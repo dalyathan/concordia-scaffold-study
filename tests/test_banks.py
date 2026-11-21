@@ -39,7 +39,7 @@ def make_bank():
   return mem
 
 
-def test_bank_round_trip(tmp_path):
+def test_bank_save_and_reload(tmp_path):
   mem = make_bank()
   path = str(tmp_path / "bank.parquet")
   sha = phase2.save_bank(mem, path)

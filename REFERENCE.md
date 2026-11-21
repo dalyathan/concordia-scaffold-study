@@ -1,6 +1,6 @@
 # Reference implementation
 
-This tab holds the reference implementation of the harness, condition builders, pipeline driver and analysis described in the Protocol tab: about 2,300 lines of Python, including tests. Where this tab and the Protocol tab disagree, the Protocol tab is authoritative and the disagreement is a bug to report.
+This document holds the reference implementation of the harness, condition builders, pipeline driver and analysis described in PROTOCOL.md, with its test results. Where the two disagree, PROTOCOL.md is authoritative and the disagreement is a bug to report.
 
 ## R1. Overview
 
@@ -9,65 +9,85 @@ This tab holds the reference implementation of the harness, condition builders, 
 | File | What it does | Protocol sections |
 |---|---|---|
 | `refimpl/core.py` | Prompt set (420 prompts, 35 cells; extension V = 7, 8), best offers, regret, unique-best cells, cell split, seeds, reasoning text S and S\_reason (with answer stems), text utilities | 1.2, 4, 6, 8.1, 8.4, 10.1 |
-| `refimpl/local_gemma2.py` | `LocalGemma2`: local stand-in for `together_ai.Gemma2` (system texts, few-shots, trimming, whole-answer and first-token letter scoring), with hook support, the letter-mass coherence measure and the generation-cache reset | 1.2, 4, 10.4 |
+| `refimpl/local_gemma2.py` | `LocalGemma2`: local stand-in for `together_ai.Gemma2` (system texts, few-shots, trimming, whole-answer and first-token letter scoring). Choice scoring is sequential (one candidate per pass) and fixed. Also: hook support, the letter-mass coherence measure, the generation-cache reset, and per-call seeding only inside a call context | 1.2, 4, 10.4 |
 | `refimpl/determinism.py` | Sequential executor, seeded `default_rng`, deterministic torch | 4 |
-| `refimpl/phase2.py` | Formative memories; builds an agent as `haggling.py` does, seeds the decision, feeds it the script, returns offer, regret, S, S\_reason and every model call | 8 |
+| `refimpl/runtime.py` | Loads 9B (or 2B) from the pinned snapshot: bfloat16, eager attention, `low_cpu_mem_usage`, `device_map={"": 0}`. Loads all-mpnet-base-v2 on the CPU. Reports the environment | 3 |
+| `refimpl/phase2.py` | Formative memories; player config; saving and loading memory banks (de-duplication hashes recomputed at load). Builds an agent as `haggling.py` does, seeds the decision, feeds it the script, and returns offer, regret, S, S\_reason and every model call | 8 |
 | `refimpl/phase3.py` | Fixed decision prompt, token positions P1–P4, activation capture, steering hook; returns first-token and whole-answer p(k) | 9.1, 9.6, 10.3 |
-| `refimpl/conditions.py` | The 28 Phase 3 conditions, advice removal (including bare numbers and currency marks), format-matched filler, paraphrase retries, leakage-audit prompt | 9.2 |
+| `refimpl/conditions.py` | The 28 Phase 3 conditions, the N7 donor rule, advice removal (including bare numbers and currency marks), format-matched filler, paraphrase retries, leakage-audit prompt | 9.2 |
 | `refimpl/steering.py` | Layer and α grid, rescaling, (layer, α) tuning with a "no steering" option | 10.2, 10.4 |
 | `refimpl/pipeline.py` | Run driver: Phase 2 and E1 with the exclusion rule; paraphrases; Phase 3 scoring and activation storage; native replay; leakage audit and its flag; pilot power rule; named directions (robust to dropped paraphrases); letter-span projection (E6); matched content copy; 1,000 random directions; tuning and test evaluation (`run_phase3b`) | 6, 8–10, 12 |
-| `refimpl/analysis.py` | Sign-flip tests (exact for n ≤ 20), Wilcoxon (sensitivity), IUT, reverse rule, Holm (0.05 and 0.01), BH, bootstrap, verdicts, power simulation, A/B/R assembly, K1 (six components, including sharpening and the matched random permutation p), K2 (unique-best cells, partial correlation, five controls), K1/K2 assembly, fidelity (E9) | 6, 9.3, 10.5, 11 |
-| `tests/test_core.py`, `tests/test_design.py` | 25 unit tests (check P0.10) | 6 |
+| `refimpl/analysis.py` | Sign-flip tests (exact for n ≤ 20), Wilcoxon (sensitivity), IUT, reverse rule, Holm (0.05 and 0.01), BH, bootstrap, verdicts, power simulation, A/B/R assembly, K1 (six components, including sharpening and the matched random permutation p), K2 (unique-best cells, partial correlation, five controls, bootstrap p = (1 + count)/(1 + n)), K1/K2 assembly, fidelity (E9) | 6, 9.3, 10.5, 11 |
+| `tests/test_core.py`, `tests/test_design.py`, `tests/test_banks.py` | 30 unit tests (check P0.10) | 6 |
 | `tests/smoke_gemma.py` | Phase 3 path on a real Gemma 2 checkpoint (P0.2, P0.7 and P0.9 logic) | 6 |
-| `tests/scoring_orders.py` | First-token versus whole-answer scoring across the five option orders on one prompt | 1.2 |
-| `tests/smoke_phase2.py` | One Concordia `rational_agent` decision through the Phase 2 harness, run twice (P0.6 and P0.7 logic) | 6 |
+| `tests/scoring_orders.py` | Letter mass and first-token versus whole-answer top-choice agreement across the five option orders on one prompt (prints no probabilities or regret) | 1.2 |
+| `tests/smoke_phase2.py` | One Concordia `rational_agent` decision through the Phase 2 harness on a pilot prompt, run twice; prints only call counts, retrieval flags and hashes (P0.6 and P0.7 logic) | 6 |
+| `scripts/download_models.py` | Downloads the pinned revisions and checks every weight shard against the Hub's LFS SHA-256 | 3, P0.1 |
+| `scripts/nonet.sh` | Runs a command with no network, as the unprivileged user, without `HF_TOKEN` | 5 |
+| `scripts/check_phase3_memory.py`, `scripts/check_phase2_agents.py` | 9B engineering checks: Phase 3 peak memory and time per pass; one Phase 2 decision per agent, recording no outcome | 6 (P0.6, P0.11) |
+| `scripts/generate_banks.py` | Generates and saves the 14 formative-memory banks, with a save-and-reload equality check | 6, 8.3 |
+| `scripts/make_registration.py` | Writes the registration record (hashes, revisions, hardware) | 11 |
+| `scripts/build_reference.py` | Builds this document with verbatim code listings | — |
 
 ### Environment
 
 The code runs on the stack pinned in Protocol section 3:
 
-- Python 3.11, torch 2.4.1, transformers 4.44.2, numpy 1.26.4, scipy 1.14.1, pandas 2.0.3, frozen in `requirements.lock`;
+- Python 3.11, torch 2.4.1, transformers 4.44.2, numpy 1.26.4, scipy 1.14.1, pandas 2.0.3, frozen in `requirements.lock` (CPU torch, 159 packages);
+- for GPU runs, the same lock with `torch==2.4.1` from PyPI (CUDA 12.1 build), its `nvidia-*` packages and `pyarrow==17.0.0`, frozen in `requirements.gpu.lock` (173 packages);
 - Concordia v1.8.9 (commit `3643ac0466f748b8055b61feb0b7908411f73d84`) on `PYTHONPATH`;
 - the directory containing `agent_py_files/` (from the supplementary zip) on `PYTHONPATH`.
 
-It uses no API newer than transformers 4.44.2. The tests in R3 ran on this pinned stack, and the unit tests also on a newer one (Python 3.13, torch 2.15, transformers 5.23).
+It uses no API newer than transformers 4.44.2. Every process that imports agent code runs without network and without `HF_TOKEN`, with `HF_HUB_OFFLINE=1`, `CUBLAS_WORKSPACE_CONFIG=:4096:8` and `PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True` (`scripts/nonet.sh`).
 
 ### How to run
 
 ```
-python -m pytest -q tests/test_core.py tests/test_design.py
-python tests/smoke_gemma.py /path/to/gemma-2-2b-it
-python tests/scoring_orders.py /path/to/gemma-2-2b-it
-PYTHONPATH=/path/to/concordia:. python tests/smoke_phase2.py /path/to/gemma-2-2b-it
+python scripts/download_models.py                  # needs HF_TOKEN; verifies shard hashes
+unset HF_TOKEN; export HF_HUB_OFFLINE=1
+PYTHONPATH=concordia:agents_zip:. python -m pytest -q tests/
+scripts/nonet.sh python tests/smoke_gemma.py 9b --device cuda
+scripts/nonet.sh python tests/scoring_orders.py 9b --device cuda
+scripts/nonet.sh python tests/smoke_phase2.py 2b --device cuda
+scripts/nonet.sh python scripts/check_phase3_memory.py --notes-tokens 200 3000 3900
+scripts/nonet.sh python scripts/check_phase2_agents.py
+scripts/nonet.sh python scripts/generate_banks.py
 ```
+
+`9b`, `2b` and `embedder` resolve to the snapshot directories of the pinned revisions under `./models`.
 
 The full study calls these, in the order of Protocol section 12:
 
-1. `pipeline.run_phase2`, then again with `temperature=0.5, draws=range(5)` for E1;
-2. `run_paraphrases`, `run_phase3`, `run_native_replay` and `run_leakage_audit`;
+1. `pipeline.run_phase2` (memories loaded with `phase2.load_bank`), then again with `temperature=0.5, draws=range(5)` for E1;
+2. `run_paraphrases`, `run_phase3`, `run_native_replay` and `run_leakage_audit`, passing `values=core.VALUES + core.EXT_VALUES` if the extension is triggered;
 3. `run_phase3b`;
 4. `analysis.abr_tests`, `analysis.k_tests` and `analysis.confirmatory_verdicts`.
 
 The pilot uses `run_phase3(..., only=("N0", "N1"))` and `pilot_power_rule`.
 
-The smoke tests use Gemma 2 2B-it so they fit a CPU. It has 26 layers and hidden size 2,304, with the same architecture and soft-caps as 9B. The real runs load `google/gemma-2-9b-it` at the pinned revision with no code change. `steering.LAYERS` (6–30) assumes 9B's 42 layers.
+`steering.LAYERS` (6–30) assumes 9B's 42 layers.
 
 ### Design notes
 
-- **Two scorings from one pass.** The first-token log-probability of each letter at P1 (the Phase 3 primary) and the whole-answer score (letter, end-of-turn and newline, Concordia's rule) both come from the same batched pass.
-- **Letter scoring.** The five answer sequences share a prefix and differ only in the letter token, so they are scored in one batch through the decoder stack (`model.model`, no cache). Only the positions that predict answer tokens go through the unembedding. The final soft-cap (30) and the log-softmax are computed in float32. This avoids materialising five × sequence length × 256k logits and needs nothing newer than transformers 4.44.2.
-- **Coherence.** Every batch row shares P1, so the first-position log-probability of row b's letter is the probability of letter b. Their sum is the letter mass, which the tuning coherence rule uses and every condition reports.
-- **Generation cache.** transformers 4.44.2 keeps Gemma 2's generation cache on the model and reuses it when large enough. That makes floating-point rounding depend on earlier calls. `sample_text` deletes it before each call.
+- **Sequential letter scoring.** The five answer sequences share a prefix and differ only in the letter token. Each is scored in its own forward pass through the decoder stack (`model.model`, no cache, batch size 1). The mode is fixed, so shapes, and therefore rounding, never depend on free memory. Only the positions that predict answer tokens go through the unembedding; the final soft-cap (30) and the log-softmax are computed in float32. A batched mode exists only for check P0.2.
+- **Two scorings from the same passes.** The first-token log-probability of each letter at P1 (the Phase 3 primary) and the whole-answer score (letter, end-of-turn and newline, Concordia's rule) come from the same five passes.
+- **Coherence.** Every pass shares P1, so pass b's first-position log-probability of its own letter is the probability of letter b. Their sum is the letter mass, which the tuning coherence rule uses and every condition reports.
+- **Hooks in every pass.** Capture and steering hooks are registered once around the five passes, so they fire in each, at the same P1. Captured positions are at or before P1 and identical across passes.
+- **Generation cache.** transformers 4.44.2 keeps Gemma 2's generation cache on the model and reuses it when large enough. That makes floating-point rounding depend on earlier calls, so `sample_text` deletes it before each call.
+- **Seeding scope.** Per-call seeds apply only inside `call_context(...)` (Phases 2–3). Without a context (Phase 1), nothing is re-seeded and sampling follows the launcher's seed.
+- **Memory banks.** A bank is saved as parquet (text, time, tags, importance, embedding). Loading re-adds the rows in order through `AssociativeMemory.add` with the stored embeddings, so the frame's columns, dtypes and order match the original. It also recomputes `_stored_hashes` as `hash((text, time, tuple(tags), importance))`, because Python's string hashes change between processes.
 - **Memory copy.** `AssociativeMemory` holds a `threading.Lock` and cannot be deep-copied. Each Phase 2 run makes a blank memory on its own clock and copies the stored bank's rows and hashes into it. The decision then starts by seeding the global generators, because memory sampling uses numpy's global state.
 - **Positions.** P1 is the last prefix token. P2–P4 come from the tokenizer's offset mapping on the decoded prefix, with an assertion that re-tokenising gives the same ids.
-- **Steering** adds α·v to the chosen layer's output from P1 onwards, for all five sequences.
-- **Agent code** from the zip is imported only by the pipeline. A static audit found no network, subprocess, `eval`/`exec` or file-writing calls in the three entry files.
+- **Steering** adds α·v to the chosen layer's output from P1 onwards, in each of the five passes.
+- **Agent code** from the zip is imported only by the pipeline and the check scripts, always without network. A static audit found no network, subprocess, `eval`/`exec` or file-writing calls in the three entry files.
 
 ## R2. Code
 
+Every file below is listed verbatim (generated by `scripts/build_reference.py`).
+
 ### `refimpl/core.py`
 
-```python
+````python
 """Pure logic shared by all phases: prompt set, oracle, regret, seeds, text controls.
 
 No model code here, so everything in this file is unit-testable on a CPU.
@@ -314,11 +334,11 @@ def cap_tokens(text: str, tokenizer, cap: int = 3000) -> tuple[str, bool]:
   half = cap // 2
   return (tokenizer.decode(ids[:half]) + "\n...\n" + tokenizer.decode(ids[-half:]),
           True)
-```
+````
 
 ### `refimpl/local_gemma2.py`
 
-```python
+````python
 """LocalGemma2: a local stand-in for concordia/language_model/together_ai.py:Gemma2.
 
 Reproduces that class's message lists, prompt trimming and choice scoring with a
@@ -404,8 +424,15 @@ class CallContext:
   temperature_override: float | None = None   # 0.0 in Phases 2-3
 
 
+# The default is a sentinel: "no call context set" (Phase 1, native runs). Only
+# calls made inside call_context(...) (Phases 2-3) get per-call seeds.
+NO_CONTEXT = CallContext()
 CONTEXT: contextvars.ContextVar[CallContext] = contextvars.ContextVar(
-    "call_context", default=CallContext())
+    "call_context", default=NO_CONTEXT)
+
+
+def context_is_set() -> bool:
+  return CONTEXT.get() is not NO_CONTEXT
 
 
 @contextlib.contextmanager
@@ -431,7 +458,13 @@ class _StopOnStrings:
 class LocalGemma2(_Base):
   """Drop-in LanguageModel for Concordia v1.8.9 agents and game masters."""
 
-  def __init__(self, model, tokenizer, *, log: Callable[[dict], None] | None = None):
+  def __init__(self, model, tokenizer, *, log: Callable[[dict], None] | None = None,
+               sequential: bool = True):
+    # Choice scoring mode, fixed for the whole run (Protocol section 4). True: the
+    # letter sequences are always scored one at a time (batch size 1), on every
+    # GPU and whatever the free memory. False (batched) is kept only for the P0.2
+    # comparison on short prompts.
+    self.sequential = sequential
     self.max_new_cap: int | None = None
     self.last_letter_mass: float = float("nan")
     self.last_first_token: dict[str, float] = {}
@@ -450,7 +483,12 @@ class LocalGemma2(_Base):
     ids = self.tok(text, add_special_tokens=False, return_tensors="pt").input_ids
     return ids.to(self.device)
 
-  def _seed(self, prompt: str) -> int:
+  def _seed(self, prompt: str) -> int | None:
+    """Per-call seeding, applied only when a call context is set (Phases 2-3).
+    Without one (Phase 1) nothing is re-seeded, so sampling follows the
+    launcher's seed."""
+    if not context_is_set():
+      return None
     ctx = CONTEXT.get()
     s = core.call_seed(prompt, ctx.agent, ctx.pid, ctx.draw)
     import random
@@ -502,13 +540,22 @@ class LocalGemma2(_Base):
 
   # -------------------------------------------------------- choice scoring
   def letter_scores(self, user_prompt: str, letters: Sequence[str],
-                    hooks: Sequence = ()) -> tuple[dict[str, float], int, torch.Tensor]:
+                    hooks: Sequence = (), sequential: bool | None = None
+                    ) -> tuple[dict[str, float], int, torch.Tensor]:
     """Total log-probability of each letter as the whole assistant answer.
 
-    Returns (scores, p1_index, prefix_ids). All letters are single tokens, so the
-    five sequences have equal length and are scored in one batch. p1_index is the
-    position of the last prefix token (the newline after '<start_of_turn>model').
+    Returns (scores, p1_index, prefix_ids). p1_index is the position of the last
+    prefix token (the newline after '<start_of_turn>model').
+
+    All letters are single tokens, so the candidate sequences have equal length.
+    sequential=True (the default, self.sequential) scores them one per forward
+    pass, always with batch size 1; it never depends on free memory. Hooks are
+    registered for every pass, so activations are captured and steering applied
+    in each pass; P1 is the same position in each. sequential=False scores all
+    candidates in one batch (P0.2 comparison only).
     """
+    if sequential is None:
+      sequential = self.sequential
     trimmed = ensure_prompt_not_too_long(user_prompt, max(len(l) for l in letters))
     prefix = self.render(build_messages(CHOICE_SYSTEM, trimmed), True)
     prefix_ids = self.encode(prefix)[0]
@@ -522,31 +569,38 @@ class LocalGemma2(_Base):
     assert len(n) == 1, "letters must tokenise to equal lengths"
     batch = torch.stack(seqs)
     start = len(prefix_ids)
+    groups = [batch[b:b + 1] for b in range(len(seqs))] if sequential else [batch]
+    cap = getattr(self.model.config, "final_logit_softcapping", None)
+    logps = []
     handles = [h() for h in hooks]
     try:
       with torch.no_grad():
-        # Run the decoder stack (hooks fire here), then unembed only the positions
-        # that predict answer tokens: start-1 .. len-2. This avoids materialising
-        # [batch, seq, 256k] logits and works on transformers 4.44.2 (no
-        # logits_to_keep). The final-logit soft-cap is applied in float32.
-        hidden = self.model.model(input_ids=batch, use_cache=False).last_hidden_state  # after final norm
-        logits = self.model.lm_head(hidden[:, start - 1:-1]).float()
+        for g in groups:
+          # Run the decoder stack (hooks fire here), then unembed only the
+          # positions that predict answer tokens: start-1 .. len-2. This avoids
+          # materialising [batch, seq, 256k] logits and works on transformers
+          # 4.44.2 (no logits_to_keep). The final-logit soft-cap is applied in
+          # float32.
+          hidden = self.model.model(input_ids=g, use_cache=False).last_hidden_state  # after final norm
+          logits = self.model.lm_head(hidden[:, start - 1:-1]).float()
+          del hidden
+          if cap:
+            logits = torch.tanh(logits / cap) * cap
+          logps.append(torch.log_softmax(logits, dim=-1))
+          del logits
     finally:
       for h in handles:
         h.remove()
-    cap = getattr(self.model.config, "final_logit_softcapping", None)
-    if cap:
-      logits = torch.tanh(logits / cap) * cap
-    logp = torch.log_softmax(logits, dim=-1)
+    logp = torch.cat(logps, 0)
     # Coherence measure (Protocol 10.4): next-token probability mass on the letters
-    # at P1. Every batch row shares P1, so row b gives the probability of letter b.
+    # at P1. Every row shares P1, so row b gives the probability of letter b.
     first = {l: float(logp[b, 0, batch[b, start]]) for b, l in enumerate(letters)}
     self.last_letter_mass = float(sum(np.exp(v) for v in first.values()))
     # First-token log-probability of each letter at P1 (Phase 3 primary outcome).
     self.last_first_token = first
     scores = {}
     for b, l in enumerate(letters):
-      tgt = batch[b, start:]
+      tgt = batch[b, start:].to(logp.device)
       lp = logp[b].gather(-1, tgt[:, None]).squeeze(-1)
       scores[l] = float(lp.sum())
     return scores, start - 1, prefix_ids
@@ -562,11 +616,11 @@ class LocalGemma2(_Base):
     self.log({"kind": "choice", "agent": ctx.agent, "pid": ctx.pid,
               "prompt": prompt, "scores": scores, "choice": responses[idx]})
     return idx, responses[idx], dict(scores)
-```
+````
 
 ### `refimpl/determinism.py`
 
-```python
+````python
 """Patches that make Phases 2-3 deterministic (Protocol section 4, "Determinism")."""
 from __future__ import annotations
 
@@ -640,11 +694,115 @@ def deterministic_execution():
   finally:
     concurrent.futures.ThreadPoolExecutor = saved_pool
     np.random.default_rng = saved_rng
-```
+````
+
+### `refimpl/runtime.py`
+
+````python
+"""Model and embedder loading for GPU runs (Protocol section 3).
+
+Models live in ./models in the Hugging Face cache layout (scripts/download_models.py),
+so each path is the snapshot directory of its pinned revision. Every process that
+imports agent code runs with HF_HUB_OFFLINE=1 and no network.
+
+The 9B model is loaded with low_cpu_mem_usage=True and device_map={"": 0}: shards are
+memory-mapped and moved to the GPU tensor by tensor, so the weights never sit in
+system RAM in full (the bank-generation machine has 16 GB of RAM). Only one language
+model is loaded per process.
+"""
+from __future__ import annotations
+
+import os
+
+import torch
+
+REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+MODELS_DIR = os.path.join(REPO_ROOT, "models")
+
+GEMMA_9B = ("google/gemma-2-9b-it", "11c9b309abf73637e4b6f9a3fa1e92e615547819")
+GEMMA_2B = ("google/gemma-2-2b-it", "299a8560bedf22ed1c72a8a11e7dce4a7f9f51f8")
+EMBEDDER = ("sentence-transformers/all-mpnet-base-v2", "e8c3b32edf5434bc2275fc9bab85f82640a19130")
+PINS = {"9b": GEMMA_9B, "2b": GEMMA_2B, "embedder": EMBEDDER}
+
+
+def snapshot_path(repo: str, revision: str, models_dir: str = MODELS_DIR) -> str:
+  path = os.path.join(models_dir, "models--" + repo.replace("/", "--"), "snapshots", revision)
+  if not os.path.isdir(path):
+    raise FileNotFoundError(f"{repo}@{revision} not found under {models_dir}")
+  return path
+
+
+def resolve(name_or_path: str) -> tuple[str, str | None]:
+  """'9b' / '2b' / 'embedder' -> (snapshot path, revision); a path -> (path, None)."""
+  if name_or_path in PINS:
+    repo, rev = PINS[name_or_path]
+    return snapshot_path(repo, rev), rev
+  for repo, rev in PINS.values():
+    if os.path.abspath(name_or_path) == os.path.abspath(snapshot_path_or_none(repo, rev) or ""):
+      return name_or_path, rev
+  return name_or_path, None
+
+
+def snapshot_path_or_none(repo, rev):
+  try:
+    return snapshot_path(repo, rev)
+  except FileNotFoundError:
+    return None
+
+
+def load_gemma(name_or_path: str = "9b", device: str = "cuda"):
+  """Returns (model, tokenizer). device='cuda': bfloat16, eager attention,
+  low_cpu_mem_usage, device_map={"": 0} (straight to GPU 0). device='cpu': the
+  CPU smoke-test configuration."""
+  from transformers import AutoModelForCausalLM, AutoTokenizer
+  path, rev = resolve(name_or_path)
+  kw = dict(revision=rev) if rev else {}
+  tok = AutoTokenizer.from_pretrained(path, **kw)
+  if device == "cuda":
+    model = AutoModelForCausalLM.from_pretrained(
+        path, torch_dtype=torch.bfloat16, attn_implementation="eager",
+        low_cpu_mem_usage=True, device_map={"": 0}, **kw)
+  elif device == "cpu":
+    model = AutoModelForCausalLM.from_pretrained(
+        path, torch_dtype=torch.bfloat16, attn_implementation="eager",
+        low_cpu_mem_usage=True, **kw)
+  else:
+    raise ValueError(device)
+  return model.eval(), tok
+
+
+def load_lm(name_or_path: str = "9b", device: str = "cuda", sequential: bool = True, **kw):
+  from .local_gemma2 import LocalGemma2
+  model, tok = load_gemma(name_or_path, device)
+  return LocalGemma2(model, tok, sequential=sequential, **kw)
+
+
+def load_embedder(name_or_path: str = "embedder"):
+  """all-mpnet-base-v2 on the CPU (its vectors go into the hashed memory banks).
+  Returns (callable text -> vector, SentenceTransformer)."""
+  from sentence_transformers import SentenceTransformer
+  path, rev = resolve(name_or_path)
+  kw = dict(revision=rev) if rev else {}
+  model = SentenceTransformer(path, device="cpu", **kw)
+  return (lambda t: model.encode(t, show_progress_bar=False)), model
+
+
+def env_report() -> dict:
+  import transformers
+  out = {"torch": torch.__version__, "torch.version.cuda": torch.version.cuda,
+         "cudnn": torch.backends.cudnn.version(), "transformers": transformers.__version__,
+         "CUBLAS_WORKSPACE_CONFIG": os.environ.get("CUBLAS_WORKSPACE_CONFIG"),
+         "PYTORCH_CUDA_ALLOC_CONF": os.environ.get("PYTORCH_CUDA_ALLOC_CONF"),
+         "HF_HUB_OFFLINE": os.environ.get("HF_HUB_OFFLINE")}
+  if torch.cuda.is_available():
+    out["gpu"] = torch.cuda.get_device_name(0)
+    out["gpu_total_bytes"] = torch.cuda.get_device_properties(0).total_memory
+  return out
+````
 
 ### `refimpl/phase2.py`
 
-```python
+````python
 """Phase 2 harness: build one agent exactly as v1.8.9 haggling.py does, feed it the
 scripted conversation, and collect its decision and reasoning text S.
 
@@ -680,10 +838,7 @@ DECISION_SPEC = entity_lib.choice_action_spec(
 
 def formative_memory(lm: LocalGemma2, embedder, variant: int):
   """Generated once per variant (greedy) and stored; reused for every agent."""
-  name = core.FEMALE_NAMES[variant - 1]
-  random.seed(1000 + variant)                 # get_trait() uses the global RNG
-  cfg = haggling.configure_player(name, "female", fv.YEAR, True,
-                                  random.Random(1000 + variant))
+  cfg = player_config(variant)                # seeds the global RNG first (get_trait)
   clock = game_clock.MultiIntervalClock(start=START,
                                         step_sizes=[haggling.MAJOR_TIME_STEP,
                                                     haggling.MINOR_TIME_STEP])
@@ -759,11 +914,93 @@ def run_decision(lm: LocalGemma2, embedder, agent_module: str, p: core.Prompt,
           "hard_regret": core.hard_regret(p, k), "S": S, "S_reason": S_reason,
           "calls": calls,
           "rule_memories_in_prompts": rule_seen}
-```
+
+
+# ------------------------------------------------------- formative-memory banks
+BANK_COLUMNS = ("text", "time", "tags", "importance", "embedding")
+
+
+def player_config(variant: int):
+  """The player config exactly as formative_memory() derives it (global random
+  seeded first, because get_trait() uses it)."""
+  name = core.FEMALE_NAMES[variant - 1]
+  random.seed(1000 + variant)
+  return haggling.configure_player(name, "female", fv.YEAR, True,
+                                   random.Random(1000 + variant))
+
+
+def save_bank(mem, path: str) -> str:
+  """Writes mem's rows (text, time, tags, importance, embedding) as parquet and
+  returns the file's SHA-256."""
+  import hashlib
+  import pyarrow as pa
+  import pyarrow.parquet as pq
+  df = mem.get_data_frame()
+  schema = pa.schema([("text", pa.string()), ("time", pa.timestamp("ns")),
+                      ("tags", pa.list_(pa.string())), ("importance", pa.float64()),
+                      ("embedding", pa.list_(pa.float32()))])
+  table = pa.table({
+      "text": [str(t) for t in df["text"]],
+      "time": [pd_timestamp(t) for t in df["time"]],
+      "tags": [list(t) for t in df["tags"]],
+      "importance": [float(x) for x in df["importance"]],
+      "embedding": [np.asarray(e, dtype=np.float32) for e in df["embedding"]]},
+      schema=schema)
+  pq.write_table(table, path)
+  with open(path, "rb") as f:
+    return hashlib.sha256(f.read()).hexdigest()
+
+
+def pd_timestamp(t):
+  import pandas as pd
+  return pd.Timestamp(t)
+
+
+def bank_hash(text: str, time, tags, importance) -> int:
+  """AssociativeMemory.add's de-duplication hash. Python string hashes change
+  between processes, so this is always recomputed at load, never stored."""
+  return hash((text, time, tuple(tags), importance))
+
+
+def load_bank(path: str, lm, embedder, variant: int):
+  """Rebuilds (memory, cfg) as formative_memory() returned them, from a saved bank.
+
+  Rows are re-added in their saved order through AssociativeMemory.add, with the
+  stored embedding (the embedder is not re-run) and the stored time, tags (as a
+  tuple) and importance, so the frame has the same columns, dtypes and order as
+  the original. _stored_hashes is recomputed in this process."""
+  import pyarrow.parquet as pq
+  table = pq.read_table(path)
+  assert tuple(table.column_names) == BANK_COLUMNS, table.column_names
+  rows = table.to_pylist()
+  stored = {}
+  for r in rows:
+    e = np.asarray(r["embedding"], dtype=np.float32)
+    prev = stored.setdefault(r["text"], e)
+    assert np.array_equal(prev, e), "one text with two embeddings"
+  clock = game_clock.MultiIntervalClock(start=START,
+                                        step_sizes=[haggling.MAJOR_TIME_STEP,
+                                                    haggling.MINOR_TIME_STEP])
+  mem = blank_memories.MemoryFactory(
+      model=lm, embedder=lambda t: stored[t].copy(),
+      importance=importance_function.ConstantImportanceModel().importance,
+      clock_now=clock.now).make_blank_memory()
+  for r in rows:
+    t = r["time"]
+    t = t.to_pydatetime() if hasattr(t, "to_pydatetime") else t
+    mem.add(r["text"], timestamp=t, tags=tuple(r["tags"]), importance=float(r["importance"]))
+  assert len(mem.get_data_frame()) == len(rows), "duplicate rows in bank"
+  expected = {bank_hash(r["text"], (r["time"].to_pydatetime() if hasattr(r["time"], "to_pydatetime")
+                                    else r["time"]), r["tags"], float(r["importance"]))
+              for r in rows}
+  mem._stored_hashes = expected
+  mem._embedder = embedder          # real embedder for anything added later
+  return mem, player_config(variant)
+````
 
 ### `refimpl/phase3.py`
 
-```python
+````python
 """Phase 3 / 3b: fixed decision prompt, activation capture and steering."""
 from __future__ import annotations
 
@@ -913,11 +1150,11 @@ def score_prompt(lm: LocalGemma2, p: core.Prompt, opening: str, notes: str | Non
   probs_full = core.softmax_scores(scores, l2p)
   hard = l2p[max(LETTERS, key=lambda l: (first[l], -LETTERS.index(l)))]
   return probs, hard, store, probs_full
-```
+````
 
 ### `refimpl/conditions.py`
 
-```python
+````python
 """Phase 3 condition builders (Protocol section 9.2): the inserted text per condition."""
 from __future__ import annotations
 
@@ -1019,8 +1256,32 @@ def paraphrase(sample_text: Callable[..., str], call_context, text: str, agent: 
 
 
 # ----------------------------------------------------------------- builder
-def v_prime(p: core.Prompt) -> core.Prompt:
-  return core.Prompt(p.variant, p.V + 1 if p.V < 6 else 5, p.line, p.C)
+def _donor_key(p: core.Prompt, q: core.Prompt) -> tuple:
+  """Manhattan distance in (V, C), then smaller V, then smaller C. No-information
+  prompts use C = 0."""
+  c_p, c_q = p.C or 0, q.C or 0
+  return (abs(p.V - q.V) + abs(c_p - c_q), q.V, c_q)
+
+
+def n7_donor(p: core.Prompt, values: Sequence[int] = core.VALUES) -> core.Prompt:
+  """N7 donor: the prompt with the same variant and seller line whose set of best
+  offers does not overlap p's, nearest in (V, C) (_donor_key). No-information
+  prompts take only no-information donors with the same line. Where no donor is
+  disjoint (only cell V = 5, C = 5, where every offer is best), the donor with the
+  smallest overlap is used, under the same distance and tie rule."""
+  if p.C is None:
+    cands = [core.Prompt(p.variant, V, p.line, None) for V in values]
+  else:
+    cands = [core.Prompt(p.variant, V, p.line, C) for V in values for C in core.COSTS]
+  cands = [q for q in cands if q.cell != p.cell]
+  best = set(core.oracle_bids(p))
+  overlap = {q: len(best & set(core.oracle_bids(q))) for q in cands}
+  return min(cands, key=lambda q: (overlap[q], *_donor_key(p, q)))
+
+
+def has_disjoint_donor(p: core.Prompt, values: Sequence[int] = core.VALUES) -> bool:
+  q = n7_donor(p, values)
+  return not set(core.oracle_bids(p)) & set(core.oracle_bids(q))
 
 
 def oracle_offer(p: core.Prompt) -> int:
@@ -1031,10 +1292,13 @@ def build_conditions(p: core.Prompt, S: Mapping[str, Mapping[str, str]],
                      S_reason: Mapping[str, Mapping[str, str]],
                      offers: Mapping[str, Mapping[str, int]],
                      paraphrases: Mapping[str, Mapping[str, str | None]],
-                     openings: Sequence[str], tokenizer) -> dict[str, str | None]:
+                     openings: Sequence[str], tokenizer,
+                     values: Sequence[int] = core.VALUES) -> dict[str, str | None]:
   """All 28 conditions for prompt p. Dicts are keyed [agent][pid]. Returns
-  code -> inserted text (None = no Notes block). Texts are capped (core.cap_tokens)."""
-  pid, vp = p.pid, v_prime(p).pid
+  code -> inserted text (None = no Notes block). Texts are capped (core.cap_tokens).
+  values: the V grid in use (core.VALUES, or VALUES + EXT_VALUES with the
+  extension); it fixes the N7 donor set."""
+  pid, vp = p.pid, n7_donor(p, values).pid
   out: dict[str, str | None] = {"N0": None}
   out["N1"] = S[BASELINE][pid]
   out["N1s"] = remove_recommendations_strict(S[BASELINE][pid])
@@ -1077,11 +1341,11 @@ def audit_prompt(notes: str) -> tuple[str, dict[str, int | None]]:
   lines.append("  (f) The notes do not favour any price")
   mapping["f"] = None
   return "\n".join(lines) + "\nAnswer: (", mapping
-```
+````
 
 ### `refimpl/steering.py`
 
-```python
+````python
 """Phase 3b helpers: grid, rescaling, (layer, alpha) tuning (Protocol 10.2, 10.4)."""
 from __future__ import annotations
 
@@ -1122,11 +1386,11 @@ def tune(evaluate: Callable[[int, float], tuple[float, float]],
       if best is None or red > best[2] + 1e-12:
         best = (layer, alpha, red)
   return best
-```
+````
 
 ### `refimpl/pipeline.py`
 
-```python
+````python
 """Run driver for Phases 2, 3 and 3b and the pilot (Protocol sections 6 and 8-12).
 
 Every record is written to disk, so the analysis can be rerun without the model:
@@ -1217,12 +1481,15 @@ def run_paraphrases(lm: LocalGemma2, S: Mapping[str, Mapping[str, str]], out: st
 
 # ------------------------------------------------------------------ Phase 3
 def run_phase3(lm: LocalGemma2, prompts: Sequence[core.Prompt], S, S_reason, offers,
-               para, openings: Sequence[str], out: str, only: Sequence[str] | None = None):
+               para, openings: Sequence[str], out: str, only: Sequence[str] | None = None,
+               values: Sequence[int] = core.VALUES):
   """Scores every condition (or only those in `only`, e.g. the pilot's N0/N1) in
-  the five cyclic orders and stores activations."""
+  the five cyclic orders and stores activations. values: the V grid in use
+  (core.VALUES + core.EXT_VALUES with the extension); it fixes the N7 donors."""
   orders = core.cyclic_orders()
   for p in prompts:
-    conds = conditions.build_conditions(p, S, S_reason, offers, para, openings, lm.tok)
+    conds = conditions.build_conditions(p, S, S_reason, offers, para, openings, lm.tok,
+                                        values)
     if only is not None:
       conds = {k: v for k, v in conds.items() if k in only}
     opening = openings[p.opening_index]
@@ -1274,10 +1541,12 @@ def run_native_replay(lm: LocalGemma2, out: str):
             "first_token": lm.last_first_token})
 
 
-def run_leakage_audit(lm: LocalGemma2, prompts, S, S_reason, offers, para, openings, out: str):
+def run_leakage_audit(lm: LocalGemma2, prompts, S, S_reason, offers, para, openings, out: str,
+                      values: Sequence[int] = core.VALUES):
   """Score the audit question for every N8 and N1s text (Protocol 9.2)."""
   for p in prompts:
-    conds = conditions.build_conditions(p, S, S_reason, offers, para, openings, lm.tok)
+    conds = conditions.build_conditions(p, S, S_reason, offers, para, openings, lm.tok,
+                                        values)
     for code, text in conds.items():
       if not (code.startswith("N8:") or code == "N1s") or not text:
         continue
@@ -1354,10 +1623,11 @@ def project_out_letters(lm: LocalGemma2, v: torch.Tensor) -> torch.Tensor:
   """E6: remove v's component in the span of the a-e unembedding rows, then
   rescale to the original norm."""
   ids = [lm.tok.convert_tokens_to_ids(l) for l in "abcde"]
-  W = lm.model.lm_head.weight[ids].float()              # 5 x d
+  W = lm.model.lm_head.weight[ids].float().cpu()        # 5 x d (on CPU, like v)
   Q, _ = torch.linalg.qr(W.T)                           # d x 5, orthonormal
-  r = v.float() - Q @ (Q.T @ v.float())
-  return steering.rescale(r, float(v.norm()))
+  x = v.float().cpu()
+  r = x - Q @ (Q.T @ x)
+  return steering.rescale(r, float(x.norm()))
 
 
 def steered_regret(lm: LocalGemma2, p: core.Prompt, notes: str, opening: str,
@@ -1467,11 +1737,11 @@ def run_phase3b(lm, out: str, dev, test, notes_n1, openings, n_random: int = 100
                "random": rand_tuned, "gamma": gamma}, f, default=str)
   return {"named": named, "content_matched": matched, "random_single": random_single,
           "gamma": gamma}
-```
+````
 
 ### `refimpl/analysis.py`
 
-```python
+````python
 """Confirmatory statistics (Protocol sections 10.5 and 11).
 
 Primary test: one-sided sign-flip permutation test of the mean cell difference.
@@ -1833,8 +2103,9 @@ def calibration_test(prompts: Sequence[core.Prompt],
     r_a = partial_spearman(a[idx], o[idx], z[idx])[0]
     for k in used:
       diffs[k].append(r_a - partial_spearman(ctrl[k][idx], o[idx], z[idx])[0])
-  p_vs = {k: float(np.mean(np.asarray(v) <= 0)) for k, v in diffs.items()}
-  p_vs_rev = {k: float(np.mean(np.asarray(v) >= 0)) for k, v in diffs.items()}
+  # Bootstrap p-values as (1 + count) / (1 + n), so none is exactly zero.
+  p_vs = {k: float((1 + np.sum(np.asarray(v) <= 0)) / (1 + n_boot)) for k, v in diffs.items()}
+  p_vs_rev = {k: float((1 + np.sum(np.asarray(v) >= 0)) / (1 + n_boot)) for k, v in diffs.items()}
   strongest = max(used, key=ctrl_rho.get)               # equivalence vs strongest control
   lo, hi = np.quantile(diffs[strongest], [0.05, 0.95])
   return {"n_cells": len(cells), "rho_partial": rho, "p_rho": p_rho,
@@ -1884,11 +2155,349 @@ def fidelity(test: Sequence[core.Prompt], soft: Mapping[tuple, float],
   gap = float(np.mean(cell_diffs(n1, ne, test)))
   got = float(np.mean(cell_diffs(n1, st, test)))
   return got / gap if gap != 0 else float("nan")
-```
+````
+
+### `tests/scoring_orders.py`
+
+````python
+"""First-token versus whole-answer scoring across the five option orders (one prompt)."""
+import os, sys
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from refimpl import core, phase3
+from refimpl.local_gemma2 import LocalGemma2
+
+import argparse
+from refimpl import runtime
+ap = argparse.ArgumentParser()
+ap.add_argument("model")
+ap.add_argument("--device", default="cpu", choices=("cpu", "cuda"))
+args = ap.parse_args()
+model, tok = runtime.load_gemma(args.model, args.device)
+lm = LocalGemma2(model, tok, sequential=True)
+p = core.Prompt(1, 5, "information", 3)
+notes = "Question: What is Anya's best offer?\nAnswer: She can resell for 5 coins."
+# Reports only the mean letter mass and first-token versus whole-answer top-choice
+# agreement (no probabilities, offers or regret are printed).
+masses, agree = [], 0
+for i, order in enumerate(core.cyclic_orders()):
+  pf, _, _, pw = phase3.score_prompt(lm, p, "Opening sentence number 0.", notes, order)
+  masses.append(lm.last_letter_mass)
+  agree += max(pf, key=pf.get) == max(pw, key=pw.get)
+print(f"mean letter mass {sum(masses) / len(masses):.3f} "
+      f"(range {min(masses):.3f}-{max(masses):.3f}); first-token vs whole-answer "
+      f"top choice agree in {agree} of 5 orders")
+````
+
+### `tests/smoke_gemma.py`
+
+````python
+"""End-to-end smoke test of LocalGemma2 + Phase 3 on a Gemma 2 model.
+
+Usage: python tests/smoke_gemma.py <2b|9b|model dir> [--device cpu|cuda]
+Checks: P0.2-style batched-vs-sequential scoring parity, P0.9 zero-steer identity,
+position finding, activation capture, steering effect, greedy determinism.
+"""
+import argparse
+import os
+import sys
+import time
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+import torch
+
+from refimpl import core, phase3, runtime
+from refimpl.local_gemma2 import (CHOICE_SYSTEM, LocalGemma2, build_messages,
+                                  call_context)
+
+ap = argparse.ArgumentParser()
+ap.add_argument("model")
+ap.add_argument("--device", default="cpu", choices=("cpu", "cuda"))
+args = ap.parse_args()
+torch.manual_seed(0)
+model, tok = runtime.load_gemma(args.model, args.device)
+lm = LocalGemma2(model, tok, sequential=True)
+cfg = model.config
+print("layers", cfg.num_hidden_layers, "hidden", cfg.hidden_size,
+      "softcaps", cfg.attn_logit_softcapping, cfg.final_logit_softcapping)
+
+OPENINGS = [f"Opening sentence number {i}." for i in range(5)]  # stand-ins
+p = core.Prompt(1, 5, "information", 3)
+order = core.cyclic_orders()[0]
+notes = "Question: What is Anya's best offer?\nAnswer: She can resell for 5 coins."
+
+# Rendered prompt check: system text folded into the first user turn.
+r = lm.render(build_messages(CHOICE_SYSTEM, "X"), True)
+assert r.count("<start_of_turn>user") == 3 and r.endswith("<start_of_turn>model\n")
+assert CHOICE_SYSTEM + "\n\nQuestion: Is Jake a turtle?" in r
+print("render ok")
+
+t = time.time()
+probs, hard, store, probs_full = phase3.score_prompt(lm, p, OPENINGS[0], notes, order, capture=True)
+print(f"score+capture {time.time()-t:.1f}s  first-token probs={ {k: round(v,3) for k,v in probs.items()} } hard={hard}")
+print(f"whole-answer probs={ {k: round(v,3) for k,v in probs_full.items()} }  letter mass at P1={lm.last_letter_mass:.3f}")
+assert abs(sum(probs.values()) - 1) < 1e-6
+assert len(store) == cfg.num_hidden_layers
+assert set(store[0]) == {"P1", "P2", "P3", "P4"}
+assert store[0]["P1"].shape == (cfg.hidden_size,)
+
+# Positions decode to the intended tokens.
+user, _ = phase3.decision_user_turn(p, OPENINGS[0], notes, order)
+pre = lm.encode(lm.render(build_messages(CHOICE_SYSTEM, user), True))[0]
+pos = phase3.token_positions(lm, pre, p)
+for name, i in pos.items():
+  print(name, repr(tok.decode(pre[max(0, i-3):i+1])))
+assert tok.decode(pre[pos["P2"]]).endswith("(")
+assert tok.decode(pre[len(pre)-1]) == "\n"
+
+# P0.2 (revised): batched letter scoring versus sequential (one letter per pass).
+t = time.time()
+scores, p1, _ = lm.letter_scores(user, phase3.LETTERS, sequential=False)
+t_b = time.time() - t
+first_b, mass_b = dict(lm.last_first_token), lm.last_letter_mass
+t = time.time()
+seq, p1s, _ = lm.letter_scores(user, phase3.LETTERS, sequential=True)
+t_s = time.time() - t
+first_s = dict(lm.last_first_token)
+deltas = {l: abs(seq[l] - scores[l]) for l in phase3.LETTERS}
+deltas_first = {l: abs(first_s[l] - first_b[l]) for l in phase3.LETTERS}
+print(f"prompt tokens {p1 + 1}; batched {t_b:.2f}s, sequential {t_s:.2f}s")
+print("batched vs sequential whole-answer |delta| (nats):", {l: f"{d:.2e}" for l, d in deltas.items()})
+print("batched vs sequential first-token |delta| (nats):", {l: f"{d:.2e}" for l, d in deltas_first.items()})
+md = max(max(deltas.values()), max(deltas_first.values()))
+print(f"P0.2 max |delta| = {md:.3e} nats; criterion 1e-3: {'within' if md < 1e-3 else 'EXCEEDED'}; "
+      f"bit-identical: {md == 0.0}")
+same_argmax = max(scores, key=scores.get) == max(seq, key=seq.get)
+same_first = max(first_b, key=first_b.get) == max(first_s, key=first_s.get)
+print("argmax identical (whole-answer, first-token):", same_argmax, same_first)
+# P0.2 is reported, not a gate: on GPU, bf16 kernels differ with batch shape, so
+# the two modes are not bit-identical. Only argmax agreement is asserted here.
+assert p1 == p1s and same_argmax and same_first
+print("batched vs sequential ok (same argmax)")
+scores = seq  # the registered mode from here on
+# Determinism: the same batch twice gives bit-identical scores (P0.7 logic).
+again, _, _ = lm.letter_scores(user, phase3.LETTERS)
+assert again == scores
+print("repeat bit-identical ok")
+
+# P0.9: zero steering vector leaves scores identical.
+zero = torch.zeros(cfg.hidden_size)
+probs0, _, _, full0 = phase3.score_prompt(lm, p, OPENINGS[0], notes, order, steer=(6, zero))
+assert all(probs0[k] == probs[k] and full0[k] == probs_full[k] for k in core.PRICES), (probs0, probs)
+print("zero-steer identity ok")
+
+# A large steering vector changes the distribution.
+v = store[6]["P1"].float() * 4.0
+probs_s, _, _, _ = phase3.score_prompt(lm, p, OPENINGS[0], notes, order, steer=(6, v))
+print("steered probs", {k: round(x, 3) for k, x in probs_s.items()})
+assert any(abs(probs_s[k] - probs[k]) > 1e-3 for k in core.PRICES)
+
+# Greedy sample_text is deterministic and honours terminators.
+with call_context(agent="test", pid=p.pid, temperature_override=0.0):
+  a = lm.sample_text("Question: What colour is the sky?\nAnswer: The sky is",
+                     max_tokens=12, terminators=("\n",))
+  b = lm.sample_text("Question: What colour is the sky?\nAnswer: The sky is",
+                     max_tokens=12, terminators=("\n",))
+print("sample_text:", repr(a))
+assert a == b and "\n" not in a
+
+# Choice through the Concordia-facing API.
+idx, resp, sc = lm.sample_choice("Question: Is fire hot?\n  (a) Yes\n  (b) No\nAnswer: (",
+                                 ["a", "b"])
+print("sample_choice:", resp, {k: round(v, 2) for k, v in sc.items()})
+print("ALL SMOKE CHECKS PASSED")
+````
+
+### `tests/smoke_phase2.py`
+
+````python
+"""Phase 2 harness smoke test: Concordia v1.8.9's rational_agent (byte-identical to
+the contest zip's copy) makes one scripted decision through LocalGemma2.
+
+Usage: PYTHONPATH=<concordia v1.8.9>:<ref> python tests/smoke_phase2.py <2b|9b|gemma dir>
+       [--device cpu|cuda]
+A hash-based stand-in embedder is used here; real runs use all-mpnet-base-v2.
+Prints no offer, regret or S text: only call counts, retrieval flags, whether S is
+non-empty and SHA-256 values for the determinism check.
+"""
+import argparse
+import hashlib
+import sys
+import time
+
+import numpy as np
+
+from examples.modular.environment.modules import fruitville_haggling as fv
+from refimpl import core, phase2, runtime
+
+# Environment shim for this CPU box only (Python 3.13 + pandas>2.0.3, whereas
+# Concordia v1.8.9 pins pandas<=2.0.3 on Python 3.11): newer pandas leaves the
+# memory bank's 'time' column as object dtype after concat into an empty frame.
+# Applied only when pandas is newer than the pinned 2.0.3.
+import pandas as pd
+if tuple(int(x) for x in pd.__version__.split(".")[:2]) > (2, 0):
+  from concordia.associative_memory import associative_memory as _am
+  _orig = _am.AssociativeMemory._pd_to_text
+  def _pd_to_text(self, data, *a, **kw):
+    data = data.copy(); data["time"] = pd.to_datetime(data["time"])
+    return _orig(self, data, *a, **kw)
+  _am.AssociativeMemory._pd_to_text = _pd_to_text
+  print("pandas shim applied (pandas", pd.__version__, ")")
+from refimpl.local_gemma2 import LocalGemma2
+
+
+def embedder(text: str) -> np.ndarray:            # deterministic stand-in
+  h = hashlib.sha256(text.encode()).digest()
+  v = np.frombuffer(h * 12, dtype=np.uint8)[:384].astype(np.float32) - 127.5
+  return v / np.linalg.norm(v)
+
+
+ap = argparse.ArgumentParser()
+ap.add_argument("model")
+ap.add_argument("--device", default="cpu", choices=("cpu", "cuda"))
+args = ap.parse_args()
+model, tok = runtime.load_gemma(args.model, args.device)
+lm = LocalGemma2(model, tok, sequential=True)
+
+# CPU smoke test: formative-memory generation (upstream Concordia, ~5,000-token
+# backstory) is skipped; the agent starts from a blank memory bank with the
+# player-specific memories added, and generations are capped at 64 tokens.
+lm.max_new_cap = 64
+import random
+from concordia.associative_memory import blank_memories, importance_function
+from examples.modular.environment import haggling
+random.seed(1001)
+cfg = haggling.configure_player(core.FEMALE_NAMES[0], "female", fv.YEAR, True,
+                                random.Random(1001))
+mem = blank_memories.MemoryFactory(
+    model=lm, embedder=embedder,
+    importance=importance_function.ConstantImportanceModel().importance,
+    clock_now=lambda: phase2.SETUP).make_blank_memory()
+for extra in cfg.extras["player_specific_memories"]:
+  mem.add(extra, tags=["initial_player_specific_memory"])
+
+p = core.Prompt(13, 5, "information", 3)          # pilot variant: never confirmatory
+sha = lambda x: hashlib.sha256(str(x).encode()).hexdigest()
+t = time.time()
+res = phase2.run_decision(lm, embedder, "concordia.factory.agent.rational_agent", p,
+                          mem, cfg, list(fv.VISUAL_SCENE_OPENINGS))
+print(f"decision in {time.time()-t:.0f}s")
+print("model calls during episode:", len(res["calls"]))
+print("rule memories seen in act() prompts:", res["rule_memories_in_prompts"])
+print("S non-empty:", bool(res["S"]), " sha256(S):", sha(res["S"])[:16])
+assert res["k"] in core.PRICES and res["S"]
+# Determinism: rerun gives the same offer and the same S (compared by hash only).
+res2 = phase2.run_decision(lm, embedder, "concordia.factory.agent.rational_agent", p,
+                           mem, cfg, list(fv.VISUAL_SCENE_OPENINGS))
+same = sha((res["k"], res["S"])) == sha((res2["k"], res2["S"]))
+if not same:
+  for i, (c1, c2) in enumerate(zip(res["calls"], res2["calls"])):
+    if sha(c1) != sha(c2):
+      print("first differing call index:", i, c1["kind"])
+      break
+assert same, "not deterministic"
+print("PHASE 2 SMOKE TEST PASSED (deterministic rerun identical)")
+````
+
+### `tests/test_banks.py`
+
+````python
+"""Formative-memory bank save/load (phase2.save_bank / phase2.load_bank).
+
+Needs Concordia v1.8.9 on PYTHONPATH (skipped otherwise); no model is loaded."""
+import datetime
+import hashlib
+import os
+import subprocess
+import sys
+
+import numpy as np
+import pytest
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+pytest.importorskip("concordia")
+pytest.importorskip("examples.modular.environment.haggling")
+
+from concordia.associative_memory import blank_memories, importance_function  # noqa: E402
+from refimpl import phase2  # noqa: E402
+
+
+def fake_embed(text):
+  h = hashlib.sha256(text.encode()).digest()
+  return (np.frombuffer(h * 24, dtype=np.uint8)[:768].astype(np.float32) - 127.5) / 50
+
+
+def make_bank():
+  mem = blank_memories.MemoryFactory(
+      model=None, embedder=fake_embed,
+      importance=importance_function.ConstantImportanceModel().importance,
+      clock_now=lambda: phase2.START).make_blank_memory()
+  t0 = datetime.datetime(1880, 3, 1, 9, 30)
+  mem.add("Anya was born in a small village.", timestamp=t0, tags=["episode"])
+  mem.add("She learnt to\nbargain.", timestamp=t0 + datetime.timedelta(days=400),
+          tags=("episode", "childhood"))
+  mem.add("Same text, other time.", timestamp=t0)
+  mem.add("Same text, other time.", timestamp=t0 + datetime.timedelta(minutes=5))
+  mem.add("Anya always drives a hard bargain.", tags=["initial_player_specific_memory"])
+  mem.add("Importance differs.", timestamp=t0, importance=0.25)
+  return mem
+
+
+def test_bank_save_and_reload(tmp_path):
+  mem = make_bank()
+  path = str(tmp_path / "bank.parquet")
+  sha = phase2.save_bank(mem, path)
+  assert len(sha) == 64 and phase2.save_bank(mem, path) == sha      # deterministic file
+  import pyarrow.parquet as pq
+  assert tuple(pq.read_table(path).column_names) == phase2.BANK_COLUMNS
+  loaded, cfg = phase2.load_bank(path, None, fake_embed, 1)
+  a, b = mem.get_data_frame(), loaded.get_data_frame()
+  assert list(a.columns) == list(b.columns) and list(a.dtypes) == list(b.dtypes)
+  assert len(a) == len(b) == 6
+  for col in ("text", "time", "tags", "importance"):
+    assert list(a[col]) == list(b[col]), col
+  assert all(isinstance(t, tuple) for t in b["tags"])
+  for x, y in zip(a["embedding"], b["embedding"]):
+    assert x.dtype == y.dtype == np.float32 and np.array_equal(x, y)
+  assert loaded._stored_hashes == mem._stored_hashes
+  assert cfg.name == "Anya Blossomwood"
+  assert cfg.extras == phase2.player_config(1).extras
+
+
+def test_duplicate_row_ignored_after_load(tmp_path):
+  mem = make_bank()
+  path = str(tmp_path / "bank.parquet")
+  phase2.save_bank(mem, path)
+  loaded, _ = phase2.load_bank(path, None, fake_embed, 1)
+  n = len(loaded.get_data_frame())
+  row = loaded.get_data_frame().iloc[1]
+  loaded.add(row["text"], timestamp=row["time"].to_pydatetime(), tags=list(row["tags"]),
+             importance=row["importance"])
+  assert len(loaded.get_data_frame()) == n                          # duplicate ignored
+  loaded.add(row["text"], timestamp=row["time"].to_pydatetime(), tags=list(row["tags"]),
+             importance=0.5)
+  assert len(loaded.get_data_frame()) == n + 1                      # a new row is added
+
+
+def test_hashes_recomputed_in_a_fresh_process(tmp_path):
+  """String hashes differ across processes: the loader must not reuse stored ones."""
+  mem = make_bank()
+  path = str(tmp_path / "bank.parquet")
+  phase2.save_bank(mem, path)
+  code = ("import sys, hashlib, numpy as np; sys.path.insert(0, %r); "
+          "from tests.test_banks import fake_embed; from refimpl import phase2; "
+          "m, _ = phase2.load_bank(%r, None, fake_embed, 1); r = m.get_data_frame().iloc[0]; "
+          "n = len(m.get_data_frame()); "
+          "m.add(r['text'], timestamp=r['time'].to_pydatetime(), tags=list(r['tags']), "
+          "importance=r['importance']); print(len(m.get_data_frame()) == n)"
+          % (os.path.dirname(os.path.dirname(os.path.abspath(__file__))), path))
+  env = dict(os.environ, PYTHONHASHSEED="12345")
+  out = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, env=env)
+  assert out.stdout.strip() == "True", out.stderr[-2000:]
+````
 
 ### `tests/test_core.py`
 
-```python
+````python
 import math
 import os
 import sys
@@ -1989,11 +2598,34 @@ def test_signflip_and_wilcoxon_direction():
 def test_wilcoxon_direction():
   assert analysis.wilcoxon_greater([0.1] * 20 + [0.2] * 15) < 1e-4
   assert analysis.wilcoxon_greater([-0.1] * 35) > 0.99
-```
+
+
+
+
+def test_seed_only_inside_call_context():
+  import random
+  from refimpl.local_gemma2 import LocalGemma2, call_context, context_is_set
+  lm = object.__new__(LocalGemma2)                    # _seed needs no model
+  assert not context_is_set()
+  random.seed(123); expected = random.random()
+  random.seed(123)
+  assert lm._seed("prompt") is None                    # Phase 1: launcher seed untouched
+  assert random.random() == expected
+  with call_context(agent="a", pid="p"):
+    assert context_is_set()
+    s = lm._seed("prompt")
+    assert s == core.call_seed("prompt", "a", "p", 0)
+    x = random.random()
+    lm._seed("prompt")
+    assert random.random() == x                        # Phases 2-3: per-call seed
+  with call_context():                                 # an empty context still counts as set
+    assert context_is_set()
+  assert not context_is_set()
+````
 
 ### `tests/test_design.py`
 
-```python
+````python
 """Unit tests for the condition builders and the confirmatory statistics."""
 import math
 import os
@@ -2036,7 +2668,7 @@ def test_qa_filler_exact_length_and_format():
 
 def test_condition_set():
   p = core.Prompt(1, 5, "information", 3)
-  vp = conditions.v_prime(p)
+  vp = conditions.n7_donor(p)
   S = {a: {p.pid: f"Question: q\nAnswer: text of {a}", vp.pid: "other"} for a in conditions.AGENTS}
   off = {a: {p.pid: 3} for a in conditions.AGENTS}
   para = {a: {p.pid: "para"} for a in conditions.AGENTS}
@@ -2046,6 +2678,38 @@ def test_condition_set():
   para[conditions.ENTRIES[0]][p.pid] = None
   c = conditions.build_conditions(p, S, S, off, para, ["Open."], WordTok())
   assert len(c) == 27                                    # failed paraphrase dropped
+
+
+def test_n7_donor_disjoint_and_deterministic():
+  for values, n_cells, n_disjoint in ((core.VALUES, 35, 34),
+                                      (core.VALUES + core.EXT_VALUES, 49, 48)):
+    ps = core.prompt_set([1], values)
+    assert len({p.cell for p in ps}) == n_cells
+    donors = {p.cell: conditions.n7_donor(p, values) for p in ps}
+    disjoint = {c for c, q in donors.items()
+                if not set(core.oracle_bids(next(p for p in ps if p.cell == c)))
+                & set(core.oracle_bids(q))}
+    assert len(disjoint) == n_disjoint
+    assert {c for c in donors if c not in disjoint} == {(5, "C", 5)}
+    for p in ps:
+      q = donors[p.cell]
+      # Same variant and line; no-information donors only for no-information prompts.
+      assert q.variant == p.variant and q.line == p.line and (q.C is None) == (p.C is None)
+      assert q.cell != p.cell and q.V in values
+      assert conditions.n7_donor(p, values) == q            # deterministic
+      if p.cell != (5, "C", 5):
+        # Nearest disjoint donor, ties to smaller V then smaller C.
+        cands = [r for r in ps if r.line == p.line and r.cell != p.cell
+                 and not set(core.oracle_bids(p)) & set(core.oracle_bids(r))]
+        key = lambda r: (abs(p.V - r.V) + abs((p.C or 0) - (r.C or 0)), r.V, r.C or 0)
+        assert key(q) == min(key(r) for r in cands)
+  # Every-offer-optimal cell: smallest overlap (1), nearest, smaller V -> (V=5, C=4).
+  q = conditions.n7_donor(core.Prompt(3, 5, "information", 5))
+  assert (q.variant, q.V, q.C) == (3, 5, 4)
+  # Spot checks.
+  assert conditions.n7_donor(core.Prompt(1, 2, "neutral", None)).V == 4
+  assert conditions.n7_donor(core.Prompt(1, 6, "pressure", None)).V == 4
+  assert conditions.n7_donor(core.Prompt(1, 5, "information", 3)).cell == (5, "C", 2)
 
 
 def test_audit_prompt():
@@ -2179,263 +2843,415 @@ def test_k_tests_assembly_and_fidelity():
       soft[(p.pid, c)] = 0.4
   half = {p.pid: (1.0, 0.7, flat, flat) for p in test}
   assert abs(analysis.fidelity(test, soft, half) - 0.5) < 1e-9
-```
+````
 
-### `tests/smoke_gemma.py`
+### `scripts/build_reference.py`
 
-```python
-"""End-to-end smoke test of LocalGemma2 + Phase 3 on a small Gemma 2 model (CPU).
+````python
+"""Builds REFERENCE.md: R1 (docs/reference_R1.md), R2 = verbatim listings of every
+file in refimpl/, tests/ and scripts/ plus a requirements excerpt, R3
+(docs/reference_R3.md). Run after any code change so the listings match exactly."""
+import glob, os
+root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+os.chdir(root)
+FILES = (sorted(glob.glob("refimpl/*.py")) + sorted(glob.glob("tests/*.py"))
+         + sorted(glob.glob("scripts/*.py")) + sorted(glob.glob("scripts/*.sh")))
+ORDER = ["refimpl/core.py", "refimpl/local_gemma2.py", "refimpl/determinism.py",
+         "refimpl/runtime.py", "refimpl/phase2.py", "refimpl/phase3.py",
+         "refimpl/conditions.py", "refimpl/steering.py", "refimpl/pipeline.py",
+         "refimpl/analysis.py"]
+FILES = [f for f in ORDER if f in FILES] + [f for f in FILES if f not in ORDER]
+FILES = [f for f in FILES if not f.endswith("__init__.py")]
+parts = [open("docs/reference_R1.md").read().rstrip() + "\n\n## R2. Code\n\n"
+         "Every file below is listed verbatim (generated by `scripts/build_reference.py`).\n"]
+for f in FILES:
+  lang = "bash" if f.endswith(".sh") else "python"
+  body = open(f).read().rstrip("\n")
+  fence = "`" * 4                     # longer than any fence inside the listed files
+  assert fence not in body, f
+  parts.append(f"\n### `{f}`\n\n{fence}{lang}\n{body}\n{fence}\n")
+lock = [l.strip() for l in open("requirements.gpu.lock") if l.split("==")[0] in
+        ("accelerate", "immutabledict", "numpy", "pandas", "pyarrow", "safetensors", "scipy",
+         "sentence-transformers", "tokenizers", "torch", "transformers", "nvidia-cudnn-cu12")]
+n = sum(1 for l in open("requirements.gpu.lock") if l.strip())
+parts.append(f"\n### `requirements.gpu.lock` (excerpt; the full file, {n} lines, ships with the code)\n\n```\n"
+             + "\n".join(lock) + "\n```\n")
+parts.append("\n" + open("docs/reference_R3.md").read().strip() + "\n")
+open("REFERENCE.md", "w").write("".join(parts))
+print("REFERENCE.md:", sum(len(p) for p in parts), "chars,", len(FILES), "files")
+````
 
-Usage: python -I tests/smoke_gemma.py /path/to/gemma-2-2b-it
-Checks: P0.2-style batch-vs-single scoring parity, P0.9 zero-steer identity,
-position finding, activation capture, steering effect, greedy determinism.
-"""
-import os
-import sys
-import time
+### `scripts/check_phase2_agents.py`
 
+````python
+"""Stage 1 check 4.4: one Phase 2 decision per agent on 9B, twice each.
+
+Pilot prompt v13-V5-information-C3, real all-mpnet-base-v2 embeddings, and a
+temporary blank memory bank (plus the player-specific memory, as
+phase2.formative_memory adds it). Records only: exception or not, number of
+model calls, whether S is non-empty, whether each rule memory reached the prompts,
+the longest rendered prompt in tokens, wall time, and SHA-256 equality of S across
+the two runs. No offer, regret, S text or calls log is printed or saved."""
+import argparse, hashlib, json, os, random, sys, time, traceback
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer
-
-from refimpl import core, phase3
-from refimpl.local_gemma2 import (CHOICE_SYSTEM, LocalGemma2, build_messages,
-                                  call_context)
-
-path = sys.argv[1]
-torch.manual_seed(0)
-tok = AutoTokenizer.from_pretrained(path)
-model = AutoModelForCausalLM.from_pretrained(path, torch_dtype=torch.bfloat16,
-                                             attn_implementation="eager").eval()
-lm = LocalGemma2(model, tok)
-cfg = model.config
-print("layers", cfg.num_hidden_layers, "hidden", cfg.hidden_size,
-      "softcaps", cfg.attn_logit_softcapping, cfg.final_logit_softcapping)
-
-OPENINGS = [f"Opening sentence number {i}." for i in range(5)]  # stand-ins
-p = core.Prompt(1, 5, "information", 3)
-order = core.cyclic_orders()[0]
-notes = "Question: What is Anya's best offer?\nAnswer: She can resell for 5 coins."
-
-# Rendered prompt check: system text folded into the first user turn.
-r = lm.render(build_messages(CHOICE_SYSTEM, "X"), True)
-assert r.count("<start_of_turn>user") == 3 and r.endswith("<start_of_turn>model\n")
-assert CHOICE_SYSTEM + "\n\nQuestion: Is Jake a turtle?" in r
-print("render ok")
-
-t = time.time()
-probs, hard, store, probs_full = phase3.score_prompt(lm, p, OPENINGS[0], notes, order, capture=True)
-print(f"score+capture {time.time()-t:.1f}s  first-token probs={ {k: round(v,3) for k,v in probs.items()} } hard={hard}")
-print(f"whole-answer probs={ {k: round(v,3) for k,v in probs_full.items()} }  letter mass at P1={lm.last_letter_mass:.3f}")
-assert abs(sum(probs.values()) - 1) < 1e-6
-assert len(store) == cfg.num_hidden_layers
-assert set(store[0]) == {"P1", "P2", "P3", "P4"}
-assert store[0]["P1"].shape == (cfg.hidden_size,)
-
-# Positions decode to the intended tokens.
-user, _ = phase3.decision_user_turn(p, OPENINGS[0], notes, order)
-pre = lm.encode(lm.render(build_messages(CHOICE_SYSTEM, user), True))[0]
-pos = phase3.token_positions(lm, pre, p)
-for name, i in pos.items():
-  print(name, repr(tok.decode(pre[max(0, i-3):i+1])))
-assert tok.decode(pre[pos["P2"]]).endswith("(")
-assert tok.decode(pre[len(pre)-1]) == "\n"
-
-# P0.2-style: batched letter scoring equals scoring each sequence alone.
-scores, p1, _ = lm.letter_scores(user, phase3.LETTERS)
-deltas, alone_all = {}, {}
-for l in phase3.LETTERS:
-  alone, _, _ = lm.letter_scores(user, [l])
-  alone_all[l] = alone[l]
-  deltas[l] = abs(alone[l] - scores[l])
-print("batch vs single |delta| (nats):", {l: f"{d:.2e}" for l, d in deltas.items()})
-assert max(deltas.values()) < 5e-2
-assert max(scores, key=scores.get) == max(alone_all, key=alone_all.get)
-print("batch vs single ok (same argmax)")
-# Determinism: the same batch twice gives bit-identical scores (P0.7 logic).
-again, _, _ = lm.letter_scores(user, phase3.LETTERS)
-assert again == scores
-print("repeat bit-identical ok")
-
-# P0.9: zero steering vector leaves scores identical.
-zero = torch.zeros(cfg.hidden_size)
-probs0, _, _, full0 = phase3.score_prompt(lm, p, OPENINGS[0], notes, order, steer=(6, zero))
-assert all(probs0[k] == probs[k] and full0[k] == probs_full[k] for k in core.PRICES), (probs0, probs)
-print("zero-steer identity ok")
-
-# A large steering vector changes the distribution.
-v = store[6]["P1"].float() * 4.0
-probs_s, _, _, _ = phase3.score_prompt(lm, p, OPENINGS[0], notes, order, steer=(6, v))
-print("steered probs", {k: round(x, 3) for k, x in probs_s.items()})
-assert any(abs(probs_s[k] - probs[k]) > 1e-3 for k in core.PRICES)
-
-# Greedy sample_text is deterministic and honours terminators.
-with call_context(agent="test", pid=p.pid, temperature_override=0.0):
-  a = lm.sample_text("Question: What colour is the sky?\nAnswer: The sky is",
-                     max_tokens=12, terminators=("\n",))
-  b = lm.sample_text("Question: What colour is the sky?\nAnswer: The sky is",
-                     max_tokens=12, terminators=("\n",))
-print("sample_text:", repr(a))
-assert a == b and "\n" not in a
-
-# Choice through the Concordia-facing API.
-idx, resp, sc = lm.sample_choice("Question: Is fire hot?\n  (a) Yes\n  (b) No\nAnswer: (",
-                                 ["a", "b"])
-print("sample_choice:", resp, {k: round(v, 2) for k, v in sc.items()})
-print("ALL SMOKE CHECKS PASSED")
-```
-
-### `tests/scoring_orders.py`
-
-```python
-"""First-token versus whole-answer scoring across the five option orders (one prompt)."""
-import os, sys
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer
-from refimpl import core, phase3
-from refimpl.local_gemma2 import LocalGemma2
-
-path = sys.argv[1]
-tok = AutoTokenizer.from_pretrained(path)
-model = AutoModelForCausalLM.from_pretrained(path, torch_dtype=torch.bfloat16,
-                                             attn_implementation="eager").eval()
-lm = LocalGemma2(model, tok)
-p = core.Prompt(1, 5, "information", 3)
-notes = "Question: What is Anya's best offer?\nAnswer: She can resell for 5 coins."
-acc_f, acc_w = {k: 0.0 for k in core.PRICES}, {k: 0.0 for k in core.PRICES}
-for i, order in enumerate(core.cyclic_orders()):
-  pf, hard, _, pw = phase3.score_prompt(lm, p, "Opening sentence number 0.", notes, order)
-  top_f, top_w = max(pf, key=pf.get), max(pw, key=pw.get)
-  print(f"order {i} {order}: first-token top={top_f} ({pf[top_f]:.2f}, letter "
-        f"{'abcde'[order.index(top_f)]}); whole-answer top={top_w} ({pw[top_w]:.2f}, letter "
-        f"{'abcde'[order.index(top_w)]}); letter mass {lm.last_letter_mass:.2f}")
-  for k in core.PRICES:
-    acc_f[k] += pf[k] / 5; acc_w[k] += pw[k] / 5
-print("order-averaged first-token:", {k: round(v, 3) for k, v in acc_f.items()},
-      "soft regret", round(core.soft_regret(p, acc_f), 3))
-print("order-averaged whole-answer:", {k: round(v, 3) for k, v in acc_w.items()},
-      "soft regret", round(core.soft_regret(p, acc_w), 3))
-```
-
-### `tests/smoke_phase2.py`
-
-```python
-"""Phase 2 harness smoke test: Concordia v1.8.9's rational_agent (byte-identical to
-the contest zip's copy) makes one scripted decision through LocalGemma2.
-
-Usage: PYTHONPATH=<concordia v1.8.9>:<ref> python tests/smoke_phase2.py <gemma dir>
-A hash-based stand-in embedder is used here; real runs use all-mpnet-base-v2.
-"""
-import hashlib
-import sys
-import time
-
-import numpy as np
-import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer
-
-from examples.modular.environment.modules import fruitville_haggling as fv
-from refimpl import core, phase2
-
-# Environment shim for this CPU box only (Python 3.13 + pandas>2.0.3, whereas
-# Concordia v1.8.9 pins pandas<=2.0.3 on Python 3.11): newer pandas leaves the
-# memory bank's 'time' column as object dtype after concat into an empty frame.
-# Applied only when pandas is newer than the pinned 2.0.3.
-import pandas as pd
-if tuple(int(x) for x in pd.__version__.split(".")[:2]) > (2, 0):
-  from concordia.associative_memory import associative_memory as _am
-  _orig = _am.AssociativeMemory._pd_to_text
-  def _pd_to_text(self, data, *a, **kw):
-    data = data.copy(); data["time"] = pd.to_datetime(data["time"])
-    return _orig(self, data, *a, **kw)
-  _am.AssociativeMemory._pd_to_text = _pd_to_text
-  print("pandas shim applied (pandas", pd.__version__, ")")
-from refimpl.local_gemma2 import LocalGemma2
-
-
-def embedder(text: str) -> np.ndarray:            # deterministic stand-in
-  h = hashlib.sha256(text.encode()).digest()
-  v = np.frombuffer(h * 12, dtype=np.uint8)[:384].astype(np.float32) - 127.5
-  return v / np.linalg.norm(v)
-
-
-path = sys.argv[1]
-tok = AutoTokenizer.from_pretrained(path)
-model = AutoModelForCausalLM.from_pretrained(path, torch_dtype=torch.bfloat16,
-                                             attn_implementation="eager").eval()
-lm = LocalGemma2(model, tok)
-
-# CPU smoke test: formative-memory generation (upstream Concordia, ~5,000-token
-# backstory) is skipped; the agent starts from a blank memory bank with the
-# player-specific memories added, and generations are capped at 64 tokens.
-lm.max_new_cap = 64
-import random
 from concordia.associative_memory import blank_memories, importance_function
 from examples.modular.environment import haggling
-random.seed(1001)
-cfg = haggling.configure_player(core.FEMALE_NAMES[0], "female", fv.YEAR, True,
-                                random.Random(1001))
+from examples.modular.environment.modules import fruitville_haggling as fv
+from refimpl import core, phase2, runtime
+from refimpl.local_gemma2 import CHOICE_SYSTEM, TEXT_SYSTEM, LocalGemma2, build_messages
+
+AGENTS = ("concordia.factory.agent.rational_agent", "concordia.factory.agent.basic_agent",
+          "agent_py_files.taehun_cgcal", "agent_py_files.fluffy_fluffyagent_v16submission",
+          "agent_py_files.hgyun_loss_aversion_agent_v3_plus2")
+ap = argparse.ArgumentParser()
+ap.add_argument("--agents", nargs="*", default=list(AGENTS))
+ap.add_argument("--out", default="logs/check_phase2_agents.json")
+args = ap.parse_args()
+
+model, tok = runtime.load_gemma("9b", "cuda")
+lm = LocalGemma2(model, tok, sequential=True)
+embed, _ = runtime.load_embedder("embedder")
+p = core.Prompt(13, 5, "information", 3)
+assert p.pid == "v13-V5-information-C3"
+random.seed(1000 + p.variant)
+cfg = haggling.configure_player(p.buyer, "female", fv.YEAR, True, random.Random(1000 + p.variant))
 mem = blank_memories.MemoryFactory(
-    model=lm, embedder=embedder,
+    model=lm, embedder=embed,
     importance=importance_function.ConstantImportanceModel().importance,
     clock_now=lambda: phase2.SETUP).make_blank_memory()
 for extra in cfg.extras["player_specific_memories"]:
   mem.add(extra, tags=["initial_player_specific_memory"])
 
-p = core.Prompt(1, 5, "information", 3)
-t = time.time()
-res = phase2.run_decision(lm, embedder, "concordia.factory.agent.rational_agent", p,
-                          mem, cfg, list(fv.VISUAL_SCENE_OPENINGS))
-print(f"decision in {time.time()-t:.0f}s: offer={res['k']} hard_regret={res['hard_regret']}")
-print("model calls during episode:", len(res["calls"]))
-print("rule memories seen in act() prompts:", res["rule_memories_in_prompts"])
-print("S (first 600 chars):\n", res["S"][:600])
-assert res["k"] in core.PRICES and res["S"]
-# Determinism: rerun gives the same offer and the same S.
-res2 = phase2.run_decision(lm, embedder, "concordia.factory.agent.rational_agent", p,
-                           mem, cfg, list(fv.VISUAL_SCENE_OPENINGS))
-if not (res2["k"] == res["k"] and res2["S"] == res["S"]):
-  import difflib
-  print("offers:", res["k"], res2["k"])
-  for i, (c1, c2) in enumerate(zip(res["calls"], res2["calls"])):
-    if c1 != c2:
-      print("first differing call:", i, c1["kind"])
-      for key in ("prompt", "output", "scores"):
-        if c1.get(key) != c2.get(key):
-          a, b = str(c1.get(key)), str(c2.get(key))
-          j = next((n for n in range(min(len(a), len(b))) if a[n] != b[n]), min(len(a), len(b)))
-          print(" key", key, "differs at char", j)
-          print("  run1:", repr(a[max(0, j-150):j+150]))
-          print("  run2:", repr(b[max(0, j-150):j+150]))
-      break
-assert res2["k"] == res["k"] and res2["S"] == res["S"], "not deterministic"
-print("PHASE 2 SMOKE TEST PASSED (deterministic rerun identical)")
-```
+def rendered_tokens(c):
+  sysm = TEXT_SYSTEM if c["kind"] == "text" else CHOICE_SYSTEM
+  return len(lm.encode(lm.render(build_messages(sysm, c["prompt"]), True))[0])
 
-### `requirements.lock` (excerpt; the full file, 159 lines, ships with the code)
+# Numbers-only generation log: prompt tokens and requested new tokens per call.
+gen_log = []
+_orig_generate = lm.model.generate
+def _logged_generate(ids, **kw):
+  gen_log.append({"prompt_tokens": int(ids.shape[1]), "max_new_tokens": kw.get("max_new_tokens")})
+  torch.cuda.reset_peak_memory_stats()
+  out = _orig_generate(ids, **kw)
+  gen_log[-1]["new_tokens"] = int(out.shape[1] - ids.shape[1])
+  gen_log[-1]["peak_GiB"] = round(torch.cuda.max_memory_allocated() / 2**30, 2)
+  return out
+lm.model.generate = _logged_generate
+
+results = json.load(open(args.out)) if os.path.exists(args.out) else {}
+for a in args.agents:
+  runs = []
+  for rep in (0, 1):
+    torch.cuda.reset_peak_memory_stats()
+    gen_log.clear()
+    t = time.perf_counter()
+    try:
+      r = phase2.run_decision(lm, embed, a, p, mem, cfg, list(fv.VISUAL_SCENE_OPENINGS))
+      runs.append({"exception": None, "wall_s": round(time.perf_counter() - t, 1),
+                   "n_model_calls": len(r["calls"]),
+                   "n_text_calls": sum(c["kind"] == "text" for c in r["calls"]),
+                   "n_choice_calls": sum(c["kind"] == "choice" for c in r["calls"]),
+                   "S_nonempty": bool(r["S"]),
+                   "rule_memories_in_prompts": r["rule_memories_in_prompts"],
+                   "longest_prompt_tokens": max(rendered_tokens(c) for c in r["calls"]),
+                   "peak_gpu_GiB": round(torch.cuda.max_memory_allocated() / 2**30, 2),
+                   "S_sha256": hashlib.sha256(r["S"].encode()).hexdigest()})
+      del r
+    except Exception as e:  # noqa: BLE001 - logged, run continues
+      runs.append({"exception": repr(e)[:500], "traceback": traceback.format_exc()[-2000:],
+                   "wall_s": round(time.perf_counter() - t, 1)})
+    finally:
+      # Release memory held by a failed call (left-over generation cache, frames).
+      import gc
+      if hasattr(lm.model, "_cache"):
+        del lm.model._cache
+      gc.collect(); torch.cuda.empty_cache()
+    runs[-1]["generate_calls"] = list(gen_log)
+  ok = all(x["exception"] is None for x in runs)
+  results[a] = {"runs": runs, "S_identical_sha256": ok and runs[0]["S_sha256"] == runs[1]["S_sha256"]}
+  printable = {k: v for k, v in results[a].items()}
+  print(a, json.dumps(printable, indent=1), flush=True)
+  json.dump(results, open(args.out, "w"), indent=1)
+````
+
+### `scripts/check_phase3_memory.py`
+
+````python
+"""Stage 1 check 4.3: peak GPU memory and time per sequential scoring pass on 9B,
+for a short Phase 3 prompt and a worst-case one (3,000-token Notes filler, about
+4,500 tokens in all), unsteered and steered at layer 18, with activation capture
+as in Phase 3. Pilot variant 13 only. Prints no probabilities, offers or regret."""
+import argparse, json, os, sys, time
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+import torch
+from examples.modular.environment.modules import fruitville_haggling as fv
+from refimpl import conditions, core, phase3, runtime
+from refimpl.local_gemma2 import CHOICE_SYSTEM, LocalGemma2, build_messages
+
+ap = argparse.ArgumentParser()
+ap.add_argument("--model", default="9b")
+ap.add_argument("--reps", type=int, default=3)
+ap.add_argument("--out", default="logs/check_phase3_memory.json")
+ap.add_argument("--notes-tokens", nargs="*", type=int, default=[200, 3000])
+args = ap.parse_args()
+model, tok = runtime.load_gemma(args.model, "cuda")
+lm = LocalGemma2(model, tok, sequential=True)
+openings = list(fv.VISUAL_SCENE_OPENINGS)
+p = core.Prompt(13, 5, "neutral", None)
+opening = openings[p.opening_index]
+order = core.cyclic_orders()[0]
+cases = {f"{n}-token notes": conditions.qa_filler(openings, n, tok) for n in args.notes_tokens}
+LAYER = 18
+results = {"model": args.model, "gpu": torch.cuda.get_device_name(0), "cases": {}}
+for name, notes in cases.items():
+  user, _ = phase3.decision_user_turn(p, opening, notes, order)
+  n_tok = len(lm.encode(lm.render(build_messages(CHOICE_SYSTEM, user, "a"), False))[0])
+  # Steering vector: the prompt's own layer-18 P1 activation (realistic norm).
+  _, _, store, _ = phase3.score_prompt(lm, p, opening, notes, order, capture=True)
+  vec = store[LAYER]["P1"].float()
+  rec = {"tokens_per_sequence": n_tok, "notes_tokens": conditions.n_tokens(notes, tok)}
+  for mode, steer in (("unsteered", None), ("steered L18", (LAYER, vec))):
+    torch.cuda.synchronize(); torch.cuda.reset_peak_memory_stats()
+    times, outs = [], []
+    for _ in range(args.reps):
+      t = time.perf_counter()
+      probs, _, _, full = phase3.score_prompt(lm, p, opening, notes, order, capture=True,
+                                              steer=steer)
+      torch.cuda.synchronize()
+      times.append(time.perf_counter() - t)
+      outs.append(json.dumps([probs, full, lm.last_letter_mass]))
+    rec[mode] = {"peak_gpu_bytes": torch.cuda.max_memory_allocated(),
+                 "peak_gpu_GiB": round(torch.cuda.max_memory_allocated() / 2**30, 2),
+                 "sec_per_scoring_5_passes": [round(x, 3) for x in times],
+                 "sec_per_pass_mean": round(sum(times) / len(times) / 5, 3),
+                 "repeat_bit_identical": len(set(outs)) == 1}
+  results["cases"][name] = rec
+  print(name, json.dumps(rec, indent=1), flush=True)
+results["weights_GiB"] = round(sum(x.numel() * x.element_size() for x in model.parameters()) / 2**30, 2)
+os.makedirs(os.path.dirname(args.out), exist_ok=True)
+json.dump(results, open(args.out, "w"), indent=1)
+print("weights GiB", results["weights_GiB"])
+````
+
+### `scripts/download_models.py`
+
+````python
+"""Download the pinned models into ./models (HF cache layout) and verify every
+weight shard's SHA-256 against the LFS hashes listed by the Hub at that revision.
+Reads HF_TOKEN from the environment; never prints or stores it."""
+import hashlib, json, os, sys
+from huggingface_hub import HfApi, snapshot_download
+
+PINS = [("google/gemma-2-9b-it", "11c9b309abf73637e4b6f9a3fa1e92e615547819", None),
+        ("google/gemma-2-2b-it", "299a8560bedf22ed1c72a8a11e7dce4a7f9f51f8", None),
+        ("sentence-transformers/all-mpnet-base-v2", "e8c3b32edf5434bc2275fc9bab85f82640a19130",
+         ["onnx/*", "openvino/*", "pytorch_model.bin", "*.h5", "*.ot", "*.msgpack"])]
+WEIGHT_SUFFIXES = (".safetensors", ".bin")
+token = os.environ["HF_TOKEN"]
+api = HfApi(token=token)
+report = {}
+for repo, rev, ignore in PINS:
+  info = api.model_info(repo, revision=rev, files_metadata=True)
+  assert info.sha == rev, (repo, info.sha)
+  path = snapshot_download(repo, revision=rev, cache_dir="models", token=token,
+                           ignore_patterns=(ignore or []) + ["transformers/*"])
+  res = {}
+  for s in info.siblings:
+    if not s.rfilename.endswith(WEIGHT_SUFFIXES) or not os.path.exists(os.path.join(path, s.rfilename)):
+      continue
+    h = hashlib.sha256()
+    with open(os.path.join(path, s.rfilename), "rb") as f:
+      for chunk in iter(lambda: f.read(1 << 24), b""):
+        h.update(chunk)
+    ok = h.hexdigest() == s.lfs.sha256
+    res[s.rfilename] = {"sha256": h.hexdigest(), "lfs_sha256": s.lfs.sha256, "match": ok}
+    print(repo, s.rfilename, "OK" if ok else "MISMATCH", flush=True)
+  report[repo] = {"revision": rev, "path": path, "shards": res}
+os.makedirs("logs", exist_ok=True)
+with open("logs/model_hashes.json", "w") as f:
+  json.dump(report, f, indent=1)
+bad = [(r, n) for r, v in report.items() for n, x in v["shards"].items() if not x["match"]]
+print("ALL SHARD HASHES MATCH" if not bad else f"MISMATCHES: {bad}")
+sys.exit(1 if bad else 0)
+````
+
+### `scripts/generate_banks.py`
+
+````python
+"""Stage 1 step 5: generate the 14 formative-memory banks (variants 1-14) with
+phase2.formative_memory on 9B (greedy, determinism patches), save each as parquet
+(text, time, tags, importance, embedding) and record its SHA-256. Resumable:
+existing banks are skipped. Banks contain no outcome."""
+import argparse, json, os, sys, time
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+import torch
+from refimpl import phase2, runtime
+from refimpl.local_gemma2 import LocalGemma2
+
+ap = argparse.ArgumentParser()
+ap.add_argument("--variants", nargs="*", type=int, default=list(range(1, 15)))
+ap.add_argument("--out", default="banks")
+args = ap.parse_args()
+os.makedirs(args.out, exist_ok=True)
+manifest_path = os.path.join(args.out, "manifest.json")
+manifest = json.load(open(manifest_path)) if os.path.exists(manifest_path) else {}
+model, tok = runtime.load_gemma("9b", "cuda")
+n_calls = {"n": 0}
+lm = LocalGemma2(model, tok, sequential=True, log=lambda rec: n_calls.__setitem__("n", n_calls["n"] + 1))
+embed, _ = runtime.load_embedder("embedder")
+for v in args.variants:
+  path = os.path.join(args.out, f"formative_v{v:02d}.parquet")
+  if os.path.exists(path) and str(v) in manifest:
+    print(f"variant {v}: exists, skipped", flush=True)
+    continue
+  n_calls["n"] = 0
+  torch.cuda.reset_peak_memory_stats()
+  t = time.perf_counter()
+  mem, cfg = phase2.formative_memory(lm, embed, v)
+  sha = phase2.save_bank(mem, path)
+  # Save-and-reload check against the live memory (same process, so hashes comparable).
+  import numpy as np
+  loaded, cfg2 = phase2.load_bank(path, lm, embed, v)
+  a, b = mem.get_data_frame(), loaded.get_data_frame()
+  rt = (list(a.columns) == list(b.columns) and list(a.dtypes) == list(b.dtypes)
+        and all(list(a[c]) == list(b[c]) for c in ("text", "time", "tags", "importance"))
+        and all(np.array_equal(x, y) for x, y in zip(a["embedding"], b["embedding"]))
+        and loaded._stored_hashes == mem._stored_hashes and cfg2.extras == cfg.extras)
+  assert rt, f"variant {v}: bank reload differs from the generated memory"
+  manifest[str(v)] = {"file": os.path.basename(path), "sha256": sha,
+                      "rows": len(mem.get_data_frame()), "buyer": cfg.name,
+                      "model_calls": n_calls["n"], "wall_s": round(time.perf_counter() - t, 1),
+                      "peak_gpu_GiB": round(torch.cuda.max_memory_allocated() / 2**30, 2),
+                      "reload_equal": rt}
+  json.dump(manifest, open(manifest_path, "w"), indent=1, sort_keys=True)
+  print(f"variant {v}:", json.dumps(manifest[str(v)]), flush=True)
+print("done")
+````
+
+### `scripts/make_registration.py`
+
+````python
+"""Stage 1 step 6: write registration/ (hashes, revisions, hardware). Does not publish.
+
+Usage: python scripts/make_registration.py <code commit hash>"""
+import glob, hashlib, json, os, subprocess, sys
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+import torch
+from refimpl import runtime
+
+commit = sys.argv[1]
+root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+os.chdir(root)
+
+def sha(path):
+  with open(path, "rb") as f:
+    return hashlib.sha256(f.read()).hexdigest()
+
+tracked = subprocess.run(["git", "ls-tree", "-r", "--name-only", commit], capture_output=True,
+                         text=True, check=True).stdout.split()
+code = sorted(f for f in tracked if f.endswith((".py", ".sh")) or f in
+              ("PROTOCOL.md", "requirements.lock", "requirements.gpu.lock", ".gitignore"))
+for f in code:   # hashes are of the committed bytes
+  blob = subprocess.run(["git", "show", f"{commit}:{f}"], capture_output=True, check=True).stdout
+  assert hashlib.sha256(blob).hexdigest() == sha(f), f"{f} differs from commit {commit}"
+manifest = json.load(open("banks/manifest.json"))
+banks = {m["file"]: m["sha256"] for _, m in sorted(manifest.items(), key=lambda kv: int(kv[0]))}
+for f, h in banks.items():
+  assert sha(os.path.join("banks", f)) == h, f
+smi = subprocess.run(["nvidia-smi", "--query-gpu=name,driver_version,memory.total",
+                      "--format=csv,noheader"], capture_output=True, text=True).stdout.strip()
+gpu_name, driver, mem_total = [x.strip() for x in smi.split(",")]
+model_hashes = json.load(open("logs/model_hashes.json"))
+reg = {
+  "code_commit": commit,
+  "code_sha256": {f: sha(f) for f in code},
+  "requirements.gpu.lock_sha256": sha("requirements.gpu.lock"),
+  "memory_banks_sha256": banks,
+  "models": {k: {"repo": r, "revision": v,
+                 "weight_sha256": {n: x["sha256"] for n, x in model_hashes[r]["shards"].items()}}
+             for k, (r, v) in runtime.PINS.items()},
+  "concordia": {"tag": "v1.8.9", "commit": "3643ac0466f748b8055b61feb0b7908411f73d84"},
+  "agent_zip": {"bytes": 4537615,
+                "sha256": "e9ffb65167d776fd4beae14ee65cd3b44ec9c489870698c203f7acdefc199582"},
+  "bank_generation_and_development_hardware": {
+      "gpu": gpu_name, "gpu_memory": mem_total, "driver": driver,
+      "torch": torch.__version__, "torch.version.cuda": torch.version.cuda,
+      "cudnn": torch.backends.cudnn.version(), "instance": "AWS g5.xlarge (4 vCPUs, 16 GB RAM)"},
+  "confirmatory_hardware": "to be decided (PROTOCOL.md section 3 specifies one 48 GB GPU)",
+}
+os.makedirs("registration", exist_ok=True)
+json.dump(reg, open("registration/registration.json", "w"), indent=1, sort_keys=True)
+lines = ["# Registration record (not published)", "",
+         f"- Code commit: `{commit}`",
+         f"- Concordia: v1.8.9, commit `{reg['concordia']['commit']}`",
+         f"- Agent zip: {reg['agent_zip']['bytes']:,} bytes, SHA-256 `{reg['agent_zip']['sha256']}`", ""]
+lines += ["## Models", ""]
+for k, m in reg["models"].items():
+  lines.append(f"- {m['repo']} at revision `{m['revision']}`")
+  for n, h in m["weight_sha256"].items():
+    lines.append(f"  - `{n}`: `{h}`")
+lines += ["", "## Hardware", "",
+          f"- **Bank-generation and development hardware:** {gpu_name} ({mem_total}), driver {driver}, "
+          f"torch {torch.__version__}, CUDA (torch.version.cuda) {torch.version.cuda}, "
+          f"cuDNN {torch.backends.cudnn.version()}; AWS g5.xlarge (4 vCPUs, 16 GB RAM).",
+          "- **Confirmatory hardware:** to be decided. PROTOCOL.md section 3 specifies one 48 GB GPU; "
+          "exact repeatability (P0.7) is required on that configuration only.", "",
+          "## Memory banks (SHA-256)", ""]
+lines += [f"- `{f}`: `{h}`" for f, h in banks.items()]
+lines += ["", f"## requirements.gpu.lock", "", f"- `{reg['requirements.gpu.lock_sha256']}`", "",
+          "## Code files (SHA-256 at the code commit)", ""]
+lines += [f"- `{f}`: `{h}`" for f, h in reg["code_sha256"].items()]
+open("registration/REGISTRATION.md", "w").write("\n".join(lines) + "\n")
+print("\n".join(lines))
+````
+
+### `scripts/nonet.sh`
+
+````bash
+#!/usr/bin/env bash
+# Run a command with no network: a fresh network namespace (loopback only), then
+# drop straight back to the calling user. Used instead of `unshare -rn` because
+# this host restricts unprivileged user namespaces
+# (kernel.apparmor_restrict_unprivileged_userns=1). HF_TOKEN is never passed in.
+set -euo pipefail
+U=$(id -u); G=$(id -g); ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+exec sudo -n unshare -n -- setpriv --reuid="$U" --regid="$G" --init-groups -- \
+  env -i HOME="$HOME" USER="$USER" PATH="$PATH" LANG=C.UTF-8 \
+  HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 \
+  CUBLAS_WORKSPACE_CONFIG=:4096:8 PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True \
+  PYTHONPATH="$ROOT/concordia:$ROOT/agents_zip:$ROOT" \
+  bash -c 'cd "$0" && ip link set lo up 2>/dev/null; exec "$@"' "$ROOT" "$@"
+````
+
+### `requirements.gpu.lock` (excerpt; the full file, 173 lines, ships with the code)
 
 ```
 accelerate==0.34.2
 immutabledict==4.3.1
 numpy==1.26.4
+nvidia-cudnn-cu12==9.1.0.70
 pandas==2.0.3
+pyarrow==17.0.0
 safetensors==0.8.0
 scipy==1.14.1
 sentence-transformers==3.0.1
 tokenizers==0.19.1
-torch==2.4.1+cpu
+torch==2.4.1
 transformers==4.44.2
 ```
 
 ## R3. Test results
 
-All model tests ran on a 2-core CPU with 8 GB RAM. The model was Gemma 2 2B-it at revision `299a8560bedf22ed1c72a8a11e7dce4a7f9f51f8`, in bfloat16 with eager attention; its weight files' SHA-256 matched the published hashes before loading. Two software stacks were used:
+All results below come from one NVIDIA A10G (24 GB; driver 595.112.07) on an AWS g5.xlarge (4 vCPUs, 16 GB RAM). The stack is the pinned GPU stack: Python 3.11.18, torch 2.4.1 with CUDA 12.1 and cuDNN 9.1.0.70, transformers 4.44.2 (`requirements.gpu.lock`). Models were loaded from their pinned revisions, and every weight shard's SHA-256 matched the Hub's LFS hash first:
 
-- **Pinned** (all results below unless stated): Python 3.11.15, torch 2.4.1, transformers 4.44.2, numpy 1.26.4, scipy 1.14.1, pandas 2.0.3, with Concordia's and its examples' requirements. Frozen as `requirements.lock`, 159 packages.
-- **Newer:** Python 3.13, torch 2.15.0, transformers 5.23.0, pandas 3.0.5.
+- gemma-2-9b-it: 4 shards;
+- gemma-2-2b-it: 2 shards;
+- all-mpnet-base-v2: `model.safetensors`.
 
-### Unit tests (P0.10): 25 passed on both stacks
+Every model process ran with no network and without `HF_TOKEN`. No offer, regret, S text or calls log of any agent was printed or saved. The agent checks use pilot prompts only.
+
+### Unit tests (P0.10): 30 passed
 
 `tests/test_core.py` covers:
 
@@ -2443,7 +3259,7 @@ All model tests ran on a 2-core CPU with 8 GB RAM. The model was Gemma 2 2B-it a
 - the hand-computed best-offer table, including C = V and C > V;
 - non-negative regret;
 - the disjoint 17/18 split;
-- seeds;
+- seeds, and per-call seeding applied only inside a call context (the global generators are untouched without one);
 - S entries, with the prompt's answer stem;
 - softmax and cyclic orders;
 - Holm and IUT;
@@ -2453,6 +3269,11 @@ All model tests ran on a 2-core CPU with 8 GB RAM. The model was Gemma 2 2B-it a
 
 - **Advice removal.** These go: per-option profit lines, "3 coins: 2" lists, option labels, multi-price sentences, "offer 2", "a price of 3 seems fair" and "$2". These stay: single-price facts, "the average price is 3 coins" and "2 kg".
 - **Conditions.** Exact-length Q/A filler; the 28-condition set, including a dropped paraphrase; the audit prompt.
+- **N7 donors.**
+  - 34 of 35 cells (48 of 49 with V = 7, 8) have a disjoint donor; the exception is cell (5, 5), whose donor is (5, 4).
+  - Donors keep the variant and line; no-information prompts get only no-information donors.
+  - Each donor is the nearest disjoint cell under the tie rule, checked by brute force.
+  - The choice is deterministic.
 - **Tuner.** It returns "no steering" when every setting hurts or none is coherent.
 - **Sign-flip test.** Exact for 18 cells, Monte Carlo for 36.
 - **Families and verdicts.** BH, the reverse rule, all four verdicts through the two Holm families, and the monotonicity of the power simulation.
@@ -2461,94 +3282,119 @@ All model tests ran on a 2-core CPU with 8 GB RAM. The model was Gemma 2 2B-it a
 - **K2.** It uses only the 12 unique-best cells; pulling to a fixed price, flattening and sharpening do not pass, and steering to each prompt's best offer does.
 - **K1/K2 assembly and the fidelity measure.**
 
-### `smoke_gemma.py` (Phase 3 path; P0.2, P0.7 and P0.9 logic): passed
+`tests/test_banks.py` covers memory banks:
+
+- Save and reload reproduce columns, dtypes, every row (tags as tuples, embeddings bit-exact), the de-duplication hashes and the player config.
+- Re-adding a duplicate row is ignored, while a row differing only in importance is added.
+- The duplicate check also holds in a fresh process with a different `PYTHONHASHSEED`.
+
+### Model configuration (P0.1): matches
+
+`config.json` at the pinned 9B revision: 42 layers, hidden size 3,584, 16 query and 8 key-value heads, head dimension 256, sliding window 4,096, soft-caps 50 and 30, vocabulary 256,000.
+
+**Loading.** 9B loads with `low_cpu_mem_usage=True` and `device_map={"": 0}`. Peak resident memory was 5.6 GB, and loading took about 2.3 minutes, limited by disk reads. The weights occupy 17.21 GiB on the GPU.
+
+### `smoke_gemma.py` on 9B (Phase 3 path; P0.2, P0.7 and P0.9 logic): passed
+
+The prompt is a smoke prompt with a made-up one-line note and placeholder openings, not any agent's text.
 
 ```
-layers 26 hidden 2304 softcaps 50.0 30.0
+layers 42 hidden 3584 softcaps 50.0 30.0
 render ok
-score+capture 25.2s  first-token probs={1: 0.0, 2: 0.001, 3: 0.011, 4: 0.028, 5: 0.959} hard=5
-whole-answer probs={1: 0.008, 2: 0.203, 3: 0.235, 4: 0.422, 5: 0.132}  letter mass at P1=0.620
+score+capture 2.1s  [probabilities omitted here]
 P2 '\nAnswer: ('
 P3 ' so price accordingly."'
 P4 ' 5 coins back'
-batch vs single |delta| (nats): {'a': '0.00e+00', 'b': '0.00e+00', 'c': '0.00e+00', 'd': '0.00e+00', 'e': '0.00e+00'}
-batch vs single ok (same argmax)
+prompt tokens 590; batched 1.19s, sequential 1.35s
+batched vs sequential whole-answer |delta| (nats): {'a': '3.21e-01', 'b': '6.33e-02', 'c': '8.60e-02', 'd': '6.44e-02', 'e': '2.14e-01'}
+batched vs sequential first-token |delta| (nats): {'a': '5.32e-02', 'b': '2.36e-02', 'c': '1.40e-01', 'd': '3.25e-02', 'e': '2.36e-02'}
+P0.2 max |delta| = 3.210e-01 nats; criterion 1e-3: EXCEEDED; bit-identical: False
+argmax identical (whole-answer, first-token): True True
+batched vs sequential ok (same argmax)
 repeat bit-identical ok
 zero-steer identity ok
-steered probs {1: 0.544, 2: 0.019, 3: 0.038, 4: 0.054, 5: 0.346}
-sample_text: 'typically blue. '
-sample_choice: b {'a': -31.72, 'b': -28.58}
+sample_text: 'blue. '
 ALL SMOKE CHECKS PASSED
 ```
 
 What this shows:
 
 - The prompt is rendered with the system text folded into the first user turn.
-- Activations are captured at every layer at P1–P4, and P2–P4 decode to the intended text.
-- Batched letter scores equal single-sequence scores for all five letters to the last bit, which meets P0.2.
-- Scoring the same batch twice is bit-identical (P0.7 logic).
+- Activations are captured at all 42 layers at P1–P4, and P2–P4 decode to the intended text.
+- Scoring the same prompt twice is bit-identical (P0.7 logic).
 - A zero steering vector leaves both scorings bit-identical (P0.9), and a large vector moves the distribution.
 - Greedy sampling is repeatable and stops at terminators.
+- **Batched and sequential scoring are not bit-identical on this GPU:** up to 0.32 nats (whole-answer) and 0.14 nats (first-token), though with the same argmax. On a CPU the same comparison had been identical to the last bit.
 
-On the newer stack the whole-answer p(2 coins) is 0.186 instead of 0.203, which is why versions are pinned.
+  A diagnostic on 2B compared the final hidden state at P1 between batch sizes 5 and 1. It differs by up to 0.81, on a scale of 96. Unembedding in float32 leaves 0.18 nats, so the difference is not just bf16 logit rounding: GPU kernels chosen for different batch shapes accumulate floating-point error differently, and the error compounds over the layers.
 
-### `scoring_orders.py`: first-token versus whole-answer scoring (Protocol 1.2)
+  This is why the scoring mode is fixed (sequential) for every run, and why P0.2 is reported rather than used as a gate.
 
-The prompt has V = 5, a stated cost of 3 and a best offer of 3, with a one-line note saying "She can resell for 5 coins".
+### `scoring_orders.py` on 9B
 
-```
-order 0 (1, 2, 3, 4, 5): first-token top=5 (0.96, letter e); whole-answer top=4 (0.42, letter d); letter mass 0.62
-order 1 (2, 3, 4, 5, 1): first-token top=5 (0.97, letter d); whole-answer top=5 (0.65, letter d); letter mass 0.41
-order 2 (3, 4, 5, 1, 2): first-token top=5 (0.99, letter c); whole-answer top=5 (0.85, letter c); letter mass 0.43
-order 3 (4, 5, 1, 2, 3): first-token top=5 (0.72, letter b); whole-answer top=5 (0.80, letter b); letter mass 0.24
-order 4 (5, 1, 2, 3, 4): first-token top=5 (0.45, letter a); whole-answer top=3 (0.34, letter d); letter mass 0.25
-order-averaged first-token: {1: 0.018, 2: 0.019, 3: 0.091, 4: 0.055, 5: 0.817} soft regret 1.763
-order-averaged whole-answer: {1: 0.092, 2: 0.083, 3: 0.152, 4: 0.144, 5: 0.529} soft regret 1.553
-```
-
-What this shows:
-
-- First-token scoring picks "5 coins" in every order, whatever letter carries it. It is not a letter-position artefact; the 2B model seems anchored by the note's "5 coins".
-- Whole-answer scoring agrees in 3 of 5 orders and is flatter, because the end-of-turn terms differ by letter.
-- The letter mass at P1 is only 0.24–0.62 here, so the renormalised p(k) describes only part of the output.
-
-These are the reasons the protocol makes first-token scoring primary in Phase 3, reports whole-answer scoring for every test, and reports letter mass per condition. The 2B numbers only illustrate the measurement; the experiment uses 9B.
-
-### `smoke_phase2.py` (Phase 2 harness; P0.6 and P0.7 logic): passed
+Same smoke prompt (V = 5, stated cost 3, a one-line note), five cyclic orders:
 
 ```
-decision in 107s: offer=4 hard_regret=1.0
+mean letter mass 0.570 (range 0.457-0.816); first-token vs whole-answer top choice agree in 3 of 5 orders
+```
+
+Whole-answer and first-token scoring disagree on the top choice in 2 of 5 orders, and the letter mass is well below 1. These are the reasons the protocol makes first-token scoring primary in Phase 3, reports whole-answer scoring for every test, and reports letter mass per condition.
+
+### Phase 3 memory and time per pass on 9B (P0.11 logic)
+
+Pilot prompt v13-V5-neutral with format-matched filler Notes. Sequential scoring with activation capture at all 42 layers; steering at layer 18 with the prompt's own P1 activation. Peak is `torch.cuda.max_memory_allocated()`. The card offers 22.06 GiB.
+
+| Notes | Tokens per sequence | Peak GPU (unsteered / steered) | Time per pass (unsteered / steered) | Repeats bit-identical |
+| --- | --- | --- | --- | --- |
+| 200 tokens | 797 | 17.39 / 17.39 GiB | 0.383 / 0.384 s | yes |
+| 3,000 tokens (the cap) | 3,597 | 19.40 / 19.40 GiB | 2.323 / 2.323 s | yes |
+| 3,900 tokens | 4,497 | 20.56 / 20.56 GiB | 3.194 / 3.194 s | yes |
+
+Every Phase 3 and 3b scoring fits a 24 GB GPU with sequential scoring.
+
+### One Phase 2 decision per agent on 9B (P0.6 logic)
+
+Pilot prompt v13-V5-information-C3, real all-mpnet-base-v2 embeddings. Memory: a temporary blank bank plus the player-specific memory. Each agent ran twice.
+
+| Agent | Exception | Model calls (text + choice) | S non-empty | Rule memories reached prompts | Longest prompt (tokens) | Wall time | S byte-identical across runs |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `rational_agent` | none | 6 (5 + 1) | yes | 3 of 3 | 1,419 | 56 s, 54 s | yes |
+| `basic_agent` | none | 12 (10 + 2) | yes | 3 of 3 | 1,836 | 86 s, 86 s | yes |
+| `taehun_cgcal` | none | 7 (5 + 2) | yes | 3 of 3 | 701 | 10 s, 10 s | yes |
+| `fluffy_fluffyagent_v16submission` | none | 5 (4 + 1) | yes | 3 of 3 | 3,331 | 169 s, 168 s | yes |
+| `hgyun_loss_aversion_agent_v3_plus2` | CUDA out of memory | — | — | — | ≥ 2,424 | 122 s to failure | — |
+
+`hgyun` fails in `generate` on a 2,424-token prompt, allocating 2.31 GiB (= 2,424 × 256,000 × 4 bytes). transformers 4.44.2's `Gemma2ForCausalLM.forward` unembeds every prompt position in prefill and copies the logits to float32. On top of 17.2 GiB of weights, that overflows 24 GB from about 2,400 prompt tokens. Phase 3 scoring is unaffected, because it unembeds only the answer positions. Phases 1–2 need the 48 GB GPU of Protocol section 3, or a registered change to prefill unembedding.
+
+### `smoke_phase2.py` on 2B: passed
+
+```
+decision in 20s
 model calls during episode: 6
 rule memories seen in act() prompts: {0: True, 1: True, 2: True}
+S non-empty: True  sha256(S): c444e197fab8730a
 PHASE 2 SMOKE TEST PASSED (deterministic rerun identical)
 ```
 
-Concordia v1.8.9's `rational_agent` was built through `run_decision`. It received the setup observations, the premise and the four scripted utterances, and chose an offer through `LocalGemma2.sample_choice`.
+### Formative-memory banks
 
-- All three rule memories appeared in the prompts sent during `act()`.
-- A second run from the same starting memories produced the same offer and byte-identical S. The first S entry reads "Question: Summarize the observations above into one or two sentences. / Answer: Anya Blossomwood is trying to buy fruit from Aiden Riversong in the Fruitville market. …", with the answer stem in place.
-- No pandas shim was needed on the pinned stack.
+The 14 banks (variants 1–14) were generated on 9B, greedy, under the determinism patches, in about 2.4 minutes each.
 
-To fit a CPU, this run differs from a real Phase 2 run:
+- Every bank has 13 rows, from 2 model calls.
+- In each, the saved file reloads to a memory equal to the live one: rows, dtypes, de-duplication hashes and player config.
+- Their SHA-256 values are in the registration record.
+- Concordia printed one warning, for variant 4: 8 episodes were generated for 7 formative ages. Concordia pairs episodes with ages using `zip`, so the extra episode is dropped, as it would be upstream.
 
-- formative-memory generation was skipped;
-- generations were capped at 64 tokens;
-- a hash-based embedder stood in for all-mpnet-base-v2.
+### Bugs the tests found and fixed
 
-### Not yet run here
-
-- **The three contest entries.** The execution sandbox used to prepare this document does not allow running third-party code from the downloaded archive, even after the static audit. P0.6 therefore requires all five agents to pass on the registered GPU before any confirmatory run, and the pipeline records failures under the exclusion rule.
-- **9B.** Nothing has been run on 9B; P0.1–P0.9 cover that on the registered GPU.
-- **The pipeline driver end to end.** Its statistics are unit-tested (`abr_tests`, `k_tests`, `confirmatory_verdicts`, `power_simulation`). Its model-calling functions are loops over the smoke-tested `phase2.run_decision`, `phase3.score_prompt` and `LocalGemma2.letter_scores`.
-
-### Bugs the smoke tests found and fixed
-
-- **Out of memory.** Full-vocabulary logits for five sequences exhausted 8 GB. The scorer now unembeds only the answer positions.
+- **Out of memory in scoring.** Full-vocabulary logits for five sequences exhausted memory. The scorer now unembeds only the answer positions.
 - **Deep copy fails.** `copy.deepcopy` of an `AssociativeMemory` fails on its thread lock. Its rows are now copied into a fresh memory.
 - **Missing answer stem.** S dropped the answer stem each completion continues, so an entry read "Answer: is trying to buy…". The stem is now kept and unit-tested.
 - **Unset attention mask.** `generate` warned about it; it is now passed explicitly.
-- **Run-history dependence on the pinned stack.** The first pinned-stack Phase 2 run failed its determinism check. Call 1 of both runs had the identical prompt, yet greedy decoding diverged at character 70:
-  - run 1: "…negotiating the price of fruit."
-  - run 2: "…negotiating the price of fruit at the current time of 00:20 to 00:25…"
+- **Run-history dependence.** transformers 4.44.2 reuses Gemma 2's generation cache across calls when it is large enough. Attention shapes, and therefore rounding, then depend on earlier calls; this flipped a greedy token between two otherwise identical runs. `sample_text` now deletes the cache before each call. Memory sampling in `AssociativeMemory.add` uses numpy's global state, so each decision also starts by seeding the global generators.
+- **Memory held after an out-of-memory error.** A failed `generate` left its cache and frames on the GPU, so the next decision failed at once. The agent check now releases the cache and collects garbage after an exception.
 
-  transformers 4.44.2 reuses Gemma 2's generation cache across calls when it is large enough. Attention shapes, and therefore rounding, then depend on earlier calls. `sample_text` now deletes the cache before each call. Memory sampling in `AssociativeMemory.add` uses numpy's global state, so each decision now also starts by seeding the global generators.
+### Open issues
+
+- **Phase 2 generation on 24 GB** (above): unresolved; needs the 48 GB GPU or a registered prefill change.
+- **The pipeline driver end to end** has not run, because no pilot or confirmatory phase may run before registration. Its statistics are unit-tested (`abr_tests`, `k_tests`, `confirmatory_verdicts`, `power_simulation`). Its model-calling functions are loops over the tested `phase2.run_decision`, `phase3.score_prompt` and `LocalGemma2.letter_scores`.

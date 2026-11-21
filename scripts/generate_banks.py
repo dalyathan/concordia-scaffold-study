@@ -29,7 +29,7 @@ for v in args.variants:
   t = time.perf_counter()
   mem, cfg = phase2.formative_memory(lm, embed, v)
   sha = phase2.save_bank(mem, path)
-  # Round-trip check against the live memory (same process, so hashes comparable).
+  # Save-and-reload check against the live memory (same process, so hashes comparable).
   import numpy as np
   loaded, cfg2 = phase2.load_bank(path, lm, embed, v)
   a, b = mem.get_data_frame(), loaded.get_data_frame()
@@ -37,12 +37,12 @@ for v in args.variants:
         and all(list(a[c]) == list(b[c]) for c in ("text", "time", "tags", "importance"))
         and all(np.array_equal(x, y) for x, y in zip(a["embedding"], b["embedding"]))
         and loaded._stored_hashes == mem._stored_hashes and cfg2.extras == cfg.extras)
-  assert rt, f"variant {v}: bank round trip failed"
+  assert rt, f"variant {v}: bank reload differs from the generated memory"
   manifest[str(v)] = {"file": os.path.basename(path), "sha256": sha,
                       "rows": len(mem.get_data_frame()), "buyer": cfg.name,
                       "model_calls": n_calls["n"], "wall_s": round(time.perf_counter() - t, 1),
                       "peak_gpu_GiB": round(torch.cuda.max_memory_allocated() / 2**30, 2),
-                      "round_trip_ok": rt}
+                      "reload_equal": rt}
   json.dump(manifest, open(manifest_path, "w"), indent=1, sort_keys=True)
   print(f"variant {v}:", json.dumps(manifest[str(v)]), flush=True)
 print("done")

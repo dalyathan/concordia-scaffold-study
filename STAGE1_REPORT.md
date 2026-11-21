@@ -6,7 +6,7 @@ Date: 2026-11-21. Instance: AWS **g5.xlarge** (one NVIDIA A10G, 24 GB; 4 vCPUs; 
 
 - Everything in STAGE1_PROMPT.md was completed. The 9B model loads directly to the GPU within 16 GB of system RAM (peak RSS 5.6 GB), so the instance did not need to change.
 - All 30 unit tests pass. All 9B smoke checks pass.
-- All 14 formative-memory banks were generated and round-trip exactly.
+- All 14 formative-memory banks were generated, and each reloads to a memory equal to the one generated.
 - Phase 3 scoring fits the A10G: sequential scoring of a 4,497-token prompt peaks at 20.56 GiB.
 - **Two findings need a decision before Stage 2:**
   1. `hgyun_loss_aversion_agent_v3_plus2` runs out of GPU memory in a Phase 2 decision on the A10G. transformers 4.44.2 computes float32 logits for the whole prompt during generation prefill.
@@ -152,7 +152,7 @@ As instructed, the error was logged and the run continued. This blocks Phase 2 (
 - Each bank is saved as `banks/formative_vNN.parquet` with columns text, time, tags, importance and embedding (float32 lists). The SHA-256 values are in `banks/manifest.json` and `registration/`.
 - Each bank was reloaded in the same process with the new loader and compared with the live memory: columns, dtypes, every row (text, time, tags as tuples, importance, embedding bit-exact), the de-duplication hashes and the player config all match.
 
-| Variant | Buyer | File | Rows | Model calls | Wall time | Peak GPU | Round trip | SHA-256 |
+| Variant | Buyer | File | Rows | Model calls | Wall time | Peak GPU | Reload equal | SHA-256 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1 | Anya Blossomwood | `formative_v01.parquet` | 13 | 2 | 147 s | 20.1 GiB | exact | `036088e9e1950a5290e860564893b0e19c23835f51bc605d225890dd69d3d151` |
 | 2 | Brynn Orchardheart | `formative_v02.parquet` | 13 | 2 | 141 s | 20.17 GiB | exact | `5ac0a0ceac0b0fbcb303c79893e30ba76c2f56a525cfc7f9ef2913b0dd134483` |
@@ -181,7 +181,7 @@ Every bank has 13 rows. By tag, in variants 1 and 4: 7 `episode`, 1 `info`, 1 `i
 
 Unit tests (`tests/test_banks.py`):
 
-- a saved bank round-trips;
+- a saved bank reloads to an equal memory;
 - re-adding a duplicate row is ignored, while a row differing only in importance is added;
 - the duplicate check also holds in a fresh process with a different `PYTHONHASHSEED`.
 
@@ -248,7 +248,7 @@ Both change numerics relative to the current reference, so they would have to be
     - `scripts/download_models.py`, `nonet.sh`, `check_phase3_memory.py`, `check_phase2_agents.py`, `generate_banks.py`, `make_registration.py`;
     - `tests/test_banks.py`;
     - `requirements.gpu.lock`.
-11. **REFERENCE.md** was not regenerated in Stage 1. Its code listings predate these fixes.
+11. **REFERENCE.md** is now built by `scripts/build_reference.py` from `docs/reference_R1.md`, verbatim listings of every file in `refimpl/`, `tests/` and `scripts/`, and `docs/reference_R3.md` (the 9B results above).
 
 ## 9. Blocks for Stage 2
 
@@ -256,4 +256,4 @@ Both change numerics relative to the current reference, so they would have to be
 2. **Confirmatory hardware is undecided.** P0.7's exact repeatability holds only on one configuration. If confirmatory runs use an L40S, every scoring and generation there will differ numerically from this A10G at the 0.1–0.3-nat level seen in 4.1. That is fine for the design, which loads published banks, but it means all phases must run on the same registered GPU.
 3. **Phase 3b compute** (27–43 A10G-days; 11–17 L40S-days) is far above the old 2–3-day plan. Consider registering one-pass first-token scoring for 3b tuning.
 4. **P0.2 wording.** The 10⁻³ figure is now a reported reference, not a pass criterion. Confirm this is acceptable before registration.
-5. **REFERENCE.md** must be regenerated so its listings match the committed code, before registration.
+5. **REFERENCE.md** must be rebuilt (`scripts/build_reference.py`) after any further code change, so its listings match the registered commit.

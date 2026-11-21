@@ -13,7 +13,7 @@ The game is a single buying decision with a stated cost prior and acceptance rul
 - **equivalent**, meaning the effect is within a smallest effect of interest;
 - **inconclusive**.
 
-The protocol, code and analysis scripts are hash-committed before any model is run, including the pilot. A tested reference implementation of the harness, conditions, pipeline and analysis is in the **Reference implementation** tab.
+The protocol, code and analysis scripts are hash-committed before any model is run, including the pilot. A tested reference implementation of the harness, conditions, pipeline and analysis is in the REFERENCE.md.
 
 ## 1. Questions, outcomes and hypotheses
 
@@ -30,7 +30,7 @@ The protocol, code and analysis scripts are hash-committed before any model is r
 - **Hard regret** uses the chosen offer.
 - **Soft regret** uses p(k). In Phase 3 and 3b (primary), p(k) is the model's next-token probability for each option letter at the decision position P1, renormalised over the five letters, with no extra temperature and averaged over five option orders. This is the quantity steering acts on directly.
 - **Sensitivity.** Whole-answer scoring, as in Concordia's choice calls (letter, end-of-turn, newline), is reported for every Phase 3 test. Its end-of-turn terms vary by letter and can dominate the score.
-- **Letter mass.** The unrenormalised probability on the five letters is reported per condition, because a small letter mass means the renormalised p(k) describes only part of the model's output. On a 2B smoke-test prompt the two scorings agreed on the top choice in 3 of 5 orders, and the letter mass was 0.24–0.62 (Reference implementation tab, R3).
+- **Letter mass.** The unrenormalised probability on the five letters is reported per condition, because a small letter mass means the renormalised p(k) describes only part of the model's output. On a 9B smoke-test prompt the two scorings agreed on the top choice in 3 of 5 orders, and the letter mass was 0.46–0.82, mean 0.57 (REFERENCE.md, R3).
 - **Calibration.** For a change in conditions, ask whether the per-cell shift in expected offer tracks each cell's best offer once the cell's starting expected offer is held fixed. This is a partial correlation, so offers that merely regress towards a common price do not count (section 10.5).
 
 **1.3 Confirmatory hypotheses** (one-sided, one Holm family of eleven tests; section 11). "Entry" means each of `taehun_cgcal`, `fluffy_fluffyagent_v16submission` and `hgyun_loss_aversion_agent_v3_plus2`, tested separately. N-codes are the Phase 3 text conditions (section 9.2).
@@ -113,7 +113,7 @@ Each phase removes one confound left by the previous one. A naive comparison of 
 | Expected architecture (check P0.1) | 42 layers, hidden size 3,584, 16 query and 8 key-value heads, head dimension 256, alternating local (4,096-token window) and global attention, soft-caps 50 (attention) and 30 (final), vocabulary 256,000 ([Gemma 2 report](https://arxiv.org/abs/2408.00118)) |
 | Memory embedder | `sentence-transformers/all-mpnet-base-v2` (the v1.8.9 launcher default), `revision="e8c3b32edf5434bc2275fc9bab85f82640a19130"` |
 | Smoke-test model | `google/gemma-2-2b-it`, `revision="299a8560bedf22ed1c72a8a11e7dce4a7f9f51f8"`: same architecture family, used only for CPU tests of the code |
-| Python | 3.11; torch 2.4.1, transformers 4.44.2, accelerate 0.34.2, sentence-transformers 3.0.1, numpy 1.26.4, scipy 1.14.1, pandas 2.0.3 (Concordia requires ≤ 2.0.3), plus Concordia's and its examples' other requirements, frozen in `requirements.lock` (159 packages, shipped with the code). The reference implementation's unit tests and Gemma smoke tests pass on exactly this stack (Reference implementation tab, R3). The lock was resolved with the CPU build of torch 2.4.1 for the CPU tests. The GPU runs install the same lock with `torch==2.4.1` from PyPI (the CUDA 12.1 build) and the `nvidia-*` packages it pulls in, recorded by `pip freeze` at P0.1 |
+| Python | 3.11; torch 2.4.1, transformers 4.44.2, accelerate 0.34.2, sentence-transformers 3.0.1, numpy 1.26.4, scipy 1.14.1, pandas 2.0.3 (Concordia requires ≤ 2.0.3), plus Concordia's and its examples' other requirements, frozen in `requirements.lock` (159 packages, shipped with the code). The lock was resolved with the CPU build of torch 2.4.1 for the CPU tests. The GPU runs install the same lock with `torch==2.4.1` from PyPI (the CUDA 12.1 build), the `nvidia-*` packages it pulls in and `pyarrow==17.0.0` (for the memory banks), frozen as `requirements.gpu.lock` (173 packages). The reference implementation's unit tests and 9B smoke tests pass on exactly this GPU stack (REFERENCE.md, R3) |
 | R (sensitivity models only) | R 4.4.1, lme4 1.1-35, lmerTest 3.1-3 |
 | Sparse autoencoders (exploratory) | [`google/gemma-scope-9b-it-res`](https://huggingface.co/google/gemma-scope-9b-it-res), layers 9, 20 and 31, width 16k |
 | Hardware | Confirmatory runs: one 48 GB GPU of a model named in the registration file (for example an NVIDIA L40S), with CUDA and driver versions recorded there; to be decided at registration. Exact repeatability (check P0.7) is required on that configuration only. The formative-memory banks were generated, and the development checks run, on one NVIDIA A10G (24 GB), recorded in the registration file as the bank-generation and development hardware |
@@ -137,7 +137,7 @@ The contest called Gemma through Together AI with `concordia/language_model/toge
   - Each call is seeded from SHA-256 over the UTF-8 encoding of (prompt, agent, prompt ID, draw index), joined by U+001F; the first 8 bytes are read big-endian. This seeds `random`, the legacy `numpy.random` and torch.
   - Unseeded `numpy.random.default_rng()` calls get a seed from the call context plus a counter that resets at each decision.
   - At the start of every decision, `random`, the legacy `numpy.random` and torch are seeded from the same hash over ("decision-start", agent, prompt ID, draw). `AssociativeMemory.add` samples memories with pandas `DataFrame.sample(random_state=None)`, which uses numpy's global state, before any model call has re-seeded it.
-  - Before every generation, the model's stored generation cache is deleted. transformers 4.44.2 otherwise reuses Gemma 2's cache whenever an earlier call left a large enough one, so attention shapes, and therefore floating-point rounding, would depend on call history. On the pinned stack this flipped a greedy token between two otherwise identical runs (Reference implementation tab, R3).
+  - Before every generation, the model's stored generation cache is deleted. transformers 4.44.2 otherwise reuses Gemma 2's cache whenever an earlier call left a large enough one, so attention shapes, and therefore floating-point rounding, would depend on call history. On the pinned stack this flipped a greedy token between two otherwise identical runs (REFERENCE.md, R3).
   - `torch.use_deterministic_algorithms(True)` and `CUBLAS_WORKSPACE_CONFIG=:4096:8` are set.
 
 Together's handling of the system message and its sampling defaults are unknown; check P0.3 measures the system-message effect.
@@ -171,7 +171,7 @@ Every check must pass, or have its deviation logged, before Phase 1 and Phase 2 
 | P0.7 Determinism | Rerun 40 Phase 2 decisions (8 per agent) and 100 Phase 3 prompts | Offers and reasoning texts byte-identical; scores bit-identical (the scorer always runs sequentially, batch size 1, with fixed shapes) |
 | P0.8 Sequential execution | Log the thread of every model call in 10 decisions | One thread, submission order |
 | P0.9 Steering hook | Add a zero vector through the hook on 50 prompts | Probabilities bit-identical to unhooked scoring |
-| P0.10 Unit tests | `tests/test_core.py`, `tests/test_design.py` and `tests/test_banks.py` (30 tests): prompt counts and extension cells, best-offer table, regret, cell split, seeds, per-call seeding only inside a call context, S entries with stems, removal rules, filler, condition set, N7 donors (34 of 35 cells, 48 of 49 with the extension, disjoint; deterministic), audit prompt, memory-bank round trip and duplicate rejection (hashes recomputed in a fresh process), the no-steering tuner option, sign-flip, Holm, IUT, BH, reverse rule, verdicts, power simulation, A/B/R assembly, K1 including the sharpening null, and K2 (unique-best cells; attractor, flatten and sharpening do not pass; oracle steering does) | All pass |
+| P0.10 Unit tests | `tests/test_core.py`, `tests/test_design.py` and `tests/test_banks.py` (30 tests): prompt counts and extension cells, best-offer table, regret, cell split, seeds, per-call seeding only inside a call context, S entries with stems, removal rules, filler, condition set, N7 donors (34 of 35 cells, 48 of 49 with the extension, disjoint; deterministic), audit prompt, memory-bank save-and-reload equality and duplicate rejection (hashes recomputed in a fresh process), the no-steering tuner option, sign-flip, Holm, IUT, BH, reverse rule, verdicts, power simulation, A/B/R assembly, K1 including the sharpening null, and K2 (unique-best cells; attractor, flatten and sharpening do not pass; oracle steering does) | All pass |
 | P0.11 Runtime and memory | Time and peak memory for 5 prompts × 5 agents (Phase 2) and 50 prompts (Phase 3) | Used for scheduling only |
 
 **Order.**
@@ -236,7 +236,7 @@ Every agent decides after exactly the same memories and the same fully scripted 
 | 5 | Elara Berryvine | Elias Berryfield | 5 | 11 | Kira Citronbloom | Kieran Citronbrook | 1 |
 | 6 | Faye Honeydew | Flynn Honeycomb | 1 | 12 | Lila Figleaf | Lennon Figtree | 2 |
 
-**8.2 Script.** Two rounds, buyer first:
+**8.2 Script.** Two exchanges, buyer first:
 
 1. Buyer: "Good morning! I'm interested in your fruit. What can you tell me about it?"
 2. Seller: "Good morning! It was picked this week and it's ripe and sweet."
@@ -614,7 +614,7 @@ Note: on transformers 4.44.2, `generate` computes float32 logits over the whole 
 - **Implicit advice.** The removal rule can miss advice that is only implied. That would make the N8 comparisons in R easier to pass, not harder, so a passed R may still partly reflect implied advice. The leakage audit (9.2) measures how much remains, and N9 and N10 bound how much naming an answer alone can do.
 - **What S contains.** S includes memory-summary calls as well as deliberation. E7 repeats B and R on S\_reason, the deliberation alone.
 - **Linear, mid-layer steering only.** A null K1 does not rule out other mechanisms.
-- **Numerics.** Exact repeatability holds only on the registered GPU model, driver and lock file. Replications on other hardware or library versions should expect small numerical differences: on the 2B smoke prompt, p(2 coins) was 0.203 on the pinned stack and 0.186 on a newer one. Conclusions should rest on the cell-level tests, not on matching individual probabilities.
+- **Numerics.** Exact repeatability holds only on the registered GPU model, driver and lock file, with the fixed sequential scoring mode. Replications on other hardware or library versions should expect numerical differences of the size seen between batch shapes on one GPU: on the 9B smoke prompt, batched and sequential letter scores differed by up to 0.32 nats with the same argmax (REFERENCE.md, R3). Conclusions should rest on the cell-level tests, not on matching individual probabilities.
 - **Licence.** The agent archive has no licence. Agent files are not redistributed; patches are published as diffs against the archive's SHA-256.
 
 **Release, at registration:**
