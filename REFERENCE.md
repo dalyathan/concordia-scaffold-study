@@ -2249,7 +2249,7 @@ for name, i in pos.items():
 assert tok.decode(pre[pos["P2"]]).endswith("(")
 assert tok.decode(pre[len(pre)-1]) == "\n"
 
-# P0.2 (revised): batched letter scoring versus sequential (one letter per pass).
+# P0.2: batched letter scoring versus sequential (one letter per pass).
 t = time.time()
 scores, p1, _ = lm.letter_scores(user, phase3.LETTERS, sequential=False)
 t_b = time.time() - t
