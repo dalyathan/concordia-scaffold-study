@@ -1,0 +1,243 @@
+"""LocalGemma2: a local stand-in for concordia/language_model/together_ai.py:Gemma2.
+
+Reproduces that class's message lists, prompt trimming and choice scoring with a
+local Transformers model, so internal activations are accessible. The trimming
+function is copied from Concordia v1.8.9 (Apache 2.0) so behaviour matches.
+"""
+from __future__ import annotations
+
+import contextlib
+import contextvars
+import dataclasses
+from typing import Callable, Collection, Sequence
+
+import numpy as np
+import torch
+
+try:  # Concordia is needed only when the class is used inside agents.
+  from concordia.language_model import language_model as _lm
+  _Base = _lm.LanguageModel
+except ImportError:  # pragma: no cover - allows unit tests without Concordia
+  _Base = object
+
+from . import core
+
+TEXT_SYSTEM = (
+    "You always continue sentences provided by the user and you never repeat "
+    "what the user has already said. All responses must end with a period. Try "
+    "not to use lists, but if you must, then always delimit list items using "
+    "either semicolons or single newline characters ('\\n'), never delimit list "
+    "items with double carriage returns ('\\n\\n')."
+)
+CHOICE_SYSTEM = ("You always continue sentences provided by the user and you never "
+                 "repeat what the user already said.")
+FEW_SHOT = [
+    ("Question: Is Jake a turtle?\nAnswer: Jake is ", "not a turtle."),
+    ("Question: What is Priya doing right now?\nAnswer: Priya is currently ",
+     "sleeping."),
+]
+MAX_ALLOWED_TOKENS = 7000
+NUM_INITIAL_TOKENS = 500
+GUESS_CHARS_PER_TOKEN = 4
+DEFAULT_NUM_RESPONSE_TOKENS = 5000
+CONTEXT_LIMIT = 8192
+
+
+def ensure_prompt_not_too_long(prompt: str, num_response_tokens: int,
+                               guess_chars_per_token: int = GUESS_CHARS_PER_TOKEN
+                               ) -> str:
+  """Copied from together_ai._ensure_prompt_not_too_long (v1.8.9)."""
+  num_initial_chars = NUM_INITIAL_TOKENS * guess_chars_per_token
+  max_prompt_tokens = MAX_ALLOWED_TOKENS - num_response_tokens
+  if max_prompt_tokens <= 0:
+    raise ValueError(f"Cannot reserve {num_response_tokens} of "
+                     f"{MAX_ALLOWED_TOKENS} tokens.")
+  max_prompt_chars = max_prompt_tokens * guess_chars_per_token
+  if len(prompt) <= max_prompt_chars:
+    return prompt
+  if max_prompt_chars > num_initial_chars:
+    num_final_chars = max_prompt_chars - num_initial_chars
+    return prompt[:num_initial_chars] + prompt[-num_final_chars:]
+  return prompt[-max_prompt_chars:]
+
+
+def build_messages(system: str, user_prompt: str, assistant: str | None = None
+                   ) -> list[dict]:
+  """Gemma has no system role: the system text is folded into the first user turn."""
+  msgs = []
+  for i, (u, a) in enumerate(FEW_SHOT):
+    msgs.append({"role": "user", "content": (system + "\n\n" + u) if i == 0 else u})
+    msgs.append({"role": "assistant", "content": a})
+  msgs.append({"role": "user", "content": user_prompt})
+  if assistant is not None:
+    msgs.append({"role": "assistant", "content": assistant})
+  return msgs
+
+
+# Call context: set by the harness so seeds and logs know who is calling.
+@dataclasses.dataclass
+class CallContext:
+  agent: str = ""
+  pid: str = ""
+  draw: int = 0
+  temperature_override: float | None = None   # 0.0 in Phases 2-3
+
+
+CONTEXT: contextvars.ContextVar[CallContext] = contextvars.ContextVar(
+    "call_context", default=CallContext())
+
+
+@contextlib.contextmanager
+def call_context(**kw):
+  token = CONTEXT.set(CallContext(**kw))
+  try:
+    yield
+  finally:
+    CONTEXT.reset(token)
+
+
+class _StopOnStrings:
+  def __init__(self, tokenizer, stops: Collection[str], start: int):
+    self.tok, self.stops, self.start = tokenizer, [s for s in stops if s], start
+
+  def __call__(self, input_ids, scores, **kw) -> bool:
+    if not self.stops:
+      return False
+    text = self.tok.decode(input_ids[0, self.start:], skip_special_tokens=True)
+    return any(s in text for s in self.stops)
+
+
+class LocalGemma2(_Base):
+  """Drop-in LanguageModel for Concordia v1.8.9 agents and game masters."""
+
+  def __init__(self, model, tokenizer, *, log: Callable[[dict], None] | None = None):
+    self.max_new_cap: int | None = None
+    self.last_letter_mass: float = float("nan")
+    self.last_first_token: dict[str, float] = {}
+    self.model, self.tok = model, tokenizer
+    self.device = next(model.parameters()).device
+    self.log = log or (lambda rec: None)
+    eot = tokenizer.convert_tokens_to_ids("<end_of_turn>")
+    self.eos_ids = [i for i in {tokenizer.eos_token_id, eot} if isinstance(i, int) and i >= 0]
+
+  # ---------------------------------------------------------------- utils
+  def render(self, msgs: list[dict], add_generation_prompt: bool) -> str:
+    return self.tok.apply_chat_template(msgs, tokenize=False,
+                                        add_generation_prompt=add_generation_prompt)
+
+  def encode(self, text: str) -> torch.Tensor:
+    ids = self.tok(text, add_special_tokens=False, return_tensors="pt").input_ids
+    return ids.to(self.device)
+
+  def _seed(self, prompt: str) -> int:
+    ctx = CONTEXT.get()
+    s = core.call_seed(prompt, ctx.agent, ctx.pid, ctx.draw)
+    import random
+    random.seed(s)
+    np.random.seed(s % (2**32))
+    torch.manual_seed(s)
+    return s
+
+  # ---------------------------------------------------------- sample_text
+  def sample_text(self, prompt: str, *, max_tokens: int = 256,
+                  terminators: Collection[str] = (), temperature: float = 0.5,
+                  timeout: float = 60, seed: int | None = None) -> str:
+    del timeout, seed  # seeds are derived from the call context instead
+    ctx = CONTEXT.get()
+    if ctx.temperature_override is not None:
+      temperature = ctx.temperature_override
+    original = prompt
+    max_new = min(max_tokens, DEFAULT_NUM_RESPONSE_TOKENS)
+    if self.max_new_cap is not None:   # smoke tests on CPU only; None in real runs
+      max_new = min(max_new, self.max_new_cap)
+    prompt = ensure_prompt_not_too_long(original, max_tokens)
+    ids = self.encode(self.render(build_messages(TEXT_SYSTEM, prompt), True))
+    if ids.shape[1] + max_new > CONTEXT_LIMIT:  # mirrors the API-error retry
+      prompt = ensure_prompt_not_too_long(original, max_tokens, guess_chars_per_token=1)
+      ids = self.encode(self.render(build_messages(TEXT_SYSTEM, prompt), True))
+    self._seed(original)
+    gen_kw = dict(max_new_tokens=max_new, eos_token_id=self.eos_ids,
+                  pad_token_id=self.tok.pad_token_id or self.eos_ids[0],
+                  stopping_criteria=[_StopOnStrings(self.tok, terminators, ids.shape[1])])
+    if temperature and temperature > 0:
+      gen_kw.update(do_sample=True, temperature=float(temperature), top_p=1.0, top_k=0)
+    else:
+      gen_kw.update(do_sample=False)
+    # transformers 4.44 keeps Gemma 2's HybridCache on the model (`_cache`) and
+    # reuses it when large enough, so attention shapes - and floating-point
+    # rounding - would depend on earlier calls. Drop it so every call allocates a
+    # cache sized by its own input only (history-independent, P0.7).
+    if hasattr(self.model, "_cache"):
+      del self.model._cache
+    with torch.no_grad():
+      out = self.model.generate(ids, attention_mask=torch.ones_like(ids), **gen_kw)
+    text = self.tok.decode(out[0, ids.shape[1]:], skip_special_tokens=True)
+    cut = [text.find(s) for s in terminators if s and s in text]
+    if cut:
+      text = text[:min(cut)]
+    self.log({"kind": "text", "agent": ctx.agent, "pid": ctx.pid,
+              "prompt": original, "output": text})
+    return text
+
+  # -------------------------------------------------------- choice scoring
+  def letter_scores(self, user_prompt: str, letters: Sequence[str],
+                    hooks: Sequence = ()) -> tuple[dict[str, float], int, torch.Tensor]:
+    """Total log-probability of each letter as the whole assistant answer.
+
+    Returns (scores, p1_index, prefix_ids). All letters are single tokens, so the
+    five sequences have equal length and are scored in one batch. p1_index is the
+    position of the last prefix token (the newline after '<start_of_turn>model').
+    """
+    trimmed = ensure_prompt_not_too_long(user_prompt, max(len(l) for l in letters))
+    prefix = self.render(build_messages(CHOICE_SYSTEM, trimmed), True)
+    prefix_ids = self.encode(prefix)[0]
+    seqs = []
+    for l in letters:
+      full = self.render(build_messages(CHOICE_SYSTEM, trimmed, l), False)
+      ids = self.encode(full)[0]
+      assert torch.equal(ids[:len(prefix_ids)], prefix_ids), "prefix tokenisation drift"
+      seqs.append(ids)
+    n = {len(s) for s in seqs}
+    assert len(n) == 1, "letters must tokenise to equal lengths"
+    batch = torch.stack(seqs)
+    start = len(prefix_ids)
+    handles = [h() for h in hooks]
+    try:
+      with torch.no_grad():
+        # Run the decoder stack (hooks fire here), then unembed only the positions
+        # that predict answer tokens: start-1 .. len-2. This avoids materialising
+        # [batch, seq, 256k] logits and works on transformers 4.44.2 (no
+        # logits_to_keep). The final-logit soft-cap is applied in float32.
+        hidden = self.model.model(input_ids=batch, use_cache=False).last_hidden_state  # after final norm
+        logits = self.model.lm_head(hidden[:, start - 1:-1]).float()
+    finally:
+      for h in handles:
+        h.remove()
+    cap = getattr(self.model.config, "final_logit_softcapping", None)
+    if cap:
+      logits = torch.tanh(logits / cap) * cap
+    logp = torch.log_softmax(logits, dim=-1)
+    # Coherence measure (Protocol 10.4): next-token probability mass on the letters
+    # at P1. Every batch row shares P1, so row b gives the probability of letter b.
+    first = {l: float(logp[b, 0, batch[b, start]]) for b, l in enumerate(letters)}
+    self.last_letter_mass = float(sum(np.exp(v) for v in first.values()))
+    # First-token log-probability of each letter at P1 (Phase 3 primary outcome).
+    self.last_first_token = first
+    scores = {}
+    for b, l in enumerate(letters):
+      tgt = batch[b, start:]
+      lp = logp[b].gather(-1, tgt[:, None]).squeeze(-1)
+      scores[l] = float(lp.sum())
+    return scores, start - 1, prefix_ids
+
+  def sample_choice(self, prompt: str, responses: Sequence[str], *,
+                    seed: int | None = None) -> tuple[int, str, dict[str, float]]:
+    del seed
+    self._seed(prompt)
+    scores, _, _ = self.letter_scores(prompt, list(responses))
+    arr = np.array([scores[r] for r in responses])
+    idx = int(np.argmax(arr))           # ties -> first, as np.argmax
+    ctx = CONTEXT.get()
+    self.log({"kind": "choice", "agent": ctx.agent, "pid": ctx.pid,
+              "prompt": prompt, "scores": scores, "choice": responses[idx]})
+    return idx, responses[idx], dict(scores)
