@@ -1,27 +1,28 @@
-"""End-to-end smoke test of LocalGemma2 + Phase 3 on a small Gemma 2 model (CPU).
+"""End-to-end smoke test of LocalGemma2 + Phase 3 on a Gemma 2 model.
 
-Usage: python -I tests/smoke_gemma.py /path/to/gemma-2-2b-it
-Checks: P0.2-style batch-vs-single scoring parity, P0.9 zero-steer identity,
+Usage: python tests/smoke_gemma.py <2b|9b|model dir> [--device cpu|cuda]
+Checks: P0.2-style batched-vs-sequential scoring parity, P0.9 zero-steer identity,
 position finding, activation capture, steering effect, greedy determinism.
 """
+import argparse
 import os
 import sys
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer
 
-from refimpl import core, phase3
+from refimpl import core, phase3, runtime
 from refimpl.local_gemma2 import (CHOICE_SYSTEM, LocalGemma2, build_messages,
                                   call_context)
 
-path = sys.argv[1]
+ap = argparse.ArgumentParser()
+ap.add_argument("model")
+ap.add_argument("--device", default="cpu", choices=("cpu", "cuda"))
+args = ap.parse_args()
 torch.manual_seed(0)
-tok = AutoTokenizer.from_pretrained(path)
-model = AutoModelForCausalLM.from_pretrained(path, torch_dtype=torch.bfloat16,
-                                             attn_implementation="eager").eval()
-lm = LocalGemma2(model, tok)
+model, tok = runtime.load_gemma(args.model, args.device)
+lm = LocalGemma2(model, tok, sequential=True)
 cfg = model.config
 print("layers", cfg.num_hidden_layers, "hidden", cfg.hidden_size,
       "softcaps", cfg.attn_logit_softcapping, cfg.final_logit_softcapping)
@@ -55,17 +56,31 @@ for name, i in pos.items():
 assert tok.decode(pre[pos["P2"]]).endswith("(")
 assert tok.decode(pre[len(pre)-1]) == "\n"
 
-# P0.2-style: batched letter scoring equals scoring each sequence alone.
-scores, p1, _ = lm.letter_scores(user, phase3.LETTERS)
-deltas, alone_all = {}, {}
-for l in phase3.LETTERS:
-  alone, _, _ = lm.letter_scores(user, [l])
-  alone_all[l] = alone[l]
-  deltas[l] = abs(alone[l] - scores[l])
-print("batch vs single |delta| (nats):", {l: f"{d:.2e}" for l, d in deltas.items()})
-assert max(deltas.values()) < 5e-2
-assert max(scores, key=scores.get) == max(alone_all, key=alone_all.get)
-print("batch vs single ok (same argmax)")
+# P0.2 (revised): batched letter scoring versus sequential (one letter per pass).
+t = time.time()
+scores, p1, _ = lm.letter_scores(user, phase3.LETTERS, sequential=False)
+t_b = time.time() - t
+first_b, mass_b = dict(lm.last_first_token), lm.last_letter_mass
+t = time.time()
+seq, p1s, _ = lm.letter_scores(user, phase3.LETTERS, sequential=True)
+t_s = time.time() - t
+first_s = dict(lm.last_first_token)
+deltas = {l: abs(seq[l] - scores[l]) for l in phase3.LETTERS}
+deltas_first = {l: abs(first_s[l] - first_b[l]) for l in phase3.LETTERS}
+print(f"prompt tokens {p1 + 1}; batched {t_b:.2f}s, sequential {t_s:.2f}s")
+print("batched vs sequential whole-answer |delta| (nats):", {l: f"{d:.2e}" for l, d in deltas.items()})
+print("batched vs sequential first-token |delta| (nats):", {l: f"{d:.2e}" for l, d in deltas_first.items()})
+md = max(max(deltas.values()), max(deltas_first.values()))
+print(f"P0.2 max |delta| = {md:.3e} nats; criterion 1e-3: {'within' if md < 1e-3 else 'EXCEEDED'}; "
+      f"bit-identical: {md == 0.0}")
+same_argmax = max(scores, key=scores.get) == max(seq, key=seq.get)
+same_first = max(first_b, key=first_b.get) == max(first_s, key=first_s.get)
+print("argmax identical (whole-answer, first-token):", same_argmax, same_first)
+# P0.2 is reported, not a gate: on GPU, bf16 kernels differ with batch shape, so
+# the two modes are not bit-identical. Only argmax agreement is asserted here.
+assert p1 == p1s and same_argmax and same_first
+print("batched vs sequential ok (same argmax)")
+scores = seq  # the registered mode from here on
 # Determinism: the same batch twice gives bit-identical scores (P0.7 logic).
 again, _, _ = lm.letter_scores(user, phase3.LETTERS)
 assert again == scores

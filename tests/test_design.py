@@ -40,7 +40,7 @@ def test_qa_filler_exact_length_and_format():
 
 def test_condition_set():
   p = core.Prompt(1, 5, "information", 3)
-  vp = conditions.v_prime(p)
+  vp = conditions.n7_donor(p)
   S = {a: {p.pid: f"Question: q\nAnswer: text of {a}", vp.pid: "other"} for a in conditions.AGENTS}
   off = {a: {p.pid: 3} for a in conditions.AGENTS}
   para = {a: {p.pid: "para"} for a in conditions.AGENTS}
@@ -50,6 +50,38 @@ def test_condition_set():
   para[conditions.ENTRIES[0]][p.pid] = None
   c = conditions.build_conditions(p, S, S, off, para, ["Open."], WordTok())
   assert len(c) == 27                                    # failed paraphrase dropped
+
+
+def test_n7_donor_disjoint_and_deterministic():
+  for values, n_cells, n_disjoint in ((core.VALUES, 35, 34),
+                                      (core.VALUES + core.EXT_VALUES, 49, 48)):
+    ps = core.prompt_set([1], values)
+    assert len({p.cell for p in ps}) == n_cells
+    donors = {p.cell: conditions.n7_donor(p, values) for p in ps}
+    disjoint = {c for c, q in donors.items()
+                if not set(core.oracle_bids(next(p for p in ps if p.cell == c)))
+                & set(core.oracle_bids(q))}
+    assert len(disjoint) == n_disjoint
+    assert {c for c in donors if c not in disjoint} == {(5, "C", 5)}
+    for p in ps:
+      q = donors[p.cell]
+      # Same variant and line; no-information donors only for no-information prompts.
+      assert q.variant == p.variant and q.line == p.line and (q.C is None) == (p.C is None)
+      assert q.cell != p.cell and q.V in values
+      assert conditions.n7_donor(p, values) == q            # deterministic
+      if p.cell != (5, "C", 5):
+        # Nearest disjoint donor, ties to smaller V then smaller C.
+        cands = [r for r in ps if r.line == p.line and r.cell != p.cell
+                 and not set(core.oracle_bids(p)) & set(core.oracle_bids(r))]
+        key = lambda r: (abs(p.V - r.V) + abs((p.C or 0) - (r.C or 0)), r.V, r.C or 0)
+        assert key(q) == min(key(r) for r in cands)
+  # Every-offer-optimal cell: smallest overlap (1), nearest, smaller V -> (V=5, C=4).
+  q = conditions.n7_donor(core.Prompt(3, 5, "information", 5))
+  assert (q.variant, q.V, q.C) == (3, 5, 4)
+  # Spot checks.
+  assert conditions.n7_donor(core.Prompt(1, 2, "neutral", None)).V == 4
+  assert conditions.n7_donor(core.Prompt(1, 6, "pressure", None)).V == 4
+  assert conditions.n7_donor(core.Prompt(1, 5, "information", 3)).cell == (5, "C", 2)
 
 
 def test_audit_prompt():

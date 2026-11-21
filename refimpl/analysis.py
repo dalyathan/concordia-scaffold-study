@@ -359,8 +359,9 @@ def calibration_test(prompts: Sequence[core.Prompt],
     r_a = partial_spearman(a[idx], o[idx], z[idx])[0]
     for k in used:
       diffs[k].append(r_a - partial_spearman(ctrl[k][idx], o[idx], z[idx])[0])
-  p_vs = {k: float(np.mean(np.asarray(v) <= 0)) for k, v in diffs.items()}
-  p_vs_rev = {k: float(np.mean(np.asarray(v) >= 0)) for k, v in diffs.items()}
+  # Bootstrap p-values as (1 + count) / (1 + n), so none is exactly zero.
+  p_vs = {k: float((1 + np.sum(np.asarray(v) <= 0)) / (1 + n_boot)) for k, v in diffs.items()}
+  p_vs_rev = {k: float((1 + np.sum(np.asarray(v) >= 0)) / (1 + n_boot)) for k, v in diffs.items()}
   strongest = max(used, key=ctrl_rho.get)               # equivalence vs strongest control
   lo, hi = np.quantile(diffs[strongest], [0.05, 0.95])
   return {"n_cells": len(cells), "rho_partial": rho, "p_rho": p_rho,

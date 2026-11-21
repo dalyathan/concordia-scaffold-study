@@ -38,7 +38,7 @@ The protocol, code and analysis scripts are hash-committed before any model is r
 | Tests | Phase | Hypothesis | Pass rule |
 | --- | --- | --- | --- |
 | A1–A3 | 2 | The entry, as a full agent, has lower hard regret than `rational_agent` on identical prompts | One cell-level test |
-| B1–B3 | 3 | The entry's reasoning text helps, and helps because it is about this prompt. It gives lower soft regret than each of: no text (N0); the baseline's text (N1); format-matched filler of identical length (N6); and the entry's own text written for the same prompt with V off by one (N7), which is on-topic, has the same style and length, and differs only in the valuation | All four comparisons significant (intersection–union) |
+| B1–B3 | 3 | The entry's reasoning text helps, and helps because it is about this prompt. It gives lower soft regret than each of: no text (N0); the baseline's text (N1); format-matched filler of identical length (N6); and the entry's own text written for a nearby prompt whose best offer differs (N7), which is on-topic and has the same style and similar length | All four comparisons significant (intersection–union) |
 | R1–R3 | 3 | The entry's text helps without its price advice. With advice-bearing sentences removed (N8), it still beats no text (N0) and the baseline's text with the same removal applied (N1s) | Both comparisons significant |
 | K1 | 3b | Adding the entries' pooled text-induced direction to the baseline prompt lowers soft regret on held-out cells. It must do so more than each of: three separately tuned null directions; a sharpening null that only makes the existing distribution more confident; and 1,000 natural random directions tuned and evaluated on exactly the same budget as a matched copy of the content direction (permutation p) | All six components significant; one p-value (the largest) enters Holm |
 | K2 | 3b | That steering is calibrated. On held-out cells with a single best offer, its per-cell offer shifts track each cell's best offer with the cell's starting offer partialled out. They must do so more strongly than five matched controls: a uniform tilt, a pull towards any single fixed price, regression towards the centre, sharpening, and the steered answer-only null | All components significant; one p-value enters Holm |
@@ -116,7 +116,7 @@ Each phase removes one confound left by the previous one. A naive comparison of 
 | Python | 3.11; torch 2.4.1, transformers 4.44.2, accelerate 0.34.2, sentence-transformers 3.0.1, numpy 1.26.4, scipy 1.14.1, pandas 2.0.3 (Concordia requires ≤ 2.0.3), plus Concordia's and its examples' other requirements, frozen in `requirements.lock` (159 packages, shipped with the code). The reference implementation's unit tests and Gemma smoke tests pass on exactly this stack (Reference implementation tab, R3). The lock was resolved with the CPU build of torch 2.4.1 for the CPU tests. The GPU runs install the same lock with `torch==2.4.1` from PyPI (the CUDA 12.1 build) and the `nvidia-*` packages it pulls in, recorded by `pip freeze` at P0.1 |
 | R (sensitivity models only) | R 4.4.1, lme4 1.1-35, lmerTest 3.1-3 |
 | Sparse autoencoders (exploratory) | [`google/gemma-scope-9b-it-res`](https://huggingface.co/google/gemma-scope-9b-it-res), layers 9, 20 and 31, width 16k |
-| Hardware | One 48 GB GPU of a model named in the registration file (for example an NVIDIA L40S), with CUDA and driver versions recorded there. Exact repeatability (check P0.7) is required on that configuration only |
+| Hardware | Confirmatory runs: one 48 GB GPU of a model named in the registration file (for example an NVIDIA L40S), with CUDA and driver versions recorded there; to be decided at registration. Exact repeatability (check P0.7) is required on that configuration only. The formative-memory banks were generated, and the development checks run, on one NVIDIA A10G (24 GB), recorded in the registration file as the bank-generation and development hardware |
 
 ## 4. Model serving
 
@@ -129,9 +129,9 @@ The contest called Gemma through Together AI with `concordia/language_model/toge
   - Each label letter is appended as the whole assistant answer, under the choice system text and the same few-shots.
   - Its score is the summed log-probability of every token after the last `<start_of_turn>model\n`: the letter, `<end_of_turn>` and newline, as Together's echoed log-probabilities were.
   - The choice is the argmax, with ties going to the first option.
-  - Letters are single tokens, so all candidates have equal length. They are scored in one batched pass through the decoder stack.
+  - Letters are single tokens, so all candidates have equal length. They are scored **sequentially**: one candidate per forward pass, batch size 1 (`LocalGemma2.letter_scores`, `sequential=True`). This mode is fixed for every run and every GPU; it never depends on free memory. Batched eager attention over five long prompts does not fit in 24 GB, and a fixed mode keeps shapes, and therefore rounding, identical everywhere.
   - Only the positions that predict answer tokens are unembedded. The final soft-cap (30) and the log-softmax are computed in float32.
-  - In the smoke tests this gives batched and single-sequence scores that are identical to the last bit.
+  - A batched mode (all candidates in one pass) is kept only for check P0.2, which reports the batched-versus-sequential difference on short prompts.
 - **Determinism (Phases 2–3; `refimpl/determinism.py`).**
   - Thread pools are replaced by a sequential executor, which also covers Concordia's `concurrency` helpers.
   - Each call is seeded from SHA-256 over the UTF-8 encoding of (prompt, agent, prompt ID, draw index), joined by U+001F; the first 8 bytes are read big-endian. This seeds `random`, the legacy `numpy.random` and torch.
@@ -162,16 +162,16 @@ Every check must pass, or have its deviation logged, before Phase 1 and Phase 2 
 
 | Check | Procedure | Pass criterion |
 | --- | --- | --- |
-| P0.1 Model config | Compare `config.json` at the pinned revision with section 3; check both shards' SHA-256 against the LFS hashes at that commit | All values and hashes match |
-| P0.2 Choice scoring | On 50 captured choice prompts, compare batched letter scoring with scoring each letter alone | Scores within 10⁻³ nats; argmax identical in all 50 (2B smoke test: identical to the last bit) |
+| P0.1 Model config | Compare `config.json` at the pinned revision with section 3; check all four weight shards' SHA-256 against the LFS hashes at that commit | All values and hashes match |
+| P0.2 Choice scoring | Batched versus sequential scoring on short prompts: on 50 captured short choice prompts, score the five letters in one batch and one per pass (the registered mode) | Reported: maximum absolute difference in nats against 10⁻³, and argmax agreement. Not a gate, because all runs use sequential scoring |
 | P0.3 System folding | On 200 captured choice calls, argmax with the system text folded versus omitted | Report agreement. Below 90%: run Phase 1 both ways and report both, "folded" primary |
 | P0.4 Observation format | Log every string a player receives through `observe()` in 3 native `haggling_0` runs | Expected utterance format `{speaker} -- "{utterance}"`. If different, the captured format is used and logged |
 | P0.5 Seeds | `haggling.py` line 622 reads `self._rng = random.Random(sampled_settings.random_seed)`, and `random_seed` defaults to 42 (line 109). Replace line 622 with `self._rng = random.Random(sampled_settings.random_seed if seed is None else seed)` (the launcher already passes `seed=args.seed + repetition_idx`). Run two seeds | Sampled names, values and costs differ |
 | P0.6 Agent smoke test | All five agents, real formative memories, all-mpnet-base-v2, 9B on the registered GPU: one native `haggling_1` game and one Phase 2 prompt each | No exceptions; each agent's S is non-empty |
-| P0.7 Determinism | Rerun 40 Phase 2 decisions (8 per agent) and 100 Phase 3 prompts | Offers and reasoning texts byte-identical; scores bit-identical (the scorer uses fixed shapes) |
+| P0.7 Determinism | Rerun 40 Phase 2 decisions (8 per agent) and 100 Phase 3 prompts | Offers and reasoning texts byte-identical; scores bit-identical (the scorer always runs sequentially, batch size 1, with fixed shapes) |
 | P0.8 Sequential execution | Log the thread of every model call in 10 decisions | One thread, submission order |
 | P0.9 Steering hook | Add a zero vector through the hook on 50 prompts | Probabilities bit-identical to unhooked scoring |
-| P0.10 Unit tests | `tests/test_core.py` and `tests/test_design.py` (25 tests): prompt counts and extension cells, best-offer table, regret, cell split, seeds, S entries with stems, removal rules, filler, condition set, audit prompt, the no-steering tuner option, sign-flip, Holm, IUT, BH, reverse rule, verdicts, power simulation, A/B/R assembly, K1 including the sharpening null, and K2 (unique-best cells; attractor, flatten and sharpening do not pass; oracle steering does) | All pass |
+| P0.10 Unit tests | `tests/test_core.py`, `tests/test_design.py` and `tests/test_banks.py` (30 tests): prompt counts and extension cells, best-offer table, regret, cell split, seeds, per-call seeding only inside a call context, S entries with stems, removal rules, filler, condition set, N7 donors (34 of 35 cells, 48 of 49 with the extension, disjoint; deterministic), audit prompt, memory-bank round trip and duplicate rejection (hashes recomputed in a fresh process), the no-steering tuner option, sign-flip, Holm, IUT, BH, reverse rule, verdicts, power simulation, A/B/R assembly, K1 including the sharpening null, and K2 (unique-best cells; attractor, flatten and sharpening do not pass; oracle steering does) | All pass |
 | P0.11 Runtime and memory | Time and peak memory for 5 prompts × 5 agents (Phase 2) and 50 prompts (Phase 3) | Used for scheduling only |
 
 **Order.**
@@ -179,6 +179,8 @@ Every check must pass, or have its deviation logged, before Phase 1 and Phase 2 
 1. The 14 formative-memory banks are generated (section 8.3). This produces no outcome.
 2. This document, the code, the analysis scripts, the lock file and the SHA-256 of each memory bank are registered (hash-committed), and the banks are published.
 3. The Phase 0 checks and the pilot then run.
+
+Engineering checks that record no outcome may precede registration: environment and hash checks, unit tests, scoring parity, memory and timing measurements, and agent runs that record only whether they raised an exception, call counts, retrieval flags, prompt lengths, timings and hashes of S (never an offer, a regret, S itself or a calls log). They are reported with the registration.
 
 The pilot's decision rules are fixed here, and the pilot never computes an entry's outcome.
 
@@ -326,31 +328,39 @@ Answer: (
 | N2r–N4r | Each entry's S\_reason (8.4) | E7: reasoning without memory summaries |
 | N5 (×4) | Each agent's S paraphrased | Wording control |
 | N6 (×4) | Filler in the same format as S, with the same token count as each agent's S. Blocks of "Question: What does the market look like?" / "Answer: {opening}" cycle through the five scene openings, joined by blank lines and cut to the exact count (`conditions.qa_filler`) | Length and format control |
-| N7 (×3) | Each entry's S from the prompt with the same variant, seller line and C but V' = V + 1 (V = 6 uses V' = 5) | Specificity: V always off by 1 |
+| N7 (×3) | The entry's own text written for a nearby prompt whose best offer differs: its S from a donor prompt with the same variant and seller line whose set of best offers does not overlap this prompt's (`conditions.n7_donor`; rule below) | Specificity: on-topic text for a prompt with a different answer |
 | N8 (×3) | Each entry's S with advice-bearing sentences removed (rule below) | Text without price advice |
 | N9 (×4) | Only "{buyer} should offer {k} coins." ("coin" when k = 1), with k that agent's own Phase 2 offer | Answer only |
 | N10 | The same line with k the best offer (the smallest if several) | E5: answer-naming upper bound |
+
+**N7 donor rule** (`conditions.n7_donor`). Among the cells of the grid in use (35, or 49 with the extension) with the same seller line whose set of best offers is disjoint from this prompt's, the donor is the cell nearest in (V, C) by Manhattan distance; no-information cells use C = 0 and take only no-information donors. Ties go to the smaller V, then the smaller C. The donor prompt has the same variant. For information cells the donor's stated cost can differ from this prompt's, as well as its V. Cell (V = 5, C = 5) has every offer optimal, so no donor is disjoint: it uses the donor with the smallest overlap under the same rule (V = 5, C = 4), and it is the only exception (34 of 35 cells, 48 of 49 with the extension, have a disjoint donor; unit-tested).
 
 That is 28 × 5 orders × 420 = **58,800** scored prompts. Token counts use the pinned tokenizer without special tokens.
 
 **Paraphrases.** Each paraphrase is a `sample_text` call through `LocalGemma2` with `max_tokens` 3,000 and the prompt "Rewrite the following notes in different words. Keep every fact and number exactly.", a blank line, then the text. The first attempt is greedy. If the sorted list of digit strings (`core.numeral_multiset`) differs from the original's, up to three retries are sampled at temperature 0.7 with draw indices 1–3. If all fail, that prompt is dropped from wording contrasts only, and drop-outs are reported per agent.
 
-**Advice removal** (`conditions.remove_recommendations_strict`). The text is split at sentence ends and newlines. A sentence is removed if it mentions a price or an option label **and** any of the following:
+**Advice removal** (`conditions.remove_recommendations_strict`). The text is split at sentence ends (after `.`, `!` or `?` followed by whitespace) and at newlines. A sentence is removed if it mentions a price or an option label **and** any of the following:
 
 - a decision verb;
 - an evaluative or payoff word;
+- an option label;
 - a number attached to the price (as in "3 coins: 2" or "3 coins → 1.2");
 - two or more different prices.
 
-This catches per-option profit estimates (the top entry's main output) as well as explicit recommendations. Single-price statements of fact, such as the resale value, a stated cost or the average price, survive.
+A sentence mentions a price if it contains a coin amount ("3 coins", "three coins"), a bare number 1–5 after a decision verb, "price" or a preposition ("offer 2", "a price of 3", "for 4"; not when followed by "kg", "kilogram", "%" or "per"), or a currency mark ("$2"). Prices are compared as digits, so "three coins" and "3 coins" are the same price. This catches per-option profit estimates (the top entry's main output) as well as explicit recommendations. Single-price statements of fact, such as the resale value, a stated cost or the average price, survive. The patterns, exactly as in `conditions.py` and `core.py` (all case-insensitive):
 
 ```text
-price:          \b[1-5]\s*coins?\b  OR  \b(?:one|two|three|four|five)\s+coins?\b
-option label:   \(\s*[a-e]\s*\)  OR  \boption\s+[a-e1-5]\b
-decision verb:  \b(?:offer|offers|propose|proposes|bid|bids|pay|pays|choose|chooses|go with|settle on|counter)\b
-evaluative:     \b(?:profit|profits|gain|gains|payoff|payoffs|expected|earn|earns|earning|surplus|return|returns|optimal|best|better|worse|worth|maximi[sz]e|maximi[sz]es|recommend|recommended|should|ideal)\b
-attached:       \b[1-5]\s*coins?\b[^.\n]*?(?:[:=]|->|→)\s*-?\d
+sentence split:  (?<=[.!?])\s+|\n+
+coin amount:     \b([1-5])\s*coins?\b|\b(one|two|three|four|five)\s+coins?\b
+bare number:     \b(?:offer|offers|offering|propose|proposes|proposing|bid|bids|bidding|pay|pays|paying|price|prices|priced|at|for)\s+(?:of\s+|is\s+|around\s+|about\s+)?([1-5])\b(?!\s*(?:kg|kilogram|%|per))
+currency mark:   [$€£¢]\s?([1-5])\b
+option label:    \(\s*[a-e]\s*\)|\boption\s+[a-e1-5]\b
+decision verb:   \b(?:offer|offers|propose|proposes|bid|bids|pay|pays|choose|chooses|go with|settle on|counter)\b
+evaluative:      \b(?:profit|profits|gain|gains|payoff|payoffs|expected|earn|earns|earning|surplus|return|returns|optimal|best|better|worse|worth|maximi[sz]e|maximi[sz]es|recommend|recommended|should|ideal|fair|reasonable|good|acceptable|sensible|appropriate|aim|aims|target|targets|go for|start|starting|open|opening)\b
+attached number: \b[1-5]\s*coins?\b[^.\n]*?(?:[:=]|->|→)\s*-?\d
 ```
+
+Kept sentences are stripped and joined with single spaces.
 
 **Leakage audit** (reported with R; not a test). For every N8 and N1s text, the model is asked under the choice scoring of section 4: "Based only on these notes, which price do they favour?", with options (a)–(e) for the five prices and (f) "The notes do not favour any price". The audit reports two rates: how often the answer is a price, and how often it equals the agent's own Phase 2 offer.
 
@@ -361,7 +371,7 @@ The 10-point margin is fixed now. It is about two standard errors of a differenc
 
 **9.3 Tests.** All differences are oriented so that positive favours the entry's own text (N2, N3 or N4, written Ne), and are tested at cell level (section 11):
 
-- **B\_e:** soft regret under N0, under N1, under the entry's N6 and under the entry's N7, each minus soft regret under Ne. Four tests; the largest p-value is used (intersection–union).
+- **B\_e:** soft regret under N0, under N1, under the entry's N6 and under the entry's N7 (the entry's own text written for a nearby prompt whose best offer differs), each minus soft regret under Ne. Four tests; the largest p-value is used (intersection–union).
 - **R\_e:** N0 minus the entry's N8, and N1s minus the entry's N8. The larger p-value is used. Both texts in the second comparison have had the same removal applied, so N8 cannot win merely because the baseline's text contains bad advice.
 
 A line naming the entry's own offer (N9) is not part of R. Requiring the text to beat its own answer would penalise entries whose answers are good. N9 and N10 are reported descriptively (E5).
@@ -379,7 +389,7 @@ A line naming the entry's own offer (N9) is not part of R. Requiring the text to
 - **E7:** B and R with N2r–N4r in place of N2–N4.
 - **E8:** heterogeneity across entries.
 
-**9.6 Activations.** Forward hooks on each decoder layer's output, i = 0…41: the residual stream after the block and before the final norm, which is Gemma Scope's site. Captured in the batched scoring pass from batch item 0, stored in float16, with computation in bfloat16.
+**9.6 Activations.** Forward hooks on each decoder layer's output, i = 0…41: the residual stream after the block and before the final norm, which is Gemma Scope's site. Hooks are registered for every one of the five sequential scoring passes, so activations are captured in each pass (and steering applied in each, 10.3). All capture positions are at or before P1, which is the same position in every pass and causally unaffected by the appended letter, so every pass captures the same values; the last pass's are stored. Stored in float16, with computation in bfloat16.
 
 | Position | Definition | Stored |
 | --- | --- | --- |
@@ -415,7 +425,7 @@ Development uses all 12 variants of its cells (204 prompts); test uses all 12 va
 
 Every null is rescaled to the content direction's Euclidean norm at the same layer. α then multiplies the rescaled vector.
 
-**10.3 Intervention** (`phase3.steering_hook`). α · direction is added to layer L's output at P1 and every later position (letter, `<end_of_turn>`, newline), in the same batched full-sequence scoring as unsteered runs. Earlier positions are untouched, and causal attention means they are unaffected anyway. Check P0.9 confirms that a zero vector gives bit-identical probabilities.
+**10.3 Intervention** (`phase3.steering_hook`). α · direction is added to layer L's output at P1 and every later position (letter, `<end_of_turn>`, newline), in each of the five sequential full-sequence scoring passes, exactly as unsteered runs are scored; the hook sees the same P1 in every pass. Earlier positions are untouched, and causal attention means they are unaffected anyway. Check P0.9 confirms that a zero vector gives bit-identical probabilities.
 
 **10.4 Tuning** (development only):
 
@@ -466,7 +476,7 @@ K2's components are:
 
 K2's p-value is the largest of these. Its reverse p-value is the Bonferroni minimum over the opposite-direction components (section 11). Unit tests confirm that steering which only pulls towards a fixed price, only flattens, or only sharpens does not pass, and that steering towards each prompt's own optimum does. K2 is also computed for every random direction and its distribution is reported; this is secondary.
 
-**Power caveat.** K1 rests on 18 test cells, which detect about 0.83 SD at the strictest Holm level, and K2 on 12. The extension, if triggered, raises these to 25 and 17. An "inconclusive" steering result is a real possibility, and the verdicts are designed to report it as such.
+**Power caveat.** K1 rests on 18 test cells, which detect about 0.81 SD at the strictest Holm level, and K2 on 12. The extension, if triggered, raises these to 25 and 17. An "inconclusive" steering result is a real possibility, and the verdicts are designed to report it as such.
 
 **10.6 Secondary and exploratory:**
 
@@ -553,20 +563,22 @@ If the primary test and the mixed model disagree at α = 0.05, the result is rep
 
 - Weights: about 9.2 billion parameters × 2 bytes ≈ 18.5 GB.
 - KV cache: 42 layers × 2 × 8 heads × 256 × 2 bytes ≈ 344 KB per token, about 2.4 GB at 7,000 tokens.
-- Phase 3 scores five equal-length sequences of up to about 4,500 tokens in one batch, with eager attention.
+- Phase 3 scores five equal-length sequences of up to about 4,500 tokens, one per forward pass (batch size 1), with eager attention. Batching the five does not fit in 24 GB.
 
-A 48 GB GPU is therefore specified; P0.11 records peak memory.
+A 48 GB GPU is specified for the confirmatory runs; sequential scoring also fits a 24 GB A10G (peak memory measured in Stage 1 and recorded with the registration). P0.11 records peak memory on the registered GPU.
 
 **Storage.** P1 and P2 are stored averaged over the 5 orders, and P3 and P4 once, all in float16: 4 positions × 42 layers × 3,584 × 2 bytes ≈ 1.2 MB per prompt and condition. 420 × 28 × 1.2 MB ≈ **14 GB** (about 16 GB with the V = 7, 8 extension).
 
-**Runtime** (planning figures, replaced by P0.11):
+**Runtime** (planning figures from the Stage 1 measurements on one A10G, replaced by P0.11 on the registered GPU). Measured on the A10G: one sequential scoring pass takes 0.38 s at 800 tokens, 2.32 s at 3,600 and 3.19 s at 4,500 (steered or not); a Phase 2 decision with a blank memory took 10 s (`taehun_cgcal`) to 169 s (`fluffy`). L40S figures are scaled by published bandwidth and bf16 throughput ratios (about 1.4× for generation, 2–3× for scoring), not measured.
 
-| Phase | Workload | Estimate |
-| --- | --- | --- |
-| 1 | 200 native simulations | 3–6 GPU-days |
-| 2 | 2,100 greedy decisions plus 2,750 sampled ones (E1), 5–25 model calls each | 2.5–5 GPU-days |
-| 3 | 58,800 batched scoring passes plus 1,680 paraphrases and the leakage audit | 10–18 GPU-hours |
-| 3b | Tuning: 4 named directions × 36 settings × 204 prompts × 5 orders (147k passes), plus the matched content copy and 1,000 random directions × 36 × 17 (613k). Test: 4 named × 216 × 5 orders, plus 1,001 × 216 × 1 order (221k). About 1M passes at roughly 0.15 s each | 2–3 GPU-days |
+| Phase | Workload | A10G (24 GB) | L40S (48 GB) |
+| --- | --- | --- | --- |
+| 1 | 200 native simulations | 4–9 GPU-days, if long prompts fit (see note) | 3–6 GPU-days |
+| 2 | 2,100 greedy decisions plus 2,750 sampled ones (E1), 5–25 model calls each | 6–9 GPU-days, if long prompts fit (see note) | 4–6 GPU-days |
+| 3 | 58,800 scorings (5 sequential passes each) plus 1,680 paraphrases, the native replay and the leakage audit | 4–6 GPU-days | 2–3 GPU-days |
+| 3b | Tuning: 4 named directions × 36 settings × 204 prompts × 5 orders (147k scorings), plus the matched content copy and 1,000 random directions × 36 × 17 (613k). Test: 4 named × 216 × 5 orders, plus 1,001 × 216 × 1 order (221k). About 1M scorings of N1 prompts (about 1,000–1,500 tokens), five passes each | 27–43 GPU-days | 11–17 GPU-days |
+
+Note: on transformers 4.44.2, `generate` computes float32 logits over the whole prompt during prefill (about 1 GB per 1,000 prompt tokens, plus bfloat16 copies). On the A10G this runs out of memory from about 2,400 prompt tokens (`hgyun_loss_aversion_agent_v3_plus2` in Stage 1). Phases 1–2 therefore need the 48 GB GPU, or a registered change to prefill unembedding, before they can run on a 24 GB GPU.
 
 **Order** (`refimpl/pipeline.py` runs steps 5–8 for Phases 2–3b):
 

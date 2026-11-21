@@ -1,19 +1,21 @@
 """Phase 2 harness smoke test: Concordia v1.8.9's rational_agent (byte-identical to
 the contest zip's copy) makes one scripted decision through LocalGemma2.
 
-Usage: PYTHONPATH=<concordia v1.8.9>:<ref> python tests/smoke_phase2.py <gemma dir>
+Usage: PYTHONPATH=<concordia v1.8.9>:<ref> python tests/smoke_phase2.py <2b|9b|gemma dir>
+       [--device cpu|cuda]
 A hash-based stand-in embedder is used here; real runs use all-mpnet-base-v2.
+Prints no offer, regret or S text: only call counts, retrieval flags, whether S is
+non-empty and SHA-256 values for the determinism check.
 """
+import argparse
 import hashlib
 import sys
 import time
 
 import numpy as np
-import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer
 
 from examples.modular.environment.modules import fruitville_haggling as fv
-from refimpl import core, phase2
+from refimpl import core, phase2, runtime
 
 # Environment shim for this CPU box only (Python 3.13 + pandas>2.0.3, whereas
 # Concordia v1.8.9 pins pandas<=2.0.3 on Python 3.11): newer pandas leaves the
@@ -37,11 +39,12 @@ def embedder(text: str) -> np.ndarray:            # deterministic stand-in
   return v / np.linalg.norm(v)
 
 
-path = sys.argv[1]
-tok = AutoTokenizer.from_pretrained(path)
-model = AutoModelForCausalLM.from_pretrained(path, torch_dtype=torch.bfloat16,
-                                             attn_implementation="eager").eval()
-lm = LocalGemma2(model, tok)
+ap = argparse.ArgumentParser()
+ap.add_argument("model")
+ap.add_argument("--device", default="cpu", choices=("cpu", "cuda"))
+args = ap.parse_args()
+model, tok = runtime.load_gemma(args.model, args.device)
+lm = LocalGemma2(model, tok, sequential=True)
 
 # CPU smoke test: formative-memory generation (upstream Concordia, ~5,000-token
 # backstory) is skipped; the agent starts from a blank memory bank with the
@@ -60,31 +63,24 @@ mem = blank_memories.MemoryFactory(
 for extra in cfg.extras["player_specific_memories"]:
   mem.add(extra, tags=["initial_player_specific_memory"])
 
-p = core.Prompt(1, 5, "information", 3)
+p = core.Prompt(13, 5, "information", 3)          # pilot variant: never confirmatory
+sha = lambda x: hashlib.sha256(str(x).encode()).hexdigest()
 t = time.time()
 res = phase2.run_decision(lm, embedder, "concordia.factory.agent.rational_agent", p,
                           mem, cfg, list(fv.VISUAL_SCENE_OPENINGS))
-print(f"decision in {time.time()-t:.0f}s: offer={res['k']} hard_regret={res['hard_regret']}")
+print(f"decision in {time.time()-t:.0f}s")
 print("model calls during episode:", len(res["calls"]))
 print("rule memories seen in act() prompts:", res["rule_memories_in_prompts"])
-print("S (first 600 chars):\n", res["S"][:600])
+print("S non-empty:", bool(res["S"]), " sha256(S):", sha(res["S"])[:16])
 assert res["k"] in core.PRICES and res["S"]
-# Determinism: rerun gives the same offer and the same S.
+# Determinism: rerun gives the same offer and the same S (compared by hash only).
 res2 = phase2.run_decision(lm, embedder, "concordia.factory.agent.rational_agent", p,
                            mem, cfg, list(fv.VISUAL_SCENE_OPENINGS))
-if not (res2["k"] == res["k"] and res2["S"] == res["S"]):
-  import difflib
-  print("offers:", res["k"], res2["k"])
+same = sha((res["k"], res["S"])) == sha((res2["k"], res2["S"]))
+if not same:
   for i, (c1, c2) in enumerate(zip(res["calls"], res2["calls"])):
-    if c1 != c2:
-      print("first differing call:", i, c1["kind"])
-      for key in ("prompt", "output", "scores"):
-        if c1.get(key) != c2.get(key):
-          a, b = str(c1.get(key)), str(c2.get(key))
-          j = next((n for n in range(min(len(a), len(b))) if a[n] != b[n]), min(len(a), len(b)))
-          print(" key", key, "differs at char", j)
-          print("  run1:", repr(a[max(0, j-150):j+150]))
-          print("  run2:", repr(b[max(0, j-150):j+150]))
+    if sha(c1) != sha(c2):
+      print("first differing call index:", i, c1["kind"])
       break
-assert res2["k"] == res["k"] and res2["S"] == res["S"], "not deterministic"
+assert same, "not deterministic"
 print("PHASE 2 SMOKE TEST PASSED (deterministic rerun identical)")

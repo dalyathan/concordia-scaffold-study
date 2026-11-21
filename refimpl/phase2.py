@@ -33,10 +33,7 @@ DECISION_SPEC = entity_lib.choice_action_spec(
 
 def formative_memory(lm: LocalGemma2, embedder, variant: int):
   """Generated once per variant (greedy) and stored; reused for every agent."""
-  name = core.FEMALE_NAMES[variant - 1]
-  random.seed(1000 + variant)                 # get_trait() uses the global RNG
-  cfg = haggling.configure_player(name, "female", fv.YEAR, True,
-                                  random.Random(1000 + variant))
+  cfg = player_config(variant)                # seeds the global RNG first (get_trait)
   clock = game_clock.MultiIntervalClock(start=START,
                                         step_sizes=[haggling.MAJOR_TIME_STEP,
                                                     haggling.MINOR_TIME_STEP])
@@ -112,3 +109,85 @@ def run_decision(lm: LocalGemma2, embedder, agent_module: str, p: core.Prompt,
           "hard_regret": core.hard_regret(p, k), "S": S, "S_reason": S_reason,
           "calls": calls,
           "rule_memories_in_prompts": rule_seen}
+
+
+# ------------------------------------------------------- formative-memory banks
+BANK_COLUMNS = ("text", "time", "tags", "importance", "embedding")
+
+
+def player_config(variant: int):
+  """The player config exactly as formative_memory() derives it (global random
+  seeded first, because get_trait() uses it)."""
+  name = core.FEMALE_NAMES[variant - 1]
+  random.seed(1000 + variant)
+  return haggling.configure_player(name, "female", fv.YEAR, True,
+                                   random.Random(1000 + variant))
+
+
+def save_bank(mem, path: str) -> str:
+  """Writes mem's rows (text, time, tags, importance, embedding) as parquet and
+  returns the file's SHA-256."""
+  import hashlib
+  import pyarrow as pa
+  import pyarrow.parquet as pq
+  df = mem.get_data_frame()
+  schema = pa.schema([("text", pa.string()), ("time", pa.timestamp("ns")),
+                      ("tags", pa.list_(pa.string())), ("importance", pa.float64()),
+                      ("embedding", pa.list_(pa.float32()))])
+  table = pa.table({
+      "text": [str(t) for t in df["text"]],
+      "time": [pd_timestamp(t) for t in df["time"]],
+      "tags": [list(t) for t in df["tags"]],
+      "importance": [float(x) for x in df["importance"]],
+      "embedding": [np.asarray(e, dtype=np.float32) for e in df["embedding"]]},
+      schema=schema)
+  pq.write_table(table, path)
+  with open(path, "rb") as f:
+    return hashlib.sha256(f.read()).hexdigest()
+
+
+def pd_timestamp(t):
+  import pandas as pd
+  return pd.Timestamp(t)
+
+
+def bank_hash(text: str, time, tags, importance) -> int:
+  """AssociativeMemory.add's de-duplication hash. Python string hashes change
+  between processes, so this is always recomputed at load, never stored."""
+  return hash((text, time, tuple(tags), importance))
+
+
+def load_bank(path: str, lm, embedder, variant: int):
+  """Rebuilds (memory, cfg) as formative_memory() returned them, from a saved bank.
+
+  Rows are re-added in their saved order through AssociativeMemory.add, with the
+  stored embedding (the embedder is not re-run) and the stored time, tags (as a
+  tuple) and importance, so the frame has the same columns, dtypes and order as
+  the original. _stored_hashes is recomputed in this process."""
+  import pyarrow.parquet as pq
+  table = pq.read_table(path)
+  assert tuple(table.column_names) == BANK_COLUMNS, table.column_names
+  rows = table.to_pylist()
+  stored = {}
+  for r in rows:
+    e = np.asarray(r["embedding"], dtype=np.float32)
+    prev = stored.setdefault(r["text"], e)
+    assert np.array_equal(prev, e), "one text with two embeddings"
+  clock = game_clock.MultiIntervalClock(start=START,
+                                        step_sizes=[haggling.MAJOR_TIME_STEP,
+                                                    haggling.MINOR_TIME_STEP])
+  mem = blank_memories.MemoryFactory(
+      model=lm, embedder=lambda t: stored[t].copy(),
+      importance=importance_function.ConstantImportanceModel().importance,
+      clock_now=clock.now).make_blank_memory()
+  for r in rows:
+    t = r["time"]
+    t = t.to_pydatetime() if hasattr(t, "to_pydatetime") else t
+    mem.add(r["text"], timestamp=t, tags=tuple(r["tags"]), importance=float(r["importance"]))
+  assert len(mem.get_data_frame()) == len(rows), "duplicate rows in bank"
+  expected = {bank_hash(r["text"], (r["time"].to_pydatetime() if hasattr(r["time"], "to_pydatetime")
+                                    else r["time"]), r["tags"], float(r["importance"]))
+              for r in rows}
+  mem._stored_hashes = expected
+  mem._embedder = embedder          # real embedder for anything added later
+  return mem, player_config(variant)

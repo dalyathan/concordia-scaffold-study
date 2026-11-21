@@ -100,3 +100,24 @@ def test_wilcoxon_direction():
   assert analysis.wilcoxon_greater([-0.1] * 35) > 0.99
 
 
+
+
+def test_seed_only_inside_call_context():
+  import random
+  from refimpl.local_gemma2 import LocalGemma2, call_context, context_is_set
+  lm = object.__new__(LocalGemma2)                    # _seed needs no model
+  assert not context_is_set()
+  random.seed(123); expected = random.random()
+  random.seed(123)
+  assert lm._seed("prompt") is None                    # Phase 1: launcher seed untouched
+  assert random.random() == expected
+  with call_context(agent="a", pid="p"):
+    assert context_is_set()
+    s = lm._seed("prompt")
+    assert s == core.call_seed("prompt", "a", "p", 0)
+    x = random.random()
+    lm._seed("prompt")
+    assert random.random() == x                        # Phases 2-3: per-call seed
+  with call_context():                                 # an empty context still counts as set
+    assert context_is_set()
+  assert not context_is_set()

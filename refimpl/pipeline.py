@@ -88,12 +88,15 @@ def run_paraphrases(lm: LocalGemma2, S: Mapping[str, Mapping[str, str]], out: st
 
 # ------------------------------------------------------------------ Phase 3
 def run_phase3(lm: LocalGemma2, prompts: Sequence[core.Prompt], S, S_reason, offers,
-               para, openings: Sequence[str], out: str, only: Sequence[str] | None = None):
+               para, openings: Sequence[str], out: str, only: Sequence[str] | None = None,
+               values: Sequence[int] = core.VALUES):
   """Scores every condition (or only those in `only`, e.g. the pilot's N0/N1) in
-  the five cyclic orders and stores activations."""
+  the five cyclic orders and stores activations. values: the V grid in use
+  (core.VALUES + core.EXT_VALUES with the extension); it fixes the N7 donors."""
   orders = core.cyclic_orders()
   for p in prompts:
-    conds = conditions.build_conditions(p, S, S_reason, offers, para, openings, lm.tok)
+    conds = conditions.build_conditions(p, S, S_reason, offers, para, openings, lm.tok,
+                                        values)
     if only is not None:
       conds = {k: v for k, v in conds.items() if k in only}
     opening = openings[p.opening_index]
@@ -145,10 +148,12 @@ def run_native_replay(lm: LocalGemma2, out: str):
             "first_token": lm.last_first_token})
 
 
-def run_leakage_audit(lm: LocalGemma2, prompts, S, S_reason, offers, para, openings, out: str):
+def run_leakage_audit(lm: LocalGemma2, prompts, S, S_reason, offers, para, openings, out: str,
+                      values: Sequence[int] = core.VALUES):
   """Score the audit question for every N8 and N1s text (Protocol 9.2)."""
   for p in prompts:
-    conds = conditions.build_conditions(p, S, S_reason, offers, para, openings, lm.tok)
+    conds = conditions.build_conditions(p, S, S_reason, offers, para, openings, lm.tok,
+                                        values)
     for code, text in conds.items():
       if not (code.startswith("N8:") or code == "N1s") or not text:
         continue

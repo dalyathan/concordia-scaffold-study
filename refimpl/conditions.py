@@ -99,8 +99,32 @@ def paraphrase(sample_text: Callable[..., str], call_context, text: str, agent: 
 
 
 # ----------------------------------------------------------------- builder
-def v_prime(p: core.Prompt) -> core.Prompt:
-  return core.Prompt(p.variant, p.V + 1 if p.V < 6 else 5, p.line, p.C)
+def _donor_key(p: core.Prompt, q: core.Prompt) -> tuple:
+  """Manhattan distance in (V, C), then smaller V, then smaller C. No-information
+  prompts use C = 0."""
+  c_p, c_q = p.C or 0, q.C or 0
+  return (abs(p.V - q.V) + abs(c_p - c_q), q.V, c_q)
+
+
+def n7_donor(p: core.Prompt, values: Sequence[int] = core.VALUES) -> core.Prompt:
+  """N7 donor: the prompt with the same variant and seller line whose set of best
+  offers does not overlap p's, nearest in (V, C) (_donor_key). No-information
+  prompts take only no-information donors with the same line. Where no donor is
+  disjoint (only cell V = 5, C = 5, where every offer is best), the donor with the
+  smallest overlap is used, under the same distance and tie rule."""
+  if p.C is None:
+    cands = [core.Prompt(p.variant, V, p.line, None) for V in values]
+  else:
+    cands = [core.Prompt(p.variant, V, p.line, C) for V in values for C in core.COSTS]
+  cands = [q for q in cands if q.cell != p.cell]
+  best = set(core.oracle_bids(p))
+  overlap = {q: len(best & set(core.oracle_bids(q))) for q in cands}
+  return min(cands, key=lambda q: (overlap[q], *_donor_key(p, q)))
+
+
+def has_disjoint_donor(p: core.Prompt, values: Sequence[int] = core.VALUES) -> bool:
+  q = n7_donor(p, values)
+  return not set(core.oracle_bids(p)) & set(core.oracle_bids(q))
 
 
 def oracle_offer(p: core.Prompt) -> int:
@@ -111,10 +135,13 @@ def build_conditions(p: core.Prompt, S: Mapping[str, Mapping[str, str]],
                      S_reason: Mapping[str, Mapping[str, str]],
                      offers: Mapping[str, Mapping[str, int]],
                      paraphrases: Mapping[str, Mapping[str, str | None]],
-                     openings: Sequence[str], tokenizer) -> dict[str, str | None]:
+                     openings: Sequence[str], tokenizer,
+                     values: Sequence[int] = core.VALUES) -> dict[str, str | None]:
   """All 28 conditions for prompt p. Dicts are keyed [agent][pid]. Returns
-  code -> inserted text (None = no Notes block). Texts are capped (core.cap_tokens)."""
-  pid, vp = p.pid, v_prime(p).pid
+  code -> inserted text (None = no Notes block). Texts are capped (core.cap_tokens).
+  values: the V grid in use (core.VALUES, or VALUES + EXT_VALUES with the
+  extension); it fixes the N7 donor set."""
+  pid, vp = p.pid, n7_donor(p, values).pid
   out: dict[str, str | None] = {"N0": None}
   out["N1"] = S[BASELINE][pid]
   out["N1s"] = remove_recommendations_strict(S[BASELINE][pid])

@@ -83,8 +83,15 @@ class CallContext:
   temperature_override: float | None = None   # 0.0 in Phases 2-3
 
 
+# The default is a sentinel: "no call context set" (Phase 1, native runs). Only
+# calls made inside call_context(...) (Phases 2-3) get per-call seeds.
+NO_CONTEXT = CallContext()
 CONTEXT: contextvars.ContextVar[CallContext] = contextvars.ContextVar(
-    "call_context", default=CallContext())
+    "call_context", default=NO_CONTEXT)
+
+
+def context_is_set() -> bool:
+  return CONTEXT.get() is not NO_CONTEXT
 
 
 @contextlib.contextmanager
@@ -110,7 +117,13 @@ class _StopOnStrings:
 class LocalGemma2(_Base):
   """Drop-in LanguageModel for Concordia v1.8.9 agents and game masters."""
 
-  def __init__(self, model, tokenizer, *, log: Callable[[dict], None] | None = None):
+  def __init__(self, model, tokenizer, *, log: Callable[[dict], None] | None = None,
+               sequential: bool = True):
+    # Choice scoring mode, fixed for the whole run (Protocol section 4). True: the
+    # letter sequences are always scored one at a time (batch size 1), on every
+    # GPU and whatever the free memory. False (batched) is kept only for the P0.2
+    # comparison on short prompts.
+    self.sequential = sequential
     self.max_new_cap: int | None = None
     self.last_letter_mass: float = float("nan")
     self.last_first_token: dict[str, float] = {}
@@ -129,7 +142,12 @@ class LocalGemma2(_Base):
     ids = self.tok(text, add_special_tokens=False, return_tensors="pt").input_ids
     return ids.to(self.device)
 
-  def _seed(self, prompt: str) -> int:
+  def _seed(self, prompt: str) -> int | None:
+    """Per-call seeding, applied only when a call context is set (Phases 2-3).
+    Without one (Phase 1) nothing is re-seeded, so sampling follows the
+    launcher's seed."""
+    if not context_is_set():
+      return None
     ctx = CONTEXT.get()
     s = core.call_seed(prompt, ctx.agent, ctx.pid, ctx.draw)
     import random
@@ -181,13 +199,22 @@ class LocalGemma2(_Base):
 
   # -------------------------------------------------------- choice scoring
   def letter_scores(self, user_prompt: str, letters: Sequence[str],
-                    hooks: Sequence = ()) -> tuple[dict[str, float], int, torch.Tensor]:
+                    hooks: Sequence = (), sequential: bool | None = None
+                    ) -> tuple[dict[str, float], int, torch.Tensor]:
     """Total log-probability of each letter as the whole assistant answer.
 
-    Returns (scores, p1_index, prefix_ids). All letters are single tokens, so the
-    five sequences have equal length and are scored in one batch. p1_index is the
-    position of the last prefix token (the newline after '<start_of_turn>model').
+    Returns (scores, p1_index, prefix_ids). p1_index is the position of the last
+    prefix token (the newline after '<start_of_turn>model').
+
+    All letters are single tokens, so the candidate sequences have equal length.
+    sequential=True (the default, self.sequential) scores them one per forward
+    pass, always with batch size 1; it never depends on free memory. Hooks are
+    registered for every pass, so activations are captured and steering applied
+    in each pass; P1 is the same position in each. sequential=False scores all
+    candidates in one batch (P0.2 comparison only).
     """
+    if sequential is None:
+      sequential = self.sequential
     trimmed = ensure_prompt_not_too_long(user_prompt, max(len(l) for l in letters))
     prefix = self.render(build_messages(CHOICE_SYSTEM, trimmed), True)
     prefix_ids = self.encode(prefix)[0]
@@ -201,31 +228,38 @@ class LocalGemma2(_Base):
     assert len(n) == 1, "letters must tokenise to equal lengths"
     batch = torch.stack(seqs)
     start = len(prefix_ids)
+    groups = [batch[b:b + 1] for b in range(len(seqs))] if sequential else [batch]
+    cap = getattr(self.model.config, "final_logit_softcapping", None)
+    logps = []
     handles = [h() for h in hooks]
     try:
       with torch.no_grad():
-        # Run the decoder stack (hooks fire here), then unembed only the positions
-        # that predict answer tokens: start-1 .. len-2. This avoids materialising
-        # [batch, seq, 256k] logits and works on transformers 4.44.2 (no
-        # logits_to_keep). The final-logit soft-cap is applied in float32.
-        hidden = self.model.model(input_ids=batch, use_cache=False).last_hidden_state  # after final norm
-        logits = self.model.lm_head(hidden[:, start - 1:-1]).float()
+        for g in groups:
+          # Run the decoder stack (hooks fire here), then unembed only the
+          # positions that predict answer tokens: start-1 .. len-2. This avoids
+          # materialising [batch, seq, 256k] logits and works on transformers
+          # 4.44.2 (no logits_to_keep). The final-logit soft-cap is applied in
+          # float32.
+          hidden = self.model.model(input_ids=g, use_cache=False).last_hidden_state  # after final norm
+          logits = self.model.lm_head(hidden[:, start - 1:-1]).float()
+          del hidden
+          if cap:
+            logits = torch.tanh(logits / cap) * cap
+          logps.append(torch.log_softmax(logits, dim=-1))
+          del logits
     finally:
       for h in handles:
         h.remove()
-    cap = getattr(self.model.config, "final_logit_softcapping", None)
-    if cap:
-      logits = torch.tanh(logits / cap) * cap
-    logp = torch.log_softmax(logits, dim=-1)
+    logp = torch.cat(logps, 0)
     # Coherence measure (Protocol 10.4): next-token probability mass on the letters
-    # at P1. Every batch row shares P1, so row b gives the probability of letter b.
+    # at P1. Every row shares P1, so row b gives the probability of letter b.
     first = {l: float(logp[b, 0, batch[b, start]]) for b, l in enumerate(letters)}
     self.last_letter_mass = float(sum(np.exp(v) for v in first.values()))
     # First-token log-probability of each letter at P1 (Phase 3 primary outcome).
     self.last_first_token = first
     scores = {}
     for b, l in enumerate(letters):
-      tgt = batch[b, start:]
+      tgt = batch[b, start:].to(logp.device)
       lp = logp[b].gather(-1, tgt[:, None]).squeeze(-1)
       scores[l] = float(lp.sum())
     return scores, start - 1, prefix_ids
