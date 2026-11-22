@@ -708,3 +708,30 @@ Under the table: the three best methods, the three that failed, and slow runs (o
 **Kept current:** `tune_job.py` and `lora.py` call `ledger.py` when they finish. The running tune job loaded its code before that change, so a CPU-only waiter (tmux session `ledgerwait`, `logs/demo_ledger_after_tune.log`) rebuilds the ledger when the `tune` session ends.
 
 **Test:** `tests/test_ledger.py` checks that the ledger runs on the current files and that every row has a source that exists. **53 tests pass.**
+
+## Rung 5: LoRA — queued (starts when the tuning job ends)
+
+**Script:** `demo/lora.py`. **Training data:** build cases only. **Early stopping:** on tuning cases. Test cases and variants 1–14 are never used.
+
+- **Loss (letter-only):** at P1, the full-vocabulary log-probabilities of the five option letters only, against a target distribution over the letters.
+- **Arms:**
+  - **answer_only:** the target is uniform over the letters of the case's best offers.
+  - **template:** context distillation. The target is the model's own first-token letter distribution with the template reasoning paragraph (`pairs_template.paragraph(case, smallest best offer)`) as Notes, computed before training. The adapter learns to reproduce, on the plain prompt, what the model does when it reads the reasoning. This is the logged reading of "template reasoning" as a LoRA arm.
+  - **shuffled:** the answer_only targets with the best-offer sets permuted across build cases (PCG64 seed 0), a label-noise control.
+- **Settings:** rank 4, α 8, dropout 0, on q/k/v/o projections, float32 adapter weights, AdamW lr 1e-4, one optimizer step per case (its five orders), seed 0, gradient checkpointing, at most 8 epochs.
+- **Early stopping:** on the tuning cases' mean cell soft regret after each epoch, patience 2. Epoch 0 (adapter B = 0) equals plain.
+- **Saved:** the best adapter in `demo_out/adapters/<arm>/` (PEFT `save_pretrained`) and results in `demo_out/lora_<arm>.json`. Each run rebuilds the ledger when it finishes.
+- **Live loading:** `scoring.load_adapters` loads all saved arms into the running model; `floor.py` `adapter on|off|<arm>` shows plain beside the adapter.
+
+**Dependency:** `peft==0.12.0` was installed into `.venv`. It was the only new package (no upgrades), and it is compatible with transformers 4.44.2 and torch 2.4.1. It is not in `requirements.gpu.lock`, which belongs to the registered study.
+
+**Smoke test:** a CPU smoke test on 2B was stopped after 19 minutes still in its first stage, because bf16 matrix multiplies on this CPU are impractically slow. It was replaced by a 2B GPU smoke test at the start of the chain.
+
+**Chain:** `demo/run_lora_chain.sh`, tmux session `lora`. It waits for the `tune` session to end, runs the 2B GPU smoke test (2 cases, 1 epoch; the arms run only if it succeeds), then the 9B arms answer_only, template and shuffled in turn.
+
+Check commands:
+
+```bash
+tail -3 logs/demo_lora_chain.log logs/demo_lora_smoke_gpu.log
+grep -h "epoch\|COMPLETED" logs/demo_lora_answer_only.log logs/demo_lora_template.log logs/demo_lora_shuffled.log
+```
