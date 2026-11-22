@@ -11,8 +11,13 @@ import numpy as np
 ap = argparse.ArgumentParser()
 ap.add_argument("--cases", default="demo_out/cases.jsonl")
 ap.add_argument("--out", default="demo_out/failure_map.md")
+ap.add_argument("--splits", default=None, help="demo/splits.json: one map per split")
+ap.add_argument("--split", default=None, help="only this split (build, tuning, test)")
 args = ap.parse_args()
 cases = [json.loads(l) for l in open(args.cases)]
+if args.split:
+  sp = json.load(open(args.splits or "demo/splits.json"))["case_split"]
+  cases = [c for c in cases if sp[c["pid"]] == args.split]
 
 def kind(c):
   if c["C"] is None:
@@ -38,7 +43,8 @@ def table(title, key, order=None):
                 f"| {hi} | {lo} | {bias:+.2f} |")
   return "\n".join(rows) + "\n"
 
-out = ["# Demo failure map (plain Gemma, no Notes, 140 demo cases)", "",
+out = [f"# Demo failure map (plain Gemma, no Notes, {len(cases)} demo cases"
+       + (f", split: {args.split})" if args.split else ")"), "",
        "Hard regret is that of the top offer (argmax of p(k) averaged over the five option orders); "
        "soft regret uses the averaged p(k). Too much / too little: top offer above every best offer / "
        "below every best offer. Regret is in coins.", ""]

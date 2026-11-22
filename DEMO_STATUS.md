@@ -187,3 +187,30 @@ The full tables, including V × seller line, are in `demo_out/failure_map.md`.
   - `scripts/dry_run_pipeline.py` has not been run.
   - `REFERENCE.md` on `stage1-wip` was not rebuilt after the last code changes (`scripts/build_reference.py`).
   - Generation on 24 GB still runs out of memory for prompts of about 4,100 tokens or more, which matters for native Phase 1 games. Phase 2 prompts seen so far reach 2,947 tokens and fit.
+
+---
+
+# Demo plan, part 2 (2026-11-22)
+
+Rules followed throughout:
+
+- No name variant 1–14 is used; `agent_py_files` is never imported; PROTOCOL.md is not edited.
+- First-token probabilities are averaged over the five option orders.
+- Interventions run on tuning cases only; test cases get plain scoring only.
+
+## Step 1: split by cell — done
+
+- **Rule** (`demo/common.py::case_split`, written by `demo/make_splits.py` to `demo/splits.json`):
+  - development cells (`core.steering_cell_split == "dev"`, 17): variants 15–16 are **build** (34 cases), 17–18 are **tuning** (34);
+  - test cells (18): all four variants are **test** (72).
+  - The saved results were reused; nothing was rescored.
+- **Live case: `v15-V3-information-C1`** (V = 3, stated cost 1; the first test case in `demo.demo_prompts()` order with a stated cost below resale and non-zero plain hard regret).
+- **Failure map per split** (`scripts/demo_failure_map.py --split <name>` → `demo_out/failure_map_{build,tuning,test}.md`):
+
+| Split | Cases | Mean hard regret | Mean soft regret | Non-zero hard regret | Too much | Too little |
+| --- | --- | --- | --- | --- | --- | --- |
+| build | 34 | 0.729 | 0.699 | 56% | 10 | 9 |
+| tuning | 34 | 0.694 | 0.714 | 62% | 15 | 6 |
+| test | 72 | 0.536 | 0.534 | 51% | 27 | 10 |
+
+In the test split, stated cost below resale is non-zero in 24 of 24 cases (mean hard regret 1.417), no cost in 50%, and cost at or above resale in 4%.
