@@ -244,8 +244,26 @@ The GPU job is `demo/step2_run.py` (`logs/demo_step2.log`); the analysis is `dem
 
 **Cost dial** (`demo/dial_cost.json`): six build cases, only the stated cost changed to 1, 2, 3, 4 and none; "none" uses the neutral seller line (a logged choice).
 
-- The first run used six cases of which two pairs became identical prompts once the cost was overridden (same variant and V). A rerun with six distinct prompts is queued (`logs/demo_step2_dial.log`); the results below are from the first run, de-duplicated.
-- Gemma offers **2 coins almost whatever the stated cost**: cost 1 → 2 (overpay); cost 3 → 2 (refused); cost 4 → 2 (refused when V > 4). When the stated cost is 2, it offers *more* (3–4).
+- The first run's case list had two pairs that became identical prompts once the cost was overridden (same variant and V). It was rerun with six distinct prompts: distinct (variant, V), V + C odd so all are development cells (`demo/step2_run.py --only-dial`, `logs/demo_step2_dial.log`).
+
+Each cell shows the top offer (E = expected offer; best = best offer(s)):
+
+| Case | cost 1 | cost 2 | cost 3 | cost 4 | none |
+| --- | --- | --- | --- | --- | --- |
+| v15-V3-information-C2 | 2 (E 2.01; best 1) | 1 (E 2.35; best 2) | 2 (E 2.00; best 1,2,3) | 2 (E 2.01; best 1,2,3) | 2 (E 1.90; best 1,2) |
+| v15-V4-information-C1 | 2 (E 2.06; best 1) | 3 (E 2.98; best 2) | 2 (E 2.01; best 3) | 2 (E 2.36; best 1,2,3,4) | 2 (E 2.25; best 2) |
+| v15-V5-information-C2 | 2 (E 2.07; best 1) | 4 (E 3.48; best 2) | 2 (E 2.53; best 3) | 2 (E 2.37; best 4) | 2 (E 2.51; best 2,3) |
+| v15-V6-information-C1 | 2 (E 2.15; best 1) | 4 (E 3.38; best 2) | 2 (E 2.56; best 3) | 2 (E 2.32; best 4) | 2 (E 2.64; best 3) |
+| v16-V4-information-C3 | 2 (E 2.02; best 1) | 3 (E 2.92; best 2) | 2 (E 2.01; best 3) | 2 (E 2.31; best 1,2,3,4) | 2 (E 2.25; best 2) |
+| v16-V6-information-C3 | 2 (E 2.05; best 1) | 4 (E 3.46; best 2) | 2 (E 2.77; best 3) | 2 (E 2.20; best 4) | 2 (E 2.92; best 3) |
+
+Gemma offers **2 coins at every stated cost except 2**:
+
+- cost 1: it overpays;
+- cost 3 or 4 with V above the cost: it offers below the cost, so the seller refuses;
+- **stated cost 2: it bids above the cost** (3–4 coins, 1 in the V = 3 case).
+
+The dial makes the slope-0.12 finding concrete: the stated cost barely moves the offer, except that a stated 2 pushes it up, away from 2.
 
 **Reworded scaffold** (`scoring.reworded_user_turn`: every sentence reworded, same facts, same options; plain, all 140 cases):
 
@@ -468,3 +486,44 @@ python demo/steercheck.py --results demo_out/tune_results.json                  
 3. find the prompt ceiling with neutral and wrong-rule controls (`demo/step4_run.py && demo/step4_report.py`);
 4. test the vector with steercheck (`demo/direction.py && demo/tune_job.py && demo/steercheck.py --results …`);
 5. state the verdict with six explicit criteria (`demo/floor.py --serve`).
+
+## Step 10: tests and report — done
+
+**Unit tests.** `tests/test_demo_tools.py` (10 tests) and `tests/test_demo.py` (3) cover:
+
+- the split: counts, the cell rule, no cell shared with test, and the saved splits and live case;
+- the pair balance checks, including that they detect a skewed set;
+- the method paragraph check;
+- the offline baselines (tilt, attractor, flatten, best shift);
+- steercheck on the toy problem (the vector beats plain with a cell-bootstrap interval above 0, its negation does not help, the table fits 80 columns);
+- floor.py's command parser (registered ids refused), its screens with a fake engine (≤ 25 lines, ≤ 80 visible columns), the log (replayable, no colour codes) and colour on regret only.
+
+**All tests:** `PYTHONPATH=concordia:. python -m pytest -q tests/` → **51 passed** (registered-study tests included).
+
+## Status of part 2
+
+| Step | Status |
+| --- | --- |
+| 1 split, live case `v15-V3-information-C1`, per-split maps | done |
+| 2 is the failure real | done: cost slope 0.12; price 75% / position 15% of choice variance; free text agrees 54%; dial; reworded |
+| 3 floor.py | done: 9B and 2B checked; every live command under 5 s, except one taken while a dial ran (see below) |
+| 4 text rows | done: method 0.303 vs plain 0.714 soft regret; neutral, wrong rule, disposition and acceptance rule ≈ plain |
+| 5 pairs and directions | done: checks pass; template vector 0.3–2.7% of residual norm, cosine 0.05–0.19 |
+| 6 offline baselines | done: always-2 0.529, best shift 0.669 (beta −0.85), flatten no help |
+| 7 tuning job | **running** (started 04:23, about 3.7 hours; check commands in step 7) |
+| 8 teacher packet | done (no API call) |
+| 9 steercheck and README_DEMO.md | done |
+| 10 tests and report | done |
+
+**Open items:**
+
+- **The step 7 results.** When the job finishes, `demo_out/tune_results.json` and its table (`python demo/steercheck.py --results demo_out/tune_results.json`) give, on tuning cases (in-sample):
+  - each vector's tuned setting, regret and reduction with cell-bootstrap intervals;
+  - the negated template;
+  - the matched template's rank among the 25 reference directions;
+  - the best constant shift;
+  - the partial Spearman correlations.
+
+  They are not in this report.
+- **One live command over 5 seconds.** In the confirming 9B floor rerun, `text wrong_rule` took 5.54 s: it waited for the model lock while a background `dial` scored a five-order case. The dial thread now takes the lock one order at a time (about 0.3 s), so a live command waits at most one pass. This fix is unit-tested but has not been re-timed on 9B, because the GPU is busy with the tuning job.
+- **No intervention has touched a test case.** Only plain scoring and the plain-model analyses (step 2) used test cases.
