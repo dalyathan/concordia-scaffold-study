@@ -18,10 +18,10 @@ Skip G1 for jobs under 1 hour that use an already-reviewed method. Run at most t
    - the files needed to judge it: the relevant DEMO_STATUS.md sections, RESULTS_LEDGER.md, the relevant code, and small result summaries.
 
    Put nothing else in: no earlier reviews, no review log, no chat, no git log, no names of people, and nothing that says this is a round, an iteration or a revision. Before sending, search the packet for "round", "iteration", "reviewer said", "previous review", "revision" and remove them.
-2. **Run the reviewers.** Spawn `gate-reviewer-sonnet` and `gate-reviewer-fable` as new subagents, in parallel, and never resume an earlier one. Give each only: "Read /tmp/gate_<...>/REVIEW_BRIEF.md and follow it."
-   - If those agent types are not available in this session, spawn general-purpose subagents with model sonnet and model fable instead. Paste the instructions from `.claude/agents/gate-reviewer-*.md` as their prompt, plus the packet path.
-   - If the Fable reviewer cannot start at all, run a second fresh Sonnet reviewer instead and log that.
-3. **Save the reviews** to `reviews/<date>_<gate>_<topic>_{sonnet,fable}.md`. They never go into a later packet.
+2. **Run the reviewers.** Who reviews depends on the gate: **G1 uses Sonnet alone**, unless the step will use more than 3 GPU hours, then Sonnet and Opus; **G2 and G3 always use Sonnet and Opus**. Spawn `gate-reviewer-sonnet` (and `gate-reviewer-opus` where required) as new subagents, in parallel, and never resume an earlier one. The Fable reviewer is no longer used. Give each only: "Read /tmp/gate_<...>/REVIEW_BRIEF.md and follow it."
+   - If those agent types are not available in this session, spawn general-purpose subagents with model sonnet (and model opus where required) instead. Paste the instructions from `.claude/agents/gate-reviewer-*.md` as their prompt, plus the packet path.
+   - If the Opus reviewer cannot start at all, run a second fresh Sonnet reviewer instead and log that.
+3. **Save the reviews** to `reviews/<date>_<gate>_<topic>_{sonnet,opus}.md`. They never go into a later packet.
 4. **Act by rule**, and log every point as applied, deferred or rejected, with the reason:
    - Both reviewers say no-go: do not run it. Fix and re-gate once. If it is still no-go, log it and move to the next task.
    - A problem raised by both, or marked most severe by either, whose fix takes under 30 minutes of work or under 1 GPU hour: fix it before proceeding.

@@ -986,3 +986,7 @@ ls demo_out/lora/                                   # one JSON per finished run
 python demo/lora_report.py                          # tables, pass rule and strict criteria (CPU)
 python demo/ledger.py                               # RESULTS_LEDGER.md
 ```
+
+## Review pair changed (owner's instruction)
+
+`gate-reviewer-opus` added (same instructions as the Fable reviewer). From now: G1 Sonnet alone (Sonnet + Opus if the step uses more than 3 GPU hours); G2 and G3 always Sonnet + Opus; Fable is no longer used. `REVIEW_GATES.md` and `CLAUDE.md` updated. Earlier reviews by Fable stay in `reviews/` unchanged.
