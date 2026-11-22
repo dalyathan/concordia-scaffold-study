@@ -127,6 +127,8 @@ class LocalGemma2(_Base):
     self.max_new_cap: int | None = None
     self.last_letter_mass: float = float("nan")
     self.last_first_token: dict[str, float] = {}
+    self.last_first_token_wholepass: dict[str, float] = {}
+    self.last_top_nonletter: list[tuple[str, float]] = []
     self.model, self.tok = model, tokenizer
     self.device = next(model.parameters()).device
     self.log = log or (lambda rec: None)
@@ -155,6 +157,26 @@ class LocalGemma2(_Base):
     np.random.seed(s % (2**32))
     torch.manual_seed(s)
     return s
+
+  @contextlib.contextmanager
+  def _last_position_unembedding(self):
+    """During generate(), unembed only the last position.
+
+    transformers 4.44.2's Gemma2ForCausalLM.forward unembeds every prompt position
+    in the prefill step and copies the logits to float32 (about 1.5-2 GB per 1,000
+    prompt tokens), although generation uses only the last position. A forward
+    pre-hook on lm_head slices its input to the last position, so prefill memory
+    no longer grows with the vocabulary. Decoding steps already have one position
+    and are unchanged. Active only inside sample_text; letter_scores unembeds its
+    own positions and never runs under this hook."""
+    def pre(module, args):
+      h = args[0]
+      return (h[:, -1:, :],) if h.dim() == 3 and h.shape[1] > 1 else None
+    handle = self.model.lm_head.register_forward_pre_hook(pre)
+    try:
+      yield
+    finally:
+      handle.remove()
 
   # ---------------------------------------------------------- sample_text
   def sample_text(self, prompt: str, *, max_tokens: int = 256,
@@ -187,7 +209,7 @@ class LocalGemma2(_Base):
     # cache sized by its own input only (history-independent, P0.7).
     if hasattr(self.model, "_cache"):
       del self.model._cache
-    with torch.no_grad():
+    with torch.no_grad(), self._last_position_unembedding():
       out = self.model.generate(ids, attention_mask=torch.ones_like(ids), **gen_kw)
     text = self.tok.decode(out[0, ids.shape[1]:], skip_special_tokens=True)
     cut = [text.find(s) for s in terminators if s and s in text]
@@ -199,19 +221,28 @@ class LocalGemma2(_Base):
 
   # -------------------------------------------------------- choice scoring
   def letter_scores(self, user_prompt: str, letters: Sequence[str],
-                    hooks: Sequence = (), sequential: bool | None = None
-                    ) -> tuple[dict[str, float], int, torch.Tensor]:
-    """Total log-probability of each letter as the whole assistant answer.
+                    hooks: Sequence = (), sequential: bool | None = None,
+                    whole_answer: bool = True
+                    ) -> tuple[dict[str, float] | None, int, torch.Tensor]:
+    """First-token and whole-answer letter scores.
 
     Returns (scores, p1_index, prefix_ids). p1_index is the position of the last
     prefix token (the newline after '<start_of_turn>model').
 
-    All letters are single tokens, so the candidate sequences have equal length.
-    sequential=True (the default, self.sequential) scores them one per forward
-    pass, always with batch size 1; it never depends on free memory. Hooks are
-    registered for every pass, so activations are captured and steering applied
-    in each pass; P1 is the same position in each. sequential=False scores all
-    candidates in one batch (P0.2 comparison only).
+    P1 pass. The prefix alone is run once; its last position gives the next-token
+    distribution at P1, from which last_first_token (each letter's first-token
+    log-probability, the Phase 3 primary) and last_letter_mass are read. Hooks see
+    this pass, so activations at P1-P4 are captured and steering at P1 applied here.
+
+    Whole-answer passes (whole_answer=True). Each letter is appended as the whole
+    assistant answer (letter, <end_of_turn>, newline) and scored by the summed
+    log-probability of those tokens, Concordia's choice rule. All letters are
+    single tokens, so the sequences have equal length. sequential=True (the
+    default, self.sequential) scores them one per pass, batch size 1, always;
+    sequential=False scores them in one batch (P0.2 comparison only). Hooks are
+    registered for these passes too, so steering applies from P1 onwards in each.
+    With whole_answer=False only the P1 pass runs and scores is None (Phase 3b
+    tuning, which uses only the first-token distribution and the letter mass).
     """
     if sequential is None:
       sequential = self.sequential
@@ -228,35 +259,51 @@ class LocalGemma2(_Base):
     assert len(n) == 1, "letters must tokenise to equal lengths"
     batch = torch.stack(seqs)
     start = len(prefix_ids)
-    groups = [batch[b:b + 1] for b in range(len(seqs))] if sequential else [batch]
     cap = getattr(self.model.config, "final_logit_softcapping", None)
+
+    def unembed(hidden_slice):
+      # Only the needed positions are unembedded (no [seq, 256k] logits; works on
+      # transformers 4.44.2). Soft-cap and log-softmax in float32.
+      logits = self.model.lm_head(hidden_slice).float()
+      if cap:
+        logits = torch.tanh(logits / cap) * cap
+      return torch.log_softmax(logits, dim=-1)
+
+    groups = []
+    if whole_answer:
+      groups = [batch[b:b + 1] for b in range(len(seqs))] if sequential else [batch]
     logps = []
     handles = [h() for h in hooks]
     try:
       with torch.no_grad():
+        hidden = self.model.model(input_ids=prefix_ids[None], use_cache=False).last_hidden_state
+        logp1 = unembed(hidden[:, -1:])[0, 0]                         # P1 distribution
+        del hidden
         for g in groups:
-          # Run the decoder stack (hooks fire here), then unembed only the
-          # positions that predict answer tokens: start-1 .. len-2. This avoids
-          # materialising [batch, seq, 256k] logits and works on transformers
-          # 4.44.2 (no logits_to_keep). The final-logit soft-cap is applied in
-          # float32.
-          hidden = self.model.model(input_ids=g, use_cache=False).last_hidden_state  # after final norm
-          logits = self.model.lm_head(hidden[:, start - 1:-1]).float()
+          hidden = self.model.model(input_ids=g, use_cache=False).last_hidden_state
+          logps.append(unembed(hidden[:, start - 1:-1]))
           del hidden
-          if cap:
-            logits = torch.tanh(logits / cap) * cap
-          logps.append(torch.log_softmax(logits, dim=-1))
-          del logits
     finally:
       for h in handles:
         h.remove()
-    logp = torch.cat(logps, 0)
-    # Coherence measure (Protocol 10.4): next-token probability mass on the letters
-    # at P1. Every row shares P1, so row b gives the probability of letter b.
-    first = {l: float(logp[b, 0, batch[b, start]]) for b, l in enumerate(letters)}
+    letter_ids = [int(batch[b, start]) for b in range(len(letters))]
+    first = {l: float(logp1[i]) for l, i in zip(letters, letter_ids)}
+    # Coherence measure (Protocol 10.4): next-token probability mass on the letters.
     self.last_letter_mass = float(sum(np.exp(v) for v in first.values()))
-    # First-token log-probability of each letter at P1 (Phase 3 primary outcome).
-    self.last_first_token = first
+    self.last_first_token = first           # Phase 3 primary outcome
+    # Where the rest of the P1 mass goes: the five most probable non-letter tokens.
+    top = torch.topk(logp1, len(letters) + 5)
+    self.last_top_nonletter = [(self.tok.decode([int(i)]), float(np.exp(float(v))))
+                               for v, i in zip(top.values, top.indices)
+                               if int(i) not in letter_ids][:5]
+    if not whole_answer:
+      self.last_first_token_wholepass = {}
+      return None, start - 1, prefix_ids
+    logp = torch.cat(logps, 0)
+    # Diagnostic only: P1 read from the whole-answer passes (same quantity,
+    # different tensor shapes, so it can differ in the last bits; see P0.2).
+    self.last_first_token_wholepass = {l: float(logp[b, 0, letter_ids[b]])
+                                       for b, l in enumerate(letters)}
     scores = {}
     for b, l in enumerate(letters):
       tgt = batch[b, start:].to(logp.device)

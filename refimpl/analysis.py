@@ -39,6 +39,31 @@ def cell_diffs(a: Mapping[str, float], b: Mapping[str, float],
   return [m[c] for c in sorted(m, key=str)]
 
 
+def projected_cell_sd(d: Mapping[str, float], prompts: Sequence[core.Prompt],
+                      n_variants: int = 12) -> dict:
+  """SD of cell means of a per-prompt difference d, projected from the variants
+  observed (the pilot has 2 per cell) to n_variants per cell.
+
+  Var(cell mean of m variants) = between-cell variance + within-cell variance / m.
+  The within-cell variance is the mean over cells of the sample variance of d
+  across that cell's variants; the between-cell variance is the variance of the
+  observed cell means minus within / m_observed (floored at 0). The projection is
+  sqrt(between + within / n_variants)."""
+  by = collections.defaultdict(list)
+  for p in prompts:
+    if p.pid in d:
+      by[p.cell].append(d[p.pid])
+  cells = sorted(by, key=str)
+  m_obs = float(np.mean([len(by[c]) for c in cells]))
+  means = np.array([np.mean(by[c]) for c in cells])
+  within = float(np.mean([np.var(by[c], ddof=1) for c in cells if len(by[c]) > 1]))
+  observed = float(np.var(means, ddof=1))
+  between = max(observed - within / m_obs, 0.0)
+  return {"n_cells": len(cells), "variants_observed": m_obs, "sd_observed": observed ** 0.5,
+          "within_var": within, "between_var": between,
+          "sd_projected": (between + within / n_variants) ** 0.5}
+
+
 def signflip_greater(x: Sequence[float], n_mc: int = 100_000, seed: int = SEED) -> float:
   """One-sided sign-flip permutation p-value for mean(x) > 0.
 
@@ -60,6 +85,23 @@ def signflip_greater(x: Sequence[float], n_mc: int = 100_000, seed: int = SEED) 
 
 def signflip_less(x: Sequence[float], **kw) -> float:
   return signflip_greater([-v for v in x], **kw)
+
+
+def bootstrap_t_greater(x: Sequence[float], n: int = 10_000, seed: int = SEED) -> float:
+  """Skew-robust sensitivity for a mean > 0: cell bootstrap-t. The studentised
+  mean t = mean / (sd / sqrt(k)) is compared with the bootstrap distribution of
+  (mean* - mean) / (sd* / sqrt(k)); p = (1 + count(t* >= t)) / (1 + n)."""
+  x = np.asarray(x, dtype=float)
+  k = len(x)
+  sd = x.std(ddof=1)
+  if sd == 0:
+    return 0.0 if x.mean() > 0 else 1.0
+  t = x.mean() / (sd / np.sqrt(k))
+  rng = np.random.default_rng(seed)
+  b = rng.choice(x, size=(n, k), replace=True)
+  sb = b.std(axis=1, ddof=1)
+  tb = np.where(sb > 0, (b.mean(axis=1) - x.mean()) / np.where(sb > 0, sb, 1) * np.sqrt(k), 0.0)
+  return float((1 + np.sum(tb >= t)) / (1 + n))
 
 
 def wilcoxon_greater(x: Sequence[float]) -> float:
@@ -110,6 +152,18 @@ def bootstrap_ci(x: Sequence[float], level: float = 0.95, n: int = 10_000,
   means = rng.choice(x, size=(n, len(x)), replace=True).mean(axis=1)
   lo, hi = np.quantile(means, [(1 - level) / 2, 1 - (1 - level) / 2])
   return float(lo), float(hi)
+
+
+def bootstrap_equivalence_p(x: Sequence[float], bound: float, n: int = 10_000,
+                            seed: int = SEED) -> float:
+  """Two one-sided tests (TOST) of |mean| < bound by a cell bootstrap: the larger
+  of P*(mean* <= -bound) and P*(mean* >= bound), each (1 + count) / (1 + n). At
+  alpha = 0.05 this is equivalent to the 90% percentile interval lying inside
+  +-bound; as a p-value it can enter a multiplicity correction."""
+  rng = np.random.default_rng(seed)
+  x = np.asarray(x, dtype=float)
+  means = rng.choice(x, size=(n, len(x)), replace=True).mean(axis=1)
+  return float(max((1 + np.sum(means <= -bound)) / (1 + n), (1 + np.sum(means >= bound)) / (1 + n)))
 
 
 def verdict(passed: bool, passed_reverse: bool, interval: tuple[float, float] | None,
@@ -177,20 +231,45 @@ def abr_tests(prompts: Sequence[core.Prompt], soft: Mapping[tuple, float],
   return out
 
 
+CONFIRMATORY_TESTS = ("A1", "A2", "A3", "B1", "B2", "B3", "R1", "R2", "R3", "K1")
+
+
+def confirmatory_family(extension: bool) -> tuple[str, ...]:
+  """The Holm family (Protocol 1.3). K2 is confirmatory only when the V = 7, 8
+  extension is in force (19 unique-best test cells); with 12 cells even steering to
+  every cell's best offer cannot pass its control comparisons at the Holm level,
+  so K2 then moves to the secondary (BH) family."""
+  return CONFIRMATORY_TESTS + (("K2",) if extension else ())
+
+
 def confirmatory_verdicts(tests: Mapping[str, dict]) -> dict[str, str]:
-  """tests: name -> {'p', 'p_reverse', 'effect_cells' or 'interval', 'sesoi'?}.
-  Holm at 0.05 for the confirmatory direction, separate Holm at 0.01 for the reverse."""
+  """tests: name -> {'p', 'p_reverse', and 'effect_cells' or 'p_equiv', 'sesoi'?}.
+
+  Holm at 0.05 for the confirmatory direction, a separate Holm at 0.01 for the
+  reverse direction, and a third Holm at 0.05 over the equivalence (TOST) p-values
+  of the tests that are neither supported nor reversed. A test without an
+  equivalence p-value can only be supported, reversed or inconclusive."""
   passed = holm({k: v["p"] for k, v in tests.items()}, ALPHA)
   passed_r = holm({k: v["p_reverse"] for k, v in tests.items()}, ALPHA_REVERSE)
-  out = {}
+  p_eq = {}
   for k, v in tests.items():
-    if "interval" in v:
-      interval = v["interval"]
+    if passed[k] or passed_r[k]:
+      continue
+    if v.get("p_equiv") is not None:
+      p_eq[k] = v["p_equiv"]
     elif v.get("effect_cells") is not None:
-      interval = bootstrap_ci(v["effect_cells"], level=0.90)
+      p_eq[k] = bootstrap_equivalence_p(v["effect_cells"], v.get("sesoi", SESOI_REGRET))
+  passed_eq = holm(p_eq, ALPHA) if p_eq else {}
+  out = {}
+  for k in tests:
+    if passed[k]:
+      out[k] = "supported"
+    elif passed_r[k]:
+      out[k] = "reversed"
+    elif passed_eq.get(k):
+      out[k] = "equivalent"
     else:
-      interval = None
-    out[k] = verdict(passed[k], passed_r[k], interval, v.get("sesoi", SESOI_REGRET))
+      out[k] = "inconclusive"
   return out
 
 
@@ -312,19 +391,89 @@ def partial_spearman(x, y, z) -> tuple[float, float, float]:
   return r, float(stats.t.sf(t, n - 3)), float(stats.t.cdf(t, n - 3))
 
 
+def _rank_residuals(v, rz):
+  rv = stats.rankdata(np.asarray(v, dtype=float))
+  Z = np.column_stack([np.ones_like(rz), rz])
+  return rv - Z @ np.linalg.lstsq(Z, rv, rcond=None)[0]
+
+
+def _corr_rows(E, ey):
+  """Pearson correlation of each row of E with ey (0 where a row is constant)."""
+  E = E - E.mean(axis=-1, keepdims=True)
+  e = ey - ey.mean()
+  num = E @ e
+  den = np.sqrt((E * E).sum(axis=-1) * (e @ e))
+  return np.where(den > 0, num / np.where(den > 0, den, 1.0), 0.0)
+
+
+def partial_spearman_perm(x, y, z, n_perm: int = 100_000, seed: int = SEED
+                          ) -> tuple[float, float, float]:
+  """Partial Spearman correlation of x and y given z, with a permutation p-value.
+
+  Ranks (average ranks for ties); x's and y's ranks are residualised on z's rank;
+  the statistic is the Pearson correlation of the residuals. Null distribution:
+  the residuals of x are permuted across cells (Kennedy's method for partial
+  correlation), n_perm Monte Carlo permutations from PCG64(seed). Returns (rho,
+  p for rho > 0, p for rho < 0), each (1 + count) / (1 + n_perm)."""
+  rz = stats.rankdata(np.asarray(z, dtype=float))
+  ex, ey = _rank_residuals(x, rz), _rank_residuals(y, rz)
+  if ex.std() == 0 or ey.std() == 0:
+    return 0.0, 1.0, 1.0
+  r = float(_corr_rows(ex[None, :], ey)[0])
+  rng = np.random.Generator(np.random.PCG64(seed))
+  perm = np.argsort(rng.random((n_perm, len(ex))), axis=1)
+  null = _corr_rows(ex[perm], ey)
+  return (r, float((1 + np.sum(null >= r - 1e-12)) / (1 + n_perm)),
+          float((1 + np.sum(null <= r + 1e-12)) / (1 + n_perm)))
+
+
+def paired_swap_test(a, c, o, z, max_exact: int = 20, n_mc: int = 100_000,
+                     seed: int = SEED) -> tuple[float, float, float]:
+  """Does the steering shift a track o (given z) more than a control shift c?
+
+  Statistic: partial Spearman(a; o | z) - partial Spearman(c; o | z). Paired
+  permutation test: under the null that a cell's steered and control shifts are
+  exchangeable, every one of the 2^n within-cell swaps of a and c is equally
+  likely. Exact enumeration for n <= max_exact cells (K2: 12 or 19); otherwise
+  n_mc random swap patterns from PCG64(seed) plus the identity. Returns
+  (difference, p for difference > 0, p for < 0), each the share of assignments
+  (the identity included) at least as extreme."""
+  a, c = np.asarray(a, dtype=float), np.asarray(c, dtype=float)
+  rz = stats.rankdata(np.asarray(z, dtype=float))
+  ey = _rank_residuals(o, rz)
+  n = len(a)
+  if n <= max_exact:
+    swaps = np.array(list(itertools.product((False, True), repeat=n)))     # 2^n x n
+  else:
+    rng = np.random.Generator(np.random.PCG64(seed))
+    swaps = np.vstack([np.zeros((1, n), bool), rng.random((n_mc, n)) < 0.5])
+  A = np.where(swaps, c, a)
+  C = np.where(swaps, a, c)
+  Z = np.column_stack([np.ones_like(rz), rz])
+  H = Z @ np.linalg.pinv(Z)                              # projection onto [1, rank z]
+  RA, RC = stats.rankdata(A, axis=1), stats.rankdata(C, axis=1)
+  EA, EC = RA - RA @ H.T, RC - RC @ H.T
+  d = _corr_rows(EA, ey) - _corr_rows(EC, ey)
+  d0 = float(d[0])                                       # first row: no swaps
+  return d0, float(np.mean(d >= d0 - 1e-12)), float(np.mean(d <= d0 + 1e-12))
+
+
 def calibration_test(prompts: Sequence[core.Prompt],
                      base: Mapping[str, Mapping[int, float]],
                      steered: Mapping[str, Mapping[int, float]],
                      extra_nulls: Mapping[str, Mapping[str, Mapping[int, float]]] = {},
-                     n_boot: int = 10_000, seed: int = 11) -> dict:
+                     n_boot: int = 10_000, seed: int = 11, n_perm: int = 100_000) -> dict:
   """K2 on the test cells whose best offer is a single price (core.has_unique_best).
 
   Statistic: partial Spearman correlation, across cells, of the steering shift s
   with the best offer o, controlling for the unsteered expected offer b. Passes
-  if it is > 0 and exceeds, by a paired bootstrap over cells, the partial
-  correlation of every control: tilt (matched mean signed shift), attractor
-  towards each fixed price (the strongest of the five is used; matched mean
-  absolute shift), flatten (matched mean absolute shift), and extra_nulls."""
+  if it is > 0 (permutation test, partial_spearman_perm) and exceeds the partial
+  correlation of every control (exact paired swap test over cells,
+  paired_swap_test): tilt (matched mean signed shift), attractor towards each
+  fixed price (the strongest of the five is used; matched mean absolute shift),
+  flatten (matched mean absolute shift), and extra_nulls. The 90% interval for the
+  equivalence verdict is a cell bootstrap of the difference against the strongest
+  control (descriptive; n_boot resamples)."""
   pids = [p for p in prompts if p.pid in base and p.pid in steered and core.has_unique_best(p)]
   B = {p.pid: base[p.pid] for p in pids}
   def shifts(dists):
@@ -348,27 +497,30 @@ def calibration_test(prompts: Sequence[core.Prompt],
   o = by_cell({p.pid: float(core.oracle_bids(p)[0]) for p in pids})
   a = by_cell(s)
   ctrl = {k: by_cell(shifts(v)) for k, v in controls.items()}
-  rho, p_rho, p_rho_neg = partial_spearman(a, o, z)
+  rho, p_rho, p_rho_neg = partial_spearman_perm(a, o, z, n_perm=n_perm, seed=seed)
   ctrl_rho = {k: partial_spearman(v, o, z)[0] for k, v in ctrl.items()}
   best_att = max((k for k in ctrl if k.startswith("attractor")), key=ctrl_rho.get)
   used = [k for k in ctrl if not k.startswith("attractor")] + [best_att]
+  swap = {k: paired_swap_test(a, ctrl[k], o, z) for k in used}
+  p_vs = {k: v[1] for k, v in swap.items()}
+  p_vs_rev = {k: v[2] for k, v in swap.items()}
+  strongest = max(used, key=ctrl_rho.get)               # equivalence vs strongest control
   rng = np.random.default_rng(seed)
-  diffs = {k: [] for k in used}
+  boot = []
   for _ in range(n_boot):
     idx = rng.integers(0, len(cells), len(cells))
-    r_a = partial_spearman(a[idx], o[idx], z[idx])[0]
-    for k in used:
-      diffs[k].append(r_a - partial_spearman(ctrl[k][idx], o[idx], z[idx])[0])
-  # Bootstrap p-values as (1 + count) / (1 + n), so none is exactly zero.
-  p_vs = {k: float((1 + np.sum(np.asarray(v) <= 0)) / (1 + n_boot)) for k, v in diffs.items()}
-  p_vs_rev = {k: float((1 + np.sum(np.asarray(v) >= 0)) / (1 + n_boot)) for k, v in diffs.items()}
-  strongest = max(used, key=ctrl_rho.get)               # equivalence vs strongest control
-  lo, hi = np.quantile(diffs[strongest], [0.05, 0.95])
+    boot.append(partial_spearman(a[idx], o[idx], z[idx])[0]
+                - partial_spearman(ctrl[strongest][idx], o[idx], z[idx])[0])
+  lo, hi = np.quantile(boot, [0.05, 0.95])
+  boot = np.asarray(boot)
+  p_equiv = float(max((1 + np.sum(boot <= -SESOI_K2)) / (1 + n_boot),
+                      (1 + np.sum(boot >= SESOI_K2)) / (1 + n_boot)))
   return {"n_cells": len(cells), "rho_partial": rho, "p_rho": p_rho,
           "control_rho": {k: ctrl_rho[k] for k in used}, "p_vs_controls": p_vs,
+          "difference_vs_controls": {k: v[0] for k, v in swap.items()},
           "p": iut(p_rho, *p_vs.values()),
           "p_reverse": reverse_p(p_rho_neg, *p_vs_rev.values()),
-          "interval": (float(lo), float(hi)), "sesoi": SESOI_K2}
+          "interval": (float(lo), float(hi)), "p_equiv": p_equiv, "sesoi": SESOI_K2}
 
 
 # ------------------------------------------------------- K1/K2 assembly

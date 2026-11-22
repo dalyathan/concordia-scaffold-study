@@ -121,3 +121,16 @@ def test_seed_only_inside_call_context():
   with call_context():                                 # an empty context still counts as set
     assert context_is_set()
   assert not context_is_set()
+
+
+def test_bootstrap_t_direction():
+  assert analysis.bootstrap_t_greater([0.1] * 20 + [0.2] * 15) < 1e-3
+  assert analysis.bootstrap_t_greater([-0.1, -0.2, 0.05, -0.3] * 5) > 0.5
+
+
+def test_equivalence_family_and_union_family():
+  assert analysis.confirmatory_family(False)[-1] == "K1" and len(analysis.confirmatory_family(False)) == 10
+  assert analysis.confirmatory_family(True)[-1] == "K2" and len(analysis.confirmatory_family(True)) == 11
+  p = analysis.bootstrap_equivalence_p([0.001, -0.002, 0.003, 0.0] * 9, 0.05)
+  assert p < 0.001
+  assert analysis.bootstrap_equivalence_p([0.04, 0.06, 0.05, 0.07] * 9, 0.05) > 0.4

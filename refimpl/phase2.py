@@ -107,7 +107,7 @@ def run_decision(lm: LocalGemma2, embedder, agent_module: str, p: core.Prompt,
                enumerate(core.RULE_MEMORIES)}
   return {"pid": p.pid, "agent": agent_module, "draw": draw, "k": k,
           "hard_regret": core.hard_regret(p, k), "S": S, "S_reason": S_reason,
-          "calls": calls,
+          "calls": calls, "act_from": act_from,
           "rule_memories_in_prompts": rule_seen}
 
 

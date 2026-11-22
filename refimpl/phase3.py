@@ -92,12 +92,18 @@ def token_positions(lm: LocalGemma2, prefix_ids: torch.Tensor, p: core.Prompt,
 
 def capture_hooks(lm: LocalGemma2, store: dict, positions_fn):
   """Hook factories capturing each decoder layer's output (residual stream after
-  the block, before the final norm) at given positions, batch item 0."""
+  the block, before the final norm) at given positions, batch item 0.
+
+  letter_scores runs the P1 pass (prefix only) first, then the whole-answer
+  passes. Only the first pass is stored, so activations always come from the P1
+  pass, the pass Phase 3b steers and reads; later passes leave the store alone."""
   layers = lm.model.model.layers
   factories = []
   for i, layer in enumerate(layers):
     def make(i=i, layer=layer):
       def hook(mod, inp, out):
+        if i in store:
+          return
         hs = out[0] if isinstance(out, tuple) else out
         pos = positions_fn()
         store[i] = {name: hs[0, j].detach().to(torch.float16).cpu()
@@ -121,13 +127,15 @@ def steering_hook(lm: LocalGemma2, layer: int, vec: torch.Tensor, start_pos_fn):
 
 def score_prompt(lm: LocalGemma2, p: core.Prompt, opening: str, notes: str | None,
                  order: Sequence[int], *, capture: bool = False,
-                 steer: tuple[int, torch.Tensor] | None = None):
+                 steer: tuple[int, torch.Tensor] | None = None,
+                 whole_answer: bool = True):
   """Returns (probs, hard, store, probs_full).
 
-  probs: p(k) from the first-token letter log-probabilities at P1, renormalised
-  over the five letters (the Phase 3 primary outcome). hard: its argmax (ties to
-  the earlier letter). probs_full: p(k) from whole-answer scores (letter,
-  <end_of_turn>, newline; sensitivity analysis). store: activations if capture."""
+  probs: p(k) from the first-token letter log-probabilities at P1 (one pass over
+  the prefix), renormalised over the five letters (the Phase 3 primary outcome).
+  hard: its argmax (ties to the earlier letter). probs_full: p(k) from
+  whole-answer scores (letter, <end_of_turn>, newline; sensitivity analysis), or
+  None when whole_answer=False (Phase 3b tuning). store: activations if capture."""
   user, l2p = decision_user_turn(p, opening, notes, order)
   # P1 is the last prefix token; compute it first so hooks can use it.
   trimmed = ensure_prompt_not_too_long(user, 1)  # same trim as letter_scores
@@ -140,10 +148,10 @@ def score_prompt(lm: LocalGemma2, p: core.Prompt, opening: str, notes: str | Non
     hooks += capture_hooks(lm, store, lambda: pos)
   if steer is not None:
     hooks.append(steering_hook(lm, steer[0], steer[1], lambda: p1))
-  scores, p1_check, _ = lm.letter_scores(user, LETTERS, hooks=hooks)
+  scores, p1_check, _ = lm.letter_scores(user, LETTERS, hooks=hooks, whole_answer=whole_answer)
   assert p1_check == p1
   first = lm.last_first_token
   probs = core.softmax_scores(first, l2p)
-  probs_full = core.softmax_scores(scores, l2p)
+  probs_full = core.softmax_scores(scores, l2p) if whole_answer else None
   hard = l2p[max(LETTERS, key=lambda l: (first[l], -LETTERS.index(l)))]
   return probs, hard, store, probs_full

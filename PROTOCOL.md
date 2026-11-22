@@ -6,7 +6,7 @@ This protocol takes the top three agents of the NeurIPS 2024 Concordia Contest a
 2. Does the reasoning text they feed the model improve its offers on its own, beyond adding length and beyond simply naming an answer?
 3. Can that improvement be reproduced by adding one direction to the model's activations, and does that direction move each offer towards its own optimum rather than shifting all offers alike?
 
-The game is a single buying decision with a stated cost prior and acceptance rule, so every prompt has a known best offer. Outcomes are scored as **regret**, the shortfall from that best offer. Eleven confirmatory tests form one Holm family at α = 0.05. Each test ends in one of four pre-registered verdicts:
+The game is a single buying decision with a stated cost prior and acceptance rule, so every prompt has a known best offer. Outcomes are scored as **regret**, the shortfall from that best offer. Ten confirmatory tests, eleven if the pilot triggers the design extension (section 6), form one Holm family at α = 0.05. Each test ends in one of four pre-registered verdicts:
 
 - **supported**;
 - **reversed**, meaning significantly worse in the opposite direction;
@@ -28,12 +28,13 @@ The protocol, code and analysis scripts are hash-committed before any model is r
 
 - **Regret** = best payoff minus the payoff of the offer; it is 0 at best. Where C ≥ V, regret is k − V for an accepted offer above V, so those cells measure overpaying.
 - **Hard regret** uses the chosen offer.
-- **Soft regret** uses p(k). In Phase 3 and 3b (primary), p(k) is the model's next-token probability for each option letter at the decision position P1, renormalised over the five letters, with no extra temperature and averaged over five option orders. This is the quantity steering acts on directly.
-- **Sensitivity.** Whole-answer scoring, as in Concordia's choice calls (letter, end-of-turn, newline), is reported for every Phase 3 test. Its end-of-turn terms vary by letter and can dominate the score.
-- **Letter mass.** The unrenormalised probability on the five letters is reported per condition, because a small letter mass means the renormalised p(k) describes only part of the model's output. On a 9B smoke-test prompt the two scorings agreed on the top choice in 3 of 5 orders, and the letter mass was 0.46–0.82, mean 0.57 (REFERENCE.md, R3).
+- **Soft regret** uses p(k). In Phase 3 and 3b (primary), p(k) is the model's next-token probability for each option letter at the decision position P1, renormalised over the five letters, with no extra temperature and averaged over five option orders. This is the quantity steering acts on directly. The prompt format is Concordia's own choice format: the user turn ends with `Answer: (` and the assistant's answer is the letter, so the letter is the model's first answer token.
+- **Sensitivity.** Whole-answer scoring, as in Concordia's choice calls (letter, end-of-turn, newline), is reported for every Phase 3 and 3b test. Its end-of-turn terms vary by letter and can dominate the score. Phase 2 decisions use whole-answer scoring because that is what the agents' own choice calls do; the native replay (9.4) puts them on the first-token scale.
+- **Disagreement rule (fixed now).** Every B, R and K test is also computed with whole-answer p(k). If a test is "supported" on the primary scale but its whole-answer mean effect has the opposite sign, the verdict is reported as "supported (scoring-sensitive)", and the claim is restricted to the first-token readout.
+- **Letter mass.** The unrenormalised probability on the five letters is reported per condition, because a small letter mass means the renormalised p(k) describes only part of the model's output. Where the rest goes is reported too: the five most probable non-letter tokens at P1, with their mean probability, per condition. A B or R comparison whose two conditions differ in mean letter mass by more than 0.10 at the cell level, in any cell, is labelled "letter-mass-sensitive"; steering is held to its own coherence rule (10.4). On a 9B smoke-test prompt the two scorings agreed on the top choice in 3 of 5 orders, and the letter mass was 0.46–0.82, mean 0.57 (REFERENCE.md, R3).
 - **Calibration.** For a change in conditions, ask whether the per-cell shift in expected offer tracks each cell's best offer once the cell's starting expected offer is held fixed. This is a partial correlation, so offers that merely regress towards a common price do not count (section 10.5).
 
-**1.3 Confirmatory hypotheses** (one-sided, one Holm family of eleven tests; section 11). "Entry" means each of `taehun_cgcal`, `fluffy_fluffyagent_v16submission` and `hgyun_loss_aversion_agent_v3_plus2`, tested separately. N-codes are the Phase 3 text conditions (section 9.2).
+**1.3 Confirmatory hypotheses** (one-sided, one Holm family of ten tests, or eleven with K2 when the extension is in force; section 11). "Entry" means each of `taehun_cgcal`, `fluffy_fluffyagent_v16submission` and `hgyun_loss_aversion_agent_v3_plus2`, tested separately. N-codes are the Phase 3 text conditions (section 9.2).
 
 | Tests | Phase | Hypothesis | Pass rule |
 | --- | --- | --- | --- |
@@ -41,18 +42,19 @@ The protocol, code and analysis scripts are hash-committed before any model is r
 | B1–B3 | 3 | The entry's reasoning text helps, and helps because it is about this prompt. It gives lower soft regret than each of: no text (N0); the baseline's text (N1); format-matched filler of identical length (N6); and the entry's own text written for a nearby prompt whose best offer differs (N7), which is on-topic and has the same style and similar length | All four comparisons significant (intersection–union) |
 | R1–R3 | 3 | The entry's text helps without its price advice. With advice-bearing sentences removed (N8), it still beats no text (N0) and the baseline's text with the same removal applied (N1s) | Both comparisons significant |
 | K1 | 3b | Adding the entries' pooled text-induced direction to the baseline prompt lowers soft regret on held-out cells. It must do so more than each of: three separately tuned null directions; a sharpening null that only makes the existing distribution more confident; and 1,000 natural random directions tuned and evaluated on exactly the same budget as a matched copy of the content direction (permutation p) | All six components significant; one p-value (the largest) enters Holm |
-| K2 | 3b | That steering is calibrated. On held-out cells with a single best offer, its per-cell offer shifts track each cell's best offer with the cell's starting offer partialled out. They must do so more strongly than five matched controls: a uniform tilt, a pull towards any single fixed price, regression towards the centre, sharpening, and the steered answer-only null | All components significant; one p-value enters Holm |
+| K2 | 3b | That steering is calibrated. On held-out cells with a single best offer, its per-cell offer shifts track each cell's best offer with the cell's starting offer partialled out. They must do so more strongly than five matched controls: a uniform tilt, a pull towards any single fixed price, regression towards the centre, sharpening, and the steered answer-only null | All components significant; one p-value enters Holm. **Confirmatory only when the V = 7, 8 extension is in force** (19 test cells with a single best offer); otherwise K2 is a secondary test (1.5) |
 
 **1.4 Smallest effects of interest.**
 
 - **Regret: 0.05 coins.** The mean best payoff over the 35 cells is 1.25 coins, so this is 4% of it. It is also the regret of offering one coin too much on 1 prompt in 20.
 - **K2: a partial-correlation difference of 0.2.** With 12 cells, the 90% interval of a partial-correlation difference is expected to be wider than ±0.2, so K2 can realistically end only "supported", "reversed" or "inconclusive". This is stated now so that "inconclusive" is not over-read.
+- **Why K2's family depends on the extension.** K2's tests are exact or permutation tests over cells (10.5). With the 12 unique-best test cells of the 35-cell grid, even steering that puts 96% of each prompt's mass on its best offer cannot pass them at the Holm level: in the unit-tested synthetic case the partial correlation reaches p = 0.006 and the comparison with the flatten control p ≈ 0.28. With the extension's 19 cells the same steering passes every component at p ≤ 0.0012 (`tests/test_design.py`). A confirmatory test that cannot pass whatever the truth only uses up Holm's budget, so K2 is confirmatory with the extension and secondary (Benjamini–Hochberg, 1.5) without it. The rule is fixed now and is applied by `analysis.confirmatory_family`.
 
 The verdicts are:
 
 - **Supported:** the test passes Holm.
-- **Reversed:** the opposite-direction test passes Holm at α = 0.01 within its own family of eleven. The probability of any false directional claim across both families is at most 0.06.
-- **Equivalent:** neither of the above, and the 90% bootstrap interval of the effect lies inside ± the bound.
+- **Reversed:** the opposite-direction test passes Holm at α = 0.01 within its own family of the same tests. By the union bound, which needs no independence between the two families, the probability of any false directional claim across both is at most 0.05 + 0.01 = 0.06.
+- **Equivalent:** neither of the above, and the test's equivalence p-value passes a third Holm family at α = 0.05, formed by the tests that are neither supported nor reversed. The equivalence p-value is a two-one-sided-tests (TOST) p from the cell bootstrap: the larger of the bootstrap shares of the effect at or below −bound and at or above +bound (`analysis.bootstrap_equivalence_p`). Unadjusted, it is below 0.05 exactly when the 90% percentile interval lies inside ± the bound; Holm controls the chance of any false "equivalent" across the family.
 - **Inconclusive:** none of the above.
 
 **1.5 Secondary questions** (one Benjamini–Hochberg family, q = 0.05; each a one-sided cell-level sign-flip test, as in section 11, unless stated):
@@ -130,8 +132,10 @@ The contest called Gemma through Together AI with `concordia/language_model/toge
   - Its score is the summed log-probability of every token after the last `<start_of_turn>model\n`: the letter, `<end_of_turn>` and newline, as Together's echoed log-probabilities were.
   - The choice is the argmax, with ties going to the first option.
   - Letters are single tokens, so all candidates have equal length. They are scored **sequentially**: one candidate per forward pass, batch size 1 (`LocalGemma2.letter_scores`, `sequential=True`). This mode is fixed for every run and every GPU; it never depends on free memory. Batched eager attention over five long prompts does not fit in 24 GB, and a fixed mode keeps shapes, and therefore rounding, identical everywhere.
+  - **P1 pass.** The first-token distribution at P1 (the Phase 3 primary and the letter mass) is read from one further pass over the prefix alone. It is mathematically the same distribution as at P1 in each of the five answer passes, and one fixed pass gives one value instead of five that can differ in the last bits. Phase 3b tuning, which needs only this distribution, runs the P1 pass alone.
   - Only the positions that predict answer tokens are unembedded. The final soft-cap (30) and the log-softmax are computed in float32.
   - A batched mode (all candidates in one pass) is kept only for check P0.2, which reports the batched-versus-sequential difference on short prompts.
+- **Prefill unembedding in generation.** transformers 4.44.2's Gemma 2 forward unembeds every prompt position during generation's prefill and copies the logits to float32, about 1.5–2 GB per 1,000 prompt tokens, although only the last position is used. On a 24 GB GPU that ran out of memory from about 2,400 prompt tokens. `sample_text` therefore registers a pre-hook on the unembedding during `generate` that passes it only the last position (`LocalGemma2._last_position_unembedding`). The sampled tokens depend only on that position, so this is the same computation with a smaller matrix product; it is part of the registered code, and its peak memory is reported in REFERENCE.md, R3.
 - **Determinism (Phases 2–3; `refimpl/determinism.py`).**
   - Thread pools are replaced by a sequential executor, which also covers Concordia's `concurrency` helpers.
   - Each call is seeded from SHA-256 over the UTF-8 encoding of (prompt, agent, prompt ID, draw index), joined by U+001F; the first 8 bytes are read big-endian. This seeds `random`, the legacy `numpy.random` and torch.
@@ -171,7 +175,7 @@ Every check must pass, or have its deviation logged, before Phase 1 and Phase 2 
 | P0.7 Determinism | Rerun 40 Phase 2 decisions (8 per agent) and 100 Phase 3 prompts | Offers and reasoning texts byte-identical; scores bit-identical (the scorer always runs sequentially, batch size 1, with fixed shapes) |
 | P0.8 Sequential execution | Log the thread of every model call in 10 decisions | One thread, submission order |
 | P0.9 Steering hook | Add a zero vector through the hook on 50 prompts | Probabilities bit-identical to unhooked scoring |
-| P0.10 Unit tests | `tests/test_core.py`, `tests/test_design.py` and `tests/test_banks.py` (30 tests): prompt counts and extension cells, best-offer table, regret, cell split, seeds, per-call seeding only inside a call context, S entries with stems, removal rules, filler, condition set, N7 donors (34 of 35 cells, 48 of 49 with the extension, disjoint; deterministic), audit prompt, memory-bank save-and-reload equality and duplicate rejection (hashes recomputed in a fresh process), the no-steering tuner option, sign-flip, Holm, IUT, BH, reverse rule, verdicts, power simulation, A/B/R assembly, K1 including the sharpening null, and K2 (unique-best cells; attractor, flatten and sharpening do not pass; oracle steering does) | All pass |
+| P0.10 Unit tests | `tests/test_core.py`, `tests/test_design.py`, `tests/test_banks.py` and `tests/test_report.py` (38 tests): prompt counts and extension cells, best-offer table, regret, cell split, seeds, per-call seeding only inside a call context, S entries with stems, removal rules, filler, condition set, the pilot's conditions read only baseline data, N7 donors (34 of 35 cells, 48 of 49 with the extension, disjoint; deterministic), audit prompt, memory-bank save-and-reload equality and duplicate rejection (hashes recomputed in a fresh process), the no-steering tuner option, sign-flip, bootstrap-t, Holm, IUT, BH, reverse rule, verdicts, the family rule and TOST equivalence, power simulation and the projected cell SD, A/B/R assembly, K1 including the sharpening null, K2 (unique-best cells; exact swap test; attractor, flatten and sharpening do not pass; oracle steering passes with 19 cells and cannot beat flatten with 12), and a synthetic end-to-end run of the registered analysis including the exclusion rule | All pass |
 | P0.11 Runtime and memory | Time and peak memory for 5 prompts × 5 agents (Phase 2) and 50 prompts (Phase 3) | Used for scheduling only |
 
 **Order.**
@@ -194,14 +198,18 @@ The pilot's decision rules are fixed here, and the pilot never computes an entry
   - for `rational_agent` alone: hard regret, N0 and N1 soft regret per cell (first-token and whole-answer), the letter mass, and the cell-level spread of N1 − N0.
 
   Entries' offers and regrets are written to a sealed file that is not opened until Phase 3b ends.
-- **Power rule (fixed now; `pipeline.pilot_power_rule`, `analysis.power_simulation`).**
-  - **Simulation.** Cell differences are drawn from Normal(0.05, sd), where sd is the pilot's standard deviation of N1 − N0 cell means. There are 35 cells and 2,000 simulated data sets, each tested by the one-sided sign-flip test with 2,000 sign patterns at α = 0.05/11, with numpy seed 20261121.
+- **Power rule (fixed now; `pipeline.pilot_power_rule`, `analysis.projected_cell_sd`, `analysis.power_simulation`).**
+  - **SD projected to 12 variants.** The pilot has 2 variants per cell, the confirmatory design 12, so 2-variant cell means carry six times the within-cell variance. The sd used is sqrt(between + within/12), where within is the mean over cells of the variance of N1 − N0 across the cell's variants and between is the variance of the pilot's cell means minus within/2 (floored at 0). Using the raw 2-variant sd would bias the rule towards extending.
+  - **Simulation.** Cell differences are drawn from Normal(0.05, sd). There are 35 cells and 2,000 simulated data sets, each tested by the one-sided sign-flip test with 2,000 sign patterns at α = 0.05/11, with numpy seed 20261121. Power at 18 cells (K1) is reported with the same sd.
   - If power is at least 80%, the 35-cell design stands.
   - Otherwise the **extension** below is added before Phase 2, for every agent and test.
+  - **If power is still below 80% with 49 cells**, nothing further is added. The study runs as registered, and the four-way verdicts report underpowered tests as "inconclusive" rather than as negative.
+  - **Proxy.** N1 − N0 is the only contrast the baseline-only pilot can measure. It stands in for every contrast; the per-family power actually achieved is reported with the results.
 - **Extension (fixed now).** New design points, not re-worded copies of existing ones: resale values V = 7 and V = 8, with the same seller lines, costs, script and 12 variants. This adds 14 cells, for 49 in total, and 168 prompts.
   - Best offers: no information, V = 7 gives 3 or 4 (2.4) and V = 8 gives 4 (3.2); stated cost C < V gives k = C.
   - The split rule extends unchanged: no-information cells with V odd go to development; information cells with V + C odd go to development. That gives development 24 cells and test 25.
   - Cell means stay the unit, because the new cells differ in the payoff-relevant variable.
+  - **Why V = 7, 8 rather than harder cells.** 10 of the 14 new cells state a cost below V, where the best offer can be read off. Those cells are easy, but they are not filler: they test whether text and steering keep a model on the stated cost when the resale value is high, and they raise K2's unique-best test cells from 12 to 19. New seller lines or noisy cost statements would change the game itself, not add design points of the same game, so they are not used. The cell-type sensitivity analyses (section 11) report easy and hard cells separately.
 - **Ceiling rule (fixed now).** Cells where the pilot's N1 soft regret is below 0.05 coins are listed as "near-ceiling". The confirmatory set is unchanged. A pre-specified secondary analysis repeats every confirmatory test on the remaining cells.
 
 Pilot data never enter a confirmatory test.
@@ -335,6 +343,8 @@ Answer: (
 
 **N7 donor rule** (`conditions.n7_donor`). Among the cells of the grid in use (35, or 49 with the extension) with the same seller line whose set of best offers is disjoint from this prompt's, the donor is the cell nearest in (V, C) by Manhattan distance; no-information cells use C = 0 and take only no-information donors. Ties go to the smaller V, then the smaller C. The donor prompt has the same variant. For information cells the donor's stated cost can differ from this prompt's, as well as its V. Cell (V = 5, C = 5) has every offer optimal, so no donor is disjoint: it uses the donor with the smallest overlap under the same rule (V = 5, C = 4), and it is the only exception (34 of 35 cells, 48 of 49 with the extension, have a disjoint donor; unit-tested).
 
+**What N7 controls for, and why not a same-cell donor.** B asks whether the entry's text helps *because it is about this prompt*. N7 holds the agent, variant, names, seller line, style and approximate length fixed and changes only the payoff-relevant facts the text was written for, so that its best offer differs. Its stated values (V, and for information cells possibly C) therefore conflict with the prompt's own; that conflict is the manipulation, not a side effect: text that helps because it carries this prompt's valuation must beat text carrying another prompt's valuation. A same-cell donor from another variant (same V, C and best offer, different names) would carry the same valuation and answer, so beating it would test name-specific wording, not specificity of content, and the hypothesis would be expected to fail it. Two descriptive checks accompany N7: the share of N7 texts containing a number that conflicts with the prompt's V or C, and the share of N7 texts whose agent's Phase 2 offer for the donor prompt equals this prompt's best offer.
+
 That is 28 × 5 orders × 420 = **58,800** scored prompts. Token counts use the pinned tokenizer without special tokens.
 
 **Paraphrases.** Each paraphrase is a `sample_text` call through `LocalGemma2` with `max_tokens` 3,000 and the prompt "Rewrite the following notes in different words. Keep every fact and number exactly.", a blank line, then the text. The first attempt is greedy. If the sorted list of digit strings (`core.numeral_multiset`) differs from the original's, up to three retries are sampled at temperature 0.7 with draw indices 1–3. If all fail, that prompt is dropped from wording contrasts only, and drop-outs are reported per agent.
@@ -365,9 +375,11 @@ Kept sentences are stripped and joined with single spaces.
 **Leakage audit** (reported with R; not a test). For every N8 and N1s text, the model is asked under the choice scoring of section 4: "Based only on these notes, which price do they favour?", with options (a)–(e) for the five prices and (f) "The notes do not favour any price". The audit reports two rates: how often the answer is a price, and how often it equals the agent's own Phase 2 offer.
 
 - **Calibration.** The same rates are computed for the baseline's N1s against the baseline's own offer. That gives the level of "favouring" expected from stripped text that carries no extra advice.
-- **Flag** (`pipeline.leakage_flags`). If an entry's own-offer rate exceeds the baseline's by more than 10 percentage points, its R result is labelled "possibly carried by implied advice".
+- **Flag** (`pipeline.leakage_flags`). If an entry's own-offer rate exceeds the baseline's by more than 10 percentage points, its R result cannot be "supported": a passing R is reported as "inconclusive (possibly carried by implied advice)". Reversed and equivalent verdicts are unaffected.
+- **What the rule removed.** For every agent, the mean token count of S and of its stripped text (N8 or N1s), and the share of sentences removed, are reported, so that a difference in how much the rule strips from entry and baseline text is visible. N8 and N1s are not length-matched to each other: matching would require adding filler to stripped text, which would itself be a new condition. R is therefore read with these counts beside it.
+- **What the rule cannot catch.** Advice that names no price ("offer exactly what the seller paid") survives. The audit is the check on this; the model that answers it is the decision model, so it measures what that model can still read from the text, which is the quantity that matters for R.
 
-The 10-point margin is fixed now. It is about two standard errors of a difference of two rates on 420 prompts each, near rates of 0.3.
+The 10-point margin is fixed now. It is about three standard errors of a difference of two rates on 420 prompts each, near rates of 0.3 (standard error 0.032).
 
 **9.3 Tests.** All differences are oriented so that positive favours the entry's own text (N2, N3 or N4, written Ne), and are tested at cell level (section 11):
 
@@ -378,9 +390,10 @@ A line naming the entry's own offer (N9) is not part of R. Requiring the text to
 
 `analysis.abr_tests` assembles A, B and R. `analysis.confirmatory_verdicts` applies both Holm families and the verdict rules.
 
-**9.4 Native replay** (`pipeline.run_native_replay`). Wherever an agent's Phase 2 decision ended in a multiple-choice call, that exact final prompt is re-scored, giving both its whole-answer argmax and its first-token argmax. This puts Phase 2's native prompts on Phase 3's scale.
+**9.4 Native replay** (`pipeline.run_native_replay`). Wherever an agent's Phase 2 decision ended in a multiple-choice call over the five prices, that exact final prompt is re-scored, giving both its whole-answer argmax and its first-token argmax. This puts Phase 2's native prompts on Phase 3's scale.
 
-- **Criterion (fixed now).** If an entry's first-token argmax agrees with its Phase 2 choice on fewer than 80% of prompts, its B and R results are labelled "transplant-sensitive". The first-token scale then does not reproduce that agent's own decisions.
+- **Which decisions qualify** (`pipeline.final_price_choice`). The last model call made during `act()` must be a choice call whose prompt lists all five price options. `taehun_cgcal` decides in Python whenever the model answers that payoffs are numeric; its last call is then a yes/no choice, not a price choice, and the decision does not qualify. The number of qualifying decisions is reported per agent.
+- **Criterion (fixed now; `pipeline.native_replay_labels`).** If an entry's first-token argmax agrees with its Phase 2 choice on fewer than 80% of its qualifying prompts, its B and R results are labelled "transplant-sensitive". The first-token scale then does not reproduce that agent's own decisions.
 
 **9.5 E-family contrasts in Phase 3:**
 
@@ -389,7 +402,7 @@ A line naming the entry's own offer (N9) is not part of R. Requiring the text to
 - **E7:** B and R with N2r–N4r in place of N2–N4.
 - **E8:** heterogeneity across entries.
 
-**9.6 Activations.** Forward hooks on each decoder layer's output, i = 0…41: the residual stream after the block and before the final norm, which is Gemma Scope's site. Hooks are registered for every one of the five sequential scoring passes, so activations are captured in each pass (and steering applied in each, 10.3). All capture positions are at or before P1, which is the same position in every pass and causally unaffected by the appended letter, so every pass captures the same values; the last pass's are stored. Stored in float16, with computation in bfloat16.
+**9.6 Activations.** Forward hooks on each decoder layer's output, i = 0…41: the residual stream after the block and before the final norm, which is Gemma Scope's site. Activations are captured in the P1 pass (section 4), the pass whose first-token distribution is the primary outcome and the pass Phase 3b steers; all capture positions are at or before P1. Steering hooks fire in every pass (10.3). Stored in float16, with computation in bfloat16.
 
 | Position | Definition | Stored |
 | --- | --- | --- |
@@ -423,14 +436,17 @@ Development uses all 12 variants of its cells (204 prompts); test uses all 12 va
 | Answer-only null | h\_L(entries' answer lines, N9) − h\_L(baseline's answer line, N9) |
 | Natural random (1,000) | The difference between the N1 activations of two development prompts from different cells, at the same layer. Pairs are drawn once with numpy PCG64 seed 11 and reused at every layer (`pipeline.random_directions_at`) |
 
-Every null is rescaled to the content direction's Euclidean norm at the same layer. α then multiplies the rescaled vector.
+Every null is rescaled to the content direction's Euclidean norm at the same layer. α then multiplies the rescaled vector. Each named null's natural norm (before rescaling) is reported beside the content norm, and so is the number of directions, named or random, whose tuning fell back to "no steering" (α = 0).
 
-**10.3 Intervention** (`phase3.steering_hook`). α · direction is added to layer L's output at P1 and every later position (letter, `<end_of_turn>`, newline), in each of the five sequential full-sequence scoring passes, exactly as unsteered runs are scored; the hook sees the same P1 in every pass. Earlier positions are untouched, and causal attention means they are unaffected anyway. Check P0.9 confirms that a zero vector gives bit-identical probabilities.
+**What the random set is.** The 1,000 natural directions are not exchangeable with the content direction: they are activation differences between real prompts from different cells, so they carry valuation and cost information and can themselves lower regret. Component 6 is therefore a rank of the content direction within a reference distribution of informative, same-norm directions, not a permutation test of exchangeable units, and it is conservative. For calibration, 200 isotropic Gaussian directions (one draw each from PCG64 seed 12, reused at every layer and rescaled to the content norm; `pipeline.isotropic_directions_at`) are tuned and evaluated on the same matched budget, and the matched content copy's rank among them is reported; it is not a component of K1.
+
+**10.3 Intervention** (`phase3.steering_hook`). α · direction is added to layer L's output at P1 and every later position (letter, `<end_of_turn>`, newline), in every scoring pass, exactly as unsteered runs are scored: in the P1 pass (where it changes the first-token distribution, the primary outcome) and in each of the five sequential whole-answer passes when those run. The hook sees the same P1 in every pass. Earlier positions are untouched, and causal attention means they are unaffected anyway. Check P0.9 confirms that a zero vector gives bit-identical probabilities.
 
 **10.4 Tuning** (development only):
 
 - **Grid:** L ∈ {6, 9, …, 30} × α ∈ {0.5, 1, 2, 4}: 9 layers, 36 settings. Every direction, random ones included, is tuned over the same 36 settings.
-- **Coherence:** the mean next-token probability on the letters a–e at P1 (`LocalGemma2.last_letter_mass`) must stay at least 90% of its unsteered value.
+- **Coherence:** the mean next-token probability on the letters a–e at P1 (`LocalGemma2.last_letter_mass`), averaged over the tuning prompts and orders, must stay at least 90% of the same mean unsteered (a ratio of means).
+- **Passes.** Tuning uses only the first-token distribution and the letter mass, both from the P1 pass, so tuning runs the P1 pass alone (`whole_answer=False`). Test evaluation of the named directions also runs the whole-answer passes, for the whole-answer sensitivity analysis.
 - **Choice:** each direction gets its own best setting, by largest mean soft-regret reduction among coherent settings (`steering.tune`). Ties go to the smaller α, then the earlier layer. "No steering" is always an option. If no coherent setting reduces regret on development, the direction is applied with α = 0, so its effect is exactly zero. The same rule applies to every direction.
 - **Tuning data.** Every comparison is like for like:
   - Content and the three named nulls are tuned on all 204 development prompts × 5 orders, and tested on 216 test prompts × 5 orders.
@@ -448,8 +464,8 @@ Every null is rescaled to the content direction's Euclidean norm at the same lay
 2. **Δ minus the wording null's own steered Δ**, same test.
 3. **Δ minus the length null's own steered Δ**, same test.
 4. **Δ minus the answer-only null's own steered Δ**, same test.
-5. **Sharpening null.** Each unsteered N1 distribution is raised to a power γ and renormalised: the same mode, but more confident. γ ∈ {1.25, 1.5, 2, 3, 4, 6, 8} is chosen on development by largest mean soft-regret reduction, or γ = 1 if none reduces it (`analysis.tune_sharpen`). The component tests Δ minus the sharpened Δ, so K1 cannot pass merely because steering makes the model more confident in its existing choice.
-6. **Random-direction permutation p:** (1 + number of random directions whose mean Δ ≥ the matched content copy's mean Δ) / 1,001. The smallest attainable p is 1/1,001 ≈ 0.001, below the strictest Holm threshold of 0.05/11 ≈ 0.0045.
+5. **Sharpening null.** Each unsteered N1 distribution (the order-averaged p(k) of the prompt) is raised to a power γ and renormalised: the same mode, but more confident. γ ∈ {1.25, 1.5, 2, 3, 4, 6, 8} is chosen on development by largest mean soft-regret reduction, or γ = 1 if none reduces it (`analysis.tune_sharpen`). The component tests Δ minus the sharpened Δ, so K1 cannot pass merely because steering makes the model more confident in its existing choice.
+6. **Random-direction reference rank:** (1 + number of random directions whose mean Δ ≥ the matched content copy's mean Δ) / 1,001. The smallest attainable value is 1/1,001 ≈ 0.001, below the strictest Holm threshold of 0.05/11 ≈ 0.0045. Passing requires the matched copy to beat at least 996 of the 1,000 informative random directions, each tuned under the same noisy 17-prompt budget; this is a demanding criterion by design.
 
 K1's p-value is the largest of the six (intersection–union). It enters Holm as one test, so every component is held to K1's Holm level. K1 tests the pooled direction of the three entries. E3 tests each entry's own direction, and E8 decides which reading is primary (section 1.5).
 
@@ -471,17 +487,19 @@ Controls, each applied to the unsteered distributions:
 
 K2's components are:
 
-- the partial correlation is positive (t-test, n − 3 degrees of freedom);
-- it exceeds each control's partial correlation (paired bootstrap over cells, 10,000 resamples, seed 11).
+- **the partial correlation is positive:** a permutation test (`analysis.partial_spearman_perm`). The residuals of s's ranks (on b's rank) are permuted across cells, 100,000 Monte Carlo permutations, PCG64 seed 11, p = (1 + count) / 100,001. Ties in o (best offers take few values) are handled by average ranks, and the permutation distribution accounts for them;
+- **it exceeds each control's partial correlation:** an exact paired swap test (`analysis.paired_swap_test`). Under the null that a cell's steered and control shifts are exchangeable, all 2ⁿ within-cell swaps are equally likely (4,096 with 12 cells, 524,288 with 19); p is the share of swaps whose difference in partial correlation is at least the observed one.
+
+Both tests are exact or Monte Carlo-exact for the small number of cells, replacing a t-test and a percentile bootstrap that are not calibrated at n = 12. The 90% interval used for K2's equivalence verdict is a cell bootstrap (10,000 resamples, seed 11) of the difference against the strongest control, with its TOST p-value (1.4).
 
 K2's p-value is the largest of these. Its reverse p-value is the Bonferroni minimum over the opposite-direction components (section 11). Unit tests confirm that steering which only pulls towards a fixed price, only flattens, or only sharpens does not pass, and that steering towards each prompt's own optimum does. K2 is also computed for every random direction and its distribution is reported; this is secondary.
 
-**Power caveat.** K1 rests on 18 test cells, which detect about 0.81 SD at the strictest Holm level, and K2 on 12. The extension, if triggered, raises these to 25 and 17. An "inconclusive" steering result is a real possibility, and the verdicts are designed to report it as such.
+**Power caveat.** K1 rests on 18 test cells, which detect about 0.81 SD at the strictest Holm level, and K2 on 12. The extension, if triggered, raises these to 25 and 19 (K2's unique-best test cells with V = 7, 8 added: (7, C = 1, 3, 5), (8, C = 2, 4), and V = 8 neutral and pressure). Without the extension K2 is secondary (1.3, 1.4). An "inconclusive" steering result is a real possibility, and the verdicts are designed to report it as such.
 
 **10.6 Secondary and exploratory:**
 
-- E3: each entry's own content direction, through the same procedure.
-- E6: K1 with the letter-unembedding component projected out of the content direction (10.4).
+- E3: each entry's own content direction (h\_L(Ne) − h\_L(N1)), tuned and tested through the same procedure, with its own matched copy. Its K1 components reuse the pooled named nulls, the sharpening null and the random directions, whose test results do not depend on the content direction (`pipeline.run_phase3b`).
+- E6: K1 with the letter-unembedding component projected out of the content direction (10.4), tuned and tested like E3.
 - The full price distribution under steering, per cell.
 - Ablation: removing the unit content direction from N2–N4 runs.
 - Exploratory (labelled):
@@ -502,37 +520,40 @@ The analysis code is `refimpl/analysis.py`.
 
 There are no interim analyses. The pilot's only effect is through the power rule and ceiling rule in section 6, both fixed now.
 
-**Unit.** Under greedy decoding, prompts in one cell differ only in names and opening, so they are not independent. Each per-prompt difference D (positive favours the hypothesis) is averaged within its cell over the 12 variants. Tests use those cell means: 35 cells for A, B and R (49 with the extension), 18 test cells for K1 and 12 for K2.
+**Unit.** Under greedy decoding, prompts in one cell differ only in names and opening, so they are not independent. Each per-prompt difference D (positive favours the hypothesis) is averaged within its cell over the 12 variants. Tests use those cell means: 35 cells for A, B and R (49 with the extension), 18 test cells for K1 (25) and 12 for K2 (19).
 
 **Primary test: one-sided sign-flip permutation test of the mean cell difference** (`analysis.signflip_greater`).
 
-- **Model.** Under the null, each cell's mean difference is symmetric about 0, so its sign is exchangeable. This is a randomisation test of the claim the protocol makes, the average effect over the grid, and it uses the mean, not ranks.
+- **Null and validity.** The null is the sharp null of no effect: within every prompt, the two conditions (or agents) being compared are exchangeable, so swapping their labels leaves the joint distribution of the outcomes unchanged. That makes every prompt's difference D, and therefore every cell mean of D, symmetric about 0 whatever the distribution of regret levels, including the one-sided regret of cells with C ≥ V and the near-zero regret of easy cells. The sign-flip test is exact for this null. Cells are fixed design points; the randomness the test relies on is the label exchangeability under the null, not sampling of cells.
+- **What a rejection means.** The one-sided test uses the mean, not ranks, so a rejection is read as a positive average effect over the grid's cells, the claim the protocol makes. Skew under the alternative does not affect the test's validity, only its power.
+- **Skew-robust sensitivity.** A cell bootstrap-t test (studentised mean, 10,000 resamples, seed 20261121; `analysis.bootstrap_t_greater`) is reported beside every sign-flip test, with the Wilcoxon test below.
 - **Computation.** Exact enumeration of all 2ⁿ sign patterns when there are 20 cells or fewer. Otherwise 100,000 Monte Carlo patterns with numpy seed 20261121, p = (1 + count) / 100,001.
 - **Sensitivity.** The Wilcoxon signed-rank test (Pratt zeros) is reported for every test.
 
-Multi-part hypotheses (B, R, K1, K2) use the largest component p-value. This is an intersection–union test: it needs no adjustment within the hypothesis, and every component is held to the hypothesis's Holm level. K1's random component is a permutation p and K2's components are the partial-correlation t-test and bootstrap p-values (section 10.5).
+Multi-part hypotheses (B, R, K1, K2) use the largest component p-value. This is an intersection–union test: it needs no adjustment within the hypothesis, and every component is held to the hypothesis's Holm level. K1's random component is a reference-distribution rank, and K2's components are a permutation test and exact paired swap tests (section 10.5).
 
-**Family.** A1–A3, B1–B3, R1–R3, K1 and K2 form eleven tests, Holm–Bonferroni at α = 0.05 (`analysis.holm`). Ordered from the smallest p-value, the thresholds are 0.05/11, 0.05/10, …, 0.05/1.
+**Family** (`analysis.confirmatory_family`). A1–A3, B1–B3, R1–R3 and K1 form ten tests; K2 is the eleventh when the extension is in force (1.3). Holm–Bonferroni at α = 0.05 (`analysis.holm`). Ordered from the smallest p-value, the thresholds are 0.05/m, 0.05/(m − 1), …, 0.05/1, with m = 10 or 11. Without the extension K2 joins the secondary family.
 
-- **Reverse family.** The opposite-direction p-values form a separate Holm family of eleven at α = 0.01, used only to award "reversed".
+- **Reverse family.** The opposite-direction p-values of the same tests form a separate Holm family at α = 0.01, used only to award "reversed".
   - Single tests use `analysis.signflip_less`.
   - Multi-part tests use the Bonferroni-corrected minimum over their components' opposite-direction p-values (`analysis.reverse_p`). The permutation and bootstrap components use their lower tails.
-  - The chance of any false directional claim across both families is at most 0.05 + 0.01.
-- **Secondary tests** (E1–E9, section 1.5) form one Benjamini–Hochberg family at q = 0.05 (`analysis.benjamini_hochberg`).
+  - By the union bound, which needs no independence, the chance of any false directional claim across both families is at most 0.05 + 0.01.
+- **Equivalence family.** The TOST p-values of the tests that are neither supported nor reversed form a third Holm family at α = 0.05, used only to award "equivalent" (1.4).
+- **Secondary tests** (E1–E9, section 1.5, and K2 when the extension is not in force) form one Benjamini–Hochberg family at q = 0.05 (`analysis.benjamini_hochberg`).
 - **Exploratory analyses** carry no claims.
 
 **Verdicts** (`analysis.verdict`, applied by `analysis.confirmatory_verdicts`).
 
 - **Supported:** the test passes Holm.
 - **Reversed:** it does not pass, and its opposite-direction test passes the reverse family.
-- **Equivalent:** neither, and the 90% bootstrap interval of the mean cell difference lies within ±0.05 coins. Multi-part tests use the component with the largest p-value. For K2 the bound is a partial-correlation difference of ±0.2, against the strongest control.
+- **Equivalent:** neither, and its TOST p-value passes the equivalence family: the cell bootstrap of the mean cell difference lies within ±0.05 coins with Holm-adjusted confidence. Multi-part tests use the component with the largest p-value. For K2 the bound is a partial-correlation difference of ±0.2, against the strongest control.
 - **Inconclusive:** none of the above.
 
 **Power.** At the strictest Holm level (α ≈ 0.0045) with 80% power, a mean test (normal approximation, which the sign-flip test approaches) detects about (2.61 + 0.84)/√n standard deviations of the cell means:
 
 - 35 cells: 0.58;
 - 18 cells (K1): 0.81;
-- 12 cells (K2): 1.00.
+- 12 cells (K2 without the extension, secondary): 1.00; 19 cells (K2 with it): 0.79.
 
 Whether that reaches the 0.05-coin bound depends on the spread of cell means.
 
@@ -585,11 +606,13 @@ Note: on transformers 4.44.2, `generate` computes float32 logits over the whole 
 1. Formative-memory banks generated (no outcomes).
 2. Registration (hash commit) and publication of the banks.
 3. Phase 0 checks.
-4. Pilot (`pipeline.pilot_power_rule`), and the power and ceiling rules applied.
+4. Pilot: `run_phase2(..., sealed=True)` on the 70 pilot prompts, `seal_file` (its SHA-256 is published), `run_phase3(..., only=("N0", "N1"))`, then `pilot_power_rule`; the power and ceiling rules are applied.
 5. Phases 1 and 2 (`run_phase2`, then E1), which are independent.
 6. Phase 3 (`run_paraphrases`, `run_phase3`, `run_native_replay`, `run_leakage_audit`).
-7. Phase 3b (`run_phase3b`).
-8. Analysis with the registered code (`analysis.abr_tests`, `analysis.k_tests`, `analysis.confirmatory_verdicts`).
+7. Phase 3b (`run_phase3b`, which also produces E3, E6 and the isotropic reference).
+8. Analysis with the registered code (`refimpl/report.py`): `exclusions`, `phase3_tables`, `confirmatory` (with the leakage, native-replay, exclusion, disagreement and letter-mass rules), `secondary`, `sensitivity`, and `mixed_model_table` with `analysis/mixed_model.R`.
+
+The whole chain from step 4 to step 8 has been run end to end on a small model and off-grid prompts (`scripts/dry_run_pipeline.py`; REFERENCE.md, R3).
 
 ## 13. Deviations, threats and release
 
@@ -614,6 +637,9 @@ Note: on transformers 4.44.2, `generate` computes float32 logits over the whole 
 - **Implicit advice.** The removal rule can miss advice that is only implied. That would make the N8 comparisons in R easier to pass, not harder, so a passed R may still partly reflect implied advice. The leakage audit (9.2) measures how much remains, and N9 and N10 bound how much naming an answer alone can do.
 - **What S contains.** S includes memory-summary calls as well as deliberation. E7 repeats B and R on S\_reason, the deliberation alone.
 - **Linear, mid-layer steering only.** A null K1 does not rule out other mechanisms.
+- **Held-out means held-out cells of one grid.** Development and test cells share V and C values (never the same pair), so K1 and K2 test generalisation to new combinations within the grid, not to new values or games. Holding out whole V levels would leave too few cells on each side of a 5 × 7 grid for any test. Claims are limited to "on this grid".
+- **Pooling the entries.** K1's content direction is the mean of the three entries' text effects. If they differ, the pooled direction can mix mechanisms. The reading rule is fixed now and uses no pilot data: if E8 (heterogeneity) is significant, the per-entry directions (E3) are the primary reading of Phase 3b and K1 is reported as the pooled summary.
+- **One model, one game.** A second model or a "maximise profit" instruction arm would test generality and the role-play framing directly; both are outside this study's budget and are left to replication. E4 reports the baseline's bid bias so the role-play anchoring is visible.
 - **Numerics.** Exact repeatability holds only on the registered GPU model, driver and lock file, with the fixed sequential scoring mode. Replications on other hardware or library versions should expect numerical differences of the size seen between batch shapes on one GPU: on the 9B smoke prompt, batched and sequential letter scores differed by up to 0.32 nats with the same argmax (REFERENCE.md, R3). Conclusions should rest on the cell-level tests, not on matching individual probabilities.
 - **Licence.** The agent archive has no licence. Agent files are not redistributed; patches are published as diffs against the archive's SHA-256.
 

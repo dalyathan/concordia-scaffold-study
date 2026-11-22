@@ -163,35 +163,62 @@ def _base(ps):
   return {p.pid: around(min(5, p.V - 1) + 0.3 * (p.variant % 3)) for p in ps}
 
 
-def _test_prompts():
-  return [p for p in core.prompt_set([1, 2, 3]) if core.steering_cell_split(p.cell) == "test"]
+def _test_prompts(values=core.VALUES):
+  return [p for p in core.prompt_set([1, 2, 3], values) if core.steering_cell_split(p.cell) == "test"]
 
 
 def test_k2_uses_unique_best_cells_only():
   ps = _test_prompts()
   base = _base(ps)
   r = analysis.calibration_test(ps, base, {k: analysis.flatten(v, 0.5) for k, v in base.items()},
-                                n_boot=100)
+                                n_boot=100, n_perm=2000)
   assert r["n_cells"] == 12
+  ps = _test_prompts(core.VALUES + core.EXT_VALUES)
+  r = analysis.calibration_test(ps, _base(ps), {k: analysis.flatten(v, 0.5) for k, v in _base(ps).items()},
+                                n_boot=100, n_perm=2000)
+  assert r["n_cells"] == 19                                # with the V = 7, 8 extension
 
 
 def test_k2_controls_do_not_pass():
-  ps = _test_prompts()
-  base = _base(ps)
-  for steer in ({pid: analysis.attractor(pr, 2, 0.6) for pid, pr in base.items()},
-                {pid: analysis.flatten(pr, 0.6) for pid, pr in base.items()},
-                {pid: analysis.sharpen(pr, 3.0) for pid, pr in base.items()}):
-    r = analysis.calibration_test(ps, base, steer, n_boot=300)
-    assert r["p"] > 0.05, r
+  for values in (core.VALUES, core.VALUES + core.EXT_VALUES):
+    ps = _test_prompts(values)
+    base = _base(ps)
+    for steer in ({pid: analysis.attractor(pr, 2, 0.6) for pid, pr in base.items()},
+                  {pid: analysis.flatten(pr, 0.6) for pid, pr in base.items()},
+                  {pid: analysis.sharpen(pr, 3.0) for pid, pr in base.items()}):
+      r = analysis.calibration_test(ps, base, steer, n_boot=200, n_perm=5000)
+      assert r["p"] > 0.05, r
 
 
-def test_k2_oracle_steering_passes():
+def _oracle(ps):
+  return {p.pid: {j: (0.96 if j == core.oracle_bids(p)[0] else 0.01) for j in core.PRICES}
+          for p in ps}
+
+
+def test_k2_oracle_steering_passes_with_extension():
+  """19 unique-best test cells: steering to each prompt's best offer passes every
+  component at the strictest Holm level."""
+  ps = _test_prompts(core.VALUES + core.EXT_VALUES)
+  r = analysis.calibration_test(ps, _base(ps), _oracle(ps), n_boot=200, n_perm=20000)
+  assert r["rho_partial"] > 0.5 and r["p"] < 0.05 / 11, r
+
+
+def test_k2_twelve_cells_cannot_beat_flatten():
+  """12 cells: the partial correlation itself is detected at 0.05, but the exact swap test
+  against the flatten control cannot reach the Holm level even for oracle steering
+  (the reason K2 is confirmatory only with the extension; Protocol 1.3)."""
   ps = _test_prompts()
-  base = _base(ps)
-  steer = {p.pid: {j: (0.96 if j == core.oracle_bids(p)[0] else 0.01) for j in core.PRICES}
-           for p in ps}
-  r = analysis.calibration_test(ps, base, steer, n_boot=300)
-  assert r["rho_partial"] > 0.5 and r["p"] < 0.05, r
+  r = analysis.calibration_test(ps, _base(ps), _oracle(ps), n_boot=200, n_perm=20000)
+  assert r["p_rho"] < 0.05 and r["p_vs_controls"]["flatten"] > 0.05 / 11, r
+
+
+def test_paired_swap_test_is_exact_and_symmetric():
+  rng = np.random.default_rng(3)
+  a, c, o, z = (rng.normal(size=8) for _ in range(4))
+  d, p_hi, p_lo = analysis.paired_swap_test(a, c, o, z)
+  d2, q_hi, q_lo = analysis.paired_swap_test(c, a, o, z)
+  assert abs(d + d2) < 1e-12 and abs(p_hi - q_lo) < 1e-12      # swapping roles mirrors
+  assert min(p_hi, p_lo) >= 1 / 2 ** 8 and p_hi + p_lo >= 1      # exact over 2^8 swaps
 
 
 def test_k_tests_assembly_and_fidelity():
@@ -215,3 +242,31 @@ def test_k_tests_assembly_and_fidelity():
       soft[(p.pid, c)] = 0.4
   half = {p.pid: (1.0, 0.7, flat, flat) for p in test}
   assert abs(analysis.fidelity(test, soft, half) - 0.5) < 1e-9
+
+
+def test_pilot_conditions_read_only_baseline_data():
+  """The pilot builds N0 and N1 from the baseline's S alone (sealed pilot file)."""
+  class Guard(dict):
+    def __getitem__(self, k):
+      raise AssertionError(f"entry data read: {k}")
+  class Only(dict):                     # S: only the baseline's entry may be read
+    def __getitem__(self, k):
+      if k != conditions.BASELINE:
+        raise AssertionError(f"entry data read: {k}")
+      return dict.__getitem__(self, k)
+  p = core.Prompt(13, 5, "neutral", None)
+  S = Only({conditions.BASELINE: {p.pid: "Question: q\nAnswer: baseline text"}})
+  c = conditions.build_conditions(p, S, Guard(), Guard(), Guard(), ["Open."], WordTok(),
+                                  only=("N0", "N1"))
+  assert c == {"N0": None, "N1": "Question: q\nAnswer: baseline text"}
+
+
+def test_projected_cell_sd_removes_two_variant_noise():
+  ps = core.prompt_set([13, 14])
+  rng = np.random.default_rng(0)
+  cell_eff = {c: rng.normal(0, 0.10) for c in {p.cell for p in ps}}
+  d = {p.pid: cell_eff[p.cell] + rng.normal(0, 0.30) for p in ps}
+  r = analysis.projected_cell_sd(d, ps, n_variants=12)
+  assert r["n_cells"] == 35 and r["variants_observed"] == 2
+  assert r["sd_projected"] < r["sd_observed"]               # 2-variant means are noisier
+  assert abs(r["within_var"] - 0.09) < 0.04                  # within-cell variance recovered

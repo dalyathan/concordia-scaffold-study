@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import re
-from typing import Callable, Mapping, Sequence
+from typing import Callable, Collection, Mapping, Sequence
 
 from . import core
 
@@ -136,28 +136,45 @@ def build_conditions(p: core.Prompt, S: Mapping[str, Mapping[str, str]],
                      offers: Mapping[str, Mapping[str, int]],
                      paraphrases: Mapping[str, Mapping[str, str | None]],
                      openings: Sequence[str], tokenizer,
-                     values: Sequence[int] = core.VALUES) -> dict[str, str | None]:
-  """All 28 conditions for prompt p. Dicts are keyed [agent][pid]. Returns
-  code -> inserted text (None = no Notes block). Texts are capped (core.cap_tokens).
-  values: the V grid in use (core.VALUES, or VALUES + EXT_VALUES with the
-  extension); it fixes the N7 donor set."""
-  pid, vp = p.pid, n7_donor(p, values).pid
-  out: dict[str, str | None] = {"N0": None}
-  out["N1"] = S[BASELINE][pid]
-  out["N1s"] = remove_recommendations_strict(S[BASELINE][pid])
-  out["N10"] = core.answer_only(p.buyer, oracle_offer(p))
+                     values: Sequence[int] = core.VALUES,
+                     only: Collection[str] | None = None) -> dict[str, str | None]:
+  """All 28 conditions for prompt p, or only the codes in `only`. Dicts are keyed
+  [agent][pid]. Returns code -> inserted text (None = no Notes block). Texts are
+  capped (core.cap_tokens). values: the V grid in use (core.VALUES, or VALUES +
+  EXT_VALUES with the extension); it fixes the N7 donor set.
+
+  Each condition reads only the data it needs, so the pilot
+  (only=("N0", "N1")) needs nothing but the baseline's S: no entry's S, offer or
+  paraphrase is read (Protocol 6, sealed pilot file)."""
+  pid = p.pid
+  want = (lambda code: True) if only is None else (lambda code: code in only)
+  out: dict[str, str | None] = {}
+  if want("N0"):
+    out["N0"] = None
+  if want("N1"):
+    out["N1"] = S[BASELINE][pid]
+  if want("N1s"):
+    out["N1s"] = remove_recommendations_strict(S[BASELINE][pid])
+  if want("N10"):
+    out["N10"] = core.answer_only(p.buyer, oracle_offer(p))
   for a in AGENTS:
     tag = a.rsplit(".", 1)[-1]
     if a in ENTRY_CODE:
       c = ENTRY_CODE[a]
-      out[c] = S[a][pid]
-      out[c + "r"] = S_reason[a][pid]
-      out[f"N7:{tag}"] = S[a][vp]
-      out[f"N8:{tag}"] = remove_recommendations_strict(S[a][pid])
-    if paraphrases[a].get(pid) is not None:              # failed paraphrase: key absent,
-      out[f"N5:{tag}"] = paraphrases[a][pid]             # dropped from wording contrasts
-    out[f"N6:{tag}"] = qa_filler(openings, n_tokens(S[a][pid], tokenizer), tokenizer)
-    out[f"N9:{tag}"] = core.answer_only(p.buyer, offers[a][pid])
+      if want(c):
+        out[c] = S[a][pid]
+      if want(c + "r"):
+        out[c + "r"] = S_reason[a][pid]
+      if want(f"N7:{tag}"):
+        out[f"N7:{tag}"] = S[a][n7_donor(p, values).pid]
+      if want(f"N8:{tag}"):
+        out[f"N8:{tag}"] = remove_recommendations_strict(S[a][pid])
+    if want(f"N5:{tag}") and paraphrases[a].get(pid) is not None:  # failed paraphrase: key
+      out[f"N5:{tag}"] = paraphrases[a][pid]                      # absent, dropped from wording contrasts
+    if want(f"N6:{tag}"):
+      out[f"N6:{tag}"] = qa_filler(openings, n_tokens(S[a][pid], tokenizer), tokenizer)
+    if want(f"N9:{tag}"):
+      out[f"N9:{tag}"] = core.answer_only(p.buyer, offers[a][pid])
   capped = {}
   for k, v in out.items():
     capped[k] = None if v is None else core.cap_tokens(v, tokenizer)[0]

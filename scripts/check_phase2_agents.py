@@ -1,8 +1,8 @@
-"""Stage 1 check 4.4: one Phase 2 decision per agent on 9B, twice each.
+"""One Phase 2 decision per agent on 9B, twice each (P0.6 logic).
 
-Pilot prompt v13-V5-information-C3, real all-mpnet-base-v2 embeddings, and a
-temporary blank memory bank (plus the player-specific memory, as
-phase2.formative_memory adds it). Records only: exception or not, number of
+Pilot prompt v13-V5-information-C3, real all-mpnet-base-v2 embeddings, and
+either a temporary blank memory bank plus the player-specific memory (default) or
+the released variant-13 formative-memory bank (--bank). Records only: exception or not, number of
 model calls, whether S is non-empty, whether each rule memory reached the prompts,
 the longest rendered prompt in tokens, wall time, and SHA-256 equality of S across
 the two runs. No offer, regret, S text or calls log is printed or saved."""
@@ -21,6 +21,7 @@ AGENTS = ("concordia.factory.agent.rational_agent", "concordia.factory.agent.bas
 ap = argparse.ArgumentParser()
 ap.add_argument("--agents", nargs="*", default=list(AGENTS))
 ap.add_argument("--out", default="logs/check_phase2_agents.json")
+ap.add_argument("--bank", default=None, help="formative-memory bank parquet for variant 13")
 args = ap.parse_args()
 
 model, tok = runtime.load_gemma("9b", "cuda")
@@ -30,12 +31,15 @@ p = core.Prompt(13, 5, "information", 3)
 assert p.pid == "v13-V5-information-C3"
 random.seed(1000 + p.variant)
 cfg = haggling.configure_player(p.buyer, "female", fv.YEAR, True, random.Random(1000 + p.variant))
-mem = blank_memories.MemoryFactory(
-    model=lm, embedder=embed,
-    importance=importance_function.ConstantImportanceModel().importance,
-    clock_now=lambda: phase2.SETUP).make_blank_memory()
-for extra in cfg.extras["player_specific_memories"]:
-  mem.add(extra, tags=["initial_player_specific_memory"])
+if args.bank:
+  mem, cfg = phase2.load_bank(args.bank, lm, embed, p.variant)
+else:
+  mem = blank_memories.MemoryFactory(
+      model=lm, embedder=embed,
+      importance=importance_function.ConstantImportanceModel().importance,
+      clock_now=lambda: phase2.SETUP).make_blank_memory()
+  for extra in cfg.extras["player_specific_memories"]:
+    mem.add(extra, tags=["initial_player_specific_memory"])
 
 def rendered_tokens(c):
   sysm = TEXT_SYSTEM if c["kind"] == "text" else CHOICE_SYSTEM

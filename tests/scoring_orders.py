@@ -12,8 +12,8 @@ ap.add_argument("--device", default="cpu", choices=("cpu", "cuda"))
 args = ap.parse_args()
 model, tok = runtime.load_gemma(args.model, args.device)
 lm = LocalGemma2(model, tok, sequential=True)
-p = core.Prompt(1, 5, "information", 3)
-notes = "Question: What is Anya's best offer?\nAnswer: She can resell for 5 coins."
+p = core.Prompt(13, 5, "information", 3)          # pilot variant; never confirmatory
+notes = "Question: What is Maeve's best offer?\nAnswer: She can resell for 5 coins."
 # Reports only the mean letter mass and first-token versus whole-answer top-choice
 # agreement (no probabilities, offers or regret are printed).
 masses, agree = [], 0
