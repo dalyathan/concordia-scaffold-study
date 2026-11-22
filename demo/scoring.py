@@ -193,11 +193,14 @@ def regret(p: core.Prompt, r: Result) -> tuple[float, float]:
 
 # ---------------------------------------------------------------- adapters
 ADAPTER_DIR = os.path.join(common.ROOT, "demo_out", "adapters")
-ARMS = ("answer_only", "template", "shuffled")
 
 
 def available_adapters() -> list[str]:
-  return [a for a in ARMS if os.path.exists(os.path.join(ADAPTER_DIR, a, "adapter_config.json"))]
+  """Saved LoRA runs (one directory per run id); smoke-test runs are excluded."""
+  if not os.path.isdir(ADAPTER_DIR):
+    return []
+  return sorted(d for d in os.listdir(ADAPTER_DIR) if not d.endswith("_smoke")
+                and os.path.exists(os.path.join(ADAPTER_DIR, d, "adapter_config.json")))
 
 
 def load_adapters(lm: LocalGemma2, names=None):

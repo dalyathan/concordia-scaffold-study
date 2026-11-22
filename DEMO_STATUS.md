@@ -862,3 +862,10 @@ Also: floor.py refuses every intervention (text, steer, adapter on) on a test ca
 - One script produces every row in one run, with the arms, adapters, comparators and code frozen first.
 - Changes are reported against **test plain (0.534)**.
 - It needs gate G3 and the owner's explicit go; neither has been given.
+
+### `floor.py` safety changes (before any adapter exists)
+
+- Every intervention (`text`, `steer`, `adapter on|<name>`, and a `dial` run under a non-plain condition) is **refused on a test case**, so no adapter, vector or text is ever shown on the live case. Plain-only commands (`cost`, `shuffle`, `say`, `table`) still work there.
+- `adapter` accepts any saved run name (listed from `demo_out/adapters/`); `adapter on` loads the best run named in `demo/lora_summary.json`; `say` follows the current adapter.
+- Run ids contain no "." (`method_lr3e-04_s0`), because PEFT adapter names become module-dict keys.
+- Caches are keyed by adapter: unit-tested (`test_model_engine_cache_is_keyed_by_adapter`), together with the test-case refusals.

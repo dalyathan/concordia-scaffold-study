@@ -107,7 +107,7 @@ def test_floor_parser():
   assert floor.parse_command("text wrong_rule") == ("text", ["wrong_rule"])
   assert floor.parse_command("adapter template") == ("adapter", ["template"])
   for bad in ("", "fly", "case", "case v01-V3-neutral", "case v14-V3-neutral",
-              "case v15-V3-information", "cost 7", "adapter maybe", "shuffle now"):
+              "case v15-V3-information", "cost 7", "adapter has.dot", "adapter two words", "shuffle now"):
     with pytest.raises(floor.CommandError):
       floor.parse_command(bad)
 
@@ -126,14 +126,16 @@ class FakeEngine:
     k = 2 if condition[0] == "plain" else 1
     return FakeResult({j: (0.6 if j == k else 0.1) for j in core.PRICES})
 
-  def say(self, p):
+  def say(self, p, condition=None):
     return " 2 coins.", 2
 
 
 def test_floor_session_screens(tmp_path):
   f = floor.Floor(FakeEngine(), str(tmp_path / "log.jsonl"), colour=True)
-  for cmd in ("case v15-V3-information-C1", "cost 3", "cost none", "shuffle", "say",
-              "text method", "adapter on", "plain", "table", "fly", "case v02-V3-neutral"):
+  live = "v15-V3-information-C1"                 # a test case
+  dev = "v17-V3-information-C2"                  # a held-out tune case
+  for cmd in (f"case {live}", "cost 3", "cost none", "shuffle", "say", "adapter off", "plain", "table",
+              "fly", "case v02-V3-neutral", f"case {dev}", "text method", "adapter on", "plain"):
     out = f.run(cmd)
     assert len(out) <= floor.SCREEN, cmd
     assert max(floor.visible_len(l) for l in out) <= floor.WIDTH, cmd
@@ -141,7 +143,43 @@ def test_floor_session_screens(tmp_path):
   assert f.rows[0]["offer"] == 2 and f.rows[0]["regret"] == 1.0       # best offer is 1
   assert any(r["condition"] == "text method" and r["offer"] == 1 for r in f.rows)
   log = [l for l in open(tmp_path / "log.jsonl")]
-  assert len(log) == 11 and "\033[" not in "".join(log)                # replayable, no colour
+  assert len(log) == 14 and "\033[" not in "".join(log)                # replayable, no colour
+
+
+def test_floor_refuses_interventions_on_test_cases():
+  f = floor.Floor(FakeEngine(), None, colour=False)
+  live = "v15-V3-information-C1"
+  f.run(f"case {live}")
+  for cmd in ("text method", "steer demo/configs/random_l12.json", "adapter on", "adapter method_lr3e-04_s0"):
+    out = f.run(cmd)
+    assert "not allowed" in out[0], (cmd, out)
+  assert f.condition == ("plain", None)
+  assert not any(r["condition"].startswith(("text", "steer", "adapter")) for r in f.rows if r["ok"])
+  # plain-only analyses stay available on the test case
+  assert "error" not in f.run("cost 3")[0] and "error" not in f.run("shuffle")[0]
+
+
+def test_model_engine_cache_is_keyed_by_adapter():
+  """Two adapters (or none) on one case must never share a cached result."""
+  import contextlib
+  calls = []
+  class FakeScoring:
+    ORDERS = core.cyclic_orders()
+    def key(self, p): return (p.variant, p.V, p.line, p.C)
+    def adapter_context(self, peft, name):
+      self.active = name
+      return contextlib.nullcontext()
+    def score(self, lm, p, notes=None, orders=None, steer=None):
+      calls.append(self.active)
+      return FakeResult({k: (0.6 if k == (1 if self.active == "A" else 2 if self.active == "B" else 3) else 0.1)
+                         for k in core.PRICES})
+  eng = object.__new__(floor.ModelEngine)
+  eng.scoring, eng.cache, eng.lm, eng.peft, eng.vectors = FakeScoring(), {}, None, object(), {}
+  p = demo.DemoPrompt(17, 3, "information", 2)
+  a = eng.score(p, ("adapter", "A")); b = eng.score(p, ("adapter", "B")); n = eng.score(p, ("plain", None))
+  assert (a.top, b.top, n.top) == (1, 2, 3)
+  eng.score(p, ("adapter", "A")); eng.score(p, ("plain", None))
+  assert calls == ["A", "B", None]                  # repeats are served from the cache, per adapter
 
 
 def test_regret_colour_only():

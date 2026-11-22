@@ -56,7 +56,8 @@ ARMS = ("method", "neutral", "wrong_rule", "answer_only", "shuffled", "const2", 
 
 
 def run_id(arm, perm, lr, seed, rank=4):
-  return f"{arm}{perm if arm == 'shuffled' else ''}_lr{lr:g}_s{seed}" + (f"_r{rank}" if rank != 4 else "")
+  # no "." in a run id: PEFT adapter names become module-dict keys
+  return f"{arm}{perm if arm == 'shuffled' else ''}_lr{lr:.0e}_s{seed}" + (f"_r{rank}" if rank != 4 else "")
 
 
 def derangement_of_sets(cells, sets, perm_id):

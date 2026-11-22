@@ -63,8 +63,8 @@ def parse_command(line: str) -> tuple[str, list[str]]:
       raise CommandError(f"bad case id: {e}") from None
   if cmd == "cost" and args[0] != "none" and args[0] not in "12345":
     raise CommandError("cost takes 1-5 or none")
-  if cmd == "adapter" and args[0] not in ("on", "off", "answer_only", "template", "shuffled"):
-    raise CommandError("adapter takes on, off, answer_only, template or shuffled")
+  if cmd == "adapter" and not re.match(r"^[A-Za-z0-9_\-]+$", args[0]):
+    raise CommandError("adapter takes on, off or a saved run name")
   return cmd, args
 
 
@@ -162,6 +162,13 @@ class Floor:
     if self.p is None:
       raise CommandError("no current case (use: case <id>)")
 
+  def _no_test_interventions(self, p=None):
+    """Interventions (text, steering vector, adapter) are never shown on test cases:
+    the live case is a test case (gate G3)."""
+    p = p or self.p
+    if common.case_split(p) == "test":
+      raise CommandError("test case: interventions are not allowed here (plain only)")
+
   def _row(self, what: str, p, r, ok: bool = True, note: str = ""):
     hr = core.hard_regret(p, r.top) if ok else None
     row = {"n": len(self.rows) + 1, "case": p.pid, "condition": what,
@@ -243,6 +250,8 @@ class Floor:
 
   def _switch(self, condition):
     self._need_case()
+    if condition[0] != "plain":
+      self._no_test_interventions()
     self.condition = condition
     plain = self._score(self.p)
     if condition[0] == "plain":
@@ -264,6 +273,8 @@ class Floor:
 
   def cmd_adapter(self, state):
     self._need_case()
+    if state != "off":
+      self._no_test_interventions()
     if state == "off":
       self.condition = ("plain", None)
       return ["adapter off (plain)"]
@@ -278,7 +289,7 @@ class Floor:
   def cmd_say(self):
     self._need_case()
     with self.lock:
-      text, k = self.engine.say(self.p)
+      text, k = self.engine.say(self.p, self.condition)
     import textwrap
     return textwrap.wrap(f"{self.p.buyer} would propose {text.strip()}", WIDTH) + \
         [f"parsed offer: {k}   best: {core.oracle_bids(self.p)}"]
@@ -296,6 +307,9 @@ class Floor:
       raise CommandError("a dial is already running")
     self.dial_results = []
     cond = self.condition
+    if cond[0] != "plain":
+      for it in items:
+        self._no_test_interventions(demo.DemoPrompt(*_pid_parts(it if isinstance(it, str) else it["pid"])))
     def work():
       import scoring
       for it in items:
@@ -365,7 +379,7 @@ class ModelEngine:
     if self._adapters:
       self.peft = scoring.load_adapters(self.lm, self._adapters)
     summary = os.path.join(common.DEMO_DIR, "lora_summary.json")
-    self.default_adapter = (json.load(open(summary))["best_arm"] if os.path.exists(summary)
+    self.default_adapter = (json.load(open(summary))["best_run"] if os.path.exists(summary)
                             else (self._adapters[0] if self._adapters else None))
 
   def adapters(self):
@@ -406,8 +420,10 @@ class ModelEngine:
     v = self.vectors[vpath][cfg["name"]][int(cfg["layer"])]
     return int(cfg["layer"]), float(cfg["alpha"]) * v.float()
 
-  def say(self, p):
-    with self.scoring.adapter_context(self.peft, None):
+  def say(self, p, condition=("plain", None)):
+    """Free text under the current condition: an adapter if one is on, else plain."""
+    name = condition[1] if condition[0] == "adapter" else None
+    with self.scoring.adapter_context(self.peft, name):
       return self.scoring.say(self.lm, p)
 
 

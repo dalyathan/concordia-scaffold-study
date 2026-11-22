@@ -32,7 +32,7 @@ args = ap.parse_args()
 
 
 def rid(arm, perm, lr, seed):
-  return f"{arm}{perm if arm == 'shuffled' else ''}_lr{lr:g}_s{seed}"
+  return f"{arm}{perm if arm == 'shuffled' else ''}_lr{lr:.0e}_s{seed}"
 
 
 def done(arm, perm, lr, seed):

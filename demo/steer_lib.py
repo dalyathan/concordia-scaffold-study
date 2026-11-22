@@ -105,7 +105,7 @@ class Runner:
     logits = torch.tanh(logits / cap) * cap
     lp = torch.log_softmax(logits, dim=-1)[0, 0]
     top = torch.topk(lp, 10)
-    return [(self.tok.decode([int(i)]), round(math.exp(float(v)), 4)) for v, i in zip(top.values, top.indices)]
+    return [(self.tok.decode([int(i)]), float(f"{math.exp(float(v)):.4f}")) for v, i in zip(top.values, top.indices)]
 
   # ------------------------------------------------------ free-text steering
   def say_steered(self, p, L, vec):
