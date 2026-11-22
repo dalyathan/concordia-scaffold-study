@@ -260,3 +260,52 @@ The GPU job is `demo/step2_run.py` (`logs/demo_step2.log`); the analysis is `dem
 | all | all | 140 | 0.649 | 0.642 | 0.621 | 0.618 | 53% |
 
 Rewording leaves the failure intact: overall regret is 0.649 versus 0.621, and cost below resale stays the worst. But it changes the top offer in about half the cases. The aggregate failure is robust; individual picks are fragile.
+
+## Step 3: `demo/floor.py`, the stage tool — done
+
+- **Modes and commands.** `--serve [--model 9b|2b]` loads once and reads commands from stdin: `case`, `cost`, `shuffle`, `plain`, `text`, `steer`, `adapter`, `say`, `table`, `dial <cases.json>` / `dial show`, `help`, `quit`. `--map` prints the failure map; `--replay <log>` replays a session under a "RECORDED RUN" banner.
+- **Logging.** Every `--serve` session writes `logs/floor_<time>_<model>.jsonl`.
+- **Projector limits.** Output is cut to 80 visible columns, and every command's screen stays within 25 lines. Colour (ANSI) appears only on the regret value: red above 0, green at 0. Cost and resale are marked `>>…<<` instead of coloured.
+- **Speed.** Prompt rendering, tokenisation, the P1 index and every scored result are cached.
+- **Concurrency.** One model lock serialises the background `dial` thread and the live commands, because steering hooks are global to the model.
+- **Command parser** (`floor.parse_command`): rejects unknown commands, wrong arguments and any case id from variants 1–14.
+- **`steer <config.json>`** accepts `{"name", "layer", "alpha"[, "vectors"]}` for a saved vector (`demo_out/vectors.pt`), or `{"random_seed", "norm", "layer", "alpha"}` for a seeded Gaussian direction. The second form works on any model size; it was added so 2B could be checked before the step 5 vectors existed.
+- **`adapter on`** prints "no adapter yet".
+
+**Choices:**
+
+- `shuffle` draws a random non-cyclic order (seeded) and compares that order's pick with the order-averaged pick.
+- `say` uses the step 2 free-text format.
+- `text` rows come from `demo/textrows.py`.
+- `dial show` lists offer against best offer per case, with the best constant shift (`analysis.tilt`, beta grid ±6) fitted on the dial's cases beside it.
+- `table` comes from `steercheck.format_session_table`.
+
+**Check session** (`demo/configs/floor_check.txt`):
+
+- `case`, `cost`, `shuffle` and `say` on the live test case;
+- `text`, `steer`, `adapter` and `dial` on tuning cases only;
+- a bad command;
+- a registered case id, which is refused.
+
+| Command | 9B seconds | 2B seconds |
+| --- | --- | --- |
+| model load (warm page cache) | 5 | 42 (cold) |
+| `case` (5 orders) | 1.74 | 0.81 |
+| `cost 3` / `cost none` | 1.39 / 1.38 | 0.46 / 0.46 |
+| `shuffle` (one order) | 0.28 | 0.09 |
+| `say` | under 2 | 0.91 |
+| `text method` (plain + text, side by side) | under 3 | 1.01 |
+| `steer` (random direction, layer 12) | 4.15 | 1.37 |
+| `dial show`, `table`, `plain` (cached) | ≤ 0.7 | ≤ 0.25 |
+
+Every live command returned in under 5 seconds on 9B, and both models work (`logs/demo_floor_check_{9b,2b}.log`).
+
+Fixed after the first check:
+
+- truncation and padding now count visible columns, so ANSI codes no longer cut the `table` seconds column or misalign the side-by-side panels;
+- `help` lines fit 80 columns;
+- `say` spacing.
+
+A confirming 9B rerun is queued after the GPU jobs (`logs/demo_floor_check_9b_r2.log`).
+
+**Process note:** the step 2 commit already contained the in-progress files for later steps (`floor.py`, `steercheck.py`, `textrows.py`, `pairs_template.py`, `direction.py`, `step4_run.py`). They were written while the GPU ran and are completed and reported in their own steps.
