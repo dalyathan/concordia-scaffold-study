@@ -567,5 +567,21 @@ tmux new-session -d -s tune "nohup scripts/nonet.sh .venv/bin/python demo/tune_j
 
 ### 1. Second tuning job stopped — done
 
-- Killed at about 05:05, after 10 of 840 grid points (all template, full budget, layers 6–9).
+- Killed at 04:42, after 10 of 840 grid points (all template, full budget, layers 6–9).
 - Kept as `logs/demo_tune_job_v2.log` and `demo_out/tune_partial_v2.jsonl` (committed).
+
+### 2. Positive control "cheap" — done
+
+**Construction** (`demo/cheap_vector.py`, `logs/demo_cheap_vector.log`, 2 minutes): for each of the 34 build cases, the P1 activation (every layer, averaged over the five orders) with `pairs_template.paragraph(case, 1)` as the Notes block, minus the same with `paragraph(case, 4)`; then the average over cases. It means "say 1 coin, not 4" in absolute terms.
+
+- Saved as `cheap`, and `cheap_proj` with the letter span removed, in `demo_out/vectors.pt`.
+- Statistics are in `demo/directions.json`.
+
+| Layer | Norm / mean residual norm | Mean pairwise cosine of per-case differences | cos(vector, letter-projected) |
+| --- | --- | --- | --- |
+| 6 | 0.003 | 0.196 | 0.998 |
+| 12 | 0.005 | 0.429 | 0.999 |
+| 18 | 0.023 | 0.713 | 1.000 |
+| 24 | 0.065 | 0.625 | 1.000 |
+
+Unlike template (cosine 0.05–0.19) and offer_lower (0.08–0.27), the per-case "1 not 4" differences agree strongly from layer 12 onward. The raw vector is still small, but the scan rescales it to a fixed fraction of the residual norm.
