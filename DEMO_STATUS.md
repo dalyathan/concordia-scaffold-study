@@ -376,3 +376,20 @@ Text that states the answer for the case takes regret to about 0, which is the c
 - **Offer-lower.** The positive control is as small, but more consistent (cosine up to 0.27).
 - **Sentence.** Large and almost identical across cases, because the same text is inserted every time.
 - **Letter span.** The option-letter unembedding span is a negligible part of every vector (cosine with the projected version ≥ 0.997).
+
+## Step 6: offline baselines (fitted on tuning cases) — done
+
+`demo/baselines.py` → `demo/baselines.json`. These are fitted on the plain distributions of the 34 tuning cases. Means are over cells. Grids: beta −6 to 6 in steps of 0.05; lam 0 to 1 in steps of 0.02. Ties go to the smaller |beta| or lam.
+
+| Baseline | Parameter | Soft regret | Hard regret | cost < resale | cost ≥ resale | no cost |
+| --- | --- | --- | --- | --- | --- | --- |
+| plain | — | 0.714 | 0.694 | 1.256 | 0.085 | 0.125 |
+| constant shift (`analysis.tilt`) | best beta = −0.85 | 0.669 | 0.676 | 1.225 | 0.012 | 0.076 |
+| constant offer 1 (`analysis.attractor`, lam = 1) | — | 0.635 | 0.635 | 1.111 | 0.000 | 0.200 |
+| **constant offer 2** | — | **0.529** | 0.529 | 1.000 | 0.000 | 0.000 |
+| constant offer 3 | — | 0.694 | 0.694 | 1.111 | 0.250 | 0.200 |
+| constant offer 4 | — | 1.306 | 1.306 | 1.778 | 0.750 | 0.800 |
+| constant offer 5 | — | 2.306 | 2.306 | 2.556 | 2.250 | 1.800 |
+| shrink to the middle (`analysis.flatten`) | best lam = 0.00 | 0.714 | 0.694 | 1.256 | 0.085 | 0.125 |
+
+**"Always offer 2 coins" beats plain Gemma** on the tuning cases (0.529 vs 0.714), and so does the best constant shift (0.669). Shrinking towards uniform never helps, so its best lam is 0. A steering vector has to beat these model-free baselines before its gain means anything. The method paragraph (0.303, step 4) does.
