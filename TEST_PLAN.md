@@ -1,6 +1,6 @@
-# TEST_PLAN.md — PROPOSAL for the owner to approve or reject (nothing has been run on test cases)
+# TEST_PLAN.md — APPROVED by the owner with the answers in section 8 (nothing has been run on test cases yet)
 
-Status: draft. Nothing here is a result. A look at the test cases needs (a) this plan approved by you in a message, (b) gate G3 (Sonnet + Opus) on the approved text, (c) your explicit "go". The frozen LoRA rule was not passed on the development cells; so a test look is a new, separate, pre-registered question and the owner must decide that it is worth spending the one look.
+Status: approved by the owner (Nov 22) with answers (1) yes to the test look, (2) neutral seed 2 run on tuning cells first then frozen, (3) no extra shift-to-2 control, (4) threshold 0.10 kept. Nothing here is a result. A look at the test cases needs (a) this plan approved by you in a message, (b) gate G3 (Sonnet + Opus) on the approved text, (c) your explicit "go". The frozen LoRA rule was not passed on the development cells; so a test look is a new, separate, pre-registered question and the owner must decide that it is worth spending the one look.
 
 ## 1. Question and claim to be tested
 Does a rank-4 LoRA distilled from the method-text teacher lower first-token soft regret on unseen cells compared with plain, neutral-distil, wrong-rule-distil and always-2? (Exploratory development evidence: held-out tune cells, selected-on; method 0.194 vs wrong-rule 0.404, neutral 0.531, always-2 0.333, plain 0.577.)
@@ -21,8 +21,8 @@ Each at the best epoch saved by early stopping on the held-out tune cells (that 
 | wrong-rule lr 1e-3 s2 | 2 | 33234ecfc2b0a7dbae9abf5e06bfc9198014f6ae1e93d5dcd9c8a6b9083a706a |
 | neutral lr 1e-4 s0 | 1 | 8ca8b754ea0c216671dfe08157ce8c968febd51c4182df65a97716e010188966 |
 | neutral lr 1e-4 s1 | 3 | 1f5adbe997a5ba52f99f691cc11ec47ff918394a9d5c346bc22871675b2e9e0c |
-Neutral seed 2 does not exist (dropped by the exploratory time limit). Decision for you: run it on tuning cells first (about 0.4 GPU-h), or accept 2 neutral seeds. Reference rows computed without adapters: plain, always-2, and the in-prompt method text (an upper reference, not a comparator to beat).
-Seed policy: arm value = mean of all seeds' per-case probabilities (3 for method and wrong-rule, 2 for neutral); no best-seed selection; per-seed values reported alongside.
+Neutral seed 2 (lr 1e-4) was run on tuning cells and is frozen: best epoch 3, sha256 d3f49c7b1e50708521372d4c05bf33c8cfaaafcb2629843771b2c09135f8ce0b, held-out tune soft regret 0.516. Neutral now has 3 seeds. The machine-readable frozen list is demo/test_frozen_adapters.json (verified by sha256 before scoring). Reference rows computed without adapters: plain, always-2, and the in-prompt method text (an upper reference, not a comparator to beat).
+Seed policy: arm value = mean of all seeds' per-case probabilities (3 for each of method, wrong-rule and neutral); no best-seed selection; per-seed values reported alongside.
 Adapter files are gitignored; before the look verify each sha256 and that adapter-off scoring reproduces plain bit for bit (safety checks 1-3, demo_out/lora_checks.json).
 
 ## 4. Primary comparison (one, declared in advance)
@@ -45,5 +45,13 @@ In every case report the frozen development verdict ("not passed") next to the t
 ## 7. Locked before the look
 Scoring code, prompts, orders and analysis script (explore_cpu.py extended by a test-mode script written and committed before the look; commit hash recorded here at approval); no edits to PROTOCOL.md; variants 1-14 and agent_py_files untouched; no intervention other than the adapters above on test cases; G3 Sonnet + Opus before the run; stop time rule (all work before Nov 24 23:00 CST). One run, one report.
 
-## 8. Open items for you
-(1) Approve/reject the look at all. (2) Neutral seed 2 yes/no. (3) Whether you want an extra control that pulls offers toward 2 without the rule content (distil toward the constant-2 text, tuning cells only) before the look; the G2 reviews say the wrong-rule arm does not isolate rule content. (4) The primary threshold 0.10.
+## 8. Owner's answers (Nov 22)
+(1) Yes to the test look. (2) Run neutral seed 2 on tuning cells first, then freeze it: done. (3) No extra shift-to-2 control; always-2 is already a required comparator. (4) Keep the 0.10 threshold.
+
+## 9. Clarifications fixed before the look (written by the executor, covered by gate G3)
+- "Not worse than always-2" in section 4 = mean(always-2 soft regret - method soft regret) >= 0; "beats always-2" (reported separately, never needed for SUPPORT) = lower bound of that difference > 0.
+- Section 6 labels: the base label is SUPPORT, PARTIAL (lower bound > 0 vs plain and vs neutral, SUPPORT not met) or NOT SHOWN; HARM (upper bound of plain - method < 0 over the C>=V test cells, at least 3 such cells) is appended as a flag, not an override. The dry run on tune cells showed that an overriding HARM would mask the base label.
+- Method text in the prompt is scored on the test cases as a reference row only (it is not a comparator for any label).
+- Free-text hard regret uses all 72 test cases for plain and for the three method seeds (greedy, the same scoring.say as on development cells); descriptive.
+- The look is executed by `python demo/test_look.py --execute`, which writes demo_out/test_look.lock first (so it can run only once), needs demo/test_go.json (the owner's go), verifies the adapters' sha256, and checks that adapter-off scoring reproduces the saved plain probabilities on 4 test cases (max abs diff < 1e-4) before scoring. A dry run of the same script on the 24 held-out tune cases is in demo_out/test_dryrun.md (not a result).
+- Test-mode script: demo/test_look.py, sha256 41dd0764d4c8f6c3917b48a9780538a8e99aa2c7ae95668bf35ad9d587998d33 (committed before the look; any later change voids the plan).
