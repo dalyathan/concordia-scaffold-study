@@ -1,0 +1,64 @@
+{
+ "layer": 18,
+ "resid_norm": 220.6704007317038,
+ "cases": [
+  "v17-V2-information-C1",
+  "v17-V2-information-C3",
+  "v17-V2-information-C5",
+  "v17-V3-neutral"
+ ],
+ "rows": [
+  {
+   "vector": "offer_lower",
+   "fraction": 0.1,
+   "mean_change_in_expected_offer": -0.003699918504135258,
+   "per_case": [
+    0.008,
+    -0.009,
+    -0.013,
+    -0.001
+   ],
+   "expected": "lower",
+   "as_expected": true
+  },
+  {
+   "vector": "-offer_lower",
+   "fraction": 0.1,
+   "mean_change_in_expected_offer": 0.0031861743294541722,
+   "per_case": [
+    0.002,
+    0.012,
+    -0.003,
+    0.002
+   ],
+   "expected": "raise",
+   "as_expected": true
+  },
+  {
+   "vector": "offer_lower",
+   "fraction": 0.2,
+   "mean_change_in_expected_offer": -0.0066841102410818976,
+   "per_case": [
+    0.001,
+    -0.01,
+    -0.01,
+    -0.008
+   ],
+   "expected": "lower",
+   "as_expected": true
+  },
+  {
+   "vector": "-offer_lower",
+   "fraction": 0.2,
+   "mean_change_in_expected_offer": 0.0032695448764339385,
+   "per_case": [
+    0.0,
+    0.01,
+    0.0,
+    0.003
+   ],
+   "expected": "raise",
+   "as_expected": true
+  }
+ ]
+}

@@ -147,3 +147,28 @@ def test_regret_colour_only():
   assert floor.regret_text(0.0).startswith(floor.GREEN)
   assert floor.regret_text(0.5).startswith(floor.RED)
   assert floor.regret_text(0.5, colour=False) == "0.50"
+
+
+def test_steercheck_checkpoint_resume_skips_done_points():
+  import math
+  calls = {"n": 0}
+  cases = [(i, (i % 5) + 1) for i in range(10)]
+  def score(case, steer, orders):
+    calls["n"] += 1
+    a = 0.0 if steer is None else float(steer[1][0])
+    logits = {k: -abs(k - 2) - a * abs(k - case[1]) for k in range(1, 6)}
+    z = sum(math.exp(v) for v in logits.values())
+    return {k: math.exp(v) / z for k, v in logits.items()}, 0.8
+  args = dict(best=lambda c: {c[1]}, value=lambda c, k: float(k == c[1]), cell=lambda c: c[1],
+              vectors={"v": {0: np.array([1.0])}}, grid=[(None, 0.0), (0, 1.0), (0, 2.0)],
+              full_orders=lambda c: [0], matched_orders=lambda c: [0],
+              reference={"r": {0: np.array([-1.0])}}, n_boot=50, log=lambda *a: None,
+              case_key=lambda c: c[0])
+  ck = steercheck.MemoryCheckpoint()
+  first = steercheck.run_controls(score, cases, checkpoint=ck, **args)
+  n_first = calls["n"]
+  calls["n"] = 0
+  second = steercheck.run_controls(score, cases, checkpoint=ck, **args)
+  assert calls["n"] == 2 * len(cases)                 # only the two plain baselines
+  assert n_first > calls["n"]
+  assert [r["soft_regret"] for r in first["rows"]] == [r["soft_regret"] for r in second["rows"]]

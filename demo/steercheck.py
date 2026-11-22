@@ -73,8 +73,36 @@ def partial_spearman(x, y, z, n_perm: int = 10_000, seed: int = 11) -> tuple[flo
 
 
 # ----------------------------------------------------------------- tuning
+class MemoryCheckpoint:
+  """Per-grid-point results: (name, budget, layer, alpha) -> {case key: (probs, mass)}.
+  Subclass and override put() to persist (see demo/tune_job.py: JSONL, one line per
+  finished point, so an interruption loses at most the point being computed)."""
+
+  def __init__(self):
+    self.data: dict = {}
+
+  def get(self, key):
+    return self.data.get(key)
+
+  def put(self, key, value):
+    self.data[key] = value
+
+
+def _point(score, cases, vec, layer, alpha, orders_for, checkpoint, name, budget, case_key):
+  key = (name, budget, layer, float(alpha))
+  if checkpoint is not None:
+    hit = checkpoint.get(key)
+    if hit is not None:
+      return {c: hit[case_key(c)] for c in cases}
+  out = {c: score(c, (layer, alpha * vec[layer]), orders_for(c)) for c in cases}
+  if checkpoint is not None:
+    checkpoint.put(key, {case_key(c): out[c] for c in cases})
+  return out
+
+
 def tune(score, cases, vec: Mapping, grid: Sequence[tuple], orders_for: Callable,
-         best, value, cell_of, base: Mapping, coherence: float = 0.9) -> dict:
+         best, value, cell_of, base: Mapping, coherence: float = 0.9, checkpoint=None,
+         name: str = "", budget: str = "", case_key: Callable = str) -> dict:
   """Best coherent (layer, alpha) by mean cell soft regret; 'no steering' always an
   option (ties: no steering, then smaller alpha, then earlier layer). Coherent: mean
   letter mass at least `coherence` x the plain mean. base: case -> (probs, mass)."""
@@ -86,7 +114,7 @@ def tune(score, cases, vec: Mapping, grid: Sequence[tuple], orders_for: Callable
   for layer, alpha in grid:
     if layer is None or alpha == 0:
       continue
-    out = {c: score(c, (layer, alpha * vec[layer]), orders_for(c)) for c in cases}
+    out = _point(score, cases, vec, layer, alpha, orders_for, checkpoint, name, budget, case_key)
     reg = float(np.mean(list(cell_means({c: soft_regret(out[c][0], c, best, value) for c in cases},
                                         cell_of).values())))
     ratio = float(np.mean([out[c][1] for c in cases]) / plain_mass) if plain_mass > 0 else 0.0
@@ -96,17 +124,19 @@ def tune(score, cases, vec: Mapping, grid: Sequence[tuple], orders_for: Callable
   return {"chosen": best_setting, "tried": tried}
 
 
-def evaluate(score, cases, vec, setting, orders_for):
+def evaluate(score, cases, vec, setting, orders_for, checkpoint=None, name="", budget="",
+             case_key: Callable = str):
   if setting["layer"] is None:
     return None
-  L, a = setting["layer"], setting["alpha"]
-  return {c: score(c, (L, a * vec[L]), orders_for(c)) for c in cases}
+  return _point(score, cases, vec, setting["layer"], setting["alpha"], orders_for, checkpoint,
+                name, budget, case_key)
 
 
 def run_controls(score, cases: Sequence, best, value, cell, vectors: Mapping[str, Mapping],
                  grid: Sequence[tuple], full_orders: Callable, matched_orders: Callable,
                  reference: Mapping[str, Mapping] = {}, n_boot: int = 2000,
-                 log: Callable = print, negate: Sequence[str] | None = None) -> dict:
+                 log: Callable = print, negate: Sequence[str] | None = None,
+                 checkpoint=None, case_key: Callable = str) -> dict:
   """The whole control table. vectors: full-budget candidates (the first is also run
   at matched budget); reference: directions tuned only at matched budget (random,
   Gaussian), against which the matched first vector is ranked."""
@@ -151,21 +181,25 @@ def run_controls(score, cases: Sequence, best, value, cell, vectors: Mapping[str
       if sign < 0 and name not in negate:
         continue
       v = {L: sign * x for L, x in vec.items()}
-      t = tune(score, cases, v, grid, full_orders, best, value, cell_of, base_full)
+      ck = dict(checkpoint=checkpoint, name=nm, budget="full", case_key=case_key)
+      t = tune(score, cases, v, grid, full_orders, best, value, cell_of, base_full, **ck)
       detail[nm] = t
-      row(nm, "full", base_full, evaluate(score, cases, v, t["chosen"], full_orders), t["chosen"])
+      row(nm, "full", base_full, evaluate(score, cases, v, t["chosen"], full_orders, **ck),
+          t["chosen"])
       log(f"tuned {nm}: {t['chosen']}")
   first = next(iter(vectors))
-  t = tune(score, cases, vectors[first], grid, matched_orders, best, value, cell_of, base_matched)
+  ck = dict(checkpoint=checkpoint, name=first, budget="matched", case_key=case_key)
+  t = tune(score, cases, vectors[first], grid, matched_orders, best, value, cell_of, base_matched, **ck)
   detail[f"{first}@matched"] = t
   m = row(f"{first}", "matched", base_matched,
-          evaluate(score, cases, vectors[first], t["chosen"], matched_orders), t["chosen"])
+          evaluate(score, cases, vectors[first], t["chosen"], matched_orders, **ck), t["chosen"])
   ref_red = {}
   for name, vec in reference.items():
-    t = tune(score, cases, vec, grid, matched_orders, best, value, cell_of, base_matched)
+    ck = dict(checkpoint=checkpoint, name=name, budget="matched", case_key=case_key)
+    t = tune(score, cases, vec, grid, matched_orders, best, value, cell_of, base_matched, **ck)
     detail[name] = t
-    rr = row(name, "matched", base_matched, evaluate(score, cases, vec, t["chosen"], matched_orders),
-             t["chosen"])
+    rr = row(name, "matched", base_matched,
+             evaluate(score, cases, vec, t["chosen"], matched_orders, **ck), t["chosen"])
     ref_red[name] = rr["reduction"]
     log(f"tuned reference {name}: {t['chosen']}")
   # Best constant shift (no model), fitted on the same cases.

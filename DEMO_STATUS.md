@@ -412,25 +412,58 @@ Text that states the answer for the case takes regret to about 0, which is the c
 
 **"Always offer 2 coins" beats plain Gemma** on the tuning cases (0.529 vs 0.714), and so does the best constant shift (0.669). Shrinking towards uniform never helps, so its best lam is 0. A steering vector has to beat these model-free baselines before its gain means anything. The method paragraph (0.303, step 4) does.
 
-## Step 7: tuning job (tuning cases only) — launched, running
+## Step 7: tuning job (tuning cases only) — relaunched with strength as a fraction of the residual norm, running
 
-`demo/tune_job.py`, using `steercheck.run_controls`.
+**Why the first launch was stopped.** It used α ∈ {0.5, 1, 2, 4} as a multiplier of each raw vector. The template and offer_lower vectors are only 0.3–2.7% of the residual norm at the tuning layers (step 5), so even α = 4 barely moved them. The sentence vector is 9–29% of the residual norm, so at α = 4 it exceeded 100%. The directions were therefore not compared at equal strength.
 
-- **Grid** (29 points ≤ 30): no steering, plus layers 6, 9, 12, 15, 18, 21, 24 (the first 7 of `steering.LAYERS`) × `steering.ALPHAS` (0.5, 1, 2, 4). α multiplies the vector.
-- **Full budget** (five orders): template, offer_lower, sentence, and the negated template.
-- **Matched budget** (one order per case, `cyclic_orders()[(variant − 1) mod 5]`): template, 20 random directions and 5 Gaussian directions, all rescaled to the template's norm at each layer.
-  - Random directions: differences of plain P1 activations between two tuning cases from different cells, with pairs drawn using PCG64 seed 11.
-  - Gaussian directions: PCG64 seed 12.
-- **Tuning rule:** the setting with the lowest mean cell soft regret among coherent settings, where coherent means mean letter mass ≥ 0.9 × plain. "No steering" is always an option.
-- **Analysis.** The unit of analysis is the cell (17 tuning cells). Intervals: 2,000 bootstrap resamples of cells. Tuning and evaluation use the same tuning cases, so results are in-sample and labelled so. No test case is touched.
-- **Estimate** (20 passes timed first, `logs/demo_tune_estimate.log`): 0.294 s per pass × 45,560 passes (19,040 full budget, 24,752 matched, the rest evaluations) = **3.7 hours**.
-- **Started:** 04:23, under nohup in tmux session `tune`.
+- The first job was killed after about 9 minutes, before its first tuning finished.
+- Its log is kept as `logs/demo_tune_job_v1.log` (model load only; no results).
 
-Check command:
+**Changes** (`demo/tune_job.py`, `demo/steercheck.py`):
+
+- **Strength = fraction of the mean plain P1 residual norm at that layer.** The norm is the mean over the 34 tuning cases of |h_L| at P1, from `demo_out/p1_acts.pt`; at layer 18 it is 220.7.
+- **Equal norm for every direction.** Every direction is normalised to unit length, then multiplied by that norm: template, offer_lower, sentence, the negated template, the 20 random directions and the 5 Gaussian directions. The grid value is then the fraction, so all directions are compared at equal norm.
+- **Grid** (29 points, the same for every vector): no steering, plus layers 6, 9, 12, 15, 18, 21, 24 × fractions 0.02, 0.05, 0.10, 0.20.
+- **Unchanged:**
+  - budgets: full = five orders; matched = one order per case, rotating with the variant;
+  - references: random = differences of plain P1 activations between tuning cases from different cells, PCG64 seed 11; Gaussian = seed 12;
+  - tuning rule: lowest mean cell soft regret among coherent settings (letter mass ≥ 0.9 × plain), with "no steering" always an option;
+  - cell bootstrap, 2,000 resamples;
+  - tuning cases only, in-sample.
+- **Checkpoint.**
+  - Each finished (vector, budget, layer, fraction) point, with every case's order-averaged p(k) and letter mass, is appended to **`demo_out/tune_partial.jsonl`**, flushed and fsynced.
+  - `--resume` loads that file and skips the points already there; the chosen setting's evaluation reuses the cached point.
+  - A reboot loses at most the grid point being computed, plus about 1 minute to recompute the plain baselines.
+  - Without `--resume`, an existing checkpoint file stops the job instead of being overwritten (a logged choice).
+  - The launch command passes `--resume`, which behaves as a fresh start when no file exists, so the same command restarts the job.
+  - Unit-tested: `test_steercheck_checkpoint_resume_skips_done_points`.
+  - `demo_out/tune_partial.jsonl` is git-ignored, because it changes constantly while the job runs; it lives on local disk, which survives a reboot.
+
+**Sanity check before launch** (`demo/tune_job.py --sanity`, `logs/demo_tune_sanity.log`, `demo_out/tune_sanity.json`): 4 tuning cases (v17-V2-information-C1, C3, C5, v17-V3-neutral), offer_lower at layer 18.
+
+| Direction | Fraction | Mean change in expected offer | Should | As expected | Per case |
+| --- | --- | --- | --- | --- | --- |
+| offer_lower | 0.10 | −0.004 | lower | yes | +0.008, −0.009, −0.013, −0.001 |
+| −offer_lower | 0.10 | +0.003 | raise | yes | +0.002, +0.012, −0.003, +0.002 |
+| offer_lower | 0.20 | −0.007 | lower | yes | +0.001, −0.010, −0.010, −0.008 |
+| −offer_lower | 0.20 | +0.003 | raise | yes | 0.000, +0.010, 0.000, +0.003 |
+
+The signs are right, but the effect is very small: under 0.01 coins even at 20% of the residual norm, and one case moves the wrong way at 0.10. The positive control barely moves the offer at layer 18. The job was launched as instructed.
+
+**Launch.** 04:32, tmux session `tune`, under nohup, with `--resume`. Same pass count as before: about 45,560 passes at about 0.29 s, so **about 3.7 hours**.
+
+**Check commands:**
 
 ```bash
-grep -v "Loading\|Warn\|warn\|torch.load" logs/demo_tune_job.log | tail -40   # progress and, at the end, the table
-python demo/steercheck.py --results demo_out/tune_results.json                  # the table once finished
+grep -v "Loading\|Warn\|warn\|torch.load" logs/demo_tune_job.log | tail -40    # progress; at the end, the table
+wc -l demo_out/tune_partial.jsonl                                               # grid points done (840 tuned points in all: 4 x 28 full budget + 26 x 28 matched)
+python demo/steercheck.py --results demo_out/tune_results.json                   # the table once finished
+```
+
+**Resume after an interruption** (skips finished points):
+
+```bash
+tmux new-session -d -s tune "nohup scripts/nonet.sh .venv/bin/python demo/tune_job.py --resume >> logs/demo_tune_job.log 2>&1"
 ```
 
 ## Step 8: teacher packet — done (no API call)
@@ -510,14 +543,14 @@ python demo/steercheck.py --results demo_out/tune_results.json                  
 | 4 text rows | done: method 0.303 vs plain 0.714 soft regret; neutral, wrong rule, disposition and acceptance rule ≈ plain |
 | 5 pairs and directions | done: checks pass; template vector 0.3–2.7% of residual norm, cosine 0.05–0.19 |
 | 6 offline baselines | done: always-2 0.529, best shift 0.669 (beta −0.85), flatten no help |
-| 7 tuning job | **running** (started 04:23, about 3.7 hours; check commands in step 7) |
+| 7 tuning job | **running**, relaunched 04:32 with strength as a fraction of the residual norm and checkpointing (about 3.7 hours; check and resume commands in step 7) |
 | 8 teacher packet | done (no API call) |
 | 9 steercheck and README_DEMO.md | done |
 | 10 tests and report | done |
 
 **Open items:**
 
-- **The step 7 results.** When the job finishes, `demo_out/tune_results.json` and its table (`python demo/steercheck.py --results demo_out/tune_results.json`) give, on tuning cases (in-sample):
+- **The step 7 results.** When the relaunched job finishes, `demo_out/tune_results.json` and its table (`python demo/steercheck.py --results demo_out/tune_results.json`) give, on tuning cases (in-sample):
   - each vector's tuned setting, regret and reduction with cell-bootstrap intervals;
   - the negated template;
   - the matched template's rank among the 25 reference directions;
