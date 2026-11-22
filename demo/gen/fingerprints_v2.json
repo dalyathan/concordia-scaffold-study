@@ -1,0 +1,32 @@
+{
+ "files": {
+  "demo/gen_cases.py": "cc0024b70ee5d53e4dad5966aa312200d9d53fb00248b3826ec4f6b2af01044f",
+  "refimpl/core.py": "7a83fa03261cf843fa3ed9f7b83791af61189075a8176d7d41b2f74a96a775d8",
+  "refimpl/phase3.py": "b5f83cb69b6f332c78a874605e37b145981763c6a7fce25934da3b363328aded",
+  "fruitville_haggling.py": "f850d8a8cb0ecac90f4fe70964734f87a000828d7c4482f48b24f2c762f4e5e0"
+ },
+ "seed": 20261122,
+ "cells": {
+  "test_same": {
+   "n_cells": 60,
+   "sha256_with_labels": "553108957a67b82e0be50e830a3520a664924892d700df21372a154712a3de2a"
+  },
+  "test_hard": {
+   "n_cells": 62,
+   "sha256_with_labels": "831fea4c39f37c1469fd0cc411072b7100ec9635a88c9b987dc4eeace0ce0e86"
+  },
+  "hard_V": {
+   "n_cells": 20,
+   "sha256_with_labels": "3d8ee5346d24bba4c13d4fcf550bdd392a3be97e418aa0e79b6a1cda51923184"
+  },
+  "hard_grid": {
+   "n_cells": 21,
+   "sha256_with_labels": "584a2028619c173b24039f1d9e9ae524a28d293e7d83be08a22ec42d9e86dcb9"
+  },
+  "hard_wording": {
+   "n_cells": 21,
+   "sha256_with_labels": "5d73992e7cb70d22456edfdf9b930a09c5d7598fcb56ece5f626da8bb0eec401"
+  }
+ },
+ "quotas": "train 100/type, tune 14/type, test_same 20/type, hard_V 10 below + 10 no_cost, hard_grid 7/type, hard_wording 7/type (single RNG stream: changing a quota changes later splits)"
+}

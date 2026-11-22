@@ -81,3 +81,28 @@ def test_fingerprints_match_the_committed_lists():
   fp = json.load(open(os.path.join(DATA, "fingerprints.json")))
   cells, cases, _ = g.build()
   assert g.fingerprints(cells, cases) == fp
+
+
+def test_payoff_matches_an_independent_brute_force_over_the_whole_space():
+  from fractions import Fraction
+  for gname, grid in g.GRIDS.items():
+    for prior in g.PRIORS:
+      lo, hi = prior
+      for V in range(2, 13):
+        for k in grid:                                       # no stated cost: enumerate every possible farm cost
+          costs = range(lo, hi + 1)
+          exp = sum(Fraction(V - k) for c in costs if c <= k) / len(costs)
+          assert abs(g.payoff(V, grid, None, prior, k) - float(exp)) < 1e-12
+        for C in range(1, 15):
+          for k in grid:
+            assert g.payoff(V, grid, C, prior, k) == (V - k if k >= C else 0)
+
+
+def test_hard_slice_composition_and_v2_fingerprints():
+  cnt = collections.Counter((c["slice"], c["type"]) for c in CELLS if c["split"] == "test_hard")
+  assert cnt[("hard_V", "at_or_above")] == 0 and cnt[("hard_V", "below")] == cnt[("hard_V", "no_cost")] == 10
+  for sl in ("hard_grid", "hard_wording"):
+    assert {cnt[(sl, t)] for t in g.TYPES} == {7}
+  assert all(c["wording"] == 2 for c in CELLS if c["slice"] == "hard_wording")
+  assert all(c["grid_name"] in g.HARD_GRIDS for c in CELLS if c["slice"] == "hard_grid")
+  assert json.load(open(os.path.join(DATA, "fingerprints_v2.json")))["cells"] == g.fingerprints_v2(CELLS)["cells"]

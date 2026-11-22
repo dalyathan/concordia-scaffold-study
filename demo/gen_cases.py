@@ -198,6 +198,27 @@ def fingerprints(cells, cases):
   return fp
 
 
+def fingerprints_v2(cells):
+  """Test-cell entries INCLUDING labels, plus the generator and the text modules the prompts depend on."""
+  sha = lambda b: hashlib.sha256(b).hexdigest()
+  here = os.path.dirname(os.path.abspath(__file__))
+  root = os.path.dirname(here)
+  fv = os.path.join(root, "concordia", "examples", "modular", "environment", "modules", "fruitville_haggling.py")
+  out = {"generator_sha256_excluding_this_function_note": "see files", "files": {
+      "demo/gen_cases.py": sha(open(os.path.join(here, "gen_cases.py"), "rb").read()),
+      "refimpl/core.py": sha(open(os.path.join(root, "refimpl", "core.py"), "rb").read()),
+      "refimpl/phase3.py": sha(open(os.path.join(root, "refimpl", "phase3.py"), "rb").read()),
+      "fruitville_haggling.py": sha(open(fv, "rb").read())}, "seed": SEED, "cells": {}}
+  for name, sel in (("test_same", lambda c: c["split"] == "test_same"), ("test_hard", lambda c: c["split"] == "test_hard"),
+                    ("hard_V", lambda c: c["slice"] == "hard_V"), ("hard_grid", lambda c: c["slice"] == "hard_grid"),
+                    ("hard_wording", lambda c: c["slice"] == "hard_wording")):
+    sub = sorted((c for c in cells if sel(c)), key=lambda c: c["cell"])
+    out["cells"][name] = {"n_cells": len(sub), "sha256_with_labels": sha(json.dumps(sub, sort_keys=True).encode())}
+  out["quotas"] = "train 100/type, tune 14/type, test_same 20/type, hard_V 10 below + 10 no_cost, hard_grid 7/type, hard_wording 7/type (single RNG stream: changing a quota changes later splits)"
+  out.pop("generator_sha256_excluding_this_function_note")
+  return out
+
+
 if __name__ == "__main__":
   cells, cases, rej = build()
   os.makedirs(OUT, exist_ok=True)
@@ -207,6 +228,7 @@ if __name__ == "__main__":
       f.write(json.dumps(c) + "\n")
   fp = fingerprints(cells, cases)
   json.dump(fp, open(os.path.join(OUT, "fingerprints.json"), "w"), indent=1)
+  json.dump(fingerprints_v2(cells), open(os.path.join(OUT, "fingerprints_v2.json"), "w"), indent=1)
   import collections
   print(collections.Counter((c["split"], c["slice"], c["type"]) for c in cells))
   print(rej, json.dumps(fp, indent=1))
