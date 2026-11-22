@@ -29,10 +29,16 @@ from refimpl import core, runtime, steering
 from refimpl.local_gemma2 import LocalGemma2
 
 LAYERS = tuple(L for L in steering.LAYERS if L <= 24)          # 6 .. 24: 7 layers
-FRACTIONS = (0.02, 0.05, 0.10, 0.20)
+GRID_FILE = os.path.join(common.DEMO_DIR, "tune_grid.json")     # demo/choose_grid.py
+if os.path.exists(GRID_FILE):
+  _g = json.load(open(GRID_FILE))
+  FRACTIONS, MODE = tuple(_g["fractions"]), _g["mode"]
+  assert tuple(_g["layers"]) == LAYERS
+else:
+  FRACTIONS, MODE = (0.02, 0.05, 0.10, 0.20), "p1"
 GRID = [(None, 0.0)] + [(L, f) for L in LAYERS for f in FRACTIONS]
 PARTIAL = os.path.join(common.ROOT, "demo_out", "tune_partial.jsonl")
-FULL = ("template", "offer_lower", "sentence")
+FULL = ("template", "offer_lower", "sentence", "cheap")
 N_RANDOM, N_GAUSS = 20, 5
 
 ap = argparse.ArgumentParser()
@@ -71,7 +77,7 @@ for n in range(N_GAUSS):
   reference[f"gauss {n + 1}"] = unit_scaled({L: v for L in LAYERS})
 
 def score(p, steer, orders):
-  r = scoring.score(lm, p, orders=orders, steer=steer)
+  r = scoring.score(lm, p, orders=orders, steer=steer, steer_from=MODE)
   return r.probs, r.mass
 
 full = lambda p: scoring.ORDERS
@@ -111,7 +117,7 @@ if args.estimate:
   for p in cases[:4]:
     score(p, (12, vectors["template"][12]), scoring.ORDERS)
   per_pass = (time.perf_counter() - t) / 20
-  n_full = 4 * (len(GRID) - 1) * len(cases) * 5
+  n_full = (len(FULL) + 1) * (len(GRID) - 1) * len(cases) * 5
   n_matched = (1 + N_RANDOM + N_GAUSS) * (len(GRID) - 1) * len(cases)
   n_eval = (4 * 5 + 26) * len(cases) + 6 * len(cases)
   total = n_full + n_matched + n_eval
@@ -151,6 +157,7 @@ res = steercheck.run_controls(score, cases, best, value, cell, vectors, GRID, fu
                               case_key=lambda p: p.pid,
                               log=lambda m: print(f"[{time.time() - t0:6.0f}s] {m}", flush=True))
 res["grid"] = GRID
+res["position_mode"] = MODE
 res["strength"] = "fraction of the mean plain P1 residual norm at the layer (tuning cases)"
 res["resid_norm"] = resid
 res["cases"] = [p.pid for p in cases]

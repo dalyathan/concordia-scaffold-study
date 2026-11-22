@@ -1,0 +1,29 @@
+{
+ "mode": "p1",
+ "fractions": [
+  0.25,
+  0.5,
+  1.0,
+  2.0
+ ],
+ "layers": [
+  6,
+  9,
+  12,
+  15,
+  18,
+  21,
+  24
+ ],
+ "n_points": 29,
+ "positive_control_ok": false,
+ "note": "POSITIVE CONTROL FAILED: cheap never lowered the expected offer by 0.25 coins while coherent in either position mode; default fractions used",
+ "best_cheap_decrease_by_mode": {
+  "p1": 0.04081528205777463,
+  "p3": -Infinity
+ },
+ "reference_layer": null,
+ "f_min": null,
+ "f_max": null,
+ "rule": "Position mode: the one where the positive control \"cheap\" lowers the expected offer\nmost at any coherent setting (letter mass >= 0.9 x plain). Ties go to \"p1\".\nFractions: in that mode, f_min = the smallest scanned fraction at which cheap lowers\nthe expected offer by >= 0.25 coins while coherent (at any scanned layer; L* = that\nlayer, ties to the larger decrease); f_max = the largest scanned fraction at which\ncheap at L* stays coherent. Four roughly geometric values from f_min to f_max\n(rounded to two significant figures). If f_max = f_min, four geometric values from\nf_min / 4 to f_min. If cheap never lowers the offer by 0.25 while coherent: 0.25,\n0.5, 1.0, 2.0, and the positive control is recorded as failed. Layers stay 6-24\n(7 layers): 7 x 4 + no steering = 29 points."
+}

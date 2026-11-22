@@ -543,7 +543,7 @@ tmux new-session -d -s tune "nohup scripts/nonet.sh .venv/bin/python demo/tune_j
 | 4 text rows | done: method 0.303 vs plain 0.714 soft regret; neutral, wrong rule, disposition and acceptance rule ≈ plain |
 | 5 pairs and directions | done: checks pass; template vector 0.3–2.7% of residual norm, cosine 0.05–0.19 |
 | 6 offline baselines | done: always-2 0.529, best shift 0.669 (beta −0.85), flatten no help |
-| 7 tuning job | **running**, relaunched 04:32 with strength as a fraction of the residual norm and checkpointing (about 3.7 hours; check and resume commands in step 7) |
+| 7 tuning job | **running**: third launch 05:02 after a dose scan (positive control failed; grid by rule; about 4 hours; check and resume commands under "Step 7, third launch") |
 | 8 teacher packet | done (no API call) |
 | 9 steercheck and README_DEMO.md | done |
 | 10 tests and report | done |
@@ -585,3 +585,88 @@ tmux new-session -d -s tune "nohup scripts/nonet.sh .venv/bin/python demo/tune_j
 | 24 | 0.065 | 0.625 | 1.000 |
 
 Unlike template (cosine 0.05–0.19) and offer_lower (0.08–0.27), the per-case "1 not 4" differences agree strongly from layer 12 onward. The raw vector is still small, but the scan rescales it to a fixed fraction of the residual norm.
+
+### 3. Dose scan — done
+
+`demo/dose_scan.py` → `demo_out/dose_scan.json` (`logs/demo_dose_scan.log`, 15 minutes).
+
+- **Cases:** 8 tuning cases, every fourth tuning case in order: v17-V2-information-C1, v17-V3-neutral, v17-V4-information-C1, v17-V5-information-C2, v17-V6-information-C1, v18-V2-information-C3, v18-V3-information-C2, v18-V5-neutral. Five orders.
+- **Vectors:** offer_lower, cheap and sentence, each unit-normalised and scaled to a fraction of the mean plain P1 residual norm at the layer.
+- **Layers and fractions:** layers 12, 18, 24; fractions 0.1, 0.25, 0.5, 1.0, 2.0.
+- **Two position modes:**
+  - "P1 on": the vector is added at P1 and the positions after it;
+  - "P3 on": added at every position from P3 (the last token of the seller's final line) onward, through P1. This was added as `scoring.score(steer_from="p3")`.
+
+Plain on the 8 scan cases: expected offer 2.693, soft regret 0.839, letter mass 0.64. Each entry: change in expected offer / soft regret / letter mass relative to plain. **Bold**: coherent (mass ≥ 0.9 × plain).
+
+| Vector | Mode | Layer | f = 0.1 | f = 0.25 | f = 0.5 | f = 1.0 | f = 2.0 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| offer_lower | P1 on | 12 | **-0.001 / 0.84 / 0.92** | -0.002 / 0.84 / 0.79 | +0.001 / 0.85 / 0.56 | +0.017 / 0.86 / 0.22 | +0.044 / 0.89 / 0.07 |
+| offer_lower | P1 on | 18 | **+0.002 / 0.84 / 0.97** | +0.000 / 0.84 / 0.89 | -0.002 / 0.84 / 0.76 | -0.007 / 0.84 / 0.66 | +0.024 / 0.86 / 0.45 |
+| offer_lower | P1 on | 24 | **-0.022 / 0.83 / 0.99** | **-0.049 / 0.83 / 0.92** | -0.065 / 0.84 / 0.79 | -0.032 / 0.86 / 0.75 | +0.016 / 0.89 / 0.77 |
+| offer_lower | P3 on | 12 | +0.027 / 0.86 / 0.78 | +0.073 / 0.89 / 0.49 | +0.079 / 0.94 / 0.21 | +0.389 / 1.13 / 0.02 | +0.227 / 1.16 / 0.00 |
+| offer_lower | P3 on | 18 | -0.022 / 0.83 / 0.84 | -0.060 / 0.81 / 0.51 | -0.081 / 0.84 / 0.16 | +0.126 / 1.03 / 0.01 | +0.436 / 1.25 / 0.02 |
+| offer_lower | P3 on | 24 | -0.080 / 0.84 / 0.81 | -0.171 / 0.87 / 0.47 | -0.119 / 1.00 / 0.22 | +0.006 / 1.11 / 0.10 | +0.179 / 1.16 / 0.00 |
+| cheap | P1 on | 12 | **-0.001 / 0.84 / 0.93** | -0.001 / 0.84 / 0.83 | +0.001 / 0.85 / 0.65 | +0.017 / 0.86 / 0.37 | +0.052 / 0.89 / 0.07 |
+| cheap | P1 on | 18 | **+0.000 / 0.84 / 0.97** | -0.002 / 0.84 / 0.87 | +0.005 / 0.84 / 0.67 | +0.001 / 0.85 / 0.37 | +0.031 / 0.88 / 0.22 |
+| cheap | P1 on | 24 | **-0.037 / 0.82 / 0.97** | -0.078 / 0.81 / 0.88 | -0.092 / 0.82 / 0.78 | **-0.041 / 0.84 / 1.07** | +0.005 / 0.88 / 0.78 |
+| cheap | P3 on | 12 | +0.008 / 0.85 / 0.80 | +0.011 / 0.85 / 0.54 | -0.060 / 0.84 / 0.25 | +0.063 / 0.90 / 0.06 | +0.154 / 1.14 / 0.00 |
+| cheap | P3 on | 18 | -0.015 / 0.82 / 0.80 | +0.001 / 0.82 / 0.38 | +0.066 / 0.87 / 0.06 | +0.109 / 1.05 / 0.00 | +0.329 / 1.22 / 0.00 |
+| cheap | P3 on | 24 | -0.170 / 0.80 / 0.77 | -0.361 / 0.79 / 0.39 | -0.346 / 0.88 / 0.19 | +0.091 / 1.11 / 0.02 | +0.183 / 1.14 / 0.00 |
+| sentence | P1 on | 12 | **+0.002 / 0.84 / 0.95** | +0.004 / 0.84 / 0.83 | +0.010 / 0.85 / 0.64 | +0.015 / 0.85 / 0.51 | +0.026 / 0.86 / 0.40 |
+| sentence | P1 on | 18 | **-0.002 / 0.84 / 0.92** | -0.005 / 0.84 / 0.75 | -0.008 / 0.85 / 0.49 | -0.020 / 0.85 / 0.21 | +0.036 / 0.88 / 0.09 |
+| sentence | P1 on | 24 | **-0.005 / 0.84 / 0.95** | -0.012 / 0.83 / 0.83 | -0.012 / 0.84 / 0.55 | +0.010 / 0.85 / 0.17 | +0.027 / 0.88 / 0.10 |
+| sentence | P3 on | 12 | -0.015 / 0.84 / 0.88 | -0.009 / 0.87 / 0.70 | +0.040 / 0.91 / 0.37 | +0.113 / 0.98 / 0.00 | +0.287 / 1.18 / 0.00 |
+| sentence | P3 on | 18 | **+0.060 / 0.86 / 0.97** | +0.172 / 0.94 / 0.78 | +0.219 / 1.03 / 0.14 | +0.233 / 1.15 / 0.00 | +0.284 / 1.19 / 0.00 |
+| sentence | P3 on | 24 | **-0.029 / 0.83 / 1.00** | **-0.071 / 0.83 / 0.93** | -0.093 / 0.85 / 0.70 | +0.109 / 1.03 / 0.19 | +0.254 / 1.17 / 0.01 |
+
+### Steering at this setup cannot move offers
+
+**The positive control failed.** `cheap` is the steering-vector form of "say 1 coin, not 4". Its per-case differences agree strongly (cosine 0.71 at layer 18). Yet it never lowered the expected offer by more than **0.04 coins** at any coherent setting, in either position mode.
+
+**Evidence from the scan:**
+
+- **P1 on, best coherent setting:** −0.037 at layer 24, fraction 0.1. At layer 24, fraction 1.0, letter mass is 1.07 × plain but the change is only −0.041.
+- **P3 on:** `cheap` does lower the offer, by −0.17 at fraction 0.1 and −0.36 at 0.25 (layer 24), and soft regret falls to 0.79. But the letter mass drops to 0.77 and 0.39 × plain. The model stops answering with a letter before the offer moves much.
+- **offer_lower and sentence:** the same pattern. Coherent settings move the offer by at most 0.08 coins (sentence, P3 on, layer 24, fraction 0.25: −0.071 with mass 0.93). Larger strengths collapse the letter mass and *raise* the offer and the regret.
+- **Comparison with text.** On the full tuning set, the method paragraph as text cut soft regret from 0.714 to 0.303 (step 4), and the step 2 cost dial shows that changing the prompt's facts moves offers. A mean-difference vector added to the residual stream does neither at any coherent strength.
+
+**Conclusion:** with this model, these layers and these directions, steering cannot move offers by a useful amount without breaking the answer format.
+
+### 4. Grid chosen by rule — done
+
+`demo/choose_grid.py` → `demo/tune_grid.json` (`logs/demo_choose_grid.log`).
+
+- **Position mode: P1 on.** The rule takes the mode where `cheap` lowers the expected offer most while coherent: 0.041 in P1 mode; no coherent setting in P3 mode.
+- **Fractions: 0.25, 0.5, 1.0, 2.0, the fallback.** Cheap never reached a 0.25-coin decrease while coherent. **Logged: the positive control failed.**
+- **Grid:** layers 6, 9, 12, 15, 18, 21, 24 × those 4 fractions + no steering = **29 points**.
+
+**Interpretations, logged:**
+
+- "Moves the expected offer most" is read as the largest *decrease*, since cheap means "say 1, not 4".
+- Coherence is mass ≥ 0.9 × plain on the 8 scan cases.
+
+**Expected consequence:** at P1 on, most settings with fraction ≥ 0.25 were incoherent in the scan, so tuning will mostly keep "no steering" (α = 0) for every direction.
+
+### 5. Third tuning job — launched, running
+
+- **Chain:** started automatically after the scan and the grid choice (`dose_scan.py && choose_grid.py && tune_job.py --resume`, tmux session `tune`). The job started at 05:02.
+- **Grid and mode:** from `demo/tune_grid.json` (P1 on; fractions 0.25, 0.5, 1.0, 2.0).
+- **Directions:** **cheap** is added to the full-budget vectors (template, offer_lower, sentence, cheap, and the negated template). Equal norm for every direction (unit vector × fraction × mean residual norm), checkpoint, `--resume` and the 20 random + 5 Gaussian matched references are unchanged.
+- **Size:** 5 × 28 × 34 × 5 + 26 × 28 × 34 ≈ 48,500 passes, about **4 hours** at 0.29 s per pass. That makes 980 tuned grid points (5 × 28 full budget + 26 × 28 matched).
+
+**Check commands:**
+
+```bash
+grep -v "Loading\|Warn\|warn\|torch.load" logs/demo_tune_job.log | tail -40   # progress; at the end, the table
+wc -l demo_out/tune_partial.jsonl                                              # grid points done, of 980
+python demo/steercheck.py --results demo_out/tune_results.json                  # the table once finished
+```
+
+**Resume after an interruption** (skips finished points):
+
+```bash
+tmux new-session -d -s tune "nohup scripts/nonet.sh .venv/bin/python demo/tune_job.py --resume >> logs/demo_tune_job.log 2>&1"
+```
+
+**Superseded.** Step 7's second-launch section above (grid 0.02–0.20) no longer applies. Its sanity check and partial results are kept as `logs/demo_tune_sanity.log` and `demo_out/tune_partial_v2.jsonl`.

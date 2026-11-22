@@ -4,6 +4,7 @@ and P1 activation capture. Shared by floor.py, the step scripts and steercheck."
 from __future__ import annotations
 
 import dataclasses
+import os
 import functools
 import re
 import time
@@ -113,8 +114,11 @@ class Result:
 
 def score(lm: LocalGemma2, p: core.Prompt, notes: str | None = None,
           orders: Sequence[Sequence[int]] = ORDERS, steer: tuple | None = None,
-          capture: bool = False, reword: bool = False) -> Result:
-  """Order-averaged first-token p(k) from the P1 pass. steer = (layer, vector)."""
+          capture: bool = False, reword: bool = False, steer_from: str = "p1") -> Result:
+  """Order-averaged first-token p(k) from the P1 pass. steer = (layer, vector),
+  added at every position from P1 on (steer_from="p1") or from P3, the last token
+  of the seller's final line, on (steer_from="p3")."""
+  assert steer_from in ("p1", "p3")
   t0 = time.perf_counter()
   per, logs, masses, acts = [], [], [], []
   for order in orders:
@@ -125,9 +129,10 @@ def score(lm: LocalGemma2, p: core.Prompt, notes: str | None = None,
       return {"P1": p1["i"]}
     if capture:
       hooks += phase3.capture_hooks(lm, store, pos)
-    if steer is not None:
-      hooks.append(phase3.steering_hook(lm, steer[0], steer[1], lambda: p1["i"]))
     p1["i"] = _p1_index(lm, user)
+    if steer is not None:
+      start = p1["i"] if steer_from == "p1" else _p3_index(lm, user, p, reword)
+      hooks.append(phase3.steering_hook(lm, steer[0], steer[1], lambda s=start: s))
     _, p1_check, _ = lm.letter_scores(user, phase3.LETTERS, hooks=hooks, whole_answer=False)
     assert p1_check == p1["i"]
     first = dict(lm.last_first_token)
@@ -148,6 +153,18 @@ def _p1_index(lm, user: str) -> int:
     from refimpl.local_gemma2 import ensure_prompt_not_too_long
     trimmed = ensure_prompt_not_too_long(user, 1)
     cache[user] = lm.encode(lm.render(build_messages(CHOICE_SYSTEM, trimmed), True)).shape[1] - 1
+  return cache[user]
+
+
+def _p3_index(lm, user: str, p: core.Prompt, reword: bool) -> int:
+  """P3: last token of the seller's final line (phase3.token_positions), cached."""
+  assert not reword, "P3 steering is defined for the original scaffold only"
+  cache = lm.__dict__.setdefault("_p3_cache", {})
+  if user not in cache:
+    from refimpl.local_gemma2 import ensure_prompt_not_too_long
+    trimmed = ensure_prompt_not_too_long(user, 1)
+    ids = lm.encode(lm.render(build_messages(CHOICE_SYSTEM, trimmed), True))[0]
+    cache[user] = phase3.token_positions(lm, ids, p)["P3"]
   return cache[user]
 
 
@@ -172,3 +189,37 @@ def say(lm: LocalGemma2, p: core.Prompt, max_tokens: int = 16) -> tuple[str, int
 
 def regret(p: core.Prompt, r: Result) -> tuple[float, float]:
   return core.hard_regret(p, r.top), core.soft_regret(p, r.probs)
+
+
+# ---------------------------------------------------------------- adapters
+ADAPTER_DIR = os.path.join(common.ROOT, "demo_out", "adapters")
+ARMS = ("answer_only", "template", "shuffled")
+
+
+def available_adapters() -> list[str]:
+  return [a for a in ARMS if os.path.exists(os.path.join(ADAPTER_DIR, a, "adapter_config.json"))]
+
+
+def load_adapters(lm: LocalGemma2, names=None):
+  """Load the saved LoRA arms into lm.model in place (PEFT); returns the PeftModel.
+  lm keeps working: LoRA layers are injected into its modules."""
+  from peft import PeftModel
+  names = list(names or available_adapters())
+  if not names:
+    return None
+  peft = PeftModel.from_pretrained(lm.model, os.path.join(ADAPTER_DIR, names[0]), adapter_name=names[0])
+  for n in names[1:]:
+    peft.load_adapter(os.path.join(ADAPTER_DIR, n), adapter_name=n)
+  peft.eval()
+  return peft
+
+
+def adapter_context(peft, name: str | None):
+  """Context in which scoring uses adapter `name`, or no adapter (name=None)."""
+  import contextlib
+  if peft is None:
+    return contextlib.nullcontext()
+  if name is None:
+    return peft.disable_adapter()
+  peft.set_adapter(name)
+  return contextlib.nullcontext()

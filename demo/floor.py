@@ -9,7 +9,7 @@ Commands (--serve):
   case <id>          score a demo case (plain): prompt lines, bars, offer, regret
   cost <n|none>      re-score the current case with only the stated cost changed
   shuffle            re-score under a new option order; did the pick change?
-  plain | text <name> | steer <config.json> | adapter <on|off>
+  plain | text <name> | steer <config.json> | adapter <on|off|arm>
                      switch the condition; plain and current side by side
   say                greedy-generate Gemma's answer text for the current case
   table              the results table (every row kept, including failures)
@@ -63,8 +63,8 @@ def parse_command(line: str) -> tuple[str, list[str]]:
       raise CommandError(f"bad case id: {e}") from None
   if cmd == "cost" and args[0] != "none" and args[0] not in "12345":
     raise CommandError("cost takes 1-5 or none")
-  if cmd == "adapter" and args[0] not in ("on", "off"):
-    raise CommandError("adapter takes on or off")
+  if cmd == "adapter" and args[0] not in ("on", "off", "answer_only", "template", "shuffled"):
+    raise CommandError("adapter takes on, off, answer_only, template or shuffled")
   return cmd, args
 
 
@@ -264,10 +264,16 @@ class Floor:
 
   def cmd_adapter(self, state):
     self._need_case()
-    if state == "on":
+    if state == "off":
+      self.condition = ("plain", None)
+      return ["adapter off (plain)"]
+    names = getattr(self.engine, "adapters", lambda: [])()
+    if not names:
       return ["no adapter yet"]
-    self.condition = ("plain", None)
-    return ["adapter off (plain)"]
+    name = getattr(self.engine, "default_adapter", names[0]) if state == "on" else state
+    if name not in names:
+      raise CommandError(f"adapter '{name}' not found (have: {', '.join(names)})")
+    return self._switch(("adapter", name))
 
   def cmd_say(self):
     self._need_case()
@@ -354,6 +360,16 @@ class ModelEngine:
     self.cache: dict = {}
     self.vectors: dict = {}
     self.rows_def = None
+    self.peft = None
+    self._adapters = scoring.available_adapters()
+    if self._adapters:
+      self.peft = scoring.load_adapters(self.lm, self._adapters)
+    summary = os.path.join(common.DEMO_DIR, "lora_summary.json")
+    self.default_adapter = (json.load(open(summary))["best_arm"] if os.path.exists(summary)
+                            else (self._adapters[0] if self._adapters else None))
+
+  def adapters(self):
+    return list(self._adapters)
 
   def _notes(self, p, name):
     import textrows
@@ -369,7 +385,8 @@ class ModelEngine:
       steer = self._steer(arg)
     key = (self.scoring.key(p), kind, arg, tuple(map(tuple, orders)))
     if key not in self.cache:
-      self.cache[key] = self.scoring.score(self.lm, p, notes=notes, orders=orders, steer=steer)
+      with self.scoring.adapter_context(self.peft, arg if kind == "adapter" else None):
+        self.cache[key] = self.scoring.score(self.lm, p, notes=notes, orders=orders, steer=steer)
     return self.cache[key]
 
   def _steer(self, path):
@@ -390,7 +407,8 @@ class ModelEngine:
     return int(cfg["layer"]), float(cfg["alpha"]) * v.float()
 
   def say(self, p):
-    return self.scoring.say(self.lm, p)
+    with self.scoring.adapter_context(self.peft, None):
+      return self.scoring.say(self.lm, p)
 
 
 def print_map():

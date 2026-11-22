@@ -105,6 +105,7 @@ def test_floor_parser():
   assert floor.parse_command("cost none") == ("cost", ["none"])
   assert floor.parse_command("dial show") == ("dial", ["show"])
   assert floor.parse_command("text wrong_rule") == ("text", ["wrong_rule"])
+  assert floor.parse_command("adapter template") == ("adapter", ["template"])
   for bad in ("", "fly", "case", "case v01-V3-neutral", "case v14-V3-neutral",
               "case v15-V3-information", "cost 7", "adapter maybe", "shuffle now"):
     with pytest.raises(floor.CommandError):
