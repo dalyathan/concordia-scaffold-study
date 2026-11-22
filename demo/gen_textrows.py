@@ -12,7 +12,7 @@ from refimpl import core, phase3, runtime
 from refimpl.local_gemma2 import LocalGemma2
 
 OUT = os.path.join(common.ROOT, "demo_out", "gen_text_rows.jsonl")
-ROWS = ("method_original", "teacher", "neutral", "wrong_rule")
+ROWS = tuple(sys.argv[1:]) or ("method_original", "teacher", "neutral", "wrong_rule")
 
 
 def row_texts():
