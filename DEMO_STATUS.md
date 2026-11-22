@@ -622,6 +622,8 @@ Plain on the 8 scan cases: expected offer 2.693, soft regret 0.839, letter mass 
 
 ### Steering at this setup cannot move offers
 
+> **Superseded by the steering checks and gate G2 below.** This section's claim holds only for order-averaged vectors at P1 up to layer 24. Per-order vectors at layers 33–39 do move the first-token readout (as a letter push), and free-text offers can be moved too.
+
 **The positive control failed.** `cheap` is the steering-vector form of "say 1 coin, not 4". Its per-case differences agree strongly (cosine 0.71 at layer 18). Yet it never lowered the expected offer by more than **0.04 coins** at any coherent setting, in either position mode.
 
 **Evidence from the scan:**
@@ -905,3 +907,58 @@ Reviews saved as `reviews/2026-11-22_G1_lora-plan_{sonnet,fable}.md` (packet `/t
 | 17 | Train cells contain no stated cost 4 and no best offer 4, so held-out cell (5, C 4) tests extrapolation (Sonnet) | **Deferred** (open): the split is frozen; per-cell results show it |
 
 **Open review points:** 16 and 17 above; plus that the const2 *training* arm and the template arm are the first to be dropped by the reduction ladder.
+
+## 3. Steering checks: results, gate G2 and the verdict (2026-11-22)
+
+**Scripts and files.** `demo/steer_checks.py` (checks a–c, controls, extras), `demo/steer_content_check.py`, `demo/steer_followup.py`; results in `demo_out/steer_checks.{json,md}`, `steer_content_check.json`, `steer_followup.json`; logs `logs/demo_steer_*.log`. Vectors are built from the 11 train cells and scored on 12 held-out tune cases (variants 15 and 18 of the six held-out cells). No test case was scored. Reference on those 12 cases: plain soft regret **0.573** (expected offer 2.338, letter mass 0.67); method text in the prompt **0.184**; always-2 **0.333**; best constant shift of the output distribution (fitted on the train cells) **0.508**.
+
+### Checks a–c (full tables: `demo_out/steer_checks.md`)
+
+Each entry: change in expected offer / soft regret / letter mass relative to plain.
+
+| Check | Setting | Result |
+| --- | --- | --- |
+| (a) per-order cheap | layer 27, f 0.25 | −0.259 / 0.53 / ×1.09 |
+| | layer 33, f 1.0 | −1.178 / 0.427 / ×1.06 |
+| | layer 36, f 0.5 | −0.841 / 0.471 / ×1.08 |
+| | layer 39, f 0.5 | −0.974 / 0.442 / ×1.09 |
+| | **layer 39, f 1.0 (best)** | **−1.263 / 0.407 / ×1.20** |
+| (b) order-averaged cheap | best coherent: layer 27, f 0.25 | −0.205 / 0.560 / ×1.11 |
+| (b) order-averaged sentence | best coherent by change in offer: layer 33, f 1.0 | −0.072 / 0.606 / ×1.35 |
+| (c) patch method-run P1 residual into plain | layers 0–24 | no change (0.567–0.575) |
+| | 27 / 30 / 33 / 36 / 39 / 41 | 0.526 / 0.495 / 0.341 / 0.253 / 0.203 / 0.184 (layer 41 is exact: difference 0.0) |
+
+- **13 of the 40 settings in (a)** lower the expected offer by at least 0.25 coins with letter mass at least 0.9 × plain (10 with mass at or above plain). So the clause "a check moves the offer by 0.25 coins or more while the format stays coherent" **was met**. It is recorded for a later grid as a *letter push* (below), not as a content result.
+- **Controls at (a)'s best setting:** negated vector **+1.629** (soft regret 1.25, mass ×1.20); three random unit directions −0.019, −0.002, +0.024. At coherent strengths the negation raises the offer too: +0.599 (layer 39, f 0.25, mass ×0.95), +1.318 (f 0.5, ×1.01), +1.129 (layer 33, f 0.5, ×0.86).
+- **Controls for (b):** cheap negated +0.452 and sentence negated +0.264, but both at *incoherent* strength (letter mass ×0.65 and ×0.03), so those two numbers say little. Random directions: |change| ≤ 0.03.
+- **Hook verification** (above) passed first: exact patch at layer 41, and a final-layer unembedding push of −0.64 to −1.22 coins.
+
+### Gate G2 on the steering verdict — both reviewers: **partly justified**
+
+Saved as `reviews/2026-11-22_G2_steering-verdict_{sonnet,fable}.md` (packet `/tmp/gate_G2_ea489d9c/`). The proposed verdict had a wrong number (free text: 2 of 4 cases changed, not 3), over-read the patching, and used evidence that does not discriminate (a 0.99 correlation with the unembedding push). All fixes were under 1 GPU hour, so they were done before this verdict (`demo/steer_followup.py`, 20 minutes):
+
+| Review point | Check and result |
+| --- | --- |
+| Wrong-order control (both) | Steer option order i with order (i+1)'s vector: at layers 33, 36, 39 (f 0.5) the offer moves **+0.40, +1.10, +1.63** (own order −0.64, −0.84, −0.97); layer 39 f 1.0: +2.39 against −1.26. At layer 27, f 0.25 the wrong-order vector still gives −0.23 (own −0.26): that early effect is **not** order-specific |
+| Cosine with the unembedding difference (both) | Per-order cheap vector against unit(W_U[letter of 1] − W_U[letter of 4]): 0.02 (layer 27), 0.09–0.15 (33), 0.24–0.31 (36), 0.33–0.40 (39) |
+| Does the 0.99 correlation discriminate? (both) | Yes: per-case effects of per-order cheap correlate **0.991 / 0.995 / 0.997** (layers 33 / 36 / 39) with a final-layer push interpolated to the same mean change, but the **method text** correlates only **0.54**, the patch at layer 33 **0.84** and at layer 36 **0.66**. Correlation with headroom (plain offer − 1): cheap 0.82–0.95, method text 0.40 |
+| Per-order sentence vectors (Sonnet) | Layers 33, 36, 39 (f 1.0): −1.04, −1.06, −1.02 with soft regret 0.439, 0.427, 0.426 and mass ×1.4: the same letter-push behaviour as cheap |
+| Actual-delta steering (Sonnet) | Delta = method-run minus plain P1 residual of the evaluated cases themselves (diagnostic, not deployable). Own case and order: reproduces the patch (layer 39: −0.547, regret 0.203). **Averaged over orders within a case: ≈ 0 at every layer** (−0.03 to +0.01). Averaged over cases within an order: −0.044 / −0.084 / −0.179 / −0.285 / −0.388 at layers 27–39 but regret stays 0.53–0.56 |
+| Positive control as text (Sonnet) | `paragraph(case, 1)` as notes: **−1.321**; `paragraph(case, 4)`: **+1.661**; method paragraph −0.562. The target is real content when given as text |
+| Free text on all 12 cases (both) | Order-averaged cheap vector, last-position steering: layer 39, f 1.0 moves **8 of 12** offers (mean −0.67); negated moves 12 of 12 (**+2.33**); random 1 of 12 (+0.08). Layer 27, f 0.25: 2 of 12 (−0.17), negated 7 of 12 (+0.58), random 0. Hard regret on the 6 cost-below-resale cases at layer 39: 0.67 against plain's 1.0 (6 cases, 3 cells) |
+| Reporting errors (Fable) | Corrected above: 13 (not "13 or 10") settings; per-order steering at its best (0.407) is **worse than always-2 (0.333)**; the 3-of-4 free-text count is replaced by the 12-case result |
+| "Real but weak" (Fable) | Dropped as stated; replaced by the coherent-strength negations above |
+| Stats too thin (both) | Stated as descriptive: 12 cases = 6 cells; no interval is claimed for the partial Spearman (+0.10 to +0.21, plain −0.02), which is not used as evidence |
+
+### Verdict (after G2)
+
+**Mean-difference steering at P1 (order-averaged vectors, layers 12–39) did not reproduce the method text's effect on the first-token readout** (best coherent change −0.205 for cheap and −0.072 for sentence, against −0.56 for the text).
+
+1. **The vectors that moved the readout are letter pushes.** Per-order cheap and sentence vectors at layers 33–39 move the expected offer by up to −1.3 coins with coherent letter mass and symmetric negations, but they are specific to the option order (the next order's vector moves the offer the other way), they correlate 0.99 per case with a final-layer push toward the 1-coin letter, and their regret (0.41–0.43) does not beat always-2 (0.333). The method text does not behave like that (per-case correlation 0.54).
+2. **Explanation.** The method text's effect at P1 is carried by case- and order-specific signal in the last third of the network: patching the whole P1 residual recovers nothing before layer 24, about half by layer 33 and all by layer 41; the delta averaged over orders cancels to about 0; and a case-independent, order-specific delta reproduces part of the change in the offer (−0.39 of −0.55 at layer 39) but none of the regret gain. A mean-difference direction cannot hold that. **Not tested:** attention (K/V or attention outputs), so "arrives late through attention" is a hypothesis.
+3. **Free text.** The order-averaged cheap vector does move free-text offers (8 of 12 at layer 39, f 1.0) with a symmetric negation. Whether it carries case content is not shown: it is a generic "cheaper" shift (cost-below-resale hard regret 0.67 vs 1.0 on 6 cases).
+4. **Scope.** P1-only, order-averaged (and per-order) mean-difference vectors, layers 12–39 (6–24 in the earlier scan), fractions up to 1.0 (2.0 earlier); steering from the end of the seller line onward was tried only in the earlier scan at layers 12–24. All on 12 held-out tune cases (6 cells) selected on; test cases were never scored. The negative statement is about *these vectors*, not about steering in general.
+
+**Recorded for a later grid** (positive-finding clause): per-order cheap or sentence vectors at layers 27–39, fractions 0.25–1.0 (first-token readout, a letter push); order-averaged cheap at layer 39, fraction 1.0 for free text.
+
+**Open review points (steering):** the evaluated cases also selected the settings; attention was not patched; free text is 12 cases; whether any steering setting goes to the test cells needs gate G3 and the owner's go.
