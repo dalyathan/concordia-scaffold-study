@@ -298,8 +298,12 @@ class Floor:
         if isinstance(it, dict) and "cost" in it:
           p = scoring.with_cost(p, it["cost"])
         try:
-          r = self._score(p, cond)
-          self.dial_results.append({"p": p, "probs": r.probs, "top": r.top})
+          # One order per lock acquisition (about 0.3 s on 9B), so a live command
+          # waits for at most one pass, not a whole five-order case.
+          per = [self._score(p, cond, [o]).probs for o in core.cyclic_orders()]
+          probs = {k: sum(d[k] for d in per) / len(per) for k in core.PRICES}
+          top = max(core.PRICES, key=lambda k: (probs[k], -k))
+          self.dial_results.append({"p": p, "probs": probs, "top": top})
         except Exception as e:  # noqa: BLE001
           self.dial_results.append({"p": p, "error": repr(e)})
     self.dial_thread = threading.Thread(target=work, daemon=True)

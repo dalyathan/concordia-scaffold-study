@@ -393,3 +393,24 @@ Text that states the answer for the case takes regret to about 0, which is the c
 | shrink to the middle (`analysis.flatten`) | best lam = 0.00 | 0.714 | 0.694 | 1.256 | 0.085 | 0.125 |
 
 **"Always offer 2 coins" beats plain Gemma** on the tuning cases (0.529 vs 0.714), and so does the best constant shift (0.669). Shrinking towards uniform never helps, so its best lam is 0. A steering vector has to beat these model-free baselines before its gain means anything. The method paragraph (0.303, step 4) does.
+
+## Step 7: tuning job (tuning cases only) — launched, running
+
+`demo/tune_job.py`, using `steercheck.run_controls`.
+
+- **Grid** (29 points ≤ 30): no steering, plus layers 6, 9, 12, 15, 18, 21, 24 (the first 7 of `steering.LAYERS`) × `steering.ALPHAS` (0.5, 1, 2, 4). α multiplies the vector.
+- **Full budget** (five orders): template, offer_lower, sentence, and the negated template.
+- **Matched budget** (one order per case, `cyclic_orders()[(variant − 1) mod 5]`): template, 20 random directions and 5 Gaussian directions, all rescaled to the template's norm at each layer.
+  - Random directions: differences of plain P1 activations between two tuning cases from different cells, with pairs drawn using PCG64 seed 11.
+  - Gaussian directions: PCG64 seed 12.
+- **Tuning rule:** the setting with the lowest mean cell soft regret among coherent settings, where coherent means mean letter mass ≥ 0.9 × plain. "No steering" is always an option.
+- **Analysis.** The unit of analysis is the cell (17 tuning cells). Intervals: 2,000 bootstrap resamples of cells. Tuning and evaluation use the same tuning cases, so results are in-sample and labelled so. No test case is touched.
+- **Estimate** (20 passes timed first, `logs/demo_tune_estimate.log`): 0.294 s per pass × 45,560 passes (19,040 full budget, 24,752 matched, the rest evaluations) = **3.7 hours**.
+- **Started:** 04:23, under nohup in tmux session `tune`.
+
+Check command:
+
+```bash
+grep -v "Loading\|Warn\|warn\|torch.load" logs/demo_tune_job.log | tail -40   # progress and, at the end, the table
+python demo/steercheck.py --results demo_out/tune_results.json                  # the table once finished
+```
