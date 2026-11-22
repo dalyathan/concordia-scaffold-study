@@ -51,10 +51,11 @@ Rebuilt by `python demo/ledger.py` from saved results (do not edit by hand). Sof
 | 45 | inside-the-model | 5 | LoRA neutral, lr 1e-04, seed 0 | held-out tune cells (6) | yes | 0.534 [0.17, 0.91] | -0.043 | plain (held-out cells) | 0.577 | yes | 21 min | best epoch 1; no clear gain over plain | `demo_out/lora/neutral_lr1e-04_s0.json` |
 | 46 | inside-the-model | 5 | LoRA neutral, lr 3e-04, seed 0 | held-out tune cells (6) | yes | 0.577 [0.20, 0.96] | +0.000 | plain (held-out cells) | 0.577 | no | 13 min | best epoch 0; no clear gain over plain | `demo_out/lora/neutral_lr3e-04_s0.json` |
 | 47 | inside-the-model | 5 | LoRA shuffled0, lr 1e-04, seed 0 | held-out tune cells (6) | yes | 0.577 [0.20, 0.96] | +0.000 | plain (held-out cells) | 0.577 | no | 13 min | best epoch 0; no clear gain over plain | `demo_out/lora/shuffled0_lr1e-04_s0.json` |
-| 48 | inside-the-model | 5 | LoRA wrong_rule, lr 1e-04, seed 0 | held-out tune cells (6) | yes | 0.448 [0.12, 0.78] | -0.129 | plain (held-out cells) | 0.577 | yes | 26 min | best epoch 2; beats plain | `demo_out/lora/wrong_rule_lr1e-04_s0.json` |
-| 49 | inside-the-model | 5 | LoRA wrong_rule, lr 3e-04, seed 0 | held-out tune cells (6) | yes | 0.473 [0.14, 0.80] | -0.103 | plain (held-out cells) | 0.577 | yes | 46 min | best epoch 6; beats plain | `demo_out/lora/wrong_rule_lr3e-04_s0.json` |
-| 50 | inside-the-model | 5 | LoRA answer_only, renormalised-only loss, lr 3e-4 (stopped after 1 epoch) | held-out tune cells (6) | yes | 0.204 | -0.373 | plain (held-out cells) | 0.577 | yes | 7 min | dead end: letter mass collapsed to 0.01 | `logs/demo_lora_answer_only_renorm_loss_dead_end.log` |
-| 51 | take-home | 0 | steercheck toy problem (a vector that should work) | toy (40 cases) | yes | 0.066 [0.04, 0.08] | -0.734 | its negation | 0.800 | yes | — | steercheck detects a working vector and its controls | `demo/steercheck.py` |
+| 48 | inside-the-model | 5 | LoRA wrong_rule, lr 1e-03, seed 0 | held-out tune cells (6) | yes | 0.430 [0.10, 0.76] | -0.147 | plain (held-out cells) | 0.577 | yes | 42 min | best epoch 5; beats plain | `demo_out/lora/wrong_rule_lr1e-03_s0.json` |
+| 49 | inside-the-model | 5 | LoRA wrong_rule, lr 1e-04, seed 0 | held-out tune cells (6) | yes | 0.448 [0.12, 0.78] | -0.129 | plain (held-out cells) | 0.577 | yes | 26 min | best epoch 2; beats plain | `demo_out/lora/wrong_rule_lr1e-04_s0.json` |
+| 50 | inside-the-model | 5 | LoRA wrong_rule, lr 3e-04, seed 0 | held-out tune cells (6) | yes | 0.473 [0.14, 0.80] | -0.103 | plain (held-out cells) | 0.577 | yes | 46 min | best epoch 6; beats plain | `demo_out/lora/wrong_rule_lr3e-04_s0.json` |
+| 51 | inside-the-model | 5 | LoRA answer_only, renormalised-only loss, lr 3e-4 (stopped after 1 epoch) | held-out tune cells (6) | yes | 0.204 | -0.373 | plain (held-out cells) | 0.577 | yes | 7 min | dead end: letter mass collapsed to 0.01 | `logs/demo_lora_answer_only_renorm_loss_dead_end.log` |
+| 52 | take-home | 0 | steercheck toy problem (a vector that should work) | toy (40 cases) | yes | 0.066 [0.04, 0.08] | -0.734 | its negation | 0.800 | yes | — | steercheck detects a working vector and its controls | `demo/steercheck.py` |
 
 ## Three best methods (tuning split; excluding rows that name the answer)
 
@@ -104,7 +105,8 @@ Rebuilt by `python demo/ledger.py` from saved results (do not edit by hand). Sof
 - Row 45: train-cell soft regret 0.740; selected-on the held-out cells
 - Row 46: train-cell soft regret 0.778; selected-on the held-out cells
 - Row 47: train-cell soft regret 0.778; selected-on the held-out cells
-- Row 48: train-cell soft regret 0.816; selected-on the held-out cells
-- Row 49: train-cell soft regret 0.815; selected-on the held-out cells
-- Row 50: regret looks good only because it is read after renormalising over a collapsed 1% of the mass; replaced by the full-vocabulary letter loss
-- Row 51: toy regret is on the toy's own scale
+- Row 48: train-cell soft regret 0.754; selected-on the held-out cells
+- Row 49: train-cell soft regret 0.816; selected-on the held-out cells
+- Row 50: train-cell soft regret 0.815; selected-on the held-out cells
+- Row 51: regret looks good only because it is read after renormalising over a collapsed 1% of the mass; replaced by the full-vocabulary letter loss
+- Row 52: toy regret is on the toy's own scale
