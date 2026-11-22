@@ -414,3 +414,31 @@ Check command:
 grep -v "Loading\|Warn\|warn\|torch.load" logs/demo_tune_job.log | tail -40   # progress and, at the end, the table
 python demo/steercheck.py --results demo_out/tune_results.json                  # the table once finished
 ```
+
+## Step 8: teacher packet — done (no API call)
+
+`demo/make_teacher_packet.py` → **`demo/teacher_packet.md`** and `demo/teacher_packet_index.json`.
+
+**What the packet contains:**
+
+- The shared prompt, once, with placeholders. It is rendered from a demo-variant prompt (variant 15, names replaced), never from variants 1–14.
+- Only the differing lines (names, resale line, seller's last line) and Gemma's order-averaged offer distribution for every build case with non-zero regret. There are **19** such cases, under the 32 cap.
+- No best offers and no regret anywhere.
+
+**What it asks for**, as one JSON object:
+
+- a diagnosis;
+- one method paragraph with no case numbers;
+- `too_high` / `too_low` / `right` predictions for one variant (variant 15) of each of the **18 test cells**, shown as prompt lines only;
+- good/bad paragraph pairs with their concluded offers for the **34 build cases**, under the step 5 constraints.
+
+**`demo/check_teacher.py <response.json>`:**
+
+- Scores the predictions against plain Gemma's actual top offer on those cases.
+- Shows two baselines beside it:
+  - the majority class: "right" is 10 of 18, so **56%**;
+  - the rule "below about 3 coins it overbids, above it underbids", applied to the smallest best offer: **28%**.
+- Checks the pairs with the step 5 checks, plus good = a best offer and bad = not a best offer.
+- Flags digits in the method paragraph.
+- It was verified on a dummy response built from the step 5 pairs: all pair checks pass.
+- The true labels for the 18 cases are right 10, too high 4, too low 4.
