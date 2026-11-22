@@ -1,0 +1,173 @@
+{
+ "cases": [
+  "v15-V3-neutral",
+  "v15-V3-information-C2",
+  "v15-V3-information-C4",
+  "v15-V5-pressure"
+ ],
+ "letter_ids_match": true,
+ "patch_last_layer": {
+  "worst_abs_diff": 0.0,
+  "exact": true,
+  "rows": [
+   {
+    "pid": "v15-V3-neutral",
+    "order": 0,
+    "max_abs_logprob_diff": 0.0,
+    "method_vs_plain_max_diff": 5.050115719437599
+   },
+   {
+    "pid": "v15-V3-neutral",
+    "order": 1,
+    "max_abs_logprob_diff": 0.0,
+    "method_vs_plain_max_diff": 4.189091041684151
+   },
+   {
+    "pid": "v15-V3-neutral",
+    "order": 2,
+    "max_abs_logprob_diff": 0.0,
+    "method_vs_plain_max_diff": 2.8134684562683105
+   },
+   {
+    "pid": "v15-V3-neutral",
+    "order": 3,
+    "max_abs_logprob_diff": 0.0,
+    "method_vs_plain_max_diff": 2.1237833499908447
+   },
+   {
+    "pid": "v15-V3-neutral",
+    "order": 4,
+    "max_abs_logprob_diff": 0.0,
+    "method_vs_plain_max_diff": 1.2985477447509766
+   },
+   {
+    "pid": "v15-V3-information-C2",
+    "order": 0,
+    "max_abs_logprob_diff": 0.0,
+    "method_vs_plain_max_diff": 2.81856107711792
+   },
+   {
+    "pid": "v15-V3-information-C2",
+    "order": 1,
+    "max_abs_logprob_diff": 0.0,
+    "method_vs_plain_max_diff": 4.14581210911274
+   },
+   {
+    "pid": "v15-V3-information-C2",
+    "order": 2,
+    "max_abs_logprob_diff": 0.0,
+    "method_vs_plain_max_diff": 2.125824451446533
+   },
+   {
+    "pid": "v15-V3-information-C2",
+    "order": 3,
+    "max_abs_logprob_diff": 0.0,
+    "method_vs_plain_max_diff": 7.899285197257996
+   },
+   {
+    "pid": "v15-V3-information-C2",
+    "order": 4,
+    "max_abs_logprob_diff": 0.0,
+    "method_vs_plain_max_diff": 7.473651383072138
+   },
+   {
+    "pid": "v15-V3-information-C4",
+    "order": 0,
+    "max_abs_logprob_diff": 0.0,
+    "method_vs_plain_max_diff": 7.077437371015549
+   },
+   {
+    "pid": "v15-V3-information-C4",
+    "order": 1,
+    "max_abs_logprob_diff": 0.0,
+    "method_vs_plain_max_diff": 2.528367519378662
+   },
+   {
+    "pid": "v15-V3-information-C4",
+    "order": 2,
+    "max_abs_logprob_diff": 0.0,
+    "method_vs_plain_max_diff": 2.847566604614258
+   },
+   {
+    "pid": "v15-V3-information-C4",
+    "order": 3,
+    "max_abs_logprob_diff": 0.0,
+    "method_vs_plain_max_diff": 2.0857133865356445
+   },
+   {
+    "pid": "v15-V3-information-C4",
+    "order": 4,
+    "max_abs_logprob_diff": 0.0,
+    "method_vs_plain_max_diff": 1.7093210220336914
+   },
+   {
+    "pid": "v15-V5-pressure",
+    "order": 0,
+    "max_abs_logprob_diff": 0.0,
+    "method_vs_plain_max_diff": 4.868336342275143
+   },
+   {
+    "pid": "v15-V5-pressure",
+    "order": 1,
+    "max_abs_logprob_diff": 0.0,
+    "method_vs_plain_max_diff": 4.35385525226593
+   },
+   {
+    "pid": "v15-V5-pressure",
+    "order": 2,
+    "max_abs_logprob_diff": 0.0,
+    "method_vs_plain_max_diff": 5.201685070991516
+   },
+   {
+    "pid": "v15-V5-pressure",
+    "order": 3,
+    "max_abs_logprob_diff": 0.0,
+    "method_vs_plain_max_diff": 4.57348370552063
+   },
+   {
+    "pid": "v15-V5-pressure",
+    "order": 4,
+    "max_abs_logprob_diff": 0.0,
+    "method_vs_plain_max_diff": 2.163283348083496
+   }
+  ]
+ },
+ "resid_norm_layer41": 1533.3554260253907,
+ "final_layer_unembedding_steer": {
+  "plain_expected": 2.229119171359607,
+  "rows": [
+   {
+    "fraction": 0.05,
+    "d_expected": -0.6441170154818527,
+    "mass_ratio": 1.1368472341384726
+   },
+   {
+    "fraction": 0.1,
+    "d_expected": -1.0304110214201745,
+    "mass_ratio": 1.384098183828631
+   },
+   {
+    "fraction": 0.25,
+    "d_expected": -1.220740134889403,
+    "mass_ratio": 1.4602868764259789
+   },
+   {
+    "fraction": 0.5,
+    "d_expected": -1.2236389886107064,
+    "mass_ratio": 1.3200610560143775
+   },
+   {
+    "fraction": 1.0,
+    "d_expected": -1.2183549172362316,
+    "mass_ratio": 0.8251692322953796
+   },
+   {
+    "fraction": 2.0,
+    "d_expected": -1.2186557863965417,
+    "mass_ratio": 0.4450822291812348
+   }
+  ]
+ },
+ "steer_check_passes": true,
+ "rule": "pass: the expected offer falls by more than 0.05 at fraction 0.25 and does not rise again by 0.5"
+}

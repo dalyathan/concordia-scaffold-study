@@ -776,3 +776,29 @@ This follows the owner's second message of the morning and its additions. They s
 The held-out cells cover best offers 1, 2 and 4 (cost below resale), a multi-best cell, and both no-cost lines, so they are not a lookup of train cells.
 
 **Baselines on the same cases:** plain is in `demo_out/cases.jsonl`. The step 4 text rows covered only variants 17–18, so `demo/score_rows_dev.py` (`demo_out/text_rows_build.jsonl`) scored method, neutral and wrong-rule on variants 15–16. Always-2 is computed from the labels.
+
+## 3. Steering checks before closing rung 4
+
+### Hook verification — done, both checks pass (`demo/steer_verify_hooks.py`, `demo_out/steer_verify_hooks.json`, `logs/demo_steer_verify_hooks.log`)
+
+Run on 4 held-out tune cases, all five option orders.
+
+| Check | Result |
+| --- | --- |
+| Letter token ids that `letter_scores` reads equal the ids used for steering (`convert_tokens_to_ids`) | **yes** (235250, 235268, 235260, 235258, 235249) |
+| Patch the full P1 residual from a method-text run into the plain run at layer 41; must reproduce the method-text first-token distribution exactly | **exact** (worst difference 0.0 over 20 case-orders; the two runs differ by up to 7.9 nats) |
+| Steer at layer 41 with unit(W_U[letter of offer 1] − W_U[letter of offer 4]), per option order, at fractions of the mean plain P1 residual norm at layer 41 | **lowers the offer**: −0.64 coins at fraction 0.05, −1.03 at 0.1, −1.22 at 0.25–2.0; letter mass ×1.14 to ×1.46 up to fraction 0.5 (×0.83 at 1.0) |
+
+The hook is correct. Steering the final layer in the direction that raises "1" over "4" moves the expected offer by about 1.2 coins while the letter format stays coherent. The mechanism is sound, so the earlier null at layers 12–24 is about the vectors, not the code. Pass rule (logged): the expected offer falls by more than 0.05 at fraction 0.25 and does not rise again by 0.5.
+
+**Design of checks a–c** (`demo/steer_checks.py`):
+
+- **Vectors are built from the 11 train cells only** (all four variants, 44 cases), and **scored on 12 held-out tune cases** (variants 15 and 18 of the six held-out cells), so no vector is built from the cells it is scored on.
+- **Strength:** a fraction of the mean plain P1 residual norm at that layer (over train cases and orders); fractions 0.1, 0.25, 0.5, 1.0; layers 12 to 39 every 3 (10 layers).
+- **Reported:** cell-mean renormalised soft regret, letter mass relative to plain, change in expected offer.
+- **Checks:**
+  - (a) per-order cheap vectors, each order steered with its own;
+  - (b) order-averaged cheap and sentence at layers 27–39;
+  - (c) patching each case's P1 residual from the method-text run into the plain run, one layer at a time (all 42 layers).
+- **Extras:** the negated vector and 3 random directions at the best settings; the top-10 P1 tokens under steering; steered `say` on 4 cases.
+- **Rule for a positive finding:** any setting with a change in expected offer ≤ −0.25 coins and letter mass ≥ 0.9 × plain is written up and recorded for a later grid.
