@@ -335,6 +335,23 @@ if os.path.exists(dead):
         note="regret looks good only because it is read after renormalising over a collapsed 1% of the mass; "
              "replaced by the full-vocabulary letter loss")
 
+# Generated dataset: LoRA runs (tune cells scored once at the best epoch; lr and epoch chosen on a separate selection set), text rows.
+gl = sorted(glob.glob(os.path.join(common.ROOT, "demo_out", "gen_lora", "gen_*_s?.json")))
+if gl:
+  gp = os.path.join(common.ROOT, "demo", "gen")
+  gcells = {c["cell"]: c for c in json.load(open(os.path.join(gp, "cells.json")))["cells"]}
+  gplain = [json.loads(l) for l in open(os.path.join(common.ROOT, "demo_out", "gen_plain_scores.jsonl"))]
+  gtune = {}
+  for r in gplain:
+    if r["split"] == "tune":
+      gtune.setdefault(r["cell"], []).append(r["soft_regret"])
+  gplain_tune = float(np.mean([np.mean(v) for v in gtune.values()]))
+  for f in gl:
+    r = json.load(open(f))
+    v = "no improvement (epoch 0)" if r["best_epoch_is_zero"] else ("beats plain on tune" if r["tune_full_best"]["soft_regret"] < gplain_tune else "does not beat plain on tune")
+    add("inside-the-model", 5, f"generated-data LoRA {r['arm']}, lr {r['lr']:.0e}, seed {r['seed']}", "tune cells (42, generated)", "yes", r["tune_full_best"]["soft_regret"], None, gplain_tune,
+        "plain (tune cells)", gplain_tune, r.get("wall_s"), v, rel(f), note=f"best epoch {r['best_epoch']}; selection-set soft regret {r['select_best']['soft_regret']:.3f}")
+
 # The single test look (TEST_PLAN.md); the frozen development verdict stays "not passed".
 tl = os.path.join(common.ROOT, "demo_out", "test_look.json")
 if os.path.exists(tl):
