@@ -749,8 +749,8 @@
     0.4120027927533607
    ],
    "change_vs_plain": -0.3600179826376205,
-   "control": "plain (held-out cells)",
-   "control_regret": 0.5767025445125867,
+   "control": "neutral-distil (same lr, seed)",
+   "control_regret": 0.5273942488014413,
    "beats_control": "yes",
    "wall_time": 1457.249097108841,
    "verdict": "best epoch 2; beats plain",
@@ -836,6 +836,26 @@
    "verdict": "best epoch 1; no clear gain over plain",
    "source": "demo_out/lora/neutral_lr1e-04_s0.json",
    "note": "train-cell soft regret 0.740; selected-on the held-out cells"
+  },
+  {
+   "beat": "inside-the-model",
+   "rung": 5,
+   "method": "LoRA neutral, lr 1e-04, seed 1",
+   "split": "held-out tune cells (6)",
+   "in_sample": "yes",
+   "soft_regret": 0.5273942488014413,
+   "ci": [
+    0.1638987364885963,
+    0.9076405751770734
+   ],
+   "change_vs_plain": -0.04930829571114548,
+   "control": "plain (held-out cells)",
+   "control_regret": 0.5767025445125867,
+   "beats_control": "yes",
+   "wall_time": 1743.6797471046448,
+   "verdict": "best epoch 3; no clear gain over plain",
+   "source": "demo_out/lora/neutral_lr1e-04_s1.json",
+   "note": "train-cell soft regret 0.767; selected-on the held-out cells"
   },
   {
    "beat": "inside-the-model",
