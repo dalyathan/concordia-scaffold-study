@@ -32,7 +32,7 @@ OUT = os.path.join(common.ROOT, "demo_out", "gen_lora")
 ADAPTERS = os.path.join(common.ROOT, "demo_out", "adapters")
 ARMS = ("teacher", "method_original", "neutral", "wrong_rule", "answer_only")
 TRAIN_CELLS = os.path.join(g.OUT, "lora_train_cells.json")
-SELECT_CELLS = os.path.join(g.OUT, "lora_select_cells.json")
+SELECT_CELLS = os.path.join(g.OUT, "lora_select_cells_B.json")   # (set A, lora_select_cells.json, is the teacher-loop feedback/winner set)
 
 
 def run_id(arm, lr, seed):
@@ -53,6 +53,8 @@ def make_train_cells():
 
 
 def make_select_cells():
+  """(superseded: demo/gen/lora_select_cells_B.json was built once, disjoint from the training cells, the loop set A and the teacher packet cells)"""
+  raise RuntimeError("lora_select_cells_B.json is missing")
   """42 train cells outside the 100 training cells (14 per type), fixed by seed: used for early stopping and the lr choice."""
   used = set(json.load(open(TRAIN_CELLS)))
   cells = [c for c in json.load(open(os.path.join(g.OUT, "cells.json")))["cells"] if c["split"] == "train" and c["cell"] not in used]
@@ -96,6 +98,8 @@ def main():
   tune_all = [c for c in allcases.values() if c["split"] == "tune"]
   sel_cells = json.load(open(SELECT_CELLS)) if os.path.exists(SELECT_CELLS) else make_select_cells()
   assert not set(sel_cells) & set(spec), "selection cells overlap the training cells"
+  assert not set(sel_cells) & set(json.load(open(os.path.join(g.OUT, "lora_select_cells.json")))), "selection set B overlaps the teacher-loop set A"
+  assert not set(sel_cells) & set(json.load(open(os.path.join(g.OUT, "packet_cells.json")))), "selection set B overlaps the teacher packet cells"
   tune_mon = [allcases[f"{k}-n0"] for k in sel_cells]          # SELECTION set (train cells outside the training set), name variant 0
   mon_train = train[::5][:20]                                  # small train-side monitor (not used for selection)
   if args.limit:

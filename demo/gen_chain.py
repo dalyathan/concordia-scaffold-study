@@ -80,7 +80,7 @@ def choose(lr_t=None):
 
 def preconditions():
   """in-prompt teacher text must beat plain and neutral text on the selection set (a distilled adapter cannot exceed its teacher)"""
-  sel_cells = json.load(open(os.path.join(g.OUT, "lora_select_cells.json")))
+  sel_cells = json.load(open(os.path.join(g.OUT, "lora_select_cells_B.json")))
   cells = {c["cell"]: c for c in json.load(open(os.path.join(g.OUT, "cells.json")))["cells"]}
   rows = [json.loads(l) for l in open(os.path.join(common.ROOT, "demo_out", "gen_text_rows.jsonl"))]
   plain = {r["cid"]: r for r in map(json.loads, open(os.path.join(common.ROOT, "demo_out", "gen_plain_scores.jsonl")))}
