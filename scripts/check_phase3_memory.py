@@ -43,8 +43,8 @@ for name, notes in cases.items():
       outs.append(json.dumps([probs, full, lm.last_letter_mass]))
     rec[mode] = {"peak_gpu_bytes": torch.cuda.max_memory_allocated(),
                  "peak_gpu_GiB": round(torch.cuda.max_memory_allocated() / 2**30, 2),
-                 "sec_per_scoring_5_passes": [round(x, 3) for x in times],
-                 "sec_per_pass_mean": round(sum(times) / len(times) / 5, 3),
+                 "sec_per_scoring_6_passes": [round(x, 3) for x in times],  # P1 pass + 5 whole-answer passes
+                 "sec_per_pass_mean": round(sum(times) / len(times) / 6, 3),
                  "repeat_bit_identical": len(set(outs)) == 1}
   results["cases"][name] = rec
   print(name, json.dumps(rec, indent=1), flush=True)
