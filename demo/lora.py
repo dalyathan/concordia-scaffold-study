@@ -240,7 +240,7 @@ def main():
   save_dir = os.path.join(args.adapters, rid)
   history = []
   tune0, train0 = evaluate(tune), evaluate(train)
-  history.append({"epoch": 0, "train_loss": None, "tune": strip(tune0), "train": strip(train0), "sec": None})
+  history.append({"epoch": 0, "train_loss": None, "tune": strip(tune0), "train": strip(train0), "sec": None, "tune_probs": tune0["probs"]})
   print(f"epoch 0 (= plain): held-out tune soft regret {tune0['soft_regret']:.3f}, train {train0['soft_regret']:.3f}", flush=True)
   say0 = say_eval(tune, tune0["tops"])
   best = {"epoch": 0, "tune": tune0, "train": train0, "say": say0}
@@ -261,7 +261,7 @@ def main():
       opt.step()
     t_train = time.time() - t
     tn, tr = evaluate(tune), evaluate(train)
-    history.append({"epoch": epoch, "train_loss": float(np.mean(losses)), "tune": strip(tn), "train": strip(tr),
+    history.append({"epoch": epoch, "train_loss": float(np.mean(losses)), "tune": strip(tn), "train": strip(tr), "tune_probs": tn["probs"],
                     "sec": time.time() - t, "sec_training": t_train})
     print(f"epoch {epoch}: loss {np.mean(losses):.3f}; held-out tune soft {tn['soft_regret']:.3f} (mass {tn['mass']:.2f}); "
           f"train soft {tr['soft_regret']:.3f} (mass {tr['mass']:.2f}); {time.time() - t:.0f}s/epoch", flush=True)

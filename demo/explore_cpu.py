@@ -100,6 +100,18 @@ for k in ("plain", "neutral", "wrong_rule"):
   m, lo, hi, nb = boot_mean_diff(data[k][0], data["method"][0])
   res["soft"][k] = [m, lo, hi, nb]
   L.append(f"| {k} | {np.mean(list(data[k][0].values())):.3f} | {np.mean(list(data['method'][0].values())):.3f} | {m:+.3f} [{lo:+.3f}, {hi:+.3f}] | {nb} of 6 |")
+# split by cell type (G1 review: the slope is tied to the C<V cells; show the other cells apart)
+OTHER = [c for c in CELLS if c not in SLOPE_CELLS]
+L += ["", f"### A2. Same difference split by cell type (descriptive, no interval): C<V cells {SLOPE_CELLS} vs other cells {OTHER}", "",
+      "| Control | mean diff (control − method) on C<V cells | on other cells |", "| --- | --- | --- |"]
+for k in ("plain", "neutral", "wrong_rule"):
+  L.append(f"| {k} | {np.mean([data[k][0][c] - data['method'][0][c] for c in SLOPE_CELLS]):+.3f} | {np.mean([data[k][0][c] - data['method'][0][c] for c in OTHER]):+.3f} |")
+L.append("")
+# per-seed
+L += ["### A3. Per-seed held-out soft regret at each arm's chosen lr (seed 0 is the seed that chose the lr)", "", "| Arm | " + " | ".join(f"seed {s}" for s in (0, 1, 2)) + " |", "| --- | --- | --- | --- |"]
+for a in arms:
+  L.append(f"| {a} {info[a]['lr']:.0e} | " + " | ".join("—" if not run(a, info[a]['lr'], s) else f"{run(a, info[a]['lr'], s)['tune_best']['soft_regret']:.3f} (best ep {run(a, info[a]['lr'], s)['best_epoch']})" for s in (0, 1, 2)) + " |")
+L.append("")
 # slope
 L += ["", f"## B. (a) Slope of expected offer on stated cost, cells with C < V ({len(SLOPE_CELLS)} cells: {SLOPE_CELLS})", "",
       "| Arm | Slope | Method − arm [95% interval] | resamples dropped (one distinct C) |", "| --- | --- | --- | --- |"]
@@ -111,7 +123,7 @@ for a in ("method", "plain", "neutral", "wrong_rule"):
   lo, hi, dr = boot_slope_diff(data["method"][1], data[a][1], SLOPE_CELLS)
   res["slope"][a] = [sl["method"] - sl[a], lo, hi, dr]
   L.append(f"| {a} | {sl[a]:.3f} | {sl['method'] - sl[a]:+.3f} [{lo:+.3f}, {hi:+.3f}] | {dr} of {N} |")
-L += ["", "With 3 cost cells (and 4 name variants each that are not independent) this interval is fragile; read it as descriptive.", ""]
+L += ["", "POST HOC choice (seed-0 slopes were seen before the rule was written). With 3 cost cells the bootstrap has about 7 distinct outcomes and is conditioned on dropping 1/9 of resamples; the interval is arithmetic on 3 points, NOT a sampling interval. Descriptive only.", ""]
 # per-cell table
 L += ["## B. (b) Per-cell table (arm mean over seeds)", "",
       "| Cell | Line | Best offer(s) | Expected offer: plain | method | neutral | wrong-rule | Soft regret: plain | method | neutral | wrong-rule | Method beats wrong-rule? |", "| " + " | ".join(["---"] * 12) + " |"]
@@ -132,6 +144,21 @@ for a in ("method", "neutral", "wrong_rule"):
     h = {x["epoch"]: x["tune"] for x in r["history"]}
     f = lambda e, k: "—" if e not in h or h[e].get(k) is None else f"{h[e][k]:.3f}"
     L.append(f"| {a} {lr:.0e} | {f(0, 'soft_regret')} | " + " | ".join(f(e, "soft_regret") for e in (1, 2, 3, 4)) + " | " + " | ".join(f(e, "slope_stated_cost") for e in (1, 2, 3, 4)) + " |")
+L.append("")
+# per-cell fixed-epoch (runs logged after the G1 change keep per-epoch held-out probabilities)
+L += ["### Fixed-epoch per-cell soft regret difference (control − method), runs that logged per-epoch probabilities", ""]
+for a in ("neutral", "wrong_rule"):
+  for lr in LRS:
+    for s_ in (0, 1, 2):
+      rm, rc = run("method", info["method"]["lr"], s_), run(a, lr, s_)
+      if not (rm and rc and "tune_probs" in rm["history"][-1] and "tune_probs" in rc["history"][-1]):
+        continue
+      for e in (1, 2, 3, 4):
+        hm = {x["epoch"]: x for x in rm["history"]}; hc = {x["epoch"]: x for x in rc["history"]}
+        if e in hm and e in hc:
+          dm = cell_arrays([hm[e]["tune_probs"]])[0]; dc = cell_arrays([hc[e]["tune_probs"]])[0]
+          m_, lo_, hi_, nb_ = boot_mean_diff(dc, dm)
+          L.append(f"- {a} {lr:.0e} seed {s_} vs method seed {s_}, epoch {e}: {m_:+.3f} [{lo_:+.3f}, {hi_:+.3f}], method better in {nb_} of 6")
 L.append("")
 # free text
 def say_cells(key, seeds_runs):

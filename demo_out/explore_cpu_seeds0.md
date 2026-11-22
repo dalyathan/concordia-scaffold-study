@@ -11,6 +11,23 @@ Held-out cells are selected-on (lr, epoch). Bootstrap: paired over the 6 held-ou
 | neutral | 0.534 | 0.155 | +0.378 [+0.043, +0.758] | 5 of 6 |
 | wrong_rule | 0.448 | 0.155 | +0.293 [-0.003, +0.605] | 3 of 6 |
 
+### A2. Same difference split by cell type (descriptive, no interval): C<V cells [(3, 'C', 2), (5, 'C', 4), (6, 'C', 1)] vs other cells [(3, 'C', 4), (3, 'neutral'), (5, 'pressure')]
+
+| Control | mean diff (control − method) on C<V cells | on other cells |
+| --- | --- | --- |
+| plain | +0.880 | -0.037 |
+| neutral | +0.799 | -0.042 |
+| wrong_rule | +0.679 | -0.094 |
+
+### A3. Per-seed held-out soft regret at each arm's chosen lr (seed 0 is the seed that chose the lr)
+
+| Arm | seed 0 | seed 1 | seed 2 |
+| --- | --- | --- | --- |
+| method 1e-04 | 0.155 (best ep 2) | 0.217 (best ep 2) | 0.210 (best ep 4) |
+| neutral 1e-04 | 0.534 (best ep 1) | — | — |
+| wrong_rule 1e-04 | 0.448 (best ep 2) | — | — |
+
+
 ## B. (a) Slope of expected offer on stated cost, cells with C < V (3 cells: [(3, 'C', 2), (5, 'C', 4), (6, 'C', 1)])
 
 | Arm | Slope | Method − arm [95% interval] | resamples dropped (one distinct C) |
@@ -20,7 +37,7 @@ Held-out cells are selected-on (lr, epoch). Bootstrap: paired over the 6 held-ou
 | neutral | 0.076 | +0.585 [+0.571, +0.621] | 1097 of 10000 |
 | wrong_rule | 0.031 | +0.631 [+0.410, +1.184] | 1097 of 10000 |
 
-With 3 cost cells (and 4 name variants each that are not independent) this interval is fragile; read it as descriptive.
+POST HOC choice (seed-0 slopes were seen before the rule was written). With 3 cost cells the bootstrap has about 7 distinct outcomes and is conditioned on dropping 1/9 of resamples; the interval is arithmetic on 3 points, NOT a sampling interval. Descriptive only.
 
 ## B. (b) Per-cell table (arm mean over seeds)
 
@@ -44,6 +61,9 @@ With 3 cost cells (and 4 name variants each that are not independent) this inter
 | neutral 3e-04 | 0.577 | 0.627 | 0.646 | — | — | -0.070 | -0.035 | — | — |
 | neutral 1e-03 | 0.577 | 0.885 | 0.754 | — | — | -0.033 | 0.003 | — | — |
 | wrong_rule 1e-04 | 0.577 | 0.462 | 0.448 | 0.460 | 0.458 | 0.031 | 0.031 | 0.046 | 0.035 |
+
+### Fixed-epoch per-cell soft regret difference (control − method), runs that logged per-epoch probabilities
+
 
 ## B. (d) Free-text hard regret, method vs plain (cell bootstrap)
 
