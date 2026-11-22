@@ -896,7 +896,7 @@ Reviews saved as `reviews/2026-11-22_G1_lora-plan_{sonnet,fable}.md` (packet `/t
 | 8 | Teacher cache keyed without text (Fable) | **Applied**: key includes a hash of the teacher text |
 | 9 | Checks not gated; check 4 missing; pass rule unwritten (both) | **Applied**: the chain refuses to start unless `lora_checks.json` shows checks 1–3 passed and the adapter-cache test passes; the pass-rule script is committed first; its logic is unit-tested on synthetic runs |
 | 10 | Check-1 tolerance undefined; rank missing from log names (Sonnet) | **Applied**: tolerances fixed in advance (check 1 ≤ 1e-4, check 2 exact, check 3 ≤ 1e-6); log names include the rank |
-| 11 | wrong_rule is not length-matched (both) | **Applied** (wording): wrong_rule (7 tokens) is a *content* control; neutral text is the length-matched one (same length as the method paragraph, 150 tokens) |
+| 11 | wrong_rule is not length-matched (both) | **Applied** (wording): wrong_rule (6 tokens) is a *content* control; neutral text is the length-matched one (145 tokens, the same as the method paragraph) |
 | 12 | Outcome table (student matches teacher on train × transfers) (Fable) | **Applied** in `lora_report.py`: "matches the teacher on train" = best-epoch train regret within 0.05 of method text's 0.428 |
 | 13 | Fidelity to own teacher (both) | **Applied** as a logged KL(teacher‖student) on train and held-out cells for every distillation arm; **not** a gate |
 | 14 | Selection makes the rule in-sample (both) | **Applied** (wording): a pass licenses spending the one test look, never evidence |
