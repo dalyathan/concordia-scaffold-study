@@ -590,7 +590,7 @@ Unlike template (cosine 0.05–0.19) and offer_lower (0.08–0.27), the per-case
 
 `demo/dose_scan.py` → `demo_out/dose_scan.json` (`logs/demo_dose_scan.log`, 15 minutes).
 
-- **Cases:** 8 tuning cases, every fourth tuning case in order: v17-V2-information-C1, v17-V3-neutral, v17-V4-information-C1, v17-V5-information-C2, v17-V6-information-C1, v18-V2-information-C3, v18-V3-information-C2, v18-V5-neutral. Five orders.
+- **Cases:** 8 tuning cases, every fourth tuning case in order: v17-V2-information-C1, v17-V3-pressure, v17-V4-information-C3, v17-V5-information-C2, v17-V6-information-C5, v18-V3-neutral, v18-V4-information-C1, v18-V5-pressure (taken from `dose_scan.json`). Five orders.
 - **Vectors:** offer_lower, cheap and sentence, each unit-normalised and scaled to a fraction of the mean plain P1 residual norm at the layer.
 - **Layers and fractions:** layers 12, 18, 24; fractions 0.1, 0.25, 0.5, 1.0, 2.0.
 - **Two position modes:**
