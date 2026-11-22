@@ -176,3 +176,25 @@ os.makedirs(os.path.dirname(args.out), exist_ok=True)
 open(args.out + f"_seeds{''.join(map(str, args.seeds))}.md", "w").write("\n".join(L) + "\n")
 json.dump({"info": info, "res": res, "slope": sl}, open(args.out + f"_seeds{''.join(map(str, args.seeds))}.json", "w"), indent=1, default=float)
 print("\n".join(L))
+
+# ---- G2 additions: always-2 comparator, leave-one-cell-out, train-cell paired difference
+L2 = ["", "## C. G2 additions (exploratory)", ""]
+const2 = {c: float(np.mean([core.soft_regret(P[i], {k: float(k == 2) for k in core.PRICES}) for i in BYCELL[c]])) for c in CELLS}
+m_, lo_, hi_, nb_ = boot_mean_diff(const2, data["method"][0])
+L2.append(f"- always-2 − method: {m_:+.3f} [{lo_:+.3f}, {hi_:+.3f}], method better in {nb_} of 6 cells (always-2 mean {np.mean(list(const2.values())):.3f}).")
+for k in ("wrong_rule", "neutral"):
+  d = {c: data[k][0][c] - data["method"][0][c] for c in CELLS}
+  L2.append(f"- leave-one-cell-out mean of ({k} − method): " + ", ".join(f"without {c}: {np.mean([v for cc, v in d.items() if cc != c]):+.3f}" for c in CELLS))
+# train cells (fitted, not selected-on, each arm fits its own teacher)
+TRAIN = [i for i, s in SPLIT.items() if s == "lora_train"]
+TC = sorted({P[i].cell for i in TRAIN}, key=str)
+def train_cells(arm_runs):
+  return {c: np.mean([np.mean([core.soft_regret(P[i], {int(k): v for k, v in r["train_probs_best"][i].items()}) for i in TRAIN if P[i].cell == c]) for r in arm_runs]) for c in TC}
+tp = {c: np.mean([core.soft_regret(P[i], {int(k): v for k, v in plain[i].items()}) for i in TRAIN if P[i].cell == c]) for c in TC}
+tr = {a: train_cells([run(a, info[a]["lr"], s) for s in info[a]["seeds"]]) for a in arms}
+L2.append(f"- train cells (11, fitted; each arm fits its own teacher): plain {np.mean(list(tp.values())):.3f}, " + ", ".join(f"{a} {np.mean(list(tr[a].values())):.3f}" for a in arms))
+d = np.array([tr["wrong_rule"][c] - tr["method"][c] for c in TC]); rng = np.random.default_rng(SEED); bs = rng.choice(d, size=(N, len(d))).mean(1)
+L2.append(f"- train cells wrong-rule − method: {d.mean():+.3f} [{np.quantile(bs, .025):+.3f}, {np.quantile(bs, .975):+.3f}] over 11 cells")
+L2.append("- fixed-epoch per-cell section above is empty because the method runs predate the per-epoch probability logging (only wrong-rule 3e-4/1e-3 and neutral seed 1 have it).")
+open(args.out + f"_seeds{''.join(map(str, args.seeds))}.md", "a").write("\n".join(L2) + "\n")
+print("\n".join(L2))

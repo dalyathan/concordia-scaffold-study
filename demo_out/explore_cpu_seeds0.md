@@ -1,6 +1,6 @@
 # EXPLORATORY analyses (CPU, saved results; the frozen verdict 'not passed' stands)
 
-Seeds used: [0]. Arms at their own seed-0 chosen lr: method 1e-04 (seeds [0], grid {'1e-04': 0.15510958211242618, '3e-04': 0.2314509565809123, '1e-03': 0.42031721063070454}), neutral 1e-04 (seeds [0], grid {'1e-04': 0.5336067130642781, '3e-04': 0.5767025445125867, '1e-03': 0.5767025445125867}), wrong_rule 1e-04 (seeds [0], grid {'1e-04': 0.4476209046324473}).
+Seeds used: [0]. Arms at their own seed-0 chosen lr: method 1e-04 (seeds [0], grid {'1e-04': 0.15510958211242618, '3e-04': 0.2314509565809123, '1e-03': 0.42031721063070454}), neutral 1e-04 (seeds [0], grid {'1e-04': 0.5336067130642781, '3e-04': 0.5767025445125867, '1e-03': 0.5767025445125867}), wrong_rule 1e-03 (seeds [0], grid {'1e-04': 0.4476209046324473, '3e-04': 0.47348023562915326, '1e-03': 0.4301475138665957}).
 Held-out cells are selected-on (lr, epoch). Bootstrap: paired over the 6 held-out cells, 10,000 resamples, seed 0.
 
 ## A. Soft regret on held-out cells (arm mean over seeds), difference control − method
@@ -9,7 +9,7 @@ Held-out cells are selected-on (lr, epoch). Bootstrap: paired over the 6 held-ou
 | --- | --- | --- | --- | --- |
 | plain | 0.577 | 0.155 | +0.422 [+0.051, +0.820] | 5 of 6 |
 | neutral | 0.534 | 0.155 | +0.378 [+0.043, +0.758] | 5 of 6 |
-| wrong_rule | 0.448 | 0.155 | +0.293 [-0.003, +0.605] | 3 of 6 |
+| wrong_rule | 0.430 | 0.155 | +0.275 [-0.011, +0.579] | 4 of 6 |
 
 ### A2. Same difference split by cell type (descriptive, no interval): C<V cells [(3, 'C', 2), (5, 'C', 4), (6, 'C', 1)] vs other cells [(3, 'C', 4), (3, 'neutral'), (5, 'pressure')]
 
@@ -17,15 +17,15 @@ Held-out cells are selected-on (lr, epoch). Bootstrap: paired over the 6 held-ou
 | --- | --- | --- |
 | plain | +0.880 | -0.037 |
 | neutral | +0.799 | -0.042 |
-| wrong_rule | +0.679 | -0.094 |
+| wrong_rule | +0.642 | -0.092 |
 
 ### A3. Per-seed held-out soft regret at each arm's chosen lr (seed 0 is the seed that chose the lr)
 
 | Arm | seed 0 | seed 1 | seed 2 |
 | --- | --- | --- | --- |
 | method 1e-04 | 0.155 (best ep 2) | 0.217 (best ep 2) | 0.210 (best ep 4) |
-| neutral 1e-04 | 0.534 (best ep 1) | — | — |
-| wrong_rule 1e-04 | 0.448 (best ep 2) | — | — |
+| neutral 1e-04 | 0.534 (best ep 1) | 0.527 (best ep 3) | — |
+| wrong_rule 1e-03 | 0.430 (best ep 5) | 0.354 (best ep 5) | 0.428 (best ep 2) |
 
 
 ## B. (a) Slope of expected offer on stated cost, cells with C < V (3 cells: [(3, 'C', 2), (5, 'C', 4), (6, 'C', 1)])
@@ -35,7 +35,7 @@ Held-out cells are selected-on (lr, epoch). Bootstrap: paired over the 6 held-ou
 | method | 0.661 | | |
 | plain | 0.053 | +0.609 [+0.604, +0.611] | 1097 of 10000 |
 | neutral | 0.076 | +0.585 [+0.571, +0.621] | 1097 of 10000 |
-| wrong_rule | 0.031 | +0.631 [+0.410, +1.184] | 1097 of 10000 |
+| wrong_rule | -0.010 | +0.672 [+0.668, +0.681] | 1097 of 10000 |
 
 POST HOC choice (seed-0 slopes were seen before the rule was written). With 3 cost cells the bootstrap has about 7 distinct outcomes and is conditioned on dropping 1/9 of resamples; the interval is arithmetic on 3 points, NOT a sampling interval. Descriptive only.
 
@@ -43,12 +43,12 @@ POST HOC choice (seed-0 slopes were seen before the rule was written). With 3 co
 
 | Cell | Line | Best offer(s) | Expected offer: plain | method | neutral | wrong-rule | Soft regret: plain | method | neutral | wrong-rule | Method beats wrong-rule? |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| (3, 'C', 2) | information | [2] | 2.47 | 1.98 | 2.50 | 1.65 | 0.998 | 0.029 | 0.737 | 0.627 | yes |
-| (3, 'C', 4) | information | [1, 2, 3] | 2.02 | 2.19 | 2.19 | 2.00 | 0.002 | 0.170 | 0.009 | 0.002 | NO |
-| (3, 'neutral') | neutral | [1, 2] | 1.98 | 1.56 | 2.08 | 1.89 | 0.020 | 0.019 | 0.050 | 0.013 | NO |
-| (5, 'C', 4) | information | [4] | 2.44 | 3.18 | 2.55 | 2.02 | 0.994 | 0.410 | 0.965 | 0.999 | yes |
-| (5, 'pressure') | pressure | [2, 3] | 3.15 | 1.92 | 2.84 | 2.07 | 0.199 | 0.143 | 0.146 | 0.035 | NO |
-| (6, 'C', 1) | information | [1] | 2.25 | 1.16 | 2.29 | 2.01 | 1.249 | 0.159 | 1.295 | 1.010 | yes |
+| (3, 'C', 2) | information | [2] | 2.47 | 1.98 | 2.50 | 2.14 | 0.998 | 0.029 | 0.737 | 0.533 | yes |
+| (3, 'C', 4) | information | [1, 2, 3] | 2.02 | 2.19 | 2.19 | 1.99 | 0.002 | 0.170 | 0.009 | 0.006 | NO |
+| (3, 'neutral') | neutral | [1, 2] | 1.98 | 1.56 | 2.08 | 1.99 | 0.020 | 0.019 | 0.050 | 0.026 | yes |
+| (5, 'C', 4) | information | [4] | 2.44 | 3.18 | 2.55 | 1.99 | 0.994 | 0.410 | 0.965 | 0.998 | yes |
+| (5, 'pressure') | pressure | [2, 3] | 3.15 | 1.92 | 2.84 | 1.99 | 0.199 | 0.143 | 0.146 | 0.026 | NO |
+| (6, 'C', 1) | information | [1] | 2.25 | 1.16 | 2.29 | 1.99 | 1.249 | 0.159 | 1.295 | 0.993 | yes |
 
 ## B. (c) Held-out soft regret at fixed epochs (all saved runs, seed 0; history holds aggregates only, so no per-cell interval is possible)
 
@@ -61,6 +61,8 @@ POST HOC choice (seed-0 slopes were seen before the rule was written). With 3 co
 | neutral 3e-04 | 0.577 | 0.627 | 0.646 | — | — | -0.070 | -0.035 | — | — |
 | neutral 1e-03 | 0.577 | 0.885 | 0.754 | — | — | -0.033 | 0.003 | — | — |
 | wrong_rule 1e-04 | 0.577 | 0.462 | 0.448 | 0.460 | 0.458 | 0.031 | 0.031 | 0.046 | 0.035 |
+| wrong_rule 3e-04 | 0.577 | 0.511 | 0.484 | 0.482 | 0.474 | 0.007 | 0.027 | 0.005 | 0.014 |
+| wrong_rule 1e-03 | 0.577 | 0.470 | 0.523 | 0.468 | 0.467 | -0.000 | -0.009 | -0.002 | -0.006 |
 
 ### Fixed-epoch per-cell soft regret difference (control − method), runs that logged per-epoch probabilities
 
@@ -69,3 +71,12 @@ POST HOC choice (seed-0 slopes were seen before the rule was written). With 3 co
 
 plain 0.500, method 0.467; difference plain − method +0.033 [-0.150, +0.250], method better in 1 of 6 cells.
 
+
+## C. G2 additions (exploratory)
+
+- always-2 − method: +0.178 [-0.108, +0.509], method better in 2 of 6 cells (always-2 mean 0.333).
+- leave-one-cell-out mean of (wrong_rule − method): without (3, 'C', 2): +0.229, without (3, 'C', 4): +0.363, without (3, 'neutral'): +0.329, without (5, 'C', 4): +0.213, without (5, 'pressure'): +0.353, without (6, 'C', 1): +0.163
+- leave-one-cell-out mean of (neutral − method): without (3, 'C', 2): +0.313, without (3, 'C', 4): +0.486, without (3, 'neutral'): +0.448, without (5, 'C', 4): +0.343, without (5, 'pressure'): +0.454, without (6, 'C', 1): +0.227
+- train cells (11, fitted; each arm fits its own teacher): plain 0.778, method 0.363, neutral 0.740, wrong_rule 0.754
+- train cells wrong-rule − method: +0.392 [+0.099, +0.698] over 11 cells
+- fixed-epoch per-cell section above is empty because the method runs predate the per-epoch probability logging (only wrong-rule 3e-4/1e-3 and neutral seed 1 have it).
