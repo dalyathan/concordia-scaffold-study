@@ -341,3 +341,38 @@ The controls show that the content does the work:
 - the disposition: slightly worse than plain (0.747).
 
 Text that states the answer for the case takes regret to about 0, which is the ceiling a vector would have to approach.
+
+## Step 5: pairs and directions (no Claude) — done
+
+**Template pairs** (`demo/pairs_template.py` → `demo/pairs_template.json`):
+
+- 34 build cases, none skipped. No build cell has every offer optimal; that cell, V = 5 and C = 5, is a test cell.
+- One template for all case types; only the facts and the concluded offer vary, and the arithmetic for the concluded offer is stated truthfully.
+- Good concludes a best offer. Bad concludes the offer just above or below the best set, chosen greedily to balance direction and mean price.
+
+| Check | Result |
+| --- | --- |
+| token lengths within 10% | **pass** (ratio 1.00 for every pair) |
+| bad above / below | **18 / 16** |
+| mean concluded price, good / bad | **2.65 / 2.59** (within 0.25: pass) |
+| offer-lower pairs (positive control): 34 pairs, A one coin below B, same template | **pass** (lengths ratio 1.00) |
+
+**Directions** (`demo/direction.py`, `logs/demo_step5.log`) → `demo_out/vectors.pt` and `demo/directions.json`:
+
+- P1 activation at every layer, averaged over the five orders, with the paragraph as the Notes block.
+- template = mean(good − bad) and offer_lower = mean(A − B), on build cases.
+- sentence = mean(method − neutral), on the step 4 tuning activations.
+- Each also with the option-letter span removed (`pipeline.project_out_letters`, which rescales to the original norm).
+
+| Vector | Pairs | Norm / mean residual norm, layers 6, 12, 18, 24 | Mean pairwise cosine of per-case differences, same layers | cos(vector, letter-projected vector), same layers |
+| --- | --- | --- | --- | --- |
+| template | 34 | 0.003, 0.003, 0.006, 0.027 | 0.189, 0.085, 0.053, 0.131 | 0.999, 0.999, 1.000, 0.998 |
+| offer_lower | 34 | 0.002, 0.003, 0.010, 0.030 | 0.075, 0.162, 0.256, 0.238 | 0.998, 0.999, 1.000, 1.000 |
+| sentence | 34 | 0.094, 0.153, 0.284, 0.290 | 0.996, 0.992, 0.995, 0.981 | 1.000, 0.999, 1.000, 0.997 |
+
+**Reading:**
+
+- **Template.** The vector is tiny: 0.3–2.7% of the residual norm at the tuning layers. Its per-case differences barely agree (cosine 0.05–0.19). The good-minus-bad difference is mostly case-specific, so the mean direction is weak.
+- **Offer-lower.** The positive control is as small, but more consistent (cosine up to 0.27).
+- **Sentence.** Large and almost identical across cases, because the same text is inserted every time.
+- **Letter span.** The option-letter unembedding span is a negligible part of every vector (cosine with the projected version ≥ 0.997).
