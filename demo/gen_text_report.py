@@ -15,7 +15,7 @@ rows = collections.defaultdict(dict)
 for r in map(json.loads, open(os.path.join(ROOT, "demo_out", "gen_text_rows.jsonl"))):
   rows[r["row"]][r["cid"]] = r
 rows["plain"] = plain
-NAMES = ("plain", "method_original", "teacher", "neutral", "wrong_rule")
+NAMES = ("plain", "method_original", "teacher_v1", "teacher", "neutral", "wrong_rule")
 
 
 def cellvals(row, split, typ=None):
@@ -58,7 +58,7 @@ def baseline(split, typ, kind):
 
 L = ["# Text rows on generated train and tune cells (plain Gemma 2 9B-it, five orders; test sets not scored)", "",
      "Notes block inserted before the question. Rows: plain (no notes), original method paragraph (earlier work), teacher method (Claude Opus, frozen), "
-     "same-length neutral text, wrong rule (\"Offer half the stated cost.\"). Soft regret = best expected payoff minus the model's; cell means "
+     "same-length neutral text, wrong rule; teacher_v1 = the first paragraph, teacher = the frozen winner of the closed loop (selected on 42 loop cells, so optimistic there) (\"Offer half the stated cost.\"). Soft regret = best expected payoff minus the model's; cell means "
      "(two name variants), cell-bootstrap 95% intervals (10,000, seed 0). 'diff' = plain minus row (positive = row better).", ""]
 for split in ("train", "tune"):
   n = len(cellvals("plain", split))
@@ -80,6 +80,21 @@ for split in ("train", "tune"):
     L.append(f"| {name} | " + " | ".join(cols) + f" | {slope(name, split):.2f} | {mass:.2f} | {d[0]:+.3f} [{d[1]:+.3f}, {d[2]:+.3f}] |")
   L.append("| always-cheapest | " + " | ".join(f"{baseline(split, t, 'cheapest'):.3f}" for t in (None, "below", "at_or_above", "no_cost")) + " | | | |")
   L.append("| stated-cost rule | " + " | ".join(f"{baseline(split, t, 'rule'):.3f}" for t in (None, "below", "at_or_above", "no_cost")) + " | | | |")
+  L.append("")
+B = json.load(open(os.path.join(g.OUT, "lora_select_cells_B.json")))
+A = json.load(open(os.path.join(g.OUT, "lora_select_cells.json")))
+for label, keys in (("LoRA selection set B (42 train cells not used by the loop, the packet or LoRA training)", B), ("loop set A (42 cells the winner was selected on: optimistic)", A)):
+  L += [f"## {label}", "", "| Row | soft regret [95%] | below | at_or_above | no_cost |", "| --- | --- | --- | --- | --- |"]
+  for name in NAMES:
+    by = collections.defaultdict(list)
+    for cid, r in rows[name].items():
+      if cases[cid]["cell"] in keys and cases[cid]["name_variant"] == 0:
+        by[cases[cid]["cell"]].append(r["soft_regret"])
+    if len(by) < len(keys):
+      L.append(f"| {name} | incomplete ({len(by)} of {len(keys)}) | | | |"); continue
+    v = {k: float(np.mean(x)) for k, x in by.items()}
+    m = boot(list(v.values()))
+    L.append(f"| {name} | {m[0]:.3f} [{m[1]:.3f}, {m[2]:.3f}] | " + " | ".join(f"{np.mean([x for k, x in v.items() if cells[k]['type'] == t]):.3f}" for t in g.TYPES) + " |")
   L.append("")
 open(os.path.join(ROOT, "demo_out", "gen_text_report.md"), "w").write("\n".join(L) + "\n")
 print("\n".join(L))

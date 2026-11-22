@@ -1,11 +1,11 @@
 # GEN_PLAN.md — LoRA arms on the generated dataset (written before training)
 
 ## Question
-Can a method paragraph written by Claude from Gemma's own failures (the "teacher method", frozen in demo/gen/teacher_method.txt, sha256 d4010305b297188598d0fb87186ed8fdb2ef0c98446dec70240a7f74f46c3499) be distilled into rank-4 LoRA weights so that plain-prompt Gemma 2 9B-it makes better offers on unseen generated cells? Evidence comes from the TUNE cells only; test_same and test_hard are not touched, and nothing here is a test result.
+Can a method paragraph written by Claude from Gemma's own failures (the "teacher method", frozen in demo/gen/teacher_method.txt after a closed loop: the round-1 paragraph, sha256 f41ae9b32010fcf2dbf87a7d207393eed31cf6a99294a7ed425abb98abf9b4b9; the first paragraph is kept as teacher_method_v1.txt, sha256 d4010305b297188598d0fb87186ed8fdb2ef0c98446dec70240a7f74f46c3499) be distilled into rank-4 LoRA weights so that plain-prompt Gemma 2 9B-it makes better offers on unseen generated cells? Evidence comes from the TUNE cells only; test_same and test_hard are not touched, and nothing here is a test result.
 
 ## Data (all from demo/gen/, CPU-generated; only train and tune cells are read)
 - Training set: 100 of the 300 train cells (34 below-resale, 33 at-or-above, 33 no-cost; demo/gen/lora_train_cells.json), one fixed name variant per cell, three fixed option orders per case = 300 examples per arm. Reduced from the 300 cells for the 8-hour budget (a pass costs about 1 s; the full set would take about 1 hour per epoch).
-- **Selection set** (demo/gen/lora_select_cells.json): 42 train cells outside the 100 training cells (14 per type), name variant 0, five orders. The lr choice and early stopping use this set only.
+- **Selection set B** (demo/gen/lora_select_cells_B.json): 42 train cells outside the 100 training cells, outside the teacher-loop set A (lora_select_cells.json, on which the paragraph was chosen) and outside the 50 cells of the original teacher packet (14 per type), name variant 0, five orders. The lr choice and early stopping use this set only.
 - **Tune set** (42 cells x 2 name variants, five orders): scored once per run, at the best epoch, and used for the verdict only; it is not used for any selection. Tune numbers are therefore not selected-on (only the run is).
 - Reference rows on tune (no training): plain, the teacher text in the prompt, the original method text in the prompt, neutral text, wrong rule (step B), always-cheapest and the stated-cost rule (computed from labels).
 
