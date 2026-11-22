@@ -214,3 +214,49 @@ Rules followed throughout:
 | test | 72 | 0.536 | 0.534 | 51% | 27 | 10 |
 
 In the test split, stated cost below resale is non-zero in 24 of 24 cases (mean hard regret 1.417), no cost in 50%, and cost at or above resale in 4%.
+
+## Step 2: is the failure real? (plain model only) — done
+
+The GPU job is `demo/step2_run.py` (`logs/demo_step2.log`); the analysis is `demo/step2_report.py` (→ `demo/step2.json`). Rescoring all 140 cases reproduced the saved order-averaged probabilities exactly (max difference 0).
+
+**Regression of the order-averaged expected offer** (all 140 cases, plain):
+
+| Case type | n | Slope on stated cost (ideal 1) | Slope on resale value | Intercept | R² |
+| --- | --- | --- | --- | --- | --- |
+| cost below resale | 60 | **0.12** | 0.14 | 1.73 | 0.23 |
+| cost at or above resale | 40 | **0.21** | 0.21 | 0.89 | 0.49 |
+| no cost | 40 | — | 0.40 | 0.85 | — |
+
+**The failure is real.** Gemma's expected offer moves only 0.12 coins per coin of stated cost, where it should move one-for-one. It barely uses the stated cost.
+
+**Variance split** (choice):
+
+- **Method.** Per case, a Latin-square ANOVA on the 5 orders × 5 positions of first-token log-probabilities, renormalised over the letters. Treatment = price, columns = option position, rows = order (removed).
+- **Result.** Pooled over cases, of the variance not due to the order: **price content 74.7%, option position 14.6%**, residual 10.7%.
+- The median case's price share is 77%. Position dominates the price in 10 of 140 cases.
+- **Choice:** the saved run kept only order-averaged probabilities, so the per-order scores came from the rescore, which is identical.
+
+**Greedy generation** (`scoring.say`):
+
+- **Format.** The decision prompt without the option list, ending "Answer: {buyer} would propose"; text system, greedy, `max_tokens` 16. The first number 1–5 or number word is parsed.
+- **Result.** All 140 parsed. The free-text offer agrees with the first-token top choice in **76 of 140 (54%)**. The mean regret of the free-text offer is 0.54 (first-token: 0.62). 0.86 s per case.
+- **Choice:** the free-text format tests whether the multiple-choice readout reflects what the model says unprompted by options. Generating after "Answer: (" would only re-read the same first-token distribution.
+
+**Cost dial** (`demo/dial_cost.json`): six build cases, only the stated cost changed to 1, 2, 3, 4 and none; "none" uses the neutral seller line (a logged choice).
+
+- The first run used six cases of which two pairs became identical prompts once the cost was overridden (same variant and V). A rerun with six distinct prompts is queued (`logs/demo_step2_dial.log`); the results below are from the first run, de-duplicated.
+- Gemma offers **2 coins almost whatever the stated cost**: cost 1 → 2 (overpay); cost 3 → 2 (refused); cost 4 → 2 (refused when V > 4). When the stated cost is 2, it offers *more* (3–4).
+
+**Reworded scaffold** (`scoring.reworded_user_turn`: every sentence reworded, same facts, same options; plain, all 140 cases):
+
+| Split | Case type | n | Reworded hard | Reworded soft | Original hard | Original soft | Same top offer |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| build | all | 34 | 0.647 | 0.715 | 0.729 | 0.699 | 41% |
+| tuning | all | 34 | 0.676 | 0.703 | 0.694 | 0.714 | 56% |
+| test | all | 72 | 0.636 | 0.579 | 0.536 | 0.534 | 57% |
+| all | cost below resale | 60 | 1.350 | 1.293 | 1.333 | 1.307 | 55% |
+| all | cost at or above resale | 40 | 0.100 | 0.144 | 0.025 | 0.064 | 50% |
+| all | no cost | 40 | 0.145 | 0.164 | 0.150 | 0.138 | 52% |
+| all | all | 140 | 0.649 | 0.642 | 0.621 | 0.618 | 53% |
+
+Rewording leaves the failure intact: overall regret is 0.649 versus 0.621, and cost below resale stays the worst. But it changes the top offer in about half the cases. The aggregate failure is robust; individual picks are fragile.

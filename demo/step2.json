@@ -1,0 +1,411 @@
+{
+ "regression": {
+  "cost below resale": {
+   "n": 60,
+   "intercept": 1.7299308935324147,
+   "slope_cost": 0.12209063066970113,
+   "slope_V": 0.1426226334153135,
+   "r2": 0.23160704187510528
+  },
+  "cost at or above resale": {
+   "n": 40,
+   "intercept": 0.8906885393756214,
+   "slope_cost": 0.2104490756049524,
+   "slope_V": 0.21415971575163079,
+   "r2": 0.49493446053042633
+  },
+  "no cost": {
+   "n": 40,
+   "intercept": 0.8515218189482947,
+   "slope_V": 0.39538267231111435,
+   "slope_cost": null
+  }
+ },
+ "variance_split": {
+  "share_price": 0.7473900233048574,
+  "share_position": 0.14552919498641684,
+  "share_residual": 0.10708078170872581,
+  "median_case_share_price": 0.7726542930089737,
+  "cases_position_dominant": 10
+ },
+ "say": {
+  "n": 140,
+  "parsed": 140,
+  "agree_with_top": 76,
+  "agreement": 0.5428571428571428,
+  "regret_of_said_offer_mean": 0.5399999999999999,
+  "sec_mean": 0.8640304245642897
+ },
+ "dial": [
+  {
+   "pid": "v15-V3-information-C2",
+   "1": [
+    2,
+    2.01,
+    [
+     1
+    ]
+   ],
+   "2": [
+    1,
+    2.35,
+    [
+     2
+    ]
+   ],
+   "3": [
+    2,
+    2.0,
+    [
+     1,
+     2,
+     3
+    ]
+   ],
+   "4": [
+    2,
+    2.01,
+    [
+     1,
+     2,
+     3
+    ]
+   ],
+   "None": [
+    2,
+    1.9,
+    [
+     1,
+     2
+    ]
+   ]
+  },
+  {
+   "pid": "v15-V4-information-C1",
+   "1": [
+    2,
+    2.06,
+    [
+     1
+    ]
+   ],
+   "2": [
+    3,
+    2.98,
+    [
+     2
+    ]
+   ],
+   "3": [
+    2,
+    2.01,
+    [
+     3
+    ]
+   ],
+   "4": [
+    2,
+    2.36,
+    [
+     1,
+     2,
+     3,
+     4
+    ]
+   ],
+   "None": [
+    2,
+    2.25,
+    [
+     2
+    ]
+   ]
+  },
+  {
+   "pid": "v15-V4-information-C3",
+   "1": [
+    2,
+    2.06,
+    [
+     1
+    ]
+   ],
+   "2": [
+    3,
+    2.98,
+    [
+     2
+    ]
+   ],
+   "3": [
+    2,
+    2.01,
+    [
+     3
+    ]
+   ],
+   "4": [
+    2,
+    2.36,
+    [
+     1,
+     2,
+     3,
+     4
+    ]
+   ],
+   "None": [
+    2,
+    2.25,
+    [
+     2
+    ]
+   ]
+  },
+  {
+   "pid": "v15-V5-information-C2",
+   "1": [
+    2,
+    2.07,
+    [
+     1
+    ]
+   ],
+   "2": [
+    4,
+    3.48,
+    [
+     2
+    ]
+   ],
+   "3": [
+    2,
+    2.53,
+    [
+     3
+    ]
+   ],
+   "4": [
+    2,
+    2.37,
+    [
+     4
+    ]
+   ],
+   "None": [
+    2,
+    2.51,
+    [
+     2,
+     3
+    ]
+   ]
+  },
+  {
+   "pid": "v15-V6-information-C1",
+   "1": [
+    2,
+    2.15,
+    [
+     1
+    ]
+   ],
+   "2": [
+    4,
+    3.38,
+    [
+     2
+    ]
+   ],
+   "3": [
+    2,
+    2.56,
+    [
+     3
+    ]
+   ],
+   "4": [
+    2,
+    2.32,
+    [
+     4
+    ]
+   ],
+   "None": [
+    2,
+    2.64,
+    [
+     3
+    ]
+   ]
+  },
+  {
+   "pid": "v15-V6-information-C3",
+   "1": [
+    2,
+    2.15,
+    [
+     1
+    ]
+   ],
+   "2": [
+    4,
+    3.38,
+    [
+     2
+    ]
+   ],
+   "3": [
+    2,
+    2.56,
+    [
+     3
+    ]
+   ],
+   "4": [
+    2,
+    2.32,
+    [
+     4
+    ]
+   ],
+   "None": [
+    2,
+    2.64,
+    [
+     3
+    ]
+   ]
+  }
+ ],
+ "reworded": {
+  "build|cost below resale": {
+   "n": 18,
+   "reworded_hard": 1.2222222222222223,
+   "reworded_soft": 1.2635527719309918,
+   "original_hard": 1.3333333333333333,
+   "original_soft": 1.2623799729650054,
+   "same_top": 0.3888888888888889
+  },
+  "build|cost at or above resale": {
+   "n": 8,
+   "reworded_hard": 0.0,
+   "reworded_soft": 0.1341373765499017,
+   "original_hard": 0.0,
+   "original_soft": 0.031004220831401804,
+   "same_top": 0.375
+  },
+  "build|no cost": {
+   "n": 8,
+   "reworded_hard": 0.0,
+   "reworded_soft": 0.06224534180083108,
+   "original_hard": 0.09999999999999998,
+   "original_soft": 0.10147405332786044,
+   "same_top": 0.5
+  },
+  "build|all": {
+   "n": 34,
+   "reworded_hard": 0.6470588235294118,
+   "reworded_soft": 0.7151474012224622,
+   "original_hard": 0.7294117647058824,
+   "original_soft": 0.6994901678424762,
+   "same_top": 0.4117647058823529
+  },
+  "tuning|cost below resale": {
+   "n": 18,
+   "reworded_hard": 1.2777777777777777,
+   "reworded_soft": 1.2413736989682584,
+   "original_hard": 1.2222222222222223,
+   "original_soft": 1.2559707985281556,
+   "same_top": 0.5555555555555556
+  },
+  "tuning|cost at or above resale": {
+   "n": 8,
+   "reworded_hard": 0.0,
+   "reworded_soft": 0.11740069905668718,
+   "original_hard": 0.0,
+   "original_soft": 0.08548064874305195,
+   "same_top": 0.625
+  },
+  "tuning|no cost": {
+   "n": 8,
+   "reworded_hard": 0.0,
+   "reworded_soft": 0.07735386311499737,
+   "original_hard": 0.19999999999999996,
+   "original_soft": 0.1250093706177429,
+   "same_top": 0.5
+  },
+  "tuning|all": {
+   "n": 34,
+   "reworded_hard": 0.6764705882352942,
+   "reworded_soft": 0.7030224434941801,
+   "original_hard": 0.6941176470588236,
+   "original_soft": 0.7144527802468577,
+   "same_top": 0.5588235294117647
+  },
+  "test|cost below resale": {
+   "n": 24,
+   "reworded_hard": 1.5,
+   "reworded_soft": 1.3529974300591316,
+   "original_hard": 1.4166666666666667,
+   "original_soft": 1.3796234231598976,
+   "same_top": 0.6666666666666666
+  },
+  "test|cost at or above resale": {
+   "n": 24,
+   "reworded_hard": 0.16666666666666666,
+   "reworded_soft": 0.1559484378216487,
+   "original_hard": 0.041666666666666664,
+   "original_soft": 0.06770879746828234,
+   "same_top": 0.5
+  },
+  "test|no cost": {
+   "n": 24,
+   "reworded_hard": 0.2416666666666667,
+   "reworded_soft": 0.22664276794847074,
+   "original_hard": 0.15,
+   "original_soft": 0.15434213598436344,
+   "same_top": 0.5416666666666666
+  },
+  "test|all": {
+   "n": 72,
+   "reworded_hard": 0.6361111111111112,
+   "reworded_soft": 0.578529545276417,
+   "original_hard": 0.5361111111111111,
+   "original_soft": 0.533891452204181,
+   "same_top": 0.5694444444444444
+  },
+  "all|cost below resale": {
+   "n": 60,
+   "reworded_hard": 1.35,
+   "reworded_soft": 1.2926769132934277,
+   "original_hard": 1.3333333333333333,
+   "original_soft": 1.307354600711907,
+   "same_top": 0.55
+  },
+  "all|cost at or above resale": {
+   "n": 40,
+   "reworded_hard": 0.1,
+   "reworded_soft": 0.143876677814307,
+   "original_hard": 0.025,
+   "original_soft": 0.06392225239586015,
+   "same_top": 0.5
+  },
+  "all|no cost": {
+   "n": 40,
+   "reworded_hard": 0.14500000000000002,
+   "reworded_soft": 0.1639055017522481,
+   "original_hard": 0.15,
+   "original_soft": 0.13790196637973873,
+   "same_top": 0.525
+  },
+  "all|all": {
+   "n": 140,
+   "reworded_hard": 0.6485714285714287,
+   "reworded_soft": 0.6419421570019134,
+   "original_hard": 0.6214285714285714,
+   "original_soft": 0.6179588913838456,
+   "same_top": 0.5285714285714286
+  }
+ }
+}

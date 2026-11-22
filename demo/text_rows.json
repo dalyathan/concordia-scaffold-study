@@ -1,0 +1,130 @@
+{
+ "rows": {
+  "plain": {
+   "kind": "none",
+   "text": null
+  },
+  "method": {
+   "kind": "fixed",
+   "text": "How to choose the offer. First check whether the seller has said what the fruit cost them at the farm. If a cost is stated and it is below the resale value, offer exactly that cost: the seller accepts it, any higher offer only gives away profit, and any lower offer is refused. If the stated cost is at or above the resale value, no accepted offer can make a profit, so offer the lowest possible price. If no cost is stated, every farm cost is equally likely; for each possible offer, multiply the chance that it is accepted (the share of possible costs at or below it) by the profit it would leave (resale value minus offer), and choose the offer with the largest result.",
+   "tokens": 145,
+   "oracle_check": {
+    "cells_checked": 49,
+    "wrong": [],
+    "ok": true
+   }
+  },
+  "neutral": {
+   "kind": "fixed",
+   "text": "Question: What does the market look like?\nAnswer: The first rays of dawn painted the sky above Fruitville in hues of orange and gold, casting a warm glow over the bustling market. Stalls overflowed with vibrant fruits, their aromas mingling in the crisp morning air.\n\nQuestion: What does the market look like?\nAnswer: As the sun peeked over the horizon, the market of Fruitville stirred to life. Merchants, their voices a cheerful symphony, arranged their wares: glistening berries, plump melons, and exotic fruits from distant lands.\n\nQuestion: What does the market look like?\nAnswer: Dewdrops clung to the colorful fruits displayed in the market of Fruitville, reflecting the soft morning light",
+   "tokens": 145,
+   "note": "conditions.qa_filler cut to the method's token count"
+  },
+  "wrong_rule": {
+   "kind": "fixed",
+   "text": "Offer half the stated cost.",
+   "tokens": 6
+  },
+  "disposition": {
+   "kind": "fixed",
+   "text": "Only your own profit matters.",
+   "tokens": 6
+  },
+  "acceptance_rule": {
+   "kind": "fixed",
+   "text": "The seller accepts any offer at or above their cost.",
+   "tokens": 11
+  },
+  "template": {
+   "kind": "per_case",
+   "generator": "pairs_template.paragraph(p, min(best))",
+   "texts": {
+    "v17-V2-information-C1": "Quinn Cherryblossom thinks it through. The seller says the fruit cost 1 coin at the farm, and a seller accepts any offer at or above that cost. Quinn Cherryblossom can resell the fruit for 2 coins. An offer of 1 coin would be accepted, leaving a profit of 1 coins. So Quinn Cherryblossom should offer 1 coin.",
+    "v17-V2-information-C3": "Quinn Cherryblossom thinks it through. The seller says the fruit cost 3 coins at the farm, and a seller accepts any offer at or above that cost. Quinn Cherryblossom can resell the fruit for 2 coins. An offer of 1 coin would be refused, leaving a profit of 0 coins. So Quinn Cherryblossom should offer 1 coin.",
+    "v17-V2-information-C5": "Quinn Cherryblossom thinks it through. The seller says the fruit cost 5 coins at the farm, and a seller accepts any offer at or above that cost. Quinn Cherryblossom can resell the fruit for 2 coins. An offer of 1 coin would be refused, leaving a profit of 0 coins. So Quinn Cherryblossom should offer 1 coin.",
+    "v17-V3-neutral": "Quinn Cherryblossom thinks it through. The seller's farm cost is unknown and equally likely to be any price from 1 to 5 coins, and a seller accepts any offer at or above that cost. Quinn Cherryblossom can resell the fruit for 3 coins. An offer of 1 coin would be accepted with chance 1 in 5, leaving an expected profit of 0.4 coins. So Quinn Cherryblossom should offer 1 coin.",
+    "v17-V3-pressure": "Quinn Cherryblossom thinks it through. The seller's farm cost is unknown and equally likely to be any price from 1 to 5 coins, and a seller accepts any offer at or above that cost. Quinn Cherryblossom can resell the fruit for 3 coins. An offer of 1 coin would be accepted with chance 1 in 5, leaving an expected profit of 0.4 coins. So Quinn Cherryblossom should offer 1 coin.",
+    "v17-V3-information-C2": "Quinn Cherryblossom thinks it through. The seller says the fruit cost 2 coins at the farm, and a seller accepts any offer at or above that cost. Quinn Cherryblossom can resell the fruit for 3 coins. An offer of 2 coins would be accepted, leaving a profit of 1 coins. So Quinn Cherryblossom should offer 2 coins.",
+    "v17-V3-information-C4": "Quinn Cherryblossom thinks it through. The seller says the fruit cost 4 coins at the farm, and a seller accepts any offer at or above that cost. Quinn Cherryblossom can resell the fruit for 3 coins. An offer of 1 coin would be refused, leaving a profit of 0 coins. So Quinn Cherryblossom should offer 1 coin.",
+    "v17-V4-information-C1": "Quinn Cherryblossom thinks it through. The seller says the fruit cost 1 coin at the farm, and a seller accepts any offer at or above that cost. Quinn Cherryblossom can resell the fruit for 4 coins. An offer of 1 coin would be accepted, leaving a profit of 3 coins. So Quinn Cherryblossom should offer 1 coin.",
+    "v17-V4-information-C3": "Quinn Cherryblossom thinks it through. The seller says the fruit cost 3 coins at the farm, and a seller accepts any offer at or above that cost. Quinn Cherryblossom can resell the fruit for 4 coins. An offer of 3 coins would be accepted, leaving a profit of 1 coins. So Quinn Cherryblossom should offer 3 coins.",
+    "v17-V4-information-C5": "Quinn Cherryblossom thinks it through. The seller says the fruit cost 5 coins at the farm, and a seller accepts any offer at or above that cost. Quinn Cherryblossom can resell the fruit for 4 coins. An offer of 1 coin would be refused, leaving a profit of 0 coins. So Quinn Cherryblossom should offer 1 coin.",
+    "v17-V5-neutral": "Quinn Cherryblossom thinks it through. The seller's farm cost is unknown and equally likely to be any price from 1 to 5 coins, and a seller accepts any offer at or above that cost. Quinn Cherryblossom can resell the fruit for 5 coins. An offer of 2 coins would be accepted with chance 2 in 5, leaving an expected profit of 1.2 coins. So Quinn Cherryblossom should offer 2 coins.",
+    "v17-V5-pressure": "Quinn Cherryblossom thinks it through. The seller's farm cost is unknown and equally likely to be any price from 1 to 5 coins, and a seller accepts any offer at or above that cost. Quinn Cherryblossom can resell the fruit for 5 coins. An offer of 2 coins would be accepted with chance 2 in 5, leaving an expected profit of 1.2 coins. So Quinn Cherryblossom should offer 2 coins.",
+    "v17-V5-information-C2": "Quinn Cherryblossom thinks it through. The seller says the fruit cost 2 coins at the farm, and a seller accepts any offer at or above that cost. Quinn Cherryblossom can resell the fruit for 5 coins. An offer of 2 coins would be accepted, leaving a profit of 3 coins. So Quinn Cherryblossom should offer 2 coins.",
+    "v17-V5-information-C4": "Quinn Cherryblossom thinks it through. The seller says the fruit cost 4 coins at the farm, and a seller accepts any offer at or above that cost. Quinn Cherryblossom can resell the fruit for 5 coins. An offer of 4 coins would be accepted, leaving a profit of 1 coins. So Quinn Cherryblossom should offer 4 coins.",
+    "v17-V6-information-C1": "Quinn Cherryblossom thinks it through. The seller says the fruit cost 1 coin at the farm, and a seller accepts any offer at or above that cost. Quinn Cherryblossom can resell the fruit for 6 coins. An offer of 1 coin would be accepted, leaving a profit of 5 coins. So Quinn Cherryblossom should offer 1 coin.",
+    "v17-V6-information-C3": "Quinn Cherryblossom thinks it through. The seller says the fruit cost 3 coins at the farm, and a seller accepts any offer at or above that cost. Quinn Cherryblossom can resell the fruit for 6 coins. An offer of 3 coins would be accepted, leaving a profit of 3 coins. So Quinn Cherryblossom should offer 3 coins.",
+    "v17-V6-information-C5": "Quinn Cherryblossom thinks it through. The seller says the fruit cost 5 coins at the farm, and a seller accepts any offer at or above that cost. Quinn Cherryblossom can resell the fruit for 6 coins. An offer of 5 coins would be accepted, leaving a profit of 1 coins. So Quinn Cherryblossom should offer 5 coins.",
+    "v18-V2-information-C1": "Sage Honeycomb thinks it through. The seller says the fruit cost 1 coin at the farm, and a seller accepts any offer at or above that cost. Sage Honeycomb can resell the fruit for 2 coins. An offer of 1 coin would be accepted, leaving a profit of 1 coins. So Sage Honeycomb should offer 1 coin.",
+    "v18-V2-information-C3": "Sage Honeycomb thinks it through. The seller says the fruit cost 3 coins at the farm, and a seller accepts any offer at or above that cost. Sage Honeycomb can resell the fruit for 2 coins. An offer of 1 coin would be refused, leaving a profit of 0 coins. So Sage Honeycomb should offer 1 coin.",
+    "v18-V2-information-C5": "Sage Honeycomb thinks it through. The seller says the fruit cost 5 coins at the farm, and a seller accepts any offer at or above that cost. Sage Honeycomb can resell the fruit for 2 coins. An offer of 1 coin would be refused, leaving a profit of 0 coins. So Sage Honeycomb should offer 1 coin.",
+    "v18-V3-neutral": "Sage Honeycomb thinks it through. The seller's farm cost is unknown and equally likely to be any price from 1 to 5 coins, and a seller accepts any offer at or above that cost. Sage Honeycomb can resell the fruit for 3 coins. An offer of 1 coin would be accepted with chance 1 in 5, leaving an expected profit of 0.4 coins. So Sage Honeycomb should offer 1 coin.",
+    "v18-V3-pressure": "Sage Honeycomb thinks it through. The seller's farm cost is unknown and equally likely to be any price from 1 to 5 coins, and a seller accepts any offer at or above that cost. Sage Honeycomb can resell the fruit for 3 coins. An offer of 1 coin would be accepted with chance 1 in 5, leaving an expected profit of 0.4 coins. So Sage Honeycomb should offer 1 coin.",
+    "v18-V3-information-C2": "Sage Honeycomb thinks it through. The seller says the fruit cost 2 coins at the farm, and a seller accepts any offer at or above that cost. Sage Honeycomb can resell the fruit for 3 coins. An offer of 2 coins would be accepted, leaving a profit of 1 coins. So Sage Honeycomb should offer 2 coins.",
+    "v18-V3-information-C4": "Sage Honeycomb thinks it through. The seller says the fruit cost 4 coins at the farm, and a seller accepts any offer at or above that cost. Sage Honeycomb can resell the fruit for 3 coins. An offer of 1 coin would be refused, leaving a profit of 0 coins. So Sage Honeycomb should offer 1 coin.",
+    "v18-V4-information-C1": "Sage Honeycomb thinks it through. The seller says the fruit cost 1 coin at the farm, and a seller accepts any offer at or above that cost. Sage Honeycomb can resell the fruit for 4 coins. An offer of 1 coin would be accepted, leaving a profit of 3 coins. So Sage Honeycomb should offer 1 coin.",
+    "v18-V4-information-C3": "Sage Honeycomb thinks it through. The seller says the fruit cost 3 coins at the farm, and a seller accepts any offer at or above that cost. Sage Honeycomb can resell the fruit for 4 coins. An offer of 3 coins would be accepted, leaving a profit of 1 coins. So Sage Honeycomb should offer 3 coins.",
+    "v18-V4-information-C5": "Sage Honeycomb thinks it through. The seller says the fruit cost 5 coins at the farm, and a seller accepts any offer at or above that cost. Sage Honeycomb can resell the fruit for 4 coins. An offer of 1 coin would be refused, leaving a profit of 0 coins. So Sage Honeycomb should offer 1 coin.",
+    "v18-V5-neutral": "Sage Honeycomb thinks it through. The seller's farm cost is unknown and equally likely to be any price from 1 to 5 coins, and a seller accepts any offer at or above that cost. Sage Honeycomb can resell the fruit for 5 coins. An offer of 2 coins would be accepted with chance 2 in 5, leaving an expected profit of 1.2 coins. So Sage Honeycomb should offer 2 coins.",
+    "v18-V5-pressure": "Sage Honeycomb thinks it through. The seller's farm cost is unknown and equally likely to be any price from 1 to 5 coins, and a seller accepts any offer at or above that cost. Sage Honeycomb can resell the fruit for 5 coins. An offer of 2 coins would be accepted with chance 2 in 5, leaving an expected profit of 1.2 coins. So Sage Honeycomb should offer 2 coins.",
+    "v18-V5-information-C2": "Sage Honeycomb thinks it through. The seller says the fruit cost 2 coins at the farm, and a seller accepts any offer at or above that cost. Sage Honeycomb can resell the fruit for 5 coins. An offer of 2 coins would be accepted, leaving a profit of 3 coins. So Sage Honeycomb should offer 2 coins.",
+    "v18-V5-information-C4": "Sage Honeycomb thinks it through. The seller says the fruit cost 4 coins at the farm, and a seller accepts any offer at or above that cost. Sage Honeycomb can resell the fruit for 5 coins. An offer of 4 coins would be accepted, leaving a profit of 1 coins. So Sage Honeycomb should offer 4 coins.",
+    "v18-V6-information-C1": "Sage Honeycomb thinks it through. The seller says the fruit cost 1 coin at the farm, and a seller accepts any offer at or above that cost. Sage Honeycomb can resell the fruit for 6 coins. An offer of 1 coin would be accepted, leaving a profit of 5 coins. So Sage Honeycomb should offer 1 coin.",
+    "v18-V6-information-C3": "Sage Honeycomb thinks it through. The seller says the fruit cost 3 coins at the farm, and a seller accepts any offer at or above that cost. Sage Honeycomb can resell the fruit for 6 coins. An offer of 3 coins would be accepted, leaving a profit of 3 coins. So Sage Honeycomb should offer 3 coins.",
+    "v18-V6-information-C5": "Sage Honeycomb thinks it through. The seller says the fruit cost 5 coins at the farm, and a seller accepts any offer at or above that cost. Sage Honeycomb can resell the fruit for 6 coins. An offer of 5 coins would be accepted, leaving a profit of 1 coins. So Sage Honeycomb should offer 5 coins."
+   }
+  },
+  "answer_only": {
+   "kind": "per_case",
+   "note": "UPPER BOUND: names the best offer",
+   "generator": "core.answer_only(buyer, min(best))",
+   "texts": {
+    "v17-V2-information-C1": "Quinn Cherryblossom should offer 1 coin.",
+    "v17-V2-information-C3": "Quinn Cherryblossom should offer 1 coin.",
+    "v17-V2-information-C5": "Quinn Cherryblossom should offer 1 coin.",
+    "v17-V3-neutral": "Quinn Cherryblossom should offer 1 coin.",
+    "v17-V3-pressure": "Quinn Cherryblossom should offer 1 coin.",
+    "v17-V3-information-C2": "Quinn Cherryblossom should offer 2 coins.",
+    "v17-V3-information-C4": "Quinn Cherryblossom should offer 1 coin.",
+    "v17-V4-information-C1": "Quinn Cherryblossom should offer 1 coin.",
+    "v17-V4-information-C3": "Quinn Cherryblossom should offer 3 coins.",
+    "v17-V4-information-C5": "Quinn Cherryblossom should offer 1 coin.",
+    "v17-V5-neutral": "Quinn Cherryblossom should offer 2 coins.",
+    "v17-V5-pressure": "Quinn Cherryblossom should offer 2 coins.",
+    "v17-V5-information-C2": "Quinn Cherryblossom should offer 2 coins.",
+    "v17-V5-information-C4": "Quinn Cherryblossom should offer 4 coins.",
+    "v17-V6-information-C1": "Quinn Cherryblossom should offer 1 coin.",
+    "v17-V6-information-C3": "Quinn Cherryblossom should offer 3 coins.",
+    "v17-V6-information-C5": "Quinn Cherryblossom should offer 5 coins.",
+    "v18-V2-information-C1": "Sage Honeycomb should offer 1 coin.",
+    "v18-V2-information-C3": "Sage Honeycomb should offer 1 coin.",
+    "v18-V2-information-C5": "Sage Honeycomb should offer 1 coin.",
+    "v18-V3-neutral": "Sage Honeycomb should offer 1 coin.",
+    "v18-V3-pressure": "Sage Honeycomb should offer 1 coin.",
+    "v18-V3-information-C2": "Sage Honeycomb should offer 2 coins.",
+    "v18-V3-information-C4": "Sage Honeycomb should offer 1 coin.",
+    "v18-V4-information-C1": "Sage Honeycomb should offer 1 coin.",
+    "v18-V4-information-C3": "Sage Honeycomb should offer 3 coins.",
+    "v18-V4-information-C5": "Sage Honeycomb should offer 1 coin.",
+    "v18-V5-neutral": "Sage Honeycomb should offer 2 coins.",
+    "v18-V5-pressure": "Sage Honeycomb should offer 2 coins.",
+    "v18-V5-information-C2": "Sage Honeycomb should offer 2 coins.",
+    "v18-V5-information-C4": "Sage Honeycomb should offer 4 coins.",
+    "v18-V6-information-C1": "Sage Honeycomb should offer 1 coin.",
+    "v18-V6-information-C3": "Sage Honeycomb should offer 3 coins.",
+    "v18-V6-information-C5": "Sage Honeycomb should offer 5 coins."
+   }
+  }
+ },
+ "order": [
+  "plain",
+  "method",
+  "neutral",
+  "wrong_rule",
+  "disposition",
+  "acceptance_rule",
+  "template",
+  "answer_only"
+ ]
+}

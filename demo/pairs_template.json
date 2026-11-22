@@ -1,0 +1,535 @@
+{
+ "template_pairs": [
+  {
+   "pid": "v15-V2-information-C1",
+   "good_offer": 1,
+   "bad_offer": 2,
+   "bad_direction": "above",
+   "good": "Opal Apricot thinks it through. The seller says the fruit cost 1 coin at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 2 coins. An offer of 1 coin would be accepted, leaving a profit of 1 coins. So Opal Apricot should offer 1 coin.",
+   "bad": "Opal Apricot thinks it through. The seller says the fruit cost 1 coin at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 2 coins. An offer of 2 coins would be accepted, leaving a profit of 0 coins. So Opal Apricot should offer 2 coins."
+  },
+  {
+   "pid": "v15-V2-information-C3",
+   "good_offer": 2,
+   "bad_offer": 3,
+   "bad_direction": "above",
+   "good": "Opal Apricot thinks it through. The seller says the fruit cost 3 coins at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 2 coins. An offer of 2 coins would be refused, leaving a profit of 0 coins. So Opal Apricot should offer 2 coins.",
+   "bad": "Opal Apricot thinks it through. The seller says the fruit cost 3 coins at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 2 coins. An offer of 3 coins would be accepted, leaving a profit of -1 coins. So Opal Apricot should offer 3 coins."
+  },
+  {
+   "pid": "v15-V2-information-C5",
+   "good_offer": 4,
+   "bad_offer": 5,
+   "bad_direction": "above",
+   "good": "Opal Apricot thinks it through. The seller says the fruit cost 5 coins at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 2 coins. An offer of 4 coins would be refused, leaving a profit of 0 coins. So Opal Apricot should offer 4 coins.",
+   "bad": "Opal Apricot thinks it through. The seller says the fruit cost 5 coins at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 2 coins. An offer of 5 coins would be accepted, leaving a profit of -3 coins. So Opal Apricot should offer 5 coins."
+  },
+  {
+   "pid": "v15-V3-neutral",
+   "good_offer": 2,
+   "bad_offer": 3,
+   "bad_direction": "above",
+   "good": "Opal Apricot thinks it through. The seller's farm cost is unknown and equally likely to be any price from 1 to 5 coins, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 3 coins. An offer of 2 coins would be accepted with chance 2 in 5, leaving an expected profit of 0.4 coins. So Opal Apricot should offer 2 coins.",
+   "bad": "Opal Apricot thinks it through. The seller's farm cost is unknown and equally likely to be any price from 1 to 5 coins, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 3 coins. An offer of 3 coins would be accepted with chance 3 in 5, leaving an expected profit of 0.0 coins. So Opal Apricot should offer 3 coins."
+  },
+  {
+   "pid": "v15-V3-pressure",
+   "good_offer": 2,
+   "bad_offer": 3,
+   "bad_direction": "above",
+   "good": "Opal Apricot thinks it through. The seller's farm cost is unknown and equally likely to be any price from 1 to 5 coins, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 3 coins. An offer of 2 coins would be accepted with chance 2 in 5, leaving an expected profit of 0.4 coins. So Opal Apricot should offer 2 coins.",
+   "bad": "Opal Apricot thinks it through. The seller's farm cost is unknown and equally likely to be any price from 1 to 5 coins, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 3 coins. An offer of 3 coins would be accepted with chance 3 in 5, leaving an expected profit of 0.0 coins. So Opal Apricot should offer 3 coins."
+  },
+  {
+   "pid": "v15-V3-information-C2",
+   "good_offer": 2,
+   "bad_offer": 1,
+   "bad_direction": "below",
+   "good": "Opal Apricot thinks it through. The seller says the fruit cost 2 coins at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 3 coins. An offer of 2 coins would be accepted, leaving a profit of 1 coins. So Opal Apricot should offer 2 coins.",
+   "bad": "Opal Apricot thinks it through. The seller says the fruit cost 2 coins at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 3 coins. An offer of 1 coin would be refused, leaving a profit of 0 coins. So Opal Apricot should offer 1 coin."
+  },
+  {
+   "pid": "v15-V3-information-C4",
+   "good_offer": 3,
+   "bad_offer": 4,
+   "bad_direction": "above",
+   "good": "Opal Apricot thinks it through. The seller says the fruit cost 4 coins at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 3 coins. An offer of 3 coins would be refused, leaving a profit of 0 coins. So Opal Apricot should offer 3 coins.",
+   "bad": "Opal Apricot thinks it through. The seller says the fruit cost 4 coins at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 3 coins. An offer of 4 coins would be accepted, leaving a profit of -1 coins. So Opal Apricot should offer 4 coins."
+  },
+  {
+   "pid": "v15-V4-information-C1",
+   "good_offer": 1,
+   "bad_offer": 2,
+   "bad_direction": "above",
+   "good": "Opal Apricot thinks it through. The seller says the fruit cost 1 coin at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 4 coins. An offer of 1 coin would be accepted, leaving a profit of 3 coins. So Opal Apricot should offer 1 coin.",
+   "bad": "Opal Apricot thinks it through. The seller says the fruit cost 1 coin at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 4 coins. An offer of 2 coins would be accepted, leaving a profit of 2 coins. So Opal Apricot should offer 2 coins."
+  },
+  {
+   "pid": "v15-V4-information-C3",
+   "good_offer": 3,
+   "bad_offer": 2,
+   "bad_direction": "below",
+   "good": "Opal Apricot thinks it through. The seller says the fruit cost 3 coins at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 4 coins. An offer of 3 coins would be accepted, leaving a profit of 1 coins. So Opal Apricot should offer 3 coins.",
+   "bad": "Opal Apricot thinks it through. The seller says the fruit cost 3 coins at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 4 coins. An offer of 2 coins would be refused, leaving a profit of 0 coins. So Opal Apricot should offer 2 coins."
+  },
+  {
+   "pid": "v15-V4-information-C5",
+   "good_offer": 4,
+   "bad_offer": 5,
+   "bad_direction": "above",
+   "good": "Opal Apricot thinks it through. The seller says the fruit cost 5 coins at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 4 coins. An offer of 4 coins would be refused, leaving a profit of 0 coins. So Opal Apricot should offer 4 coins.",
+   "bad": "Opal Apricot thinks it through. The seller says the fruit cost 5 coins at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 4 coins. An offer of 5 coins would be accepted, leaving a profit of -1 coins. So Opal Apricot should offer 5 coins."
+  },
+  {
+   "pid": "v15-V5-neutral",
+   "good_offer": 3,
+   "bad_offer": 1,
+   "bad_direction": "below",
+   "good": "Opal Apricot thinks it through. The seller's farm cost is unknown and equally likely to be any price from 1 to 5 coins, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 5 coins. An offer of 3 coins would be accepted with chance 3 in 5, leaving an expected profit of 1.2 coins. So Opal Apricot should offer 3 coins.",
+   "bad": "Opal Apricot thinks it through. The seller's farm cost is unknown and equally likely to be any price from 1 to 5 coins, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 5 coins. An offer of 1 coin would be accepted with chance 1 in 5, leaving an expected profit of 0.8 coins. So Opal Apricot should offer 1 coin."
+  },
+  {
+   "pid": "v15-V5-pressure",
+   "good_offer": 3,
+   "bad_offer": 1,
+   "bad_direction": "below",
+   "good": "Opal Apricot thinks it through. The seller's farm cost is unknown and equally likely to be any price from 1 to 5 coins, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 5 coins. An offer of 3 coins would be accepted with chance 3 in 5, leaving an expected profit of 1.2 coins. So Opal Apricot should offer 3 coins.",
+   "bad": "Opal Apricot thinks it through. The seller's farm cost is unknown and equally likely to be any price from 1 to 5 coins, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 5 coins. An offer of 1 coin would be accepted with chance 1 in 5, leaving an expected profit of 0.8 coins. So Opal Apricot should offer 1 coin."
+  },
+  {
+   "pid": "v15-V5-information-C2",
+   "good_offer": 2,
+   "bad_offer": 1,
+   "bad_direction": "below",
+   "good": "Opal Apricot thinks it through. The seller says the fruit cost 2 coins at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 5 coins. An offer of 2 coins would be accepted, leaving a profit of 3 coins. So Opal Apricot should offer 2 coins.",
+   "bad": "Opal Apricot thinks it through. The seller says the fruit cost 2 coins at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 5 coins. An offer of 1 coin would be refused, leaving a profit of 0 coins. So Opal Apricot should offer 1 coin."
+  },
+  {
+   "pid": "v15-V5-information-C4",
+   "good_offer": 4,
+   "bad_offer": 3,
+   "bad_direction": "below",
+   "good": "Opal Apricot thinks it through. The seller says the fruit cost 4 coins at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 5 coins. An offer of 4 coins would be accepted, leaving a profit of 1 coins. So Opal Apricot should offer 4 coins.",
+   "bad": "Opal Apricot thinks it through. The seller says the fruit cost 4 coins at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 5 coins. An offer of 3 coins would be refused, leaving a profit of 0 coins. So Opal Apricot should offer 3 coins."
+  },
+  {
+   "pid": "v15-V6-information-C1",
+   "good_offer": 1,
+   "bad_offer": 2,
+   "bad_direction": "above",
+   "good": "Opal Apricot thinks it through. The seller says the fruit cost 1 coin at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 6 coins. An offer of 1 coin would be accepted, leaving a profit of 5 coins. So Opal Apricot should offer 1 coin.",
+   "bad": "Opal Apricot thinks it through. The seller says the fruit cost 1 coin at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 6 coins. An offer of 2 coins would be accepted, leaving a profit of 4 coins. So Opal Apricot should offer 2 coins."
+  },
+  {
+   "pid": "v15-V6-information-C3",
+   "good_offer": 3,
+   "bad_offer": 2,
+   "bad_direction": "below",
+   "good": "Opal Apricot thinks it through. The seller says the fruit cost 3 coins at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 6 coins. An offer of 3 coins would be accepted, leaving a profit of 3 coins. So Opal Apricot should offer 3 coins.",
+   "bad": "Opal Apricot thinks it through. The seller says the fruit cost 3 coins at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 6 coins. An offer of 2 coins would be refused, leaving a profit of 0 coins. So Opal Apricot should offer 2 coins."
+  },
+  {
+   "pid": "v15-V6-information-C5",
+   "good_offer": 5,
+   "bad_offer": 4,
+   "bad_direction": "below",
+   "good": "Opal Apricot thinks it through. The seller says the fruit cost 5 coins at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 6 coins. An offer of 5 coins would be accepted, leaving a profit of 1 coins. So Opal Apricot should offer 5 coins.",
+   "bad": "Opal Apricot thinks it through. The seller says the fruit cost 5 coins at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 6 coins. An offer of 4 coins would be refused, leaving a profit of 0 coins. So Opal Apricot should offer 4 coins."
+  },
+  {
+   "pid": "v16-V2-information-C1",
+   "good_offer": 1,
+   "bad_offer": 2,
+   "bad_direction": "above",
+   "good": "Sasha Grapevine thinks it through. The seller says the fruit cost 1 coin at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 2 coins. An offer of 1 coin would be accepted, leaving a profit of 1 coins. So Sasha Grapevine should offer 1 coin.",
+   "bad": "Sasha Grapevine thinks it through. The seller says the fruit cost 1 coin at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 2 coins. An offer of 2 coins would be accepted, leaving a profit of 0 coins. So Sasha Grapevine should offer 2 coins."
+  },
+  {
+   "pid": "v16-V2-information-C3",
+   "good_offer": 2,
+   "bad_offer": 3,
+   "bad_direction": "above",
+   "good": "Sasha Grapevine thinks it through. The seller says the fruit cost 3 coins at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 2 coins. An offer of 2 coins would be refused, leaving a profit of 0 coins. So Sasha Grapevine should offer 2 coins.",
+   "bad": "Sasha Grapevine thinks it through. The seller says the fruit cost 3 coins at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 2 coins. An offer of 3 coins would be accepted, leaving a profit of -1 coins. So Sasha Grapevine should offer 3 coins."
+  },
+  {
+   "pid": "v16-V2-information-C5",
+   "good_offer": 4,
+   "bad_offer": 5,
+   "bad_direction": "above",
+   "good": "Sasha Grapevine thinks it through. The seller says the fruit cost 5 coins at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 2 coins. An offer of 4 coins would be refused, leaving a profit of 0 coins. So Sasha Grapevine should offer 4 coins.",
+   "bad": "Sasha Grapevine thinks it through. The seller says the fruit cost 5 coins at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 2 coins. An offer of 5 coins would be accepted, leaving a profit of -3 coins. So Sasha Grapevine should offer 5 coins."
+  },
+  {
+   "pid": "v16-V3-neutral",
+   "good_offer": 2,
+   "bad_offer": 3,
+   "bad_direction": "above",
+   "good": "Sasha Grapevine thinks it through. The seller's farm cost is unknown and equally likely to be any price from 1 to 5 coins, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 3 coins. An offer of 2 coins would be accepted with chance 2 in 5, leaving an expected profit of 0.4 coins. So Sasha Grapevine should offer 2 coins.",
+   "bad": "Sasha Grapevine thinks it through. The seller's farm cost is unknown and equally likely to be any price from 1 to 5 coins, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 3 coins. An offer of 3 coins would be accepted with chance 3 in 5, leaving an expected profit of 0.0 coins. So Sasha Grapevine should offer 3 coins."
+  },
+  {
+   "pid": "v16-V3-pressure",
+   "good_offer": 2,
+   "bad_offer": 3,
+   "bad_direction": "above",
+   "good": "Sasha Grapevine thinks it through. The seller's farm cost is unknown and equally likely to be any price from 1 to 5 coins, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 3 coins. An offer of 2 coins would be accepted with chance 2 in 5, leaving an expected profit of 0.4 coins. So Sasha Grapevine should offer 2 coins.",
+   "bad": "Sasha Grapevine thinks it through. The seller's farm cost is unknown and equally likely to be any price from 1 to 5 coins, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 3 coins. An offer of 3 coins would be accepted with chance 3 in 5, leaving an expected profit of 0.0 coins. So Sasha Grapevine should offer 3 coins."
+  },
+  {
+   "pid": "v16-V3-information-C2",
+   "good_offer": 2,
+   "bad_offer": 1,
+   "bad_direction": "below",
+   "good": "Sasha Grapevine thinks it through. The seller says the fruit cost 2 coins at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 3 coins. An offer of 2 coins would be accepted, leaving a profit of 1 coins. So Sasha Grapevine should offer 2 coins.",
+   "bad": "Sasha Grapevine thinks it through. The seller says the fruit cost 2 coins at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 3 coins. An offer of 1 coin would be refused, leaving a profit of 0 coins. So Sasha Grapevine should offer 1 coin."
+  },
+  {
+   "pid": "v16-V3-information-C4",
+   "good_offer": 3,
+   "bad_offer": 4,
+   "bad_direction": "above",
+   "good": "Sasha Grapevine thinks it through. The seller says the fruit cost 4 coins at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 3 coins. An offer of 3 coins would be refused, leaving a profit of 0 coins. So Sasha Grapevine should offer 3 coins.",
+   "bad": "Sasha Grapevine thinks it through. The seller says the fruit cost 4 coins at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 3 coins. An offer of 4 coins would be accepted, leaving a profit of -1 coins. So Sasha Grapevine should offer 4 coins."
+  },
+  {
+   "pid": "v16-V4-information-C1",
+   "good_offer": 1,
+   "bad_offer": 2,
+   "bad_direction": "above",
+   "good": "Sasha Grapevine thinks it through. The seller says the fruit cost 1 coin at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 4 coins. An offer of 1 coin would be accepted, leaving a profit of 3 coins. So Sasha Grapevine should offer 1 coin.",
+   "bad": "Sasha Grapevine thinks it through. The seller says the fruit cost 1 coin at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 4 coins. An offer of 2 coins would be accepted, leaving a profit of 2 coins. So Sasha Grapevine should offer 2 coins."
+  },
+  {
+   "pid": "v16-V4-information-C3",
+   "good_offer": 3,
+   "bad_offer": 2,
+   "bad_direction": "below",
+   "good": "Sasha Grapevine thinks it through. The seller says the fruit cost 3 coins at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 4 coins. An offer of 3 coins would be accepted, leaving a profit of 1 coins. So Sasha Grapevine should offer 3 coins.",
+   "bad": "Sasha Grapevine thinks it through. The seller says the fruit cost 3 coins at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 4 coins. An offer of 2 coins would be refused, leaving a profit of 0 coins. So Sasha Grapevine should offer 2 coins."
+  },
+  {
+   "pid": "v16-V4-information-C5",
+   "good_offer": 4,
+   "bad_offer": 5,
+   "bad_direction": "above",
+   "good": "Sasha Grapevine thinks it through. The seller says the fruit cost 5 coins at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 4 coins. An offer of 4 coins would be refused, leaving a profit of 0 coins. So Sasha Grapevine should offer 4 coins.",
+   "bad": "Sasha Grapevine thinks it through. The seller says the fruit cost 5 coins at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 4 coins. An offer of 5 coins would be accepted, leaving a profit of -1 coins. So Sasha Grapevine should offer 5 coins."
+  },
+  {
+   "pid": "v16-V5-neutral",
+   "good_offer": 3,
+   "bad_offer": 1,
+   "bad_direction": "below",
+   "good": "Sasha Grapevine thinks it through. The seller's farm cost is unknown and equally likely to be any price from 1 to 5 coins, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 5 coins. An offer of 3 coins would be accepted with chance 3 in 5, leaving an expected profit of 1.2 coins. So Sasha Grapevine should offer 3 coins.",
+   "bad": "Sasha Grapevine thinks it through. The seller's farm cost is unknown and equally likely to be any price from 1 to 5 coins, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 5 coins. An offer of 1 coin would be accepted with chance 1 in 5, leaving an expected profit of 0.8 coins. So Sasha Grapevine should offer 1 coin."
+  },
+  {
+   "pid": "v16-V5-pressure",
+   "good_offer": 3,
+   "bad_offer": 1,
+   "bad_direction": "below",
+   "good": "Sasha Grapevine thinks it through. The seller's farm cost is unknown and equally likely to be any price from 1 to 5 coins, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 5 coins. An offer of 3 coins would be accepted with chance 3 in 5, leaving an expected profit of 1.2 coins. So Sasha Grapevine should offer 3 coins.",
+   "bad": "Sasha Grapevine thinks it through. The seller's farm cost is unknown and equally likely to be any price from 1 to 5 coins, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 5 coins. An offer of 1 coin would be accepted with chance 1 in 5, leaving an expected profit of 0.8 coins. So Sasha Grapevine should offer 1 coin."
+  },
+  {
+   "pid": "v16-V5-information-C2",
+   "good_offer": 2,
+   "bad_offer": 1,
+   "bad_direction": "below",
+   "good": "Sasha Grapevine thinks it through. The seller says the fruit cost 2 coins at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 5 coins. An offer of 2 coins would be accepted, leaving a profit of 3 coins. So Sasha Grapevine should offer 2 coins.",
+   "bad": "Sasha Grapevine thinks it through. The seller says the fruit cost 2 coins at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 5 coins. An offer of 1 coin would be refused, leaving a profit of 0 coins. So Sasha Grapevine should offer 1 coin."
+  },
+  {
+   "pid": "v16-V5-information-C4",
+   "good_offer": 4,
+   "bad_offer": 3,
+   "bad_direction": "below",
+   "good": "Sasha Grapevine thinks it through. The seller says the fruit cost 4 coins at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 5 coins. An offer of 4 coins would be accepted, leaving a profit of 1 coins. So Sasha Grapevine should offer 4 coins.",
+   "bad": "Sasha Grapevine thinks it through. The seller says the fruit cost 4 coins at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 5 coins. An offer of 3 coins would be refused, leaving a profit of 0 coins. So Sasha Grapevine should offer 3 coins."
+  },
+  {
+   "pid": "v16-V6-information-C1",
+   "good_offer": 1,
+   "bad_offer": 2,
+   "bad_direction": "above",
+   "good": "Sasha Grapevine thinks it through. The seller says the fruit cost 1 coin at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 6 coins. An offer of 1 coin would be accepted, leaving a profit of 5 coins. So Sasha Grapevine should offer 1 coin.",
+   "bad": "Sasha Grapevine thinks it through. The seller says the fruit cost 1 coin at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 6 coins. An offer of 2 coins would be accepted, leaving a profit of 4 coins. So Sasha Grapevine should offer 2 coins."
+  },
+  {
+   "pid": "v16-V6-information-C3",
+   "good_offer": 3,
+   "bad_offer": 2,
+   "bad_direction": "below",
+   "good": "Sasha Grapevine thinks it through. The seller says the fruit cost 3 coins at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 6 coins. An offer of 3 coins would be accepted, leaving a profit of 3 coins. So Sasha Grapevine should offer 3 coins.",
+   "bad": "Sasha Grapevine thinks it through. The seller says the fruit cost 3 coins at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 6 coins. An offer of 2 coins would be refused, leaving a profit of 0 coins. So Sasha Grapevine should offer 2 coins."
+  },
+  {
+   "pid": "v16-V6-information-C5",
+   "good_offer": 5,
+   "bad_offer": 4,
+   "bad_direction": "below",
+   "good": "Sasha Grapevine thinks it through. The seller says the fruit cost 5 coins at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 6 coins. An offer of 5 coins would be accepted, leaving a profit of 1 coins. So Sasha Grapevine should offer 5 coins.",
+   "bad": "Sasha Grapevine thinks it through. The seller says the fruit cost 5 coins at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 6 coins. An offer of 4 coins would be refused, leaving a profit of 0 coins. So Sasha Grapevine should offer 4 coins."
+  }
+ ],
+ "offer_lower_pairs": [
+  {
+   "pid": "v15-V2-information-C1",
+   "A_offer": 1,
+   "B_offer": 2,
+   "A": "Opal Apricot thinks it through. The seller says the fruit cost 1 coin at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 2 coins. An offer of 1 coin would be accepted, leaving a profit of 1 coins. So Opal Apricot should offer 1 coin.",
+   "B": "Opal Apricot thinks it through. The seller says the fruit cost 1 coin at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 2 coins. An offer of 2 coins would be accepted, leaving a profit of 0 coins. So Opal Apricot should offer 2 coins."
+  },
+  {
+   "pid": "v15-V2-information-C3",
+   "A_offer": 1,
+   "B_offer": 2,
+   "A": "Opal Apricot thinks it through. The seller says the fruit cost 3 coins at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 2 coins. An offer of 1 coin would be refused, leaving a profit of 0 coins. So Opal Apricot should offer 1 coin.",
+   "B": "Opal Apricot thinks it through. The seller says the fruit cost 3 coins at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 2 coins. An offer of 2 coins would be refused, leaving a profit of 0 coins. So Opal Apricot should offer 2 coins."
+  },
+  {
+   "pid": "v15-V2-information-C5",
+   "A_offer": 3,
+   "B_offer": 4,
+   "A": "Opal Apricot thinks it through. The seller says the fruit cost 5 coins at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 2 coins. An offer of 3 coins would be refused, leaving a profit of 0 coins. So Opal Apricot should offer 3 coins.",
+   "B": "Opal Apricot thinks it through. The seller says the fruit cost 5 coins at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 2 coins. An offer of 4 coins would be refused, leaving a profit of 0 coins. So Opal Apricot should offer 4 coins."
+  },
+  {
+   "pid": "v15-V3-neutral",
+   "A_offer": 1,
+   "B_offer": 2,
+   "A": "Opal Apricot thinks it through. The seller's farm cost is unknown and equally likely to be any price from 1 to 5 coins, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 3 coins. An offer of 1 coin would be accepted with chance 1 in 5, leaving an expected profit of 0.4 coins. So Opal Apricot should offer 1 coin.",
+   "B": "Opal Apricot thinks it through. The seller's farm cost is unknown and equally likely to be any price from 1 to 5 coins, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 3 coins. An offer of 2 coins would be accepted with chance 2 in 5, leaving an expected profit of 0.4 coins. So Opal Apricot should offer 2 coins."
+  },
+  {
+   "pid": "v15-V3-pressure",
+   "A_offer": 1,
+   "B_offer": 2,
+   "A": "Opal Apricot thinks it through. The seller's farm cost is unknown and equally likely to be any price from 1 to 5 coins, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 3 coins. An offer of 1 coin would be accepted with chance 1 in 5, leaving an expected profit of 0.4 coins. So Opal Apricot should offer 1 coin.",
+   "B": "Opal Apricot thinks it through. The seller's farm cost is unknown and equally likely to be any price from 1 to 5 coins, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 3 coins. An offer of 2 coins would be accepted with chance 2 in 5, leaving an expected profit of 0.4 coins. So Opal Apricot should offer 2 coins."
+  },
+  {
+   "pid": "v15-V3-information-C2",
+   "A_offer": 1,
+   "B_offer": 2,
+   "A": "Opal Apricot thinks it through. The seller says the fruit cost 2 coins at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 3 coins. An offer of 1 coin would be refused, leaving a profit of 0 coins. So Opal Apricot should offer 1 coin.",
+   "B": "Opal Apricot thinks it through. The seller says the fruit cost 2 coins at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 3 coins. An offer of 2 coins would be accepted, leaving a profit of 1 coins. So Opal Apricot should offer 2 coins."
+  },
+  {
+   "pid": "v15-V3-information-C4",
+   "A_offer": 2,
+   "B_offer": 3,
+   "A": "Opal Apricot thinks it through. The seller says the fruit cost 4 coins at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 3 coins. An offer of 2 coins would be refused, leaving a profit of 0 coins. So Opal Apricot should offer 2 coins.",
+   "B": "Opal Apricot thinks it through. The seller says the fruit cost 4 coins at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 3 coins. An offer of 3 coins would be refused, leaving a profit of 0 coins. So Opal Apricot should offer 3 coins."
+  },
+  {
+   "pid": "v15-V4-information-C1",
+   "A_offer": 1,
+   "B_offer": 2,
+   "A": "Opal Apricot thinks it through. The seller says the fruit cost 1 coin at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 4 coins. An offer of 1 coin would be accepted, leaving a profit of 3 coins. So Opal Apricot should offer 1 coin.",
+   "B": "Opal Apricot thinks it through. The seller says the fruit cost 1 coin at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 4 coins. An offer of 2 coins would be accepted, leaving a profit of 2 coins. So Opal Apricot should offer 2 coins."
+  },
+  {
+   "pid": "v15-V4-information-C3",
+   "A_offer": 2,
+   "B_offer": 3,
+   "A": "Opal Apricot thinks it through. The seller says the fruit cost 3 coins at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 4 coins. An offer of 2 coins would be refused, leaving a profit of 0 coins. So Opal Apricot should offer 2 coins.",
+   "B": "Opal Apricot thinks it through. The seller says the fruit cost 3 coins at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 4 coins. An offer of 3 coins would be accepted, leaving a profit of 1 coins. So Opal Apricot should offer 3 coins."
+  },
+  {
+   "pid": "v15-V4-information-C5",
+   "A_offer": 3,
+   "B_offer": 4,
+   "A": "Opal Apricot thinks it through. The seller says the fruit cost 5 coins at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 4 coins. An offer of 3 coins would be refused, leaving a profit of 0 coins. So Opal Apricot should offer 3 coins.",
+   "B": "Opal Apricot thinks it through. The seller says the fruit cost 5 coins at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 4 coins. An offer of 4 coins would be refused, leaving a profit of 0 coins. So Opal Apricot should offer 4 coins."
+  },
+  {
+   "pid": "v15-V5-neutral",
+   "A_offer": 2,
+   "B_offer": 3,
+   "A": "Opal Apricot thinks it through. The seller's farm cost is unknown and equally likely to be any price from 1 to 5 coins, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 5 coins. An offer of 2 coins would be accepted with chance 2 in 5, leaving an expected profit of 1.2 coins. So Opal Apricot should offer 2 coins.",
+   "B": "Opal Apricot thinks it through. The seller's farm cost is unknown and equally likely to be any price from 1 to 5 coins, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 5 coins. An offer of 3 coins would be accepted with chance 3 in 5, leaving an expected profit of 1.2 coins. So Opal Apricot should offer 3 coins."
+  },
+  {
+   "pid": "v15-V5-pressure",
+   "A_offer": 2,
+   "B_offer": 3,
+   "A": "Opal Apricot thinks it through. The seller's farm cost is unknown and equally likely to be any price from 1 to 5 coins, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 5 coins. An offer of 2 coins would be accepted with chance 2 in 5, leaving an expected profit of 1.2 coins. So Opal Apricot should offer 2 coins.",
+   "B": "Opal Apricot thinks it through. The seller's farm cost is unknown and equally likely to be any price from 1 to 5 coins, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 5 coins. An offer of 3 coins would be accepted with chance 3 in 5, leaving an expected profit of 1.2 coins. So Opal Apricot should offer 3 coins."
+  },
+  {
+   "pid": "v15-V5-information-C2",
+   "A_offer": 1,
+   "B_offer": 2,
+   "A": "Opal Apricot thinks it through. The seller says the fruit cost 2 coins at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 5 coins. An offer of 1 coin would be refused, leaving a profit of 0 coins. So Opal Apricot should offer 1 coin.",
+   "B": "Opal Apricot thinks it through. The seller says the fruit cost 2 coins at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 5 coins. An offer of 2 coins would be accepted, leaving a profit of 3 coins. So Opal Apricot should offer 2 coins."
+  },
+  {
+   "pid": "v15-V5-information-C4",
+   "A_offer": 3,
+   "B_offer": 4,
+   "A": "Opal Apricot thinks it through. The seller says the fruit cost 4 coins at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 5 coins. An offer of 3 coins would be refused, leaving a profit of 0 coins. So Opal Apricot should offer 3 coins.",
+   "B": "Opal Apricot thinks it through. The seller says the fruit cost 4 coins at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 5 coins. An offer of 4 coins would be accepted, leaving a profit of 1 coins. So Opal Apricot should offer 4 coins."
+  },
+  {
+   "pid": "v15-V6-information-C1",
+   "A_offer": 1,
+   "B_offer": 2,
+   "A": "Opal Apricot thinks it through. The seller says the fruit cost 1 coin at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 6 coins. An offer of 1 coin would be accepted, leaving a profit of 5 coins. So Opal Apricot should offer 1 coin.",
+   "B": "Opal Apricot thinks it through. The seller says the fruit cost 1 coin at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 6 coins. An offer of 2 coins would be accepted, leaving a profit of 4 coins. So Opal Apricot should offer 2 coins."
+  },
+  {
+   "pid": "v15-V6-information-C3",
+   "A_offer": 2,
+   "B_offer": 3,
+   "A": "Opal Apricot thinks it through. The seller says the fruit cost 3 coins at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 6 coins. An offer of 2 coins would be refused, leaving a profit of 0 coins. So Opal Apricot should offer 2 coins.",
+   "B": "Opal Apricot thinks it through. The seller says the fruit cost 3 coins at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 6 coins. An offer of 3 coins would be accepted, leaving a profit of 3 coins. So Opal Apricot should offer 3 coins."
+  },
+  {
+   "pid": "v15-V6-information-C5",
+   "A_offer": 4,
+   "B_offer": 5,
+   "A": "Opal Apricot thinks it through. The seller says the fruit cost 5 coins at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 6 coins. An offer of 4 coins would be refused, leaving a profit of 0 coins. So Opal Apricot should offer 4 coins.",
+   "B": "Opal Apricot thinks it through. The seller says the fruit cost 5 coins at the farm, and a seller accepts any offer at or above that cost. Opal Apricot can resell the fruit for 6 coins. An offer of 5 coins would be accepted, leaving a profit of 1 coins. So Opal Apricot should offer 5 coins."
+  },
+  {
+   "pid": "v16-V2-information-C1",
+   "A_offer": 1,
+   "B_offer": 2,
+   "A": "Sasha Grapevine thinks it through. The seller says the fruit cost 1 coin at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 2 coins. An offer of 1 coin would be accepted, leaving a profit of 1 coins. So Sasha Grapevine should offer 1 coin.",
+   "B": "Sasha Grapevine thinks it through. The seller says the fruit cost 1 coin at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 2 coins. An offer of 2 coins would be accepted, leaving a profit of 0 coins. So Sasha Grapevine should offer 2 coins."
+  },
+  {
+   "pid": "v16-V2-information-C3",
+   "A_offer": 1,
+   "B_offer": 2,
+   "A": "Sasha Grapevine thinks it through. The seller says the fruit cost 3 coins at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 2 coins. An offer of 1 coin would be refused, leaving a profit of 0 coins. So Sasha Grapevine should offer 1 coin.",
+   "B": "Sasha Grapevine thinks it through. The seller says the fruit cost 3 coins at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 2 coins. An offer of 2 coins would be refused, leaving a profit of 0 coins. So Sasha Grapevine should offer 2 coins."
+  },
+  {
+   "pid": "v16-V2-information-C5",
+   "A_offer": 3,
+   "B_offer": 4,
+   "A": "Sasha Grapevine thinks it through. The seller says the fruit cost 5 coins at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 2 coins. An offer of 3 coins would be refused, leaving a profit of 0 coins. So Sasha Grapevine should offer 3 coins.",
+   "B": "Sasha Grapevine thinks it through. The seller says the fruit cost 5 coins at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 2 coins. An offer of 4 coins would be refused, leaving a profit of 0 coins. So Sasha Grapevine should offer 4 coins."
+  },
+  {
+   "pid": "v16-V3-neutral",
+   "A_offer": 1,
+   "B_offer": 2,
+   "A": "Sasha Grapevine thinks it through. The seller's farm cost is unknown and equally likely to be any price from 1 to 5 coins, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 3 coins. An offer of 1 coin would be accepted with chance 1 in 5, leaving an expected profit of 0.4 coins. So Sasha Grapevine should offer 1 coin.",
+   "B": "Sasha Grapevine thinks it through. The seller's farm cost is unknown and equally likely to be any price from 1 to 5 coins, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 3 coins. An offer of 2 coins would be accepted with chance 2 in 5, leaving an expected profit of 0.4 coins. So Sasha Grapevine should offer 2 coins."
+  },
+  {
+   "pid": "v16-V3-pressure",
+   "A_offer": 1,
+   "B_offer": 2,
+   "A": "Sasha Grapevine thinks it through. The seller's farm cost is unknown and equally likely to be any price from 1 to 5 coins, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 3 coins. An offer of 1 coin would be accepted with chance 1 in 5, leaving an expected profit of 0.4 coins. So Sasha Grapevine should offer 1 coin.",
+   "B": "Sasha Grapevine thinks it through. The seller's farm cost is unknown and equally likely to be any price from 1 to 5 coins, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 3 coins. An offer of 2 coins would be accepted with chance 2 in 5, leaving an expected profit of 0.4 coins. So Sasha Grapevine should offer 2 coins."
+  },
+  {
+   "pid": "v16-V3-information-C2",
+   "A_offer": 1,
+   "B_offer": 2,
+   "A": "Sasha Grapevine thinks it through. The seller says the fruit cost 2 coins at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 3 coins. An offer of 1 coin would be refused, leaving a profit of 0 coins. So Sasha Grapevine should offer 1 coin.",
+   "B": "Sasha Grapevine thinks it through. The seller says the fruit cost 2 coins at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 3 coins. An offer of 2 coins would be accepted, leaving a profit of 1 coins. So Sasha Grapevine should offer 2 coins."
+  },
+  {
+   "pid": "v16-V3-information-C4",
+   "A_offer": 2,
+   "B_offer": 3,
+   "A": "Sasha Grapevine thinks it through. The seller says the fruit cost 4 coins at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 3 coins. An offer of 2 coins would be refused, leaving a profit of 0 coins. So Sasha Grapevine should offer 2 coins.",
+   "B": "Sasha Grapevine thinks it through. The seller says the fruit cost 4 coins at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 3 coins. An offer of 3 coins would be refused, leaving a profit of 0 coins. So Sasha Grapevine should offer 3 coins."
+  },
+  {
+   "pid": "v16-V4-information-C1",
+   "A_offer": 1,
+   "B_offer": 2,
+   "A": "Sasha Grapevine thinks it through. The seller says the fruit cost 1 coin at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 4 coins. An offer of 1 coin would be accepted, leaving a profit of 3 coins. So Sasha Grapevine should offer 1 coin.",
+   "B": "Sasha Grapevine thinks it through. The seller says the fruit cost 1 coin at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 4 coins. An offer of 2 coins would be accepted, leaving a profit of 2 coins. So Sasha Grapevine should offer 2 coins."
+  },
+  {
+   "pid": "v16-V4-information-C3",
+   "A_offer": 2,
+   "B_offer": 3,
+   "A": "Sasha Grapevine thinks it through. The seller says the fruit cost 3 coins at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 4 coins. An offer of 2 coins would be refused, leaving a profit of 0 coins. So Sasha Grapevine should offer 2 coins.",
+   "B": "Sasha Grapevine thinks it through. The seller says the fruit cost 3 coins at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 4 coins. An offer of 3 coins would be accepted, leaving a profit of 1 coins. So Sasha Grapevine should offer 3 coins."
+  },
+  {
+   "pid": "v16-V4-information-C5",
+   "A_offer": 3,
+   "B_offer": 4,
+   "A": "Sasha Grapevine thinks it through. The seller says the fruit cost 5 coins at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 4 coins. An offer of 3 coins would be refused, leaving a profit of 0 coins. So Sasha Grapevine should offer 3 coins.",
+   "B": "Sasha Grapevine thinks it through. The seller says the fruit cost 5 coins at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 4 coins. An offer of 4 coins would be refused, leaving a profit of 0 coins. So Sasha Grapevine should offer 4 coins."
+  },
+  {
+   "pid": "v16-V5-neutral",
+   "A_offer": 2,
+   "B_offer": 3,
+   "A": "Sasha Grapevine thinks it through. The seller's farm cost is unknown and equally likely to be any price from 1 to 5 coins, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 5 coins. An offer of 2 coins would be accepted with chance 2 in 5, leaving an expected profit of 1.2 coins. So Sasha Grapevine should offer 2 coins.",
+   "B": "Sasha Grapevine thinks it through. The seller's farm cost is unknown and equally likely to be any price from 1 to 5 coins, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 5 coins. An offer of 3 coins would be accepted with chance 3 in 5, leaving an expected profit of 1.2 coins. So Sasha Grapevine should offer 3 coins."
+  },
+  {
+   "pid": "v16-V5-pressure",
+   "A_offer": 2,
+   "B_offer": 3,
+   "A": "Sasha Grapevine thinks it through. The seller's farm cost is unknown and equally likely to be any price from 1 to 5 coins, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 5 coins. An offer of 2 coins would be accepted with chance 2 in 5, leaving an expected profit of 1.2 coins. So Sasha Grapevine should offer 2 coins.",
+   "B": "Sasha Grapevine thinks it through. The seller's farm cost is unknown and equally likely to be any price from 1 to 5 coins, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 5 coins. An offer of 3 coins would be accepted with chance 3 in 5, leaving an expected profit of 1.2 coins. So Sasha Grapevine should offer 3 coins."
+  },
+  {
+   "pid": "v16-V5-information-C2",
+   "A_offer": 1,
+   "B_offer": 2,
+   "A": "Sasha Grapevine thinks it through. The seller says the fruit cost 2 coins at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 5 coins. An offer of 1 coin would be refused, leaving a profit of 0 coins. So Sasha Grapevine should offer 1 coin.",
+   "B": "Sasha Grapevine thinks it through. The seller says the fruit cost 2 coins at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 5 coins. An offer of 2 coins would be accepted, leaving a profit of 3 coins. So Sasha Grapevine should offer 2 coins."
+  },
+  {
+   "pid": "v16-V5-information-C4",
+   "A_offer": 3,
+   "B_offer": 4,
+   "A": "Sasha Grapevine thinks it through. The seller says the fruit cost 4 coins at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 5 coins. An offer of 3 coins would be refused, leaving a profit of 0 coins. So Sasha Grapevine should offer 3 coins.",
+   "B": "Sasha Grapevine thinks it through. The seller says the fruit cost 4 coins at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 5 coins. An offer of 4 coins would be accepted, leaving a profit of 1 coins. So Sasha Grapevine should offer 4 coins."
+  },
+  {
+   "pid": "v16-V6-information-C1",
+   "A_offer": 1,
+   "B_offer": 2,
+   "A": "Sasha Grapevine thinks it through. The seller says the fruit cost 1 coin at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 6 coins. An offer of 1 coin would be accepted, leaving a profit of 5 coins. So Sasha Grapevine should offer 1 coin.",
+   "B": "Sasha Grapevine thinks it through. The seller says the fruit cost 1 coin at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 6 coins. An offer of 2 coins would be accepted, leaving a profit of 4 coins. So Sasha Grapevine should offer 2 coins."
+  },
+  {
+   "pid": "v16-V6-information-C3",
+   "A_offer": 2,
+   "B_offer": 3,
+   "A": "Sasha Grapevine thinks it through. The seller says the fruit cost 3 coins at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 6 coins. An offer of 2 coins would be refused, leaving a profit of 0 coins. So Sasha Grapevine should offer 2 coins.",
+   "B": "Sasha Grapevine thinks it through. The seller says the fruit cost 3 coins at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 6 coins. An offer of 3 coins would be accepted, leaving a profit of 3 coins. So Sasha Grapevine should offer 3 coins."
+  },
+  {
+   "pid": "v16-V6-information-C5",
+   "A_offer": 4,
+   "B_offer": 5,
+   "A": "Sasha Grapevine thinks it through. The seller says the fruit cost 5 coins at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 6 coins. An offer of 4 coins would be refused, leaving a profit of 0 coins. So Sasha Grapevine should offer 4 coins.",
+   "B": "Sasha Grapevine thinks it through. The seller says the fruit cost 5 coins at the farm, and a seller accepts any offer at or above that cost. Sasha Grapevine can resell the fruit for 6 coins. An offer of 5 coins would be accepted, leaving a profit of 1 coins. So Sasha Grapevine should offer 5 coins."
+  }
+ ],
+ "checks": {
+  "n_pairs": 34,
+  "length_ratio_min": 1.0,
+  "length_ratio_max": 1.0,
+  "lengths_within_10pct": true,
+  "bad_above": 18,
+  "bad_below": 16,
+  "direction_balanced": true,
+  "mean_good_offer": 2.6470588235294117,
+  "mean_bad_offer": 2.588235294117647,
+  "means_within_0.25": true
+ },
+ "checks_offer_lower": {
+  "n_pairs": 34,
+  "length_ratio_min": 1.0,
+  "length_ratio_max": 1.0,
+  "lengths_within_10pct": true,
+  "all_A_one_below_B": true
+ }
+}
