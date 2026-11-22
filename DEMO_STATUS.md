@@ -816,3 +816,49 @@ Mean cell soft regret with 95% cell-bootstrap intervals (all four variants of ea
 | always-2 | 0.636 [0.18, 1.18] | 0.333 [0.00, 0.67] | 0.667 | — |
 
 The held-out cells are easier for a constant than the train cells: always-2 is already best (or tied) in 4 of the 6, so its 0.333 is a strong reference there. Every LoRA comparison uses these same cases.
+
+## 4. LoRA plan (written before any training)
+
+### Pass rule for the method arm (frozen now)
+
+**The method arm passes if its held-out tune-cell soft regret beats plain and both distillation controls (neutral-distil and wrong-rule-distil), with the lower 95% cell-bootstrap bound of each difference above 0.**
+
+- **Unit:** the 6 held-out tune cells (all four variants each).
+- **Per-arm value:** per-cell soft regret, averaged over seeds where an arm has several; each arm at its chosen learning rate.
+- **Three differences:** (plain − method), (neutral-distil − method), (wrong-rule-distil − method), per cell.
+- **Interval:** 10,000 resamples of cells, seed 0. A difference counts when its 2.5% quantile is above 0.
+- **Also reported, never part of the rule:** the shuffled arms, answer_only, constant-2, always-2 and method text.
+- **Selection caveat:** the held-out tune cells select the learning rate and the epoch, so these numbers are selected-on and not independent evidence. A fresh look needs the test cells (gate G3).
+
+### Design
+
+- **Data:** train on the 11 train cells (44 cases, 220 examples over five option orders). Early stopping on the 6 held-out tune cells. Test cells and variants 1–14 are never used.
+- **Loss (letter-only):** cross-entropy between the target and the student's first-token distribution *renormalised over the five letters*. This is the quantity that soft regret is computed from. Letter mass is therefore not trained and is logged as a side effect. I chose this over a full-vocabulary loss because the earlier plan's reviewers flagged that loss as pushing letter mass up in every arm, a format effect.
+- **Arms (targets):**
+  - **method:** the model's own first-token letter distribution with the frozen method paragraph as the Notes block, computed before training;
+  - **neutral:** the same with the same-length neutral text (matched control);
+  - **wrong_rule:** the same with "Offer half the stated cost." (matched control);
+  - **answer_only:** uniform over the letters of the case's best offers;
+  - **shuffled:** answer_only targets with the best-offer sets permuted over the train *cells* by a derangement that also avoids cells with an identical set. Three derangements (`--perm 0, 1, 2`). The fraction of labels still correct is reported (exactly equal to the true set: 0 by construction; sharing a best offer with the true set: about 36%);
+  - **const2:** one-hot on 2 coins;
+  - **template:** the model's own distribution with the template paragraph, which names the best offer. A **leaky upper bound**.
+- **Settings:** rank 4, α 8, q/k/v/o projections, float32 adapter weights, AdamW, one optimizer step per case (its five orders), gradient checkpointing, at most 8 epochs, patience 2. Learning rate grid {1e-4, 3e-4, 1e-3} for every arm, chosen on the held-out tune cells. Then seeds 0–2 at the chosen rate for method and its two controls (seed 0 is the grid run).
+- **Per epoch:** train-cell regret and letter mass, held-out regret and letter mass, seconds. At the best epoch the free-text answer (`scoring.say`) is scored on the held-out cases: agreement with the first-token top offer, against plain's.
+- **Trainability check:** answer_only at lr 3e-4 runs first. It passes if its best-epoch **train-cell** soft regret is below 0.15 (plain on the train cells: 0.778). If it fails, the pre-declared fallback (lr 1e-3, rank 16) runs once, and a null from any arm is then read as "undertrained", not as a rung-5 failure.
+- **Order:** answer_only trainability check → method, neutral → wrong_rule, answer_only (other rates), shuffled → constant-2, template → seeds 1 and 2.
+- **GPU budget:** 10 hours. The reduction rule: controls get 1 seed, then constant-2 is dropped, then template. The estimate comes from the measured seconds per epoch (smoke test) times 6.5 epochs per run.
+
+### Safety checks before the real runs (`demo/lora_checks.py`)
+
+1. The training forward pass equals the scoring path's first-token distribution on one example (epoch 0 and after a few steps).
+2. Adapter off matches plain bit-for-bit.
+3. A saved adapter reloaded in a fresh process reproduces its numbers.
+4. `floor.py` caches are keyed by adapter (unit test).
+
+Also: floor.py refuses every intervention (text, steer, adapter on) on a test case, so no adapter or vector is shown on the live case.
+
+### Freeze rule for the eventual test look
+
+- One script produces every row in one run, with the arms, adapters, comparators and code frozen first.
+- Changes are reported against **test plain (0.534)**.
+- It needs gate G3 and the owner's explicit go; neither has been given.
