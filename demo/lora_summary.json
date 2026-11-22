@@ -1,0 +1,20 @@
+{
+ "arms": {
+  "method": "method_lr1e-04_s0",
+  "neutral": "neutral_lr1e-04_s0",
+  "wrong_rule": "wrong_rule_lr1e-04_s0",
+  "answer_only": "answer_only_lr3e-04_s0"
+ },
+ "best_run": "method_lr1e-04_s0",
+ "owner_pass": false,
+ "strict_pass": false,
+ "strict": {
+  "S1 vs always-2": false,
+  "S1 vs best shuffled": true,
+  "S2 effect floor (>= 50% of the plain-to-method-text gap)": true,
+  "S3 mass >= 0.9 x plain": true,
+  "S4 free-text hard regret below plain": true,
+  "S5 slope on stated cost >= 0.25": true
+ },
+ "outcome": "learned the train cells, did not transfer"
+}

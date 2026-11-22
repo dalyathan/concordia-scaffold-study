@@ -40,9 +40,20 @@ Rebuilt by `python demo/ledger.py` from saved results (do not edit by hand). Sof
 | 34 | inside-the-model | 4 | patch method-text P1 residual into plain at layer 33 (diagnostic) | held-out tune cases (12) | yes | 0.341 | -0.233 | method text in the prompt | 0.184 | no | — | diagnostic: shows where the text's effect arrives | `demo_out/steer_checks.json` |
 | 35 | inside-the-model | 4 | patch method-text P1 residual into plain at layer 39 (diagnostic) | held-out tune cases (12) | yes | 0.203 | -0.370 | method text in the prompt | 0.184 | no | — | diagnostic: shows where the text's effect arrives | `demo_out/steer_checks.json` |
 | 36 | inside-the-model | 4 | per-order sentence vector (method - neutral), L36, f 1.0 | held-out tune cases (12) | yes | 0.427 | -0.146 | wrong-order vector, same setting | 1.279 | yes | 20 min | letter push, like per-order cheap | `demo_out/steer_followup.json` |
-| 37 | inside-the-model | 5 | LoRA answer_only, lr 3e-04, seed 0 | held-out tune cells (6) | yes | 0.000 [0.00, 0.00] | -0.577 | plain (held-out cells) | 0.577 | yes | 47 min | best epoch 7; beats plain | `demo_out/lora/answer_only_lr3e-04_s0.json` |
-| 38 | inside-the-model | 5 | LoRA answer_only, renormalised-only loss, lr 3e-4 (stopped after 1 epoch) | held-out tune cells (6) | yes | 0.204 | -0.373 | plain (held-out cells) | 0.577 | yes | 7 min | dead end: letter mass collapsed to 0.01 | `logs/demo_lora_answer_only_renorm_loss_dead_end.log` |
-| 39 | take-home | 0 | steercheck toy problem (a vector that should work) | toy (40 cases) | yes | 0.066 [0.04, 0.08] | -0.734 | its negation | 0.800 | yes | — | steercheck detects a working vector and its controls | `demo/steercheck.py` |
+| 37 | inside-the-model | 5 | LoRA answer_only, lr 1e-04, seed 0 | held-out tune cells (6) | yes | 0.002 [0.00, 0.00] | -0.575 | shuffled arm (same lr, seed) | 0.577 | yes | 47 min | best epoch 8; beats plain | `demo_out/lora/answer_only_lr1e-04_s0.json` |
+| 38 | inside-the-model | 5 | LoRA answer_only, lr 3e-04, seed 0 | held-out tune cells (6) | yes | 0.000 [0.00, 0.00] | -0.577 | plain (held-out cells) | 0.577 | yes | 47 min | best epoch 7; beats plain | `demo_out/lora/answer_only_lr3e-04_s0.json` |
+| 39 | inside-the-model | 5 | LoRA method, lr 1e-03, seed 0 | held-out tune cells (6) | yes | 0.420 [0.16, 0.70] | -0.156 | neutral-distil (same lr, seed) | 0.577 | yes | 37 min | best epoch 4; beats plain | `demo_out/lora/method_lr1e-03_s0.json` |
+| 40 | inside-the-model | 5 | LoRA method, lr 1e-04, seed 0 | held-out tune cells (6) | yes | 0.155 [0.07, 0.26] | -0.422 | neutral-distil (same lr, seed) | 0.534 | yes | 26 min | best epoch 2; beats plain | `demo_out/lora/method_lr1e-04_s0.json` |
+| 41 | inside-the-model | 5 | LoRA method, lr 1e-04, seed 1 | held-out tune cells (6) | yes | 0.217 [0.09, 0.41] | -0.360 | plain (held-out cells) | 0.577 | yes | 24 min | best epoch 2; beats plain | `demo_out/lora/method_lr1e-04_s1.json` |
+| 42 | inside-the-model | 5 | LoRA method, lr 1e-04, seed 2 | held-out tune cells (6) | yes | 0.210 [0.07, 0.42] | -0.367 | plain (held-out cells) | 0.577 | yes | 35 min | best epoch 4; beats plain | `demo_out/lora/method_lr1e-04_s2.json` |
+| 43 | inside-the-model | 5 | LoRA method, lr 3e-04, seed 0 | held-out tune cells (6) | yes | 0.231 [0.10, 0.43] | -0.345 | neutral-distil (same lr, seed) | 0.577 | yes | 30 min | best epoch 3; beats plain | `demo_out/lora/method_lr3e-04_s0.json` |
+| 44 | inside-the-model | 5 | LoRA neutral, lr 1e-03, seed 0 | held-out tune cells (6) | yes | 0.577 [0.20, 0.96] | +0.000 | plain (held-out cells) | 0.577 | no | 13 min | best epoch 0; no clear gain over plain | `demo_out/lora/neutral_lr1e-03_s0.json` |
+| 45 | inside-the-model | 5 | LoRA neutral, lr 1e-04, seed 0 | held-out tune cells (6) | yes | 0.534 [0.17, 0.91] | -0.043 | plain (held-out cells) | 0.577 | yes | 21 min | best epoch 1; no clear gain over plain | `demo_out/lora/neutral_lr1e-04_s0.json` |
+| 46 | inside-the-model | 5 | LoRA neutral, lr 3e-04, seed 0 | held-out tune cells (6) | yes | 0.577 [0.20, 0.96] | +0.000 | plain (held-out cells) | 0.577 | no | 13 min | best epoch 0; no clear gain over plain | `demo_out/lora/neutral_lr3e-04_s0.json` |
+| 47 | inside-the-model | 5 | LoRA shuffled0, lr 1e-04, seed 0 | held-out tune cells (6) | yes | 0.577 [0.20, 0.96] | +0.000 | plain (held-out cells) | 0.577 | no | 13 min | best epoch 0; no clear gain over plain | `demo_out/lora/shuffled0_lr1e-04_s0.json` |
+| 48 | inside-the-model | 5 | LoRA wrong_rule, lr 1e-04, seed 0 | held-out tune cells (6) | yes | 0.448 [0.12, 0.78] | -0.129 | plain (held-out cells) | 0.577 | yes | 26 min | best epoch 2; beats plain | `demo_out/lora/wrong_rule_lr1e-04_s0.json` |
+| 49 | inside-the-model | 5 | LoRA answer_only, renormalised-only loss, lr 3e-4 (stopped after 1 epoch) | held-out tune cells (6) | yes | 0.204 | -0.373 | plain (held-out cells) | 0.577 | yes | 7 min | dead end: letter mass collapsed to 0.01 | `logs/demo_lora_answer_only_renorm_loss_dead_end.log` |
+| 50 | take-home | 0 | steercheck toy problem (a vector that should work) | toy (40 cases) | yes | 0.066 [0.04, 0.08] | -0.734 | its negation | 0.800 | yes | — | steercheck detects a working vector and its controls | `demo/steercheck.py` |
 
 ## Three best methods (tuning split; excluding rows that name the answer)
 
@@ -81,6 +92,17 @@ Rebuilt by `python demo/ledger.py` from saved results (do not edit by hand). Sof
 - Row 34: uses the evaluated cases' own method-text run; not a deployable method; no interval (12 cases = 6 cells)
 - Row 35: uses the evaluated cases' own method-text run; not a deployable method; no interval (12 cases = 6 cells)
 - Row 36: no interval (12 cases = 6 cells)
-- Row 37: train-cell soft regret 0.000; selected-on the held-out cells
-- Row 38: regret looks good only because it is read after renormalising over a collapsed 1% of the mass; replaced by the full-vocabulary letter loss
-- Row 39: toy regret is on the toy's own scale
+- Row 37: train-cell soft regret 0.001; selected-on the held-out cells
+- Row 38: train-cell soft regret 0.000; selected-on the held-out cells
+- Row 39: train-cell soft regret 0.720; selected-on the held-out cells
+- Row 40: train-cell soft regret 0.363; selected-on the held-out cells
+- Row 41: train-cell soft regret 0.451; selected-on the held-out cells
+- Row 42: train-cell soft regret 0.394; selected-on the held-out cells
+- Row 43: train-cell soft regret 0.414; selected-on the held-out cells
+- Row 44: train-cell soft regret 0.778; selected-on the held-out cells
+- Row 45: train-cell soft regret 0.740; selected-on the held-out cells
+- Row 46: train-cell soft regret 0.778; selected-on the held-out cells
+- Row 47: train-cell soft regret 0.778; selected-on the held-out cells
+- Row 48: train-cell soft regret 0.816; selected-on the held-out cells
+- Row 49: regret looks good only because it is read after renormalising over a collapsed 1% of the mass; replaced by the full-vocabulary letter loss
+- Row 50: toy regret is on the toy's own scale

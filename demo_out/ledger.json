@@ -660,6 +660,26 @@
   {
    "beat": "inside-the-model",
    "rung": 5,
+   "method": "LoRA answer_only, lr 1e-04, seed 0",
+   "split": "held-out tune cells (6)",
+   "in_sample": "yes",
+   "soft_regret": 0.0015248597118162222,
+   "ci": [
+    0.0005833368460677987,
+    0.0025842990304106323
+   ],
+   "change_vs_plain": -0.5751776848007705,
+   "control": "shuffled arm (same lr, seed)",
+   "control_regret": 0.5767025445125867,
+   "beats_control": "yes",
+   "wall_time": 2830.244248151779,
+   "verdict": "best epoch 8; beats plain",
+   "source": "demo_out/lora/answer_only_lr1e-04_s0.json",
+   "note": "train-cell soft regret 0.001; selected-on the held-out cells"
+  },
+  {
+   "beat": "inside-the-model",
+   "rung": 5,
    "method": "LoRA answer_only, lr 3e-04, seed 0",
    "split": "held-out tune cells (6)",
    "in_sample": "yes",
@@ -676,6 +696,206 @@
    "verdict": "best epoch 7; beats plain",
    "source": "demo_out/lora/answer_only_lr3e-04_s0.json",
    "note": "train-cell soft regret 0.000; selected-on the held-out cells"
+  },
+  {
+   "beat": "inside-the-model",
+   "rung": 5,
+   "method": "LoRA method, lr 1e-03, seed 0",
+   "split": "held-out tune cells (6)",
+   "in_sample": "yes",
+   "soft_regret": 0.42031721063070454,
+   "ci": [
+    0.1563593016920256,
+    0.7011440629518713
+   ],
+   "change_vs_plain": -0.1563853338818822,
+   "control": "neutral-distil (same lr, seed)",
+   "control_regret": 0.5767025445125867,
+   "beats_control": "yes",
+   "wall_time": 2242.4410512447357,
+   "verdict": "best epoch 4; beats plain",
+   "source": "demo_out/lora/method_lr1e-03_s0.json",
+   "note": "train-cell soft regret 0.720; selected-on the held-out cells"
+  },
+  {
+   "beat": "inside-the-model",
+   "rung": 5,
+   "method": "LoRA method, lr 1e-04, seed 0",
+   "split": "held-out tune cells (6)",
+   "in_sample": "yes",
+   "soft_regret": 0.15510958211242618,
+   "ci": [
+    0.06639791717168057,
+    0.26313237667695377
+   ],
+   "change_vs_plain": -0.42159296240016053,
+   "control": "neutral-distil (same lr, seed)",
+   "control_regret": 0.5336067130642781,
+   "beats_control": "yes",
+   "wall_time": 1579.1405456066132,
+   "verdict": "best epoch 2; beats plain",
+   "source": "demo_out/lora/method_lr1e-04_s0.json",
+   "note": "train-cell soft regret 0.363; selected-on the held-out cells"
+  },
+  {
+   "beat": "inside-the-model",
+   "rung": 5,
+   "method": "LoRA method, lr 1e-04, seed 1",
+   "split": "held-out tune cells (6)",
+   "in_sample": "yes",
+   "soft_regret": 0.21668456187496624,
+   "ci": [
+    0.08789295799536452,
+    0.4120027927533607
+   ],
+   "change_vs_plain": -0.3600179826376205,
+   "control": "plain (held-out cells)",
+   "control_regret": 0.5767025445125867,
+   "beats_control": "yes",
+   "wall_time": 1457.249097108841,
+   "verdict": "best epoch 2; beats plain",
+   "source": "demo_out/lora/method_lr1e-04_s1.json",
+   "note": "train-cell soft regret 0.451; selected-on the held-out cells"
+  },
+  {
+   "beat": "inside-the-model",
+   "rung": 5,
+   "method": "LoRA method, lr 1e-04, seed 2",
+   "split": "held-out tune cells (6)",
+   "in_sample": "yes",
+   "soft_regret": 0.20950402642375357,
+   "ci": [
+    0.07114721326415184,
+    0.41697766282117826
+   ],
+   "change_vs_plain": -0.3671985180888332,
+   "control": "plain (held-out cells)",
+   "control_regret": 0.5767025445125867,
+   "beats_control": "yes",
+   "wall_time": 2122.9587433338165,
+   "verdict": "best epoch 4; beats plain",
+   "source": "demo_out/lora/method_lr1e-04_s2.json",
+   "note": "train-cell soft regret 0.394; selected-on the held-out cells"
+  },
+  {
+   "beat": "inside-the-model",
+   "rung": 5,
+   "method": "LoRA method, lr 3e-04, seed 0",
+   "split": "held-out tune cells (6)",
+   "in_sample": "yes",
+   "soft_regret": 0.2314509565809123,
+   "ci": [
+    0.09770565343171285,
+    0.43010991169433055
+   ],
+   "change_vs_plain": -0.34525158793167443,
+   "control": "neutral-distil (same lr, seed)",
+   "control_regret": 0.5767025445125867,
+   "beats_control": "yes",
+   "wall_time": 1798.1449489593506,
+   "verdict": "best epoch 3; beats plain",
+   "source": "demo_out/lora/method_lr3e-04_s0.json",
+   "note": "train-cell soft regret 0.414; selected-on the held-out cells"
+  },
+  {
+   "beat": "inside-the-model",
+   "rung": 5,
+   "method": "LoRA neutral, lr 1e-03, seed 0",
+   "split": "held-out tune cells (6)",
+   "in_sample": "yes",
+   "soft_regret": 0.5767025445125867,
+   "ci": [
+    0.20275867736423892,
+    0.9573519864009623
+   ],
+   "change_vs_plain": 0.0,
+   "control": "plain (held-out cells)",
+   "control_regret": 0.5767025445125867,
+   "beats_control": "no",
+   "wall_time": 770.772518157959,
+   "verdict": "best epoch 0; no clear gain over plain",
+   "source": "demo_out/lora/neutral_lr1e-03_s0.json",
+   "note": "train-cell soft regret 0.778; selected-on the held-out cells"
+  },
+  {
+   "beat": "inside-the-model",
+   "rung": 5,
+   "method": "LoRA neutral, lr 1e-04, seed 0",
+   "split": "held-out tune cells (6)",
+   "in_sample": "yes",
+   "soft_regret": 0.5336067130642781,
+   "ci": [
+    0.16688745035881244,
+    0.9059217981181955
+   ],
+   "change_vs_plain": -0.04309583144830864,
+   "control": "plain (held-out cells)",
+   "control_regret": 0.5767025445125867,
+   "beats_control": "yes",
+   "wall_time": 1234.337550163269,
+   "verdict": "best epoch 1; no clear gain over plain",
+   "source": "demo_out/lora/neutral_lr1e-04_s0.json",
+   "note": "train-cell soft regret 0.740; selected-on the held-out cells"
+  },
+  {
+   "beat": "inside-the-model",
+   "rung": 5,
+   "method": "LoRA neutral, lr 3e-04, seed 0",
+   "split": "held-out tune cells (6)",
+   "in_sample": "yes",
+   "soft_regret": 0.5767025445125867,
+   "ci": [
+    0.20275867736423892,
+    0.9573519864009623
+   ],
+   "change_vs_plain": 0.0,
+   "control": "plain (held-out cells)",
+   "control_regret": 0.5767025445125867,
+   "beats_control": "no",
+   "wall_time": 771.2596187591553,
+   "verdict": "best epoch 0; no clear gain over plain",
+   "source": "demo_out/lora/neutral_lr3e-04_s0.json",
+   "note": "train-cell soft regret 0.778; selected-on the held-out cells"
+  },
+  {
+   "beat": "inside-the-model",
+   "rung": 5,
+   "method": "LoRA shuffled0, lr 1e-04, seed 0",
+   "split": "held-out tune cells (6)",
+   "in_sample": "yes",
+   "soft_regret": 0.5767025445125867,
+   "ci": [
+    0.20275867736423892,
+    0.9573519864009623
+   ],
+   "change_vs_plain": 0.0,
+   "control": "plain (held-out cells)",
+   "control_regret": 0.5767025445125867,
+   "beats_control": "no",
+   "wall_time": 770.8234996795654,
+   "verdict": "best epoch 0; no clear gain over plain",
+   "source": "demo_out/lora/shuffled0_lr1e-04_s0.json",
+   "note": "train-cell soft regret 0.778; selected-on the held-out cells"
+  },
+  {
+   "beat": "inside-the-model",
+   "rung": 5,
+   "method": "LoRA wrong_rule, lr 1e-04, seed 0",
+   "split": "held-out tune cells (6)",
+   "in_sample": "yes",
+   "soft_regret": 0.4476209046324473,
+   "ci": [
+    0.11536106281503693,
+    0.7798807464498577
+   ],
+   "change_vs_plain": -0.12908163988013943,
+   "control": "plain (held-out cells)",
+   "control_regret": 0.5767025445125867,
+   "beats_control": "yes",
+   "wall_time": 1554.555284500122,
+   "verdict": "best epoch 2; beats plain",
+   "source": "demo_out/lora/wrong_rule_lr1e-04_s0.json",
+   "note": "train-cell soft regret 0.816; selected-on the held-out cells"
   },
   {
    "beat": "inside-the-model",
