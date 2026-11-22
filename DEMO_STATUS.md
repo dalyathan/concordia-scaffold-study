@@ -442,3 +442,29 @@ python demo/steercheck.py --results demo_out/tune_results.json                  
 - Flags digits in the method paragraph.
 - It was verified on a dummy response built from the step 5 pairs: all pair checks pass.
 - The true labels for the 18 cases are right 10, too high 4, too low 4.
+
+## Step 9: take-home — done
+
+**`demo/steercheck.py`** is a model-agnostic function plus CLI.
+
+- **Inputs:** `run_controls(score, cases, best, value, cell, vectors, grid, full_orders, matched_orders, reference, negate=…)`.
+- **Output:** one control table. It has these rows:
+  - plain;
+  - each vector and the requested negations, tuned at full budget;
+  - the first vector at matched budget, with its rank among the reference directions (random, Gaussian) tuned the same way;
+  - the best constant shift (tilt, beta grid ±6).
+
+  Each row carries:
+  - the partial Spearman correlation of the per-cell shift in expected option with the best option, given the plain expected option (permutation p), on cells with one best option;
+  - cell-bootstrap intervals for regret and its reduction.
+- **CLI:** `--toy` runs the self-contained toy problem; `--results <json>` prints a saved table.
+- **Where it is used:** step 7's table comes from `run_controls` / `format_table`, and `floor.py`'s `table` command from `format_session_table`.
+- **Choice:** `negate` restricts negated copies to the named vectors, because step 7 asks for the negated template only.
+
+**`README_DEMO.md`** is a five-step recipe with one command per step:
+
+1. build an oracle (`demo/make_splits.py`);
+2. read out order-averaged choices (`demo/step2_run.py && demo/step2_report.py`);
+3. find the prompt ceiling with neutral and wrong-rule controls (`demo/step4_run.py && demo/step4_report.py`);
+4. test the vector with steercheck (`demo/direction.py && demo/tune_job.py && demo/steercheck.py --results …`);
+5. state the verdict with six explicit criteria (`demo/floor.py --serve`).
