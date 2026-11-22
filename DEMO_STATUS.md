@@ -309,3 +309,35 @@ Fixed after the first check:
 A confirming 9B rerun is queued after the GPU jobs (`logs/demo_floor_check_9b_r2.log`).
 
 **Process note:** the step 2 commit already contained the in-progress files for later steps (`floor.py`, `steercheck.py`, `textrows.py`, `pairs_template.py`, `direction.py`, `step4_run.py`). They were written while the GPU ran and are completed and reported in their own steps.
+
+## Step 4: text rows (tuning cases only) — done
+
+- **Job.** `demo/step4_run.py` (`logs/demo_step4.log`, 7 minutes, 34 tuning cases × 8 rows × 5 orders); report `demo/step4_report.py` → `demo/step4.json`. Row texts are frozen in **`demo/text_rows.json`**.
+- **Method paragraph** (`textrows.METHOD`): one fixed text with no digits. Its rule, executed literally (`textrows.method_offer`), gives a best offer (`core.oracle_bids`) in all 49 cells (V = 2–8, all three case types). The check passed before the text was frozen.
+- **Rows:**
+  - same-length neutral = `conditions.qa_filler` cut to the method's token count;
+  - template reasoning = `pairs_template.paragraph(case, smallest best offer)`;
+  - answer-only = `core.answer_only(buyer, smallest best offer)`, an **upper bound**.
+  - Rows are inserted as the Notes block. Case means are used; each tuning cell has exactly two cases, so these equal cell means.
+
+| Row | Soft regret: cost < resale | cost ≥ resale | no cost | all | Hard regret (all) | Non-zero (all) | Letter mass |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| plain | 1.256 | 0.085 | 0.125 | 0.714 | 0.694 | 62% | 0.63 |
+| method | 0.494 | 0.101 | 0.075 | **0.303** | 0.288 | 21% | 0.89 |
+| same-length neutral | 1.246 | 0.033 | 0.087 | 0.688 | 0.600 | 50% | 0.54 |
+| wrong rule ("Offer half the stated cost.") | 1.285 | 0.006 | 0.030 | 0.688 | 0.765 | 53% | 0.69 |
+| disposition ("Only your own profit matters.") | 1.322 | 0.103 | 0.098 | 0.747 | 0.659 | 50% | 0.50 |
+| acceptance rule | 1.206 | 0.093 | 0.176 | 0.702 | 0.635 | 59% | 0.52 |
+| template reasoning (names the best offer) | 0.001 | 0.001 | 0.000 | 0.001 | 0.000 | 0% | 0.97 |
+| answer-only (**UPPER BOUND**) | 0.024 | 0.000 | 0.000 | 0.013 | 0.000 | 0% | 0.92 |
+
+**Prompt ceiling for a fixed text:** the method paragraph cuts soft regret by 58% (0.714 → 0.303). Almost all of the gain is in the cost-below-resale cases (1.256 → 0.494), and the letter mass rises to 0.89.
+
+The controls show that the content does the work:
+
+- neutral text of the same length: 0.688;
+- the wrong rule: 0.688;
+- the bare acceptance rule: 0.702;
+- the disposition: slightly worse than plain (0.747).
+
+Text that states the answer for the case takes regret to about 0, which is the ceiling a vector would have to approach.

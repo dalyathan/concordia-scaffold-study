@@ -106,7 +106,7 @@ def evaluate(score, cases, vec, setting, orders_for):
 def run_controls(score, cases: Sequence, best, value, cell, vectors: Mapping[str, Mapping],
                  grid: Sequence[tuple], full_orders: Callable, matched_orders: Callable,
                  reference: Mapping[str, Mapping] = {}, n_boot: int = 2000,
-                 log: Callable = print) -> dict:
+                 log: Callable = print, negate: Sequence[str] | None = None) -> dict:
   """The whole control table. vectors: full-budget candidates (the first is also run
   at matched budget); reference: directions tuned only at matched budget (random,
   Gaussian), against which the matched first vector is ranked."""
@@ -145,8 +145,11 @@ def run_controls(score, cases: Sequence, best, value, cell, vectors: Mapping[str
     rows.append(r)
     return r
   row("plain", "full", base_full, None, None)
+  negate = list(vectors) if negate is None else list(negate)
   for name, vec in vectors.items():
     for sign, nm in ((1.0, name), (-1.0, f"-{name}")):
+      if sign < 0 and name not in negate:
+        continue
       v = {L: sign * x for L, x in vec.items()}
       t = tune(score, cases, v, grid, full_orders, best, value, cell_of, base_full)
       detail[nm] = t
