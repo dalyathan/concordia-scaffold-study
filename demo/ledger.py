@@ -335,6 +335,19 @@ if os.path.exists(dead):
         note="regret looks good only because it is read after renormalising over a collapsed 1% of the mass; "
              "replaced by the full-vocabulary letter loss")
 
+# The single test look (TEST_PLAN.md); the frozen development verdict stays "not passed".
+tl = os.path.join(common.ROOT, "demo_out", "test_look.json")
+if os.path.exists(tl):
+  t = json.load(open(tl))
+  d = t["diff"]
+  add("inside-the-model", 5, "LoRA method distillation, 3 seeds, TEST LOOK (72 cases, 18 test cells)", "test cells (18)", "no",
+      t["arm_soft_regret"]["method"], None, t["arm_soft_regret"]["plain"], "wrong-rule distil (3 seeds)", t["arm_soft_regret"]["wrong_rule"],
+      None, "test label: " + t["label"].split(" (")[0].split(":")[0], rel(tl),
+      note=("frozen development verdict: NOT PASSED. Control minus method, paired cell bootstrap: "
+            f"plain {d['plain'][0]:+.3f} [{d['plain'][1]:+.3f}, {d['plain'][2]:+.3f}]; neutral {d['neutral'][0]:+.3f} [{d['neutral'][1]:+.3f}, {d['neutral'][2]:+.3f}]; "
+            f"wrong-rule {d['wrong_rule'][0]:+.3f} [{d['wrong_rule'][1]:+.3f}, {d['wrong_rule'][2]:+.3f}]; always-2 {d['always2'][0]:+.3f} [{d['always2'][1]:+.3f}, {d['always2'][2]:+.3f}] "
+            f"(always-2 {t['arm_soft_regret']['always2']:.3f}); free-text hard regret worse: plain {t['free_text_hard_regret']['plain']:.3f}, method {t['free_text_hard_regret']['method_mean']:.3f}"))
+
 # ------------------------------------------------------------ take-home
 try:
   import steercheck

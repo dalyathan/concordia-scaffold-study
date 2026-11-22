@@ -1035,6 +1035,23 @@
    "note": "regret looks good only because it is read after renormalising over a collapsed 1% of the mass; replaced by the full-vocabulary letter loss"
   },
   {
+   "beat": "inside-the-model",
+   "rung": 5,
+   "method": "LoRA method distillation, 3 seeds, TEST LOOK (72 cases, 18 test cells)",
+   "split": "test cells (18)",
+   "in_sample": "no",
+   "soft_regret": 0.26302285482371995,
+   "ci": null,
+   "change_vs_plain": -0.27086859738046104,
+   "control": "wrong-rule distil (3 seeds)",
+   "control_regret": 0.4819494492247616,
+   "beats_control": "yes",
+   "wall_time": null,
+   "verdict": "test label: SUPPORT",
+   "source": "demo_out/test_look.json",
+   "note": "frozen development verdict: NOT PASSED. Control minus method, paired cell bootstrap: plain +0.271 [+0.054, +0.514]; neutral +0.286 [+0.064, +0.536]; wrong-rule +0.219 [+0.048, +0.399]; always-2 +0.115 [-0.066, +0.317] (always-2 0.378); free-text hard regret worse: plain 0.439, method 0.736"
+  },
+  {
    "beat": "take-home",
    "rung": 0,
    "method": "steercheck toy problem (a vector that should work)",
