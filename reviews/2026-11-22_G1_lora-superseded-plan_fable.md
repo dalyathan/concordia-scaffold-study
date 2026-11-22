@@ -1,0 +1,17 @@
+# G1 review, Fable: superseded LoRA plan (answer_only / template / shuffled; build and tuning share cells)
+
+Status: for the superseded plan. Not part of any later packet.
+
+**Verdict: go-with-changes.** The script looks runnable and the tuning-only framing is honest, but as designed a positive result cannot support the "case-specific valuation" reading and a negative result cannot be told apart from under-training.
+
+1. **A positive result shows cell lookup, not valuation.** Build and tuning are the same 17 cells; an adapter memorising 17 (V, line, C)-to-offer mappings passes every "works" test (about 4.5M trainable parameters; in the 9 cost-below-resale cells the best offer is always C). Early stopping on same-cell tuning selects the most memorised epoch. Fix: hold out whole development cells, or word the conclusion as "learns the trained cells and transfers across names".
+2. **The shuffled arm does not control what the proposal says, and its rule conflicts with "works".** The permutation is across the 34 cases, not cells, so the two variants of a cell get inconsistent labels; it can only learn the marginal of best-offer sets, a learned constant, and constants already beat plain. It is a permutation, not a derangement, and some labels stay correct. Fix: define the case-specific effect as arm minus shuffled only; report the fraction of shuffled targets equal to the true ones; add a cell-consistent wrong-label arm.
+3. **A null is uninformative.** 34 optimizer steps per epoch, at most 272, lr 1e-4, patience 2; build-set fit never measured. Fix: log build soft regret each epoch; accept a null only if build regret is below about 0.1 or training loss has plateaued; otherwise a pre-declared ladder.
+4. **The template arm is nearly a duplicate of answer_only.** It distils a leaked answer, not reasoning. Fix: replace it with, or add, distillation of the no-digits method paragraph (teacher 0.303).
+5. **"Matches the text" is not like-for-like** (zero-shot paragraph versus supervised on the same cells) and has no interval. Fix: paired cell-bootstrap difference against the saved per-case method rows; state the supervision asymmetry.
+6. **The loss trains directly on the readout**; free text agrees with the first token only 54% and rewording flips half the picks. Fix: secondary tuning checks with the adapter on (`say` regret, reworded scaffold, slope on stated cost); do not run the cost dial with adapters (it creates test-cell prompts).
+7. **One seed**; the interval excludes seed and checkpoint-selection variance. Fix: 3 seeds, or state the claim covers one adapter.
+
+Code: nothing found that would clearly corrupt the result. Unverified: that `loss_on` reproduces `lm.letter_scores` (rendering, letter token ids, soft-capping; the guard `i > 0` would pass an unknown-token id); letter-mass confound unless `softmax_scores` renormalises over letters; that `scoring.score` runs under no_grad when template targets are computed; same LoRA initialisation across arms.
+
+Freeze before the single test look: adapter files and hashes, and the rule choosing arms; scoring and analysis code run end-to-end on tuning first; primary metric and paired cell-bootstrap; comparators scored in the same run (plain, always-2 chosen on tuning, the shuffled adapter, the method paragraph); thresholds; the primary subgroup (24 cost-below-resale test cases); a statement of what test can show; secondary readouts; no second look.

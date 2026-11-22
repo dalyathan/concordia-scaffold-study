@@ -761,3 +761,18 @@ This follows the owner's second message of the morning and its additions. They s
 - The `tune`, `ledgerwait` and `lora` sessions were stopped. Their processes run under nohup and outlived `tmux kill-session`, so they were killed directly.
 - The queued LoRA chain was killed before it could start: its wait loop ended as soon as the `tune` session closed.
 - **Kept:** `demo_out/tune_partial.jsonl` (21 points of the third tuning job) for a later `--resume`.
+
+**Earlier G1 reviews** (superseded LoRA plan): saved as `reviews/2026-11-22_G1_lora-superseded-plan_{sonnet,fable}.md`. Both said go-with-changes. Their main points are all covered by this plan: split by cell (no shared cells); a method-distillation arm; a matched neutral control; at least 3 seeds for the key arms; a trainability check before any null is read; train and held-out regret logged separately; secondary `say` and reworded checks; and freezing the comparators before the test look.
+
+## 2. LoRA split on cells — done
+
+`demo/make_splits_lora.py` → **`demo/splits_lora.json`**. The 17 development cells are divided into **11 train cells** (44 cases, all four variants 15–18) and **6 held-out tune cells** (24 cases, all four variants), balanced by case type. The split was hand-picked before any LoRA result. Test cells are untouched.
+
+| Set | Cells | Type counts (below resale / at or above / no cost) |
+| --- | --- | --- |
+| held-out tune (6) | (3, C 2), (5, C 4), (6, C 1), (3, C 4), (3, neutral), (5, pressure) | 3 / 1 / 2 |
+| train (11) | (2, C 1), (2, C 3), (2, C 5), (3, pressure), (4, C 1), (4, C 3), (4, C 5), (5, C 2), (5, neutral), (6, C 3), (6, C 5) | 6 / 3 / 2 |
+
+The held-out cells cover best offers 1, 2 and 4 (cost below resale), a multi-best cell, and both no-cost lines, so they are not a lookup of train cells.
+
+**Baselines on the same cases:** plain is in `demo_out/cases.jsonl`. The step 4 text rows covered only variants 17–18, so `demo/score_rows_dev.py` (`demo_out/text_rows_build.jsonl`) scored method, neutral and wrong-rule on variants 15–16. Always-2 is computed from the labels.
