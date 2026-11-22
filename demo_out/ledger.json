@@ -900,6 +900,26 @@
   {
    "beat": "inside-the-model",
    "rung": 5,
+   "method": "LoRA wrong_rule, lr 3e-04, seed 0",
+   "split": "held-out tune cells (6)",
+   "in_sample": "yes",
+   "soft_regret": 0.47348023562915326,
+   "ci": [
+    0.14462423404912664,
+    0.8023362372091801
+   ],
+   "change_vs_plain": -0.10322230888343348,
+   "control": "plain (held-out cells)",
+   "control_regret": 0.5767025445125867,
+   "beats_control": "yes",
+   "wall_time": 2753.9994938373566,
+   "verdict": "best epoch 6; beats plain",
+   "source": "demo_out/lora/wrong_rule_lr3e-04_s0.json",
+   "note": "train-cell soft regret 0.815; selected-on the held-out cells"
+  },
+  {
+   "beat": "inside-the-model",
+   "rung": 5,
    "method": "LoRA answer_only, renormalised-only loss, lr 3e-4 (stopped after 1 epoch)",
    "split": "held-out tune cells (6)",
    "in_sample": "yes",
