@@ -165,3 +165,6 @@ res["note"] = "tuning cases only; settings tuned and evaluated on the same cases
 json.dump(res, open(args.out, "w"), indent=1, default=float)
 print("\n".join(steercheck.format_table(res, colour=False)))
 print(f"TUNE JOB COMPLETED in {time.time() - t0:.0f}s", flush=True)
+# Keep the results ledger current (CPU, reads saved files only).
+import subprocess  # noqa: E402
+subprocess.run([sys.executable, os.path.join(common.DEMO_DIR, "ledger.py")], check=False)

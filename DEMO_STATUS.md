@@ -670,3 +670,41 @@ tmux new-session -d -s tune "nohup scripts/nonet.sh .venv/bin/python demo/tune_j
 ```
 
 **Superseded.** Step 7's second-launch section above (grid 0.02–0.20) no longer applies. Its sanity check and partial results are kept as `logs/demo_tune_sanity.log` and `demo_out/tune_partial_v2.jsonl`.
+
+## Ledger
+
+**[RESULTS_LEDGER.md](RESULTS_LEDGER.md)** has one row per method or arm ever tried, dead ends included; the same data is in `demo_out/ledger.json`. `python demo/ledger.py` rebuilds both from saved results. It reads files only, on the CPU.
+
+**Columns:**
+
+- demo beat: failure-is-real, one-sentence, inside-the-model or take-home;
+- rung: 1 plain readout, 2 model-free baselines, 3 text, 4 steering, 5 LoRA, 0 take-home tool;
+- method;
+- split, and whether the result is in-sample;
+- mean soft regret, with a cell-bootstrap interval where per-case results were saved;
+- change vs plain;
+- matched control and its regret;
+- beats control?;
+- wall time;
+- verdict (≤ 12 words);
+- source file.
+
+Under the table: the three best methods, the three that failed, and slow runs (over 30 minutes) with no signal.
+
+**Choices:**
+
+- **Soft regret** is the mean over cells of per-case soft regret, the unit used throughout.
+- **Free-text row** reports hard regret, labelled as such.
+- **Dead ends** come from what they left:
+  - tune v1: no result, about 9 minutes;
+  - tune v2: the best of its 10 checkpointed points, about 10 minutes;
+  - the sanity check: change in expected offer only.
+- **Dose-scan rows** use each vector and mode's best coherent setting on the 8 scan cases, against plain on the same 8. They have no interval, because per-case results weren't saved.
+- **Third tuning job.** While it runs, its rows come from the partial checkpoint, marked RUNNING. Once `demo_out/tune_results.json` exists, they come from it, including each vector's tuned setting, its negation, the matched rank and the reference set.
+- **LoRA rows** come from `demo_out/lora_<arm>.json`, scored on tuning cases, with the shuffled-label arm as the control.
+- **"Best"** excludes rows that name the answer (template reasoning, answer-only).
+- **"Failed"** lists interventions meant to help (rung ≥ 3, not controls) with no useful change (< 0.05 coins better than plain). Dead-end steering runs come first, then the failed positive control.
+
+**Kept current:** `tune_job.py` and `lora.py` call `ledger.py` when they finish. The running tune job loaded its code before that change, so a CPU-only waiter (tmux session `ledgerwait`, `logs/demo_ledger_after_tune.log`) rebuilds the ledger when the `tune` session ends.
+
+**Test:** `tests/test_ledger.py` checks that the ledger runs on the current files and that every row has a source that exists. **53 tests pass.**

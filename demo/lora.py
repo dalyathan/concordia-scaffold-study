@@ -49,6 +49,7 @@ ap.add_argument("--limit", type=int, default=0, help="smoke test: use only this 
 ap.add_argument("--out", default=os.path.join(common.ROOT, "demo_out"))
 args = ap.parse_args()
 torch.manual_seed(0)
+T_START = time.time()
 LETTERS = phase3.LETTERS
 
 model, tok = runtime.load_gemma(args.model, args.device)
@@ -168,6 +169,7 @@ for epoch in range(1, args.max_epochs + 1):
       print(f"early stop after epoch {epoch} (best epoch {best['epoch']})", flush=True)
       break
 res = {"arm": args.arm, "model": args.model, "rank": args.rank, "lr": args.lr,
+       "wall_s": time.time() - T_START,
        "trainable_parameters": n_train, "n_train_examples": len(examples),
        "best_epoch": best["epoch"], "history": history, "adapter_dir": os.path.relpath(save_dir, common.ROOT),
        "tuning_probs_best": best["probs"],
@@ -178,3 +180,6 @@ json.dump(res, open(os.path.join(args.out, f"lora_{args.arm}{'_smoke' if args.li
           indent=1)
 print(f"LORA {args.arm} COMPLETED: best epoch {best['epoch']}, tuning soft regret {best['soft_regret']:.3f}",
       flush=True)
+# Keep the results ledger current (CPU, reads saved files only).
+import subprocess  # noqa: E402
+subprocess.run([sys.executable, os.path.join(common.DEMO_DIR, "ledger.py")], check=False)

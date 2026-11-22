@@ -1,0 +1,70 @@
+# Results ledger
+
+Rebuilt by `python demo/ledger.py` from saved results (do not edit by hand). Soft regret is in coins: the mean over cells of each case's soft regret, using first-token probabilities averaged over the five option orders. Intervals are 95% cell-bootstrap intervals where per-case results were saved. Rungs: 1 plain readout, 2 model-free baselines, 3 text in the prompt, 4 steering vectors, 5 LoRA adapters. In-sample = the setting was chosen or fitted on the cases it is scored on.
+
+| # | Beat | Rung | Method | Split | In-sample | Soft regret [95% CI] | Change vs plain | Matched control | Control regret | Beats control? | Wall time | Verdict | Source |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | failure-is-real | 1 | plain Gemma 2 9B, no notes | all 140 | no | 0.618 [0.41, 0.82] | +0.000 | — | — | n/a | 3 min | fails in 55% of cases; ignores stated cost | `demo_out/cases.jsonl` |
+| 2 | failure-is-real | 1 | plain Gemma 2 9B, no notes | build | no | 0.699 [0.39, 1.03] | +0.000 | — | — | n/a | — | the reference row for this split | `demo_out/cases.jsonl` |
+| 3 | failure-is-real | 1 | plain Gemma 2 9B, no notes | tuning | no | 0.714 [0.43, 1.01] | +0.000 | — | — | n/a | — | the reference row for this split | `demo_out/cases.jsonl` |
+| 4 | failure-is-real | 1 | plain Gemma 2 9B, no notes | test | no | 0.534 [0.27, 0.84] | +0.000 | — | — | n/a | — | the reference row for this split | `demo_out/cases.jsonl` |
+| 5 | failure-is-real | 1 | plain, reworded scaffold (same facts) | all 140 | no | 0.642 [0.44, 0.85] | +0.024 | plain, original wording | 0.618 | no | — | failure survives rewording; half the picks change | `demo_out/reworded_cases.jsonl` |
+| 6 | failure-is-real | 1 | greedy free-text answer (hard regret) | all 140 | no | 0.540 [0.30, 0.79] | -0.081 | first-token top offer (hard regret) | 0.621 | yes | 2 min | free text agrees with first token 54%; similar regret | `demo_out/say.jsonl` |
+| 7 | one-sentence | 2 | constant shift (tilt, beta -0.85) | tuning | yes | 0.669 | -0.046 | plain | 0.714 | yes | — | small gain; no model knowledge needed | `demo/baselines.json` |
+| 8 | one-sentence | 2 | always offer 1 (attractor, lam 1) | tuning | no | 0.635 | -0.079 | plain | 0.714 | yes | — | beats plain Gemma without any model | `demo/baselines.json` |
+| 9 | one-sentence | 2 | always offer 2 (attractor, lam 1) | tuning | yes | 0.529 | -0.185 | plain | 0.714 | yes | — | beats plain Gemma without any model | `demo/baselines.json` |
+| 10 | one-sentence | 2 | always offer 3 (attractor, lam 1) | tuning | no | 0.694 | -0.020 | plain | 0.714 | yes | — | beats plain Gemma without any model | `demo/baselines.json` |
+| 11 | one-sentence | 2 | always offer 4 (attractor, lam 1) | tuning | no | 1.306 | +0.591 | plain | 0.714 | no | — | worse than plain | `demo/baselines.json` |
+| 12 | one-sentence | 2 | always offer 5 (attractor, lam 1) | tuning | no | 2.306 | +1.591 | plain | 0.714 | no | — | worse than plain | `demo/baselines.json` |
+| 13 | one-sentence | 2 | shrink to the middle (flatten, lam 0.00) | tuning | yes | 0.714 | +0.000 | plain | 0.714 | no | — | never helps; best lam is zero | `demo/baselines.json` |
+| 14 | one-sentence | 3 | method paragraph (no numbers) | tuning | no | 0.303 [0.11, 0.56] | -0.411 | neutral | 0.688 | yes | 1 min | cuts regret 58%; content, not length, helps | `demo_out/text_rows_tuning.jsonl` |
+| 15 | one-sentence | 3 | same-length neutral text | tuning | no | 0.688 [0.40, 1.00] | -0.026 | plain | 0.714 | yes | 1 min | length alone does nothing | `demo_out/text_rows_tuning.jsonl` |
+| 16 | one-sentence | 3 | wrong rule: offer half the stated cost | tuning | no | 0.688 [0.35, 1.10] | -0.026 | neutral | 0.688 | no | 1 min | no better than neutral text | `demo_out/text_rows_tuning.jsonl` |
+| 17 | one-sentence | 3 | disposition: only your own profit matters | tuning | no | 0.747 [0.44, 1.08] | +0.033 | neutral | 0.688 | no | 1 min | slightly worse than plain | `demo_out/text_rows_tuning.jsonl` |
+| 18 | one-sentence | 3 | acceptance rule restated | tuning | no | 0.702 [0.43, 0.99] | -0.013 | neutral | 0.688 | no | 1 min | restating the rule alone does nothing | `demo_out/text_rows_tuning.jsonl` |
+| 19 | one-sentence | 3 | template reasoning naming the best offer | tuning | no | 0.001 [0.00, 0.00] | -0.714 | answer-only | 0.013 | yes | 1 min | names the answer; near-zero regret (leaky) | `demo_out/text_rows_tuning.jsonl` |
+| 20 | one-sentence | 3 | answer only (UPPER BOUND) | tuning | no | 0.013 [0.00, 0.04] | -0.702 | plain | 0.714 | yes | 1 min | upper bound: text naming the answer | `demo_out/text_rows_tuning.jsonl` |
+| 21 | inside-the-model | 4 | tune job v1: alpha x raw vector (mis-scaled) | tuning | yes | — | — | random directions (matched) | — | n/a | 9 min | dead end: unequal norms; stopped before any result | `logs/demo_tune_job_v1.log` |
+| 22 | inside-the-model | 4 | tune job v2: template, best of 10 points (fractions 0.02-0.20) | tuning | yes | 0.714 [0.43, 1.01] | -0.001 | random directions (matched) | — | n/a | 10 min | dead end: sanity check showed under 0.01-coin moves | `demo_out/tune_partial_v2.jsonl` |
+| 23 | inside-the-model | 4 | sanity: offer_lower, layer 18, fractions 0.10/0.20 | tuning (4 cases) | no | — | — | its negation | — | n/a | — | right sign, but moves offers at most 0.007 coins | `demo_out/tune_sanity.json` |
+| 24 | inside-the-model | 4 | dose scan: offer_lower, P1 on, best coherent setting (L24, f 0.25) | tuning (8 cases) | yes | 0.826 | -0.014 | plain (8 cases) | 0.839 | yes | 3 min | moves offer -0.049 coins; negligible | `demo_out/dose_scan.json` |
+| 25 | inside-the-model | 4 | dose scan: offer_lower, P3 on, best coherent setting | tuning (8 cases) | yes | — | — | plain (8 cases) | 0.839 | n/a | 3 min | no coherent setting: letter mass collapses | `demo_out/dose_scan.json` |
+| 26 | inside-the-model | 4 | dose scan: cheap, P1 on, best coherent setting (L24, f 0.1) | tuning (8 cases) | yes | 0.823 | -0.016 | plain (8 cases) | 0.839 | yes | 3 min | moves offer -0.037 coins; negligible | `demo_out/dose_scan.json` |
+| 27 | inside-the-model | 4 | dose scan: cheap, P3 on, best coherent setting | tuning (8 cases) | yes | — | — | plain (8 cases) | 0.839 | n/a | 3 min | no coherent setting: letter mass collapses | `demo_out/dose_scan.json` |
+| 28 | inside-the-model | 4 | dose scan: sentence, P1 on, best coherent setting (L24, f 0.1) | tuning (8 cases) | yes | 0.838 | -0.002 | plain (8 cases) | 0.839 | yes | 3 min | moves offer -0.005 coins; negligible | `demo_out/dose_scan.json` |
+| 29 | inside-the-model | 4 | dose scan: sentence, P3 on, best coherent setting (L24, f 0.25) | tuning (8 cases) | yes | 0.831 | -0.009 | plain (8 cases) | 0.839 | yes | 3 min | moves offer -0.071 coins; negligible | `demo_out/dose_scan.json` |
+| 30 | inside-the-model | 4 | tune job v3 (RUNNING, partial): template, full budget, best point so far | tuning | yes | 0.714 [0.43, 1.01] | -0.000 | plain | 0.714 | yes | — | partial result; job still running | `demo_out/tune_partial.jsonl` |
+| 31 | take-home | 0 | steercheck toy problem (a vector that should work) | toy (40 cases) | yes | 0.066 [0.04, 0.08] | -0.734 | its negation | 0.800 | yes | — | steercheck detects a working vector and its controls | `demo/steercheck.py` |
+
+## Three best methods (tuning split; excluding rows that name the answer)
+
+1. method paragraph (no numbers): soft regret 0.303 (-0.411 vs plain).
+2. always offer 2 (attractor, lam 1): soft regret 0.529 (-0.185 vs plain).
+3. always offer 1 (attractor, lam 1): soft regret 0.635 (-0.079 vs plain).
+
+## Three that failed
+
+1. tune job v1: alpha x raw vector (mis-scaled): dead end: unequal norms; stopped before any result.
+2. tune job v2: template, best of 10 points (fractions 0.02-0.20): dead end: sanity check showed under 0.01-coin moves.
+3. dose scan: cheap, P1 on, best coherent setting (L24, f 0.1): moves offer -0.037 coins; negligible.
+
+## Slow runs (over 30 minutes) that gave no signal
+
+- none so far.
+
+## Row notes
+
+- Row 6: hard regret, not soft
+- Row 19: names the best offer
+- Row 20: names the best offer
+- Row 21: wall time from DEMO_STATUS (killed after about 9 minutes)
+- Row 22: best point ['template', 'full', 9, 0.05]; wall time from DEMO_STATUS (killed after about 10 minutes)
+- Row 23: change in expected offer only
+- Row 24: no per-case results saved: no interval
+- Row 25: no per-case results saved: no interval
+- Row 26: no per-case results saved: no interval
+- Row 27: no per-case results saved: no interval
+- Row 28: no per-case results saved: no interval
+- Row 29: no per-case results saved: no interval
+- Row 30: 4 grid points done; best so far ['template', 'full', 6, 0.25]; coherence not applied
+- Row 31: toy regret is on the toy's own scale
