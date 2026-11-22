@@ -40,8 +40,9 @@ Rebuilt by `python demo/ledger.py` from saved results (do not edit by hand). Sof
 | 34 | inside-the-model | 4 | patch method-text P1 residual into plain at layer 33 (diagnostic) | held-out tune cases (12) | yes | 0.341 | -0.233 | method text in the prompt | 0.184 | no | — | diagnostic: shows where the text's effect arrives | `demo_out/steer_checks.json` |
 | 35 | inside-the-model | 4 | patch method-text P1 residual into plain at layer 39 (diagnostic) | held-out tune cases (12) | yes | 0.203 | -0.370 | method text in the prompt | 0.184 | no | — | diagnostic: shows where the text's effect arrives | `demo_out/steer_checks.json` |
 | 36 | inside-the-model | 4 | per-order sentence vector (method - neutral), L36, f 1.0 | held-out tune cases (12) | yes | 0.427 | -0.146 | wrong-order vector, same setting | 1.279 | yes | 20 min | letter push, like per-order cheap | `demo_out/steer_followup.json` |
-| 37 | inside-the-model | 5 | LoRA answer_only, renormalised-only loss, lr 3e-4 (stopped after 1 epoch) | held-out tune cells (6) | yes | 0.204 | -0.373 | plain (held-out cells) | 0.577 | yes | 7 min | dead end: letter mass collapsed to 0.01 | `logs/demo_lora_answer_only_renorm_loss_dead_end.log` |
-| 38 | take-home | 0 | steercheck toy problem (a vector that should work) | toy (40 cases) | yes | 0.066 [0.04, 0.08] | -0.734 | its negation | 0.800 | yes | — | steercheck detects a working vector and its controls | `demo/steercheck.py` |
+| 37 | inside-the-model | 5 | LoRA answer_only, lr 3e-04, seed 0 | held-out tune cells (6) | yes | 0.000 [0.00, 0.00] | -0.577 | plain (held-out cells) | 0.577 | yes | 47 min | best epoch 7; beats plain | `demo_out/lora/answer_only_lr3e-04_s0.json` |
+| 38 | inside-the-model | 5 | LoRA answer_only, renormalised-only loss, lr 3e-4 (stopped after 1 epoch) | held-out tune cells (6) | yes | 0.204 | -0.373 | plain (held-out cells) | 0.577 | yes | 7 min | dead end: letter mass collapsed to 0.01 | `logs/demo_lora_answer_only_renorm_loss_dead_end.log` |
+| 39 | take-home | 0 | steercheck toy problem (a vector that should work) | toy (40 cases) | yes | 0.066 [0.04, 0.08] | -0.734 | its negation | 0.800 | yes | — | steercheck detects a working vector and its controls | `demo/steercheck.py` |
 
 ## Three best methods (tuning split; excluding rows that name the answer)
 
@@ -80,5 +81,6 @@ Rebuilt by `python demo/ledger.py` from saved results (do not edit by hand). Sof
 - Row 34: uses the evaluated cases' own method-text run; not a deployable method; no interval (12 cases = 6 cells)
 - Row 35: uses the evaluated cases' own method-text run; not a deployable method; no interval (12 cases = 6 cells)
 - Row 36: no interval (12 cases = 6 cells)
-- Row 37: regret looks good only because it is read after renormalising over a collapsed 1% of the mass; replaced by the full-vocabulary letter loss
-- Row 38: toy regret is on the toy's own scale
+- Row 37: train-cell soft regret 0.000; selected-on the held-out cells
+- Row 38: regret looks good only because it is read after renormalising over a collapsed 1% of the mass; replaced by the full-vocabulary letter loss
+- Row 39: toy regret is on the toy's own scale

@@ -990,3 +990,9 @@ python demo/ledger.py                               # RESULTS_LEDGER.md
 ## Review pair changed (owner's instruction)
 
 `gate-reviewer-opus` added (same instructions as the Fable reviewer). From now: G1 Sonnet alone (Sonnet + Opus if the step uses more than 3 GPU hours); G2 and G3 always Sonnet + Opus; Fable is no longer used. `REVIEW_GATES.md` and `CLAUDE.md` updated. Earlier reviews by Fable stay in `reviews/` unchanged.
+
+## LoRA trainability check passed; chain relaunched
+
+- **answer_only, lr 3e-4, seed 0** (`demo_out/lora/answer_only_lr3e-04_s0.json`): best epoch 7 of 8, **train soft regret 0.000, held-out soft regret 0.000**, letter mass 1.00, 317 s/epoch, 47 minutes. Trainability **passes** (threshold 0.15). It also fits the held-out cells, which it never trained on, so supervision on the answer generalises across cells here. This is the supervised reference, not evidence about the method arm.
+- **The chain halted on a ladder gap:** L5 could not take effect before the method rate was known, so the first budget check priced the full grid (10.6 h). Fixed: L5 is priced with one placeholder rate until the method grid finishes, then uses method's chosen rate. The plan estimate is still approximate (runs may use up to 8 epochs, not 6.5); the chain re-plans with measured times after the method and neutral grids.
+- Relaunched in tmux `lora` (resumes; the finished run is skipped).

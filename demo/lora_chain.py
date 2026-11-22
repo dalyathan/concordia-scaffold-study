@@ -83,7 +83,8 @@ LADDER = ("L0 full", "L1 controls 1 seed", "L2 no const2 arm", "L3 no template",
 
 def runs_for(level, method_lr=None):
   """-> (grid runs [(arm, perm, lr, seed)], seed runs [(arm, seed)])"""
-  rates = lambda arm: LR_GRID if (level < 5 or method_lr is None) else (method_lr,)
+  # L5: one rate for the non-core arms (method's rate once known; priced as one placeholder rate before)
+  rates = lambda arm: LR_GRID if level < 5 else ((method_lr,) if method_lr is not None else (3e-4,))
   runs = [("answer_only", 0, 3e-4, 0)]
   runs += [(a, 0, lr, 0) for a in ("method", "neutral") for lr in LR_GRID]
   runs += [("wrong_rule", 0, lr, 0) for lr in rates("wrong_rule")]
@@ -106,7 +107,7 @@ def hours(n, sec):
 
 def choose_plan(sec, method_lr=None):
   for level, name in enumerate(LADDER):
-    runs, seeds = runs_for(level, method_lr if level >= 5 else None)
+    runs, seeds = runs_for(level, method_lr)
     pending = [r for r in runs if not done(*r)] + [s for s in seeds if not done(s[0], 0, 3e-4, s[1])]
     est = hours(len(runs) + len(seeds), sec)
     print(f"plan {name}: {len(runs)} grid + {len(seeds)} seed runs = {len(runs) + len(seeds)} runs, "

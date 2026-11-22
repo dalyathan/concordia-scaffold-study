@@ -660,6 +660,26 @@
   {
    "beat": "inside-the-model",
    "rung": 5,
+   "method": "LoRA answer_only, lr 3e-04, seed 0",
+   "split": "held-out tune cells (6)",
+   "in_sample": "yes",
+   "soft_regret": 0.0001840884379446329,
+   "ci": [
+    2.4672790914448172e-05,
+    0.000393364442262548
+   ],
+   "change_vs_plain": -0.5765184560746421,
+   "control": "plain (held-out cells)",
+   "control_regret": 0.5767025445125867,
+   "beats_control": "yes",
+   "wall_time": 2790.8990199565887,
+   "verdict": "best epoch 7; beats plain",
+   "source": "demo_out/lora/answer_only_lr3e-04_s0.json",
+   "note": "train-cell soft regret 0.000; selected-on the held-out cells"
+  },
+  {
+   "beat": "inside-the-model",
+   "rung": 5,
    "method": "LoRA answer_only, renormalised-only loss, lr 3e-4 (stopped after 1 epoch)",
    "split": "held-out tune cells (6)",
    "in_sample": "yes",
