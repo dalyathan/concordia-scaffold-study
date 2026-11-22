@@ -541,19 +541,19 @@
    "method": "tune job v3 (RUNNING, partial): template, full budget, best point so far",
    "split": "tuning",
    "in_sample": "yes",
-   "soft_regret": 0.7141615323485624,
+   "soft_regret": 0.7116869081120079,
    "ci": [
-    0.4324383569891471,
-    1.0124508792853497
+    0.4302574547792553,
+    1.0079510260408624
    ],
-   "change_vs_plain": -0.000291247898295266,
+   "change_vs_plain": -0.0027658721348498005,
    "control": "plain",
    "control_regret": 0.7144527802468577,
    "beats_control": "yes",
    "wall_time": null,
    "verdict": "partial result; job still running",
    "source": "demo_out/tune_partial.jsonl",
-   "note": "4 grid points done; best so far ['template', 'full', 6, 0.25]; coherence not applied"
+   "note": "21 grid points done; best so far ['template', 'full', 18, 0.25]; coherence not applied"
   },
   {
    "beat": "take-home",

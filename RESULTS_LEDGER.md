@@ -33,7 +33,7 @@ Rebuilt by `python demo/ledger.py` from saved results (do not edit by hand). Sof
 | 27 | inside-the-model | 4 | dose scan: cheap, P3 on, best coherent setting | tuning (8 cases) | yes | — | — | plain (8 cases) | 0.839 | n/a | 3 min | no coherent setting: letter mass collapses | `demo_out/dose_scan.json` |
 | 28 | inside-the-model | 4 | dose scan: sentence, P1 on, best coherent setting (L24, f 0.1) | tuning (8 cases) | yes | 0.838 | -0.002 | plain (8 cases) | 0.839 | yes | 3 min | moves offer -0.005 coins; negligible | `demo_out/dose_scan.json` |
 | 29 | inside-the-model | 4 | dose scan: sentence, P3 on, best coherent setting (L24, f 0.25) | tuning (8 cases) | yes | 0.831 | -0.009 | plain (8 cases) | 0.839 | yes | 3 min | moves offer -0.071 coins; negligible | `demo_out/dose_scan.json` |
-| 30 | inside-the-model | 4 | tune job v3 (RUNNING, partial): template, full budget, best point so far | tuning | yes | 0.714 [0.43, 1.01] | -0.000 | plain | 0.714 | yes | — | partial result; job still running | `demo_out/tune_partial.jsonl` |
+| 30 | inside-the-model | 4 | tune job v3 (RUNNING, partial): template, full budget, best point so far | tuning | yes | 0.712 [0.43, 1.01] | -0.003 | plain | 0.714 | yes | — | partial result; job still running | `demo_out/tune_partial.jsonl` |
 | 31 | take-home | 0 | steercheck toy problem (a vector that should work) | toy (40 cases) | yes | 0.066 [0.04, 0.08] | -0.734 | its negation | 0.800 | yes | — | steercheck detects a working vector and its controls | `demo/steercheck.py` |
 
 ## Three best methods (tuning split; excluding rows that name the answer)
@@ -66,5 +66,5 @@ Rebuilt by `python demo/ledger.py` from saved results (do not edit by hand). Sof
 - Row 27: no per-case results saved: no interval
 - Row 28: no per-case results saved: no interval
 - Row 29: no per-case results saved: no interval
-- Row 30: 4 grid points done; best so far ['template', 'full', 6, 0.25]; coherence not applied
+- Row 30: 21 grid points done; best so far ['template', 'full', 18, 0.25]; coherence not applied
 - Row 31: toy regret is on the toy's own scale

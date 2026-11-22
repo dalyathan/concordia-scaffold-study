@@ -745,3 +745,19 @@ grep -h "epoch\|COMPLETED" logs/demo_lora_answer_only.log logs/demo_lora_templat
   - Packet `/tmp/gate_G1_c939056d/`: proposal with frozen decision rules, brief, status excerpt, ledger, `lora.py` and the code it calls, small summary.
   - The `gate-reviewer-*` agent types are not registered in this session, so fresh general-purpose agents with models sonnet and fable were given the agent files' instructions plus the packet path (the documented fallback).
 - **Code change for the packet's word check:** `pairs_template.py` replaced Python's `round()` with `int(x + 0.5)`. Same result here: 0.2 × 34 = 6.8 → 7.
+
+---
+
+# Plan of 2026-11-22, 05:30 UTC (steering checks, held-out split, LoRA with gates)
+
+This follows the owner's second message of the morning and its additions. They supersede the first message's chain, arm order and lr rule.
+
+**Gates:** this message prescribes three gates (G2 steering, G1 LoRA plan, G2 LoRA results), which overrides the two-per-message default.
+
+**The earlier G1 reviews** of the superseded LoRA proposal are saved under `reviews/` when they arrive, marked as being for the superseded plan. They are not put into any later packet.
+
+## 1. Steering job and queued chain stopped — done
+
+- The `tune`, `ledgerwait` and `lora` sessions were stopped. Their processes run under nohup and outlived `tmux kill-session`, so they were killed directly.
+- The queued LoRA chain was killed before it could start: its wait loop ended as soon as the `tune` session closed.
+- **Kept:** `demo_out/tune_partial.jsonl` (21 points of the third tuning job) for a later `--resume`.
