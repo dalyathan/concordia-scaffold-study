@@ -265,6 +265,10 @@ def main():
                     "sec": time.time() - t, "sec_training": t_train})
     print(f"epoch {epoch}: loss {np.mean(losses):.3f}; held-out tune soft {tn['soft_regret']:.3f} (mass {tn['mass']:.2f}); "
           f"train soft {tr['soft_regret']:.3f} (mass {tr['mass']:.2f}); {time.time() - t:.0f}s/epoch", flush=True)
+    with open(os.path.join(common.ROOT, "demo_out", "lora_progress.jsonl"), "a") as pf:
+      pf.write(json.dumps({"run": rid, "arm": args.arm, "lr": args.lr, "seed": args.seed, "epoch": epoch,
+                           "train_soft_regret": tr["soft_regret"], "heldout_soft_regret": tn["soft_regret"],
+                           "heldout_letter_mass": tn["mass"], "seconds": time.time() - t}) + "\n")
     if tn["soft_regret"] < best["tune"]["soft_regret"] - 1e-9:
       best = {"epoch": epoch, "tune": tn, "train": tr, "say": say_eval(tune, tn["tops"])}
       peft_model.save_pretrained(save_dir)
