@@ -1,0 +1,62 @@
+{
+ "check1_epoch0": {
+  "label": "check 1 at epoch 0 (B = 0)",
+  "max_abs_diff_letter_logprobs": 0.0,
+  "max_abs_diff_renormalised": 4.074646375862301e-08,
+  "exact": true,
+  "tolerance": 0.0001,
+  "pass": true
+ },
+ "check1_trained": {
+  "label": "check 1 after 6 steps (B != 0)",
+  "max_abs_diff_letter_logprobs": 0.0,
+  "max_abs_diff_renormalised": 9.239844078745563e-08,
+  "exact": true,
+  "tolerance": 0.0001,
+  "pass": true
+ },
+ "check2": {
+  "adapter_off_vs_saved_plain_max_diff": 0.0,
+  "bit_for_bit": true,
+  "adapter_on_vs_plain_max_diff": 0.7922755429269723,
+  "adapter_on_differs": true,
+  "pass": true
+ },
+ "saved_numbers": {
+  "v15-V3-neutral": {
+   "1": 0.20000003932762023,
+   "2": 0.20000000587083905,
+   "3": 0.2000002202220041,
+   "4": 0.1999998232912622,
+   "5": 0.1999999112882745
+  },
+  "v15-V3-information-C2": {
+   "1": 0.20000000376075827,
+   "2": 0.2000000718568719,
+   "3": 0.20000009648325584,
+   "4": 0.19999986453012386,
+   "5": 0.19999996336899012
+  },
+  "v15-V3-information-C4": {
+   "1": 0.2000000618331544,
+   "2": 0.19999990853822674,
+   "3": 0.20000016812829507,
+   "4": 0.19999982942979494,
+   "5": 0.2000000320705288
+  },
+  "v15-V5-pressure": {
+   "1": 0.19999995833442696,
+   "2": 0.1999999757600359,
+   "3": 0.20000000615634836,
+   "4": 0.20000005976709972,
+   "5": 0.19999999998208906
+  }
+ },
+ "check3": {
+  "reload_vs_saved_max_diff": 0.0,
+  "reproduces": true,
+  "exact": true,
+  "pass": true,
+  "reloaded_adapter_off_vs_plain_max_diff": 0.0
+ }
+}

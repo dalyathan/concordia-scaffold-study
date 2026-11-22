@@ -556,6 +556,23 @@
    "note": "21 grid points done; best so far ['template', 'full', 18, 0.25]; coherence not applied"
   },
   {
+   "beat": "inside-the-model",
+   "rung": 5,
+   "method": "LoRA answer_only, renormalised-only loss, lr 3e-4 (stopped after 1 epoch)",
+   "split": "held-out tune cells (6)",
+   "in_sample": "yes",
+   "soft_regret": 0.204,
+   "ci": null,
+   "change_vs_plain": -0.3727025445125868,
+   "control": "plain (held-out cells)",
+   "control_regret": 0.5767025445125867,
+   "beats_control": "yes",
+   "wall_time": 437.0,
+   "verdict": "dead end: letter mass collapsed to 0.01",
+   "source": "logs/demo_lora_answer_only_renorm_loss_dead_end.log",
+   "note": "regret looks good only because it is read after renormalising over a collapsed 1% of the mass; replaced by the full-vocabulary letter loss"
+  },
+  {
    "beat": "take-home",
    "rung": 0,
    "method": "steercheck toy problem (a vector that should work)",

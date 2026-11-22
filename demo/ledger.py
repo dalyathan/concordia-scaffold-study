@@ -284,6 +284,20 @@ if lora_runs:
         note=f"train-cell soft regret {r['train_best']['soft_regret']:.3f}; selected-on the held-out cells"
         + ("; LEAKY" if leaky else ""))
 
+# Dead end: LoRA with a renormalised-only loss (letter mass collapsed in one epoch).
+dead = os.path.join(common.ROOT, "logs", "demo_lora_answer_only_renorm_loss_dead_end.log")
+if os.path.exists(dead):
+  m = re.search(r"epoch 1: .*?held-out tune soft ([0-9.]+) \(mass ([0-9.]+)\).*?(\d+)s/epoch", open(dead).read())
+  if m:
+    ho_ids = [pid for pid, sp in json.load(open(os.path.join(common.DEMO_DIR, "splits_lora.json")))["case_split"].items()
+              if sp == "lora_tune"]
+    plain_ho = cell_stats({pid: plain_case_soft[pid] for pid in ho_ids})[0]
+    add("inside-the-model", 5, "LoRA answer_only, renormalised-only loss, lr 3e-4 (stopped after 1 epoch)",
+        "held-out tune cells (6)", "yes", float(m.group(1)), None, plain_ho, "plain (held-out cells)", plain_ho,
+        float(m.group(3)) + 120, f"dead end: letter mass collapsed to {m.group(2)}", rel(dead),
+        note="regret looks good only because it is read after renormalising over a collapsed 1% of the mass; "
+             "replaced by the full-vocabulary letter loss")
+
 # ------------------------------------------------------------ take-home
 try:
   import steercheck

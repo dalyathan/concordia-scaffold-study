@@ -19,10 +19,13 @@ option order):
   const2       one-hot on the letter of 2 coins (a constant-offer target)
   template     distillation of the template reasoning, which names the best offer
                (a LEAKY upper bound)
-Loss (letter-only): cross-entropy between the target and the student's first-token
-distribution renormalised over the five letters at P1, i.e. exactly the quantity
-that soft regret is computed from. Letter mass is therefore not trained; it is
-logged as a side effect.
+Loss (letter-only): cross-entropy of the answer letter at P1 against the target
+distribution over the five letters, using the letters' FULL-VOCABULARY log-probs
+(ordinary SFT on the answer token). It equals the renormalised cross-entropy plus
+-log(letter mass), so every arm is pushed equally to keep the answer format and the
+arms differ only in which letter they favour. Letter mass is logged. (The first
+version used the renormalised distribution only; letter mass collapsed to 0.01 in
+one epoch, see demo_out/dead_ends/.)
 LoRA: rank 4 (--rank), alpha 2 x rank, q/k/v/o projections, float32 adapter
 weights, AdamW, one optimizer step per case (its five orders), gradient
 checkpointing, at most 8 epochs, early stopping on the held-out tune cells' mean
@@ -190,7 +193,12 @@ def main():
     logits = model.lm_head(hidden).float()
     if cap:
       logits = torch.tanh(logits / cap) * cap
-    lp = torch.log_softmax(logits[0, letter_ix.to(logits.device)], dim=-1)      # renormalised over the 5 letters
+    # Full-vocabulary log-probabilities of the five letters (the answer token, as in ordinary
+    # SFT). This equals the cross-entropy on the letter distribution renormalised over the
+    # five letters PLUS -log(letter mass): every arm is also pushed to keep the answer
+    # format, so arms differ only in WHICH letter they favour. (A renormalised-only loss let
+    # the letter mass collapse to 0.01 in one epoch; demo_out/dead_ends/.)
+    lp = torch.log_softmax(logits, dim=-1)[0, letter_ix.to(logits.device)]
     return -(ex["target"].to(lp.device) * lp).sum()
 
   def evaluate(cases):
@@ -275,6 +283,7 @@ def main():
          "train_probs_best": best["train"]["probs"], "say_plain": say0, "say_best": best["say"],
          "history": history, "epochs_run": len(history) - 1,
          "adapter_dir": os.path.relpath(save_dir, common.ROOT), "wall_s": time.time() - t_start,
+         "adapter_sha256": __import__("hashlib").sha256(open(os.path.join(save_dir, "adapter_model.safetensors"), "rb").read()).hexdigest(),
          "sec_per_epoch": float(np.mean([h["sec"] for h in history[1:]])) if len(history) > 1 else None,
          "note": "early stopping on the held-out tune cells, so their numbers are selected-on (in-sample)"}
   json.dump(res, open(os.path.join(args.out, f"{rid}.json"), "w"), indent=1)
