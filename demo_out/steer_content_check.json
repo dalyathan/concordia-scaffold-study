@@ -1,0 +1,358 @@
+{
+ "plain": {
+  "name": "plain",
+  "mean_dE": 0.0,
+  "sd_dE_across_cases": 0.0,
+  "partial_spearman_expected_vs_best": -0.02162846855710127,
+  "by_type": {
+   "cost below resale": {
+    "n": 6,
+    "mean_dE": 0.0,
+    "mean_hard_regret": 0.8333333333333334
+   },
+   "cost at or above resale": {
+    "n": 2,
+    "mean_dE": 0.0,
+    "mean_hard_regret": 0.0
+   },
+   "no cost": {
+    "n": 4,
+    "mean_dE": 0.0,
+    "mean_hard_regret": 0.09999999999999998
+   }
+  },
+  "per_case_dE": {
+   "v15-V3-neutral": 0.0,
+   "v15-V3-information-C2": 0.0,
+   "v15-V3-information-C4": 0.0,
+   "v15-V5-pressure": 0.0,
+   "v15-V5-information-C4": 0.0,
+   "v15-V6-information-C1": 0.0,
+   "v18-V3-neutral": 0.0,
+   "v18-V3-information-C2": 0.0,
+   "v18-V3-information-C4": 0.0,
+   "v18-V5-pressure": 0.0,
+   "v18-V5-information-C4": 0.0,
+   "v18-V6-information-C1": 0.0
+  },
+  "soft_regret_cell_mean": 0.5733383431890435
+ },
+ "settings": [
+  {
+   "cheap": {
+    "name": "cheap per-order L33 f0.5",
+    "mean_dE": -0.6391336531892972,
+    "sd_dE_across_cases": 0.47842438497185846,
+    "partial_spearman_expected_vs_best": 0.20088606710355653,
+    "by_type": {
+     "cost below resale": {
+      "n": 6,
+      "mean_dE": -0.5773919425119866,
+      "mean_hard_regret": 1.0
+     },
+     "cost at or above resale": {
+      "n": 2,
+      "mean_dE": -0.12277470426255233,
+      "mean_hard_regret": 0.0
+     },
+     "no cost": {
+      "n": 4,
+      "mean_dE": -0.9899256936686356,
+      "mean_hard_regret": 0.19999999999999996
+     }
+    },
+    "per_case_dE": {
+     "v15-V3-neutral": -0.5039679613260839,
+     "v15-V3-information-C2": -1.112919983372109,
+     "v15-V3-information-C4": -0.15341234551923022,
+     "v15-V5-pressure": -1.3142373599885193,
+     "v15-V5-information-C4": -0.4148864094247382,
+     "v15-V6-information-C1": -0.29577084421074806,
+     "v18-V3-neutral": -0.48290057666751807,
+     "v18-V3-information-C2": -0.9596700463312644,
+     "v18-V3-information-C4": -0.09213706300587443,
+     "v18-V5-pressure": -1.658596876692421,
+     "v18-V5-information-C4": -0.3474707690385457,
+     "v18-V6-information-C1": -0.3336336026945137
+    },
+    "soft_regret_cell_mean": 0.5023936355221503
+   },
+   "matched_unembedding_push": {
+    "name": "unembedding push L41 f0.05",
+    "mean_dE": -0.5007824132479762,
+    "sd_dE_across_cases": 0.4290973657070085,
+    "partial_spearman_expected_vs_best": 0.1789682708514628,
+    "by_type": {
+     "cost below resale": {
+      "n": 6,
+      "mean_dE": -0.4671652315990473,
+      "mean_hard_regret": 1.0
+     },
+     "cost at or above resale": {
+      "n": 2,
+      "mean_dE": -0.0587389622617166,
+      "mean_hard_regret": 0.0
+     },
+     "no cost": {
+      "n": 4,
+      "mean_dE": -0.7722299112144992,
+      "mean_hard_regret": 0.19999999999999996
+     }
+    },
+    "per_case_dE": {
+     "v15-V3-neutral": -0.2948393442126358,
+     "v15-V3-information-C2": -1.0405197111132005,
+     "v15-V3-information-C4": -0.07165641435049697,
+     "v15-V5-pressure": -1.1694525922510781,
+     "v15-V5-information-C4": -0.31479972515912236,
+     "v15-V6-information-C1": -0.26414986619019265,
+     "v18-V3-neutral": -0.26557419849565833,
+     "v18-V3-information-C2": -0.6770613160699321,
+     "v18-V3-information-C4": -0.04582151017293623,
+     "v18-V5-pressure": -1.359053509898625,
+     "v18-V5-information-C4": -0.22741981131539868,
+     "v18-V6-information-C1": -0.2790409597464376
+    },
+    "soft_regret_cell_mean": 0.5009338418998147
+   },
+   "per_case_dE_corr_cheap_vs_push": 0.9867845450560313
+  },
+  {
+   "cheap": {
+    "name": "cheap per-order L36 f0.5",
+    "mean_dE": -0.8406342530807264,
+    "sd_dE_across_cases": 0.4683025518593632,
+    "partial_spearman_expected_vs_best": 0.18622052705030676,
+    "by_type": {
+     "cost below resale": {
+      "n": 6,
+      "mean_dE": -0.8180552216443151,
+      "mean_hard_regret": 1.0
+     },
+     "cost at or above resale": {
+      "n": 2,
+      "mean_dE": -0.3236726781543827,
+      "mean_hard_regret": 0.0
+     },
+     "no cost": {
+      "n": 4,
+      "mean_dE": -1.132983587698515,
+      "mean_hard_regret": 0.19999999999999996
+     }
+    },
+    "per_case_dE": {
+     "v15-V3-neutral": -0.5714012159757282,
+     "v15-V3-information-C2": -1.205511910143564,
+     "v15-V3-information-C4": -0.3689225558524962,
+     "v15-V5-pressure": -1.4362587651894239,
+     "v15-V5-information-C4": -0.676674281718525,
+     "v15-V6-information-C1": -0.5732364712957616,
+     "v18-V3-neutral": -0.613196835330776,
+     "v18-V3-information-C2": -1.2125238223129833,
+     "v18-V3-information-C4": -0.2784228004562692,
+     "v18-V5-pressure": -1.9110775342981323,
+     "v18-V5-information-C4": -0.6452017138288046,
+     "v18-V6-information-C1": -0.5951831305662527
+    },
+    "soft_regret_cell_mean": 0.47104038467098563
+   },
+   "matched_unembedding_push": {
+    "name": "unembedding push L41 f0.1",
+    "mean_dE": -1.0395914752791044,
+    "sd_dE_across_cases": 0.453333524224189,
+    "partial_spearman_expected_vs_best": 0.04360799420267897,
+    "by_type": {
+     "cost below resale": {
+      "n": 6,
+      "mean_dE": -1.0655214191398363,
+      "mean_hard_regret": 0.6666666666666666
+     },
+     "cost at or above resale": {
+      "n": 2,
+      "mean_dE": -0.4729576586831087,
+      "mean_hard_regret": 0.0
+     },
+     "no cost": {
+      "n": 4,
+      "mean_dE": -1.2840134677860044,
+      "mean_hard_regret": 0.19999999999999996
+     }
+    },
+    "per_case_dE": {
+     "v15-V3-neutral": -0.7304317703362251,
+     "v15-V3-information-C2": -1.2913141085212883,
+     "v15-V3-information-C4": -0.528630924716464,
+     "v15-V5-pressure": -1.5712672821067213,
+     "v15-V5-information-C4": -1.0169567404763638,
+     "v15-V6-information-C1": -0.8224569909894537,
+     "v18-V3-neutral": -0.7375891281439133,
+     "v18-V3-information-C2": -1.341757420727904,
+     "v18-V3-information-C4": -0.41728439264975337,
+     "v18-V5-pressure": -2.0967656905571586,
+     "v18-V5-information-C4": -1.049235403325464,
+     "v18-V6-information-C1": -0.8714078507985439
+    },
+    "soft_regret_cell_mean": 0.44165732431702415
+   },
+   "per_case_dE_corr_cheap_vs_push": 0.9799663839097205
+  },
+  {
+   "cheap": {
+    "name": "cheap per-order L39 f0.5",
+    "mean_dE": -0.9736634860235304,
+    "sd_dE_across_cases": 0.45244054720736876,
+    "partial_spearman_expected_vs_best": 0.20503796438216554,
+    "by_type": {
+     "cost below resale": {
+      "n": 6,
+      "mean_dE": -0.9912200998883467,
+      "mean_hard_regret": 0.6666666666666666
+     },
+     "cost at or above resale": {
+      "n": 2,
+      "mean_dE": -0.4507009424369436,
+      "mean_hard_regret": 0.0
+     },
+     "no cost": {
+      "n": 4,
+      "mean_dE": -1.208809837019599,
+      "mean_hard_regret": 0.19999999999999996
+     }
+    },
+    "per_case_dE": {
+     "v15-V3-neutral": -0.6050527249424096,
+     "v15-V3-information-C2": -1.2227626774391787,
+     "v15-V3-information-C4": -0.4729329644660367,
+     "v15-V5-pressure": -1.516814995570116,
+     "v15-V5-information-C4": -0.9098645555430294,
+     "v15-V6-information-C1": -0.7596658131968326,
+     "v18-V3-neutral": -0.6699927418839133,
+     "v18-V3-information-C2": -1.2949966863387576,
+     "v18-V3-information-C4": -0.42846892040785045,
+     "v18-V5-pressure": -2.043378885681957,
+     "v18-V5-information-C4": -0.9446534526316106,
+     "v18-V6-information-C1": -0.8153774141806722
+    },
+    "soft_regret_cell_mean": 0.44222967924503354
+   },
+   "matched_unembedding_push": {
+    "name": "unembedding push L41 f0.1",
+    "mean_dE": -1.0395914752791044,
+    "sd_dE_across_cases": 0.453333524224189,
+    "partial_spearman_expected_vs_best": 0.04360799420267897,
+    "by_type": {
+     "cost below resale": {
+      "n": 6,
+      "mean_dE": -1.0655214191398363,
+      "mean_hard_regret": 0.6666666666666666
+     },
+     "cost at or above resale": {
+      "n": 2,
+      "mean_dE": -0.4729576586831087,
+      "mean_hard_regret": 0.0
+     },
+     "no cost": {
+      "n": 4,
+      "mean_dE": -1.2840134677860044,
+      "mean_hard_regret": 0.19999999999999996
+     }
+    },
+    "per_case_dE": {
+     "v15-V3-neutral": -0.7304317703362251,
+     "v15-V3-information-C2": -1.2913141085212883,
+     "v15-V3-information-C4": -0.528630924716464,
+     "v15-V5-pressure": -1.5712672821067213,
+     "v15-V5-information-C4": -1.0169567404763638,
+     "v15-V6-information-C1": -0.8224569909894537,
+     "v18-V3-neutral": -0.7375891281439133,
+     "v18-V3-information-C2": -1.341757420727904,
+     "v18-V3-information-C4": -0.41728439264975337,
+     "v18-V5-pressure": -2.0967656905571586,
+     "v18-V5-information-C4": -1.049235403325464,
+     "v18-V6-information-C1": -0.8714078507985439
+    },
+    "soft_regret_cell_mean": 0.44165732431702415
+   },
+   "per_case_dE_corr_cheap_vs_push": 0.9972497420709908
+  },
+  {
+   "cheap": {
+    "name": "cheap per-order L39 f1.0",
+    "mean_dE": -1.2634849702876783,
+    "sd_dE_across_cases": 0.3912223503581154,
+    "partial_spearman_expected_vs_best": 0.09983756911573471,
+    "by_type": {
+     "cost below resale": {
+      "n": 6,
+      "mean_dE": -1.2840338750046671,
+      "mean_hard_regret": 0.6666666666666666
+     },
+     "cost at or above resale": {
+      "n": 2,
+      "mean_dE": -0.8868283110237003,
+      "mean_hard_regret": 0.0
+     },
+     "no cost": {
+      "n": 4,
+      "mean_dE": -1.4209899428441837,
+      "mean_hard_regret": 0.19999999999999996
+     }
+    },
+    "per_case_dE": {
+     "v15-V3-neutral": -0.826543247885918,
+     "v15-V3-information-C2": -1.3191715630570597,
+     "v15-V3-information-C4": -0.8940874247928472,
+     "v15-V5-pressure": -1.638446979445975,
+     "v15-V5-information-C4": -1.2874291893372636,
+     "v15-V6-information-C1": -1.0820449298913375,
+     "v18-V3-neutral": -0.946385903241622,
+     "v18-V3-information-C2": -1.4545529203425003,
+     "v18-V3-information-C4": -0.8795691972545534,
+     "v18-V5-pressure": -2.272583640803219,
+     "v18-V5-information-C4": -1.4004727090429385,
+     "v18-V6-information-C1": -1.1605319383569044
+    },
+    "soft_regret_cell_mean": 0.4072915136904384
+   },
+   "matched_unembedding_push": {
+    "name": "unembedding push L41 f0.2",
+    "mean_dE": -1.3168204537636905,
+    "sd_dE_across_cases": 0.3825164907394385,
+    "partial_spearman_expected_vs_best": -0.28903808645511764,
+    "by_type": {
+     "cost below resale": {
+      "n": 6,
+      "mean_dE": -1.33578059902117,
+      "mean_hard_regret": 0.6666666666666666
+     },
+     "cost at or above resale": {
+      "n": 2,
+      "mean_dE": -0.964718570490576,
+      "mean_hard_regret": 0.0
+     },
+     "no cost": {
+      "n": 4,
+      "mean_dE": -1.4644311775140284,
+      "mean_hard_regret": 0.19999999999999996
+     }
+    },
+    "per_case_dE": {
+     "v15-V3-neutral": -0.8818146907618709,
+     "v15-V3-information-C2": -1.3415864895009986,
+     "v15-V3-information-C4": -0.9689518405957163,
+     "v15-V5-pressure": -1.6588093711062917,
+     "v15-V5-information-C4": -1.3497961576770896,
+     "v15-V6-information-C1": -1.1245247895992532,
+     "v18-V3-neutral": -1.002686152529127,
+     "v18-V3-information-C2": -1.4856357453687423,
+     "v18-V3-information-C4": -0.9604853003854357,
+     "v18-V5-pressure": -2.3144144956588244,
+     "v18-V5-information-C4": -1.4933937151346595,
+     "v18-V6-information-C1": -1.219746696846277
+    },
+    "soft_regret_cell_mean": 0.40336691980486306
+   },
+   "per_case_dE_corr_cheap_vs_push": 0.9986638027303268
+  }
+ ]
+}
