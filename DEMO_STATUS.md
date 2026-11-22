@@ -560,3 +560,12 @@ tmux new-session -d -s tune "nohup scripts/nonet.sh .venv/bin/python demo/tune_j
   They are not in this report.
 - **One live command over 5 seconds.** In the confirming 9B floor rerun, `text wrong_rule` took 5.54 s: it waited for the model lock while a background `dial` scored a five-order case. The dial thread now takes the lock one order at a time (about 0.3 s), so a live command waits at most one pass. This fix is unit-tested but has not been re-timed on 9B, because the GPU is busy with the tuning job.
 - **No intervention has touched a test case.** Only plain scoring and the plain-model analyses (step 2) used test cases.
+
+## Step 7, third launch: dose scan first (2026-11-22)
+
+**Why.** The second launch's sanity check showed offer_lower moving the expected offer by under 0.01 coins even at 0.20 of the residual norm, at P1 only. Its grid would mostly have measured nothing.
+
+### 1. Second tuning job stopped — done
+
+- Killed at about 05:05, after 10 of 840 grid points (all template, full budget, layers 6–9).
+- Kept as `logs/demo_tune_job_v2.log` and `demo_out/tune_partial_v2.jsonl` (committed).
