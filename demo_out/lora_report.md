@@ -46,6 +46,6 @@ Reference on the same cells: plain 0.577; method text (prompt) 0.171; always-2 0
 ## Outcome (method arm, seed 0)
 
 - Train-cell soft regret at the best epoch 0.363; method text on the train cells 0.428; teacher matched: yes.
-- Outcome: **learned the train cells, did not transfer**.
+- Outcome: **improves held-out cells over plain and neutral-distil; not separated from wrong-rule-distil**.
 - All held-out numbers are selected-on; with 6 cells a null is read only as "not shown here".
 

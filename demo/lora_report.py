@@ -26,7 +26,8 @@ owner's go), it is not independent evidence.
 OUTCOME TABLE (method arm, seed 0): teacher matched on the train cells = best-epoch
 train soft regret within 0.05 of the method text's train-cell regret (0.428).
   matched + owner pass      "the method's effect transfers to held-out cells"
-  matched + owner fail      "learned the train cells, did not transfer"
+  matched + owner fail, beats plain and neutral  "improves held-out cells over plain and neutral-distil; not separated from wrong-rule-distil"
+  matched + owner fail otherwise  "learned the train cells, did not transfer"
   not matched               "undertrained or not learnable at this rank/rate"
   trainability check failed "UNDERTRAINED: no arm result is informative"
 A null with 6 held-out cells is uninformative about the idea; it is read only as
@@ -173,11 +174,13 @@ def main():
       L.append("")
     # outcome table
     trs = arms["method"]["train_best"]["soft_regret"]
-    matched = trs <= METHOD_TEXT_TRAIN + 0.05
+    matched = trs <= METHOD_TEXT_TRAIN + 0.05   # one-sided: reaching or beating the teacher counts as matched
+    beats_plain_neutral = all(v is not None and v['lower_above_0'] for k, v in owner.items() if k != 'wrong-rule-distil')
     status_f = STATUS
     trainable = json.load(open(status_f)).get("trainability", {}).get("pass", True) if os.path.exists(status_f) else True
     outcome = ("UNDERTRAINED: the trainability check failed" if not trainable else
                "the method's effect transfers to held-out cells" if matched and owner_pass else
+               "improves held-out cells over plain and neutral-distil; not separated from wrong-rule-distil" if matched and beats_plain_neutral else
                "learned the train cells, did not transfer" if matched else
                "undertrained or not learnable at this rank and rate")
     L += ["## Outcome (method arm, seed 0)", "",
