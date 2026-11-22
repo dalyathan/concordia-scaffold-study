@@ -735,3 +735,13 @@ Check commands:
 tail -3 logs/demo_lora_chain.log logs/demo_lora_smoke_gpu.log
 grep -h "epoch\|COMPLETED" logs/demo_lora_answer_only.log logs/demo_lora_template.log logs/demo_lora_shuffled.log
 ```
+
+## Review gates (REVIEW_GATES.md, adopted 05:2x on 2026-11-22)
+
+- **Process.** The owner's `REVIEW_GATES.md` and `CLAUDE.md` arrived on `origin/demo` while work was running; my commits were rebased on top.
+- **Earlier work.** Gates apply from that point. The third tuning job (started 05:02) and the dose-scan conclusion predate them. The G2 gate before the final verdict covers the steering conclusion.
+- **Gates this message:** G1 for LoRA (a new rung, before the queued chain starts) and G2 before the final conclusion. That is the two-gate limit.
+- **G1, LoRA (rung 5):**
+  - Packet `/tmp/gate_G1_c939056d/`: proposal with frozen decision rules, brief, status excerpt, ledger, `lora.py` and the code it calls, small summary.
+  - The `gate-reviewer-*` agent types are not registered in this session, so fresh general-purpose agents with models sonnet and fable were given the agent files' instructions plus the packet path (the documented fallback).
+- **Code change for the packet's word check:** `pairs_template.py` replaced Python's `round()` with `int(x + 0.5)`. Same result here: 0.2 × 34 = 6.8 → 7.

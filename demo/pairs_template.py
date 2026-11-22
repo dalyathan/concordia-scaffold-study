@@ -95,7 +95,7 @@ def checks(pairs: list[dict], n_tokens) -> dict:
           "length_ratio_min": min(ratios), "length_ratio_max": max(ratios),
           "lengths_within_10pct": all(0.9 <= r <= 1.1 for r in ratios),
           "bad_above": above, "bad_below": len(pairs) - above,
-          "direction_balanced": abs(2 * above - len(pairs)) <= max(2, round(0.2 * len(pairs))),
+          "direction_balanced": abs(2 * above - len(pairs)) <= max(2, int(0.2 * len(pairs) + 0.5)),
           "mean_good_offer": mg, "mean_bad_offer": mb,
           "means_within_0.25": abs(mg - mb) <= 0.25}
 
