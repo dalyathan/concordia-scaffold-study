@@ -9,9 +9,10 @@ Arms (targets are distributions over the five option letters, per case and optio
         Notes block, computed before training;   answer_only  uniform over the letters of the case's best offers (ceiling).
 Loss: cross-entropy of the answer letter at P1 against the target over the five letters, using the letters' FULL-VOCABULARY log-probs.
 LoRA rank 4, alpha 8, q/k/v/o, fp32 adapter weights, AdamW, one optimizer step per case (its fixed 3 option orders), gradient
-checkpointing, at most 5 epochs, early stopping on the tune cells' mean cell soft regret (variant-0 cases, five orders; patience 2).
-Training set: demo/gen/lora_train_cells.json (100 train cells, one fixed name variant each, 3 fixed orders per case: 300 examples).
-At the best epoch the full tune set (42 cells x 2 variants, five orders) is scored and saved."""
+checkpointing, at most 5 epochs, early stopping (patience 2) on a SELECTION set of 42 train cells that are not in the training set
+(demo/gen/lora_select_cells.json, 14 per type, name variant 0, five orders). The lr is chosen on the same set. The 42 TUNE cells are scored
+only once, at the best epoch, and are used for the verdict only (they are not used for any selection).
+Training set: demo/gen/lora_train_cells.json (100 train cells, one fixed name variant each, 3 fixed orders per case: 300 examples)."""
 from __future__ import annotations
 
 import argparse, hashlib, json, os, sys, time
@@ -31,6 +32,7 @@ OUT = os.path.join(common.ROOT, "demo_out", "gen_lora")
 ADAPTERS = os.path.join(common.ROOT, "demo_out", "adapters")
 ARMS = ("teacher", "method_original", "neutral", "wrong_rule", "answer_only")
 TRAIN_CELLS = os.path.join(g.OUT, "lora_train_cells.json")
+SELECT_CELLS = os.path.join(g.OUT, "lora_select_cells.json")
 
 
 def run_id(arm, lr, seed):
@@ -48,6 +50,19 @@ def make_train_cells():
   spec = {c: {"name_variant": int(rng.integers(0, 2)), "orders": sorted(int(x) for x in rng.choice(5, 3, replace=False))} for c in chosen}
   json.dump(spec, open(TRAIN_CELLS, "w"), indent=1)
   return spec
+
+
+def make_select_cells():
+  """42 train cells outside the 100 training cells (14 per type), fixed by seed: used for early stopping and the lr choice."""
+  used = set(json.load(open(TRAIN_CELLS)))
+  cells = [c for c in json.load(open(os.path.join(g.OUT, "cells.json")))["cells"] if c["split"] == "train" and c["cell"] not in used]
+  rng = np.random.Generator(np.random.PCG64(20261125))
+  chosen = []
+  for typ in g.TYPES:
+    pool = sorted(c["cell"] for c in cells if c["type"] == typ)
+    chosen += [pool[i] for i in sorted(rng.choice(len(pool), 14, replace=False))]
+  json.dump(chosen, open(SELECT_CELLS, "w"), indent=1)
+  return chosen
 
 
 def score_case(lm, c, notes=None, orders=None):
@@ -79,11 +94,13 @@ def main():
   spec = json.load(open(TRAIN_CELLS)) if os.path.exists(TRAIN_CELLS) else make_train_cells()
   train = [allcases[f"{k}-n{v['name_variant']}"] for k, v in spec.items()]
   tune_all = [c for c in allcases.values() if c["split"] == "tune"]
-  tune_mon = [c for c in tune_all if c["name_variant"] == 0]
-  mon_train = train[::3][:34]                                 # train monitor sample (not used for selection)
+  sel_cells = json.load(open(SELECT_CELLS)) if os.path.exists(SELECT_CELLS) else make_select_cells()
+  assert not set(sel_cells) & set(spec), "selection cells overlap the training cells"
+  tune_mon = [allcases[f"{k}-n0"] for k in sel_cells]          # SELECTION set (train cells outside the training set), name variant 0
+  mon_train = train[::5][:20]                                  # small train-side monitor (not used for selection)
   if args.limit:
     train, tune_mon, tune_all, mon_train = train[:args.limit], tune_mon[:args.limit], tune_all[:args.limit], mon_train[:args.limit]
-  assert all(c["split"] in ("train", "tune") for c in train + tune_all)
+  assert all(c["split"] in ("train", "tune") for c in train + tune_all + tune_mon)
   model, tok = runtime.load_gemma("9b", "cuda")
   lm = LocalGemma2(model, tok)
   letter_ix = torch.tensor([tok.convert_tokens_to_ids(l) for l in LETTERS])
@@ -161,6 +178,24 @@ def main():
     return {"soft_regret": float(np.mean(list(cm.values()))), "mass": float(np.mean(list(mass.values()))), "slope_stated_cost_below": sl,
             "soft_by_type": {t: float(np.mean([v for k, v in cm.items() if cells[k]["type"] == t])) for t in g.TYPES if any(cells[k]["type"] == t for k in cm)}}
 
+  # the training forward path must equal the scoring path (adapter at its zero initialisation)
+  model.eval()
+  with torch.no_grad():
+    worst = 0.0
+    for c in train[:3]:
+      oi = spec[c["cell"]]["orders"][0]
+      user, _ = gen_notes.render_notes(c, orders[oi], None)
+      ids = lm.encode(lm.render(build_messages(CHOICE_SYSTEM, ensure_prompt_not_too_long(user, 1)), True))[0]
+      hidden = model.model(input_ids=ids[None], use_cache=False).last_hidden_state[:, -1]
+      lg = model.lm_head(hidden).float()
+      lg = torch.tanh(lg / cap) * cap if cap else lg
+      lp = torch.log_softmax(lg, dim=-1)[0, letter_ix.to(lg.device)].cpu().numpy()
+      lm.letter_scores(user, phase3.LETTERS, whole_answer=False)
+      ref = np.array([lm.last_first_token[l] for l in LETTERS])
+      worst = max(worst, float(np.max(np.abs(lp - ref))))
+  assert worst < 1e-2, f"training forward path differs from the scoring path by {worst} nats"
+  model.train()
+  print(f"training path vs scoring path max abs log-prob difference {worst:.1e}", flush=True)
   save_dir = os.path.join(ADAPTERS, rid)
   history = []
   tp, tm = evaluate(tune_mon)
@@ -170,7 +205,7 @@ def main():
   assert dev < 1e-3, f"epoch-0 scoring differs from the saved plain scores by {dev}"
   trp, trm = evaluate(mon_train)
   history.append({"epoch": 0, "train_loss": None, "tune": s0, "train_sample": summarize(trp, trm, mon_train), "sec": None})
-  print(f"epoch 0 (= plain): tune soft regret {s0['soft_regret']:.3f} (max dev from saved plain {dev:.1e})", flush=True)
+  print(f"epoch 0 (= plain): selection-set soft regret {s0['soft_regret']:.3f} (max dev from saved plain {dev:.1e})", flush=True)
   best = {"epoch": 0, "tune": s0}
   peft_model.save_pretrained(save_dir)
   bad = 0
@@ -194,7 +229,7 @@ def main():
     trp, trm = evaluate(mon_train)
     trs = summarize(trp, trm, mon_train)
     history.append({"epoch": epoch, "train_loss": float(np.mean(losses)), "tune": tn, "train_sample": trs, "sec": time.time() - t, "sec_training": t_train})
-    print(f"epoch {epoch}: loss {np.mean(losses):.3f}; tune soft {tn['soft_regret']:.3f} (mass {tn['mass']:.2f}); train-sample soft {trs['soft_regret']:.3f}; {time.time() - t:.0f}s", flush=True)
+    print(f"epoch {epoch}: loss {np.mean(losses):.3f}; selection-set soft {tn['soft_regret']:.3f} (mass {tn['mass']:.2f}); train-sample soft {trs['soft_regret']:.3f}; {time.time() - t:.0f}s", flush=True)
     with open(os.path.join(common.ROOT, "demo_out", "lora_progress.jsonl"), "a") as pf:
       pf.write(json.dumps({"run": rid, "arm": args.arm, "lr": args.lr, "seed": args.seed, "epoch": epoch, "train_soft_regret": trs["soft_regret"],
                            "heldout_soft_regret": tn["soft_regret"], "heldout_letter_mass": tn["mass"], "seconds": time.time() - t}) + "\n")
@@ -208,22 +243,24 @@ def main():
         print(f"early stop after epoch {epoch} (best epoch {best['epoch']})", flush=True)
         break
   # full tune set (both variants, five orders) with the best adapter
-  from peft import PeftModel
-  peft_model.load_adapter(save_dir, adapter_name="best") if False else None
-  best_sd = {k: v for k, v in __import__("safetensors.torch", fromlist=["load_file"]).load_file(os.path.join(save_dir, "adapter_model.safetensors")).items()}
+  best_sd = __import__("safetensors.torch", fromlist=["load_file"]).load_file(os.path.join(save_dir, "adapter_model.safetensors"))
   from peft.utils import set_peft_model_state_dict
-  set_peft_model_state_dict(peft_model, best_sd)
+  rr = set_peft_model_state_dict(peft_model, best_sd)
+  assert not getattr(rr, "unexpected_keys", None), f"best-adapter reload: unexpected keys {rr.unexpected_keys[:3]}"
+  bp, bm = evaluate(tune_mon)
+  rl = summarize(bp, bm, tune_mon)["soft_regret"]
+  assert abs(rl - best["tune"]["soft_regret"]) < 1e-3, f"reloaded best adapter scores {rl}, expected {best['tune']['soft_regret']}"
   fp, fm = evaluate(tune_all)
   full = summarize(fp, fm, tune_all)
   res = {"run_id": rid, "arm": args.arm, "lr": args.lr, "seed": args.seed, "rank": args.rank, "trainable_parameters": n_train,
-         "best_epoch": best["epoch"], "tune_monitor_best": best["tune"], "tune_full_best": full, "tune_probs_best": fp, "tune_mass_best": fm,
+         "best_epoch": best["epoch"], "best_epoch_is_zero": best["epoch"] == 0, "select_best": best["tune"], "tune_monitor_best": best["tune"], "tune_full_best": full, "tune_probs_best": fp, "tune_mass_best": fm,
          "history": history, "epochs_run": len(history) - 1, "adapter_dir": os.path.relpath(save_dir, common.ROOT), "wall_s": time.time() - t_start,
          "adapter_sha256": hashlib.sha256(open(os.path.join(save_dir, "adapter_model.safetensors"), "rb").read()).hexdigest(),
          "adapter_config_sha256": hashlib.sha256(open(os.path.join(save_dir, "adapter_config.json"), "rb").read()).hexdigest(),
          "sec_per_epoch": float(np.mean([h["sec"] for h in history[1:]])) if len(history) > 1 else None,
-         "note": "early stopping on the tune cells (variant 0), so tune numbers are selected-on"}
+         "note": "lr and early stopping use the selection set (train cells outside the training set); the tune cells are scored once at the best epoch"}
   json.dump(res, open(os.path.join(OUT, f"{rid}.json"), "w"), indent=1)
-  print(f"GENLORA {rid} COMPLETED: best epoch {best['epoch']}, tune monitor {best['tune']['soft_regret']:.3f}, tune full {full['soft_regret']:.3f}, {time.time() - t_start:.0f}s", flush=True)
+  print(f"GENLORA {rid} COMPLETED: best epoch {best['epoch']}, selection set {best['tune']['soft_regret']:.3f}, tune full {full['soft_regret']:.3f}, {time.time() - t_start:.0f}s", flush=True)
 
 
 if __name__ == "__main__":
