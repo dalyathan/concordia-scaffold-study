@@ -10,6 +10,7 @@
   "(5, 'pressure')",
   "(6, 'C', 1)"
  ],
+ "dev_verdict": "frozen development verdict: NOT PASSED (owner's rule, wrong-rule lower bound -0.003); this test look is a separate exploratory-derived question",
  "arm_soft_regret": {
   "method": 0.1934673629581134,
   "wrong_rule": 0.4045524621657705,
@@ -64,12 +65,33 @@
    "always2": -0.08385996669304704
   }
  },
- "harm_C_ge_V": [
-  -0.12155330264766608,
-  -0.12155330264766608,
-  -0.12155330264766608,
-  0
- ],
+ "stratum_C<V_interval": {
+  "plain": [
+   0.7901215305507469,
+   0.39090124710825186,
+   1.076347854374234,
+   3
+  ],
+  "neutral": [
+   0.7031269469431188,
+   0.37122120730897334,
+   1.0639556641598176,
+   3
+  ],
+  "wrong_rule": [
+   0.4991742219332622,
+   0.28220529964951324,
+   0.8200536688449902,
+   3
+  ],
+  "always2": [
+   0.3767157718941801,
+   -0.09471905868803439,
+   0.8275044670278223,
+   2
+  ]
+ },
+ "harm_C_ge_V": null,
  "loo_wrong_rule": {
   "(3, 'C', 2)": 0.1968610591192858,
   "(3, 'C', 4)": 0.27701467233660126,
@@ -86,6 +108,10 @@
   "always2": 7.190743900312752e-17,
   "method_text_in_prompt": 0.5303845453484508
  },
+ "C<V_cells_where_method_offer_closer_to_best_than_plain": [
+  3,
+  3
+ ],
  "per_seed_soft_regret": {
   "method_lr1e-04_s0": 0.15510958211242618,
   "method_lr1e-04_s1": 0.21645377809817246,
@@ -100,8 +126,19 @@
  "mass_ratio_method": 1.5640442078384222,
  "free_text_hard_regret": {
   "plain": 0.5,
-  "method": 0.4916666666666667
+  "method_seeds": [
+   0.4666666666666666,
+   0.44166666666666665,
+   0.5666666666666667
+  ],
+  "method_mean": 0.49166666666666664,
+  "parse_failure_rate": {
+   "method_lr1e-04_s0": 0.0,
+   "method_lr1e-04_s1": 0.0,
+   "method_lr1e-04_s2": 0.0,
+   "plain": 0.0
+  }
  },
  "adapter_off_check_max_abs_diff": 0.0,
- "label": "HARM: method worse than plain on the cells with stated cost >= resale value (upper bound < 0)"
+ "label": "PARTIAL: lower bound > 0 vs plain and neutral; SUPPORT not met because: wrong_rule"
 }
