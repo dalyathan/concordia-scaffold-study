@@ -33,9 +33,15 @@ Rebuilt by `python demo/ledger.py` from saved results (do not edit by hand). Sof
 | 27 | inside-the-model | 4 | dose scan: cheap, P3 on, best coherent setting | tuning (8 cases) | yes | — | — | plain (8 cases) | 0.839 | n/a | 3 min | no coherent setting: letter mass collapses | `demo_out/dose_scan.json` |
 | 28 | inside-the-model | 4 | dose scan: sentence, P1 on, best coherent setting (L24, f 0.1) | tuning (8 cases) | yes | 0.838 | -0.002 | plain (8 cases) | 0.839 | yes | 3 min | moves offer -0.005 coins; negligible | `demo_out/dose_scan.json` |
 | 29 | inside-the-model | 4 | dose scan: sentence, P3 on, best coherent setting (L24, f 0.25) | tuning (8 cases) | yes | 0.831 | -0.009 | plain (8 cases) | 0.839 | yes | 3 min | moves offer -0.071 coins; negligible | `demo_out/dose_scan.json` |
-| 30 | inside-the-model | 4 | tune job v3 (RUNNING, partial): template, full budget, best point so far | tuning | yes | 0.712 [0.43, 1.01] | -0.003 | plain | 0.714 | yes | — | partial result; job still running | `demo_out/tune_partial.jsonl` |
-| 31 | inside-the-model | 5 | LoRA answer_only, renormalised-only loss, lr 3e-4 (stopped after 1 epoch) | held-out tune cells (6) | yes | 0.204 | -0.373 | plain (held-out cells) | 0.577 | yes | 7 min | dead end: letter mass collapsed to 0.01 | `logs/demo_lora_answer_only_renorm_loss_dead_end.log` |
-| 32 | take-home | 0 | steercheck toy problem (a vector that should work) | toy (40 cases) | yes | 0.066 [0.04, 0.08] | -0.734 | its negation | 0.800 | yes | — | steercheck detects a working vector and its controls | `demo/steercheck.py` |
+| 30 | inside-the-model | 4 | tune job v3 (PAUSED, partial): template, full budget, best point so far | tuning | yes | 0.712 [0.43, 1.01] | -0.003 | plain | 0.714 | yes | — | partial result; job paused (resume later) | `demo_out/tune_partial.jsonl` |
+| 31 | inside-the-model | 4 | steering check a: per-order cheap, best coherent (L39, f 1.0) | held-out tune cases (12) | yes | 0.407 | -0.166 | best constant shift (fit on train cells) | 0.508 | yes | 44 min | letter push: order-specific; not better than always-2 | `demo_out/steer_checks.json` |
+| 32 | inside-the-model | 4 | steering check b: order-averaged cheap, best coherent (L27, f 0.25) | held-out tune cases (12) | yes | 0.560 | -0.013 | 3 random directions (same setting) | 0.578 | yes | — | moves offer -0.20 coins; negligible | `demo_out/steer_checks.json` |
+| 33 | inside-the-model | 4 | steering check b: order-averaged sentence, best coherent (L33, f 1.0) | held-out tune cases (12) | yes | 0.606 | +0.032 | 3 random directions (same setting) | 0.579 | no | — | moves offer -0.07 coins; negligible | `demo_out/steer_checks.json` |
+| 34 | inside-the-model | 4 | patch method-text P1 residual into plain at layer 33 (diagnostic) | held-out tune cases (12) | yes | 0.341 | -0.233 | method text in the prompt | 0.184 | no | — | diagnostic: shows where the text's effect arrives | `demo_out/steer_checks.json` |
+| 35 | inside-the-model | 4 | patch method-text P1 residual into plain at layer 39 (diagnostic) | held-out tune cases (12) | yes | 0.203 | -0.370 | method text in the prompt | 0.184 | no | — | diagnostic: shows where the text's effect arrives | `demo_out/steer_checks.json` |
+| 36 | inside-the-model | 4 | per-order sentence vector (method - neutral), L36, f 1.0 | held-out tune cases (12) | yes | 0.427 | -0.146 | wrong-order vector, same setting | 1.279 | yes | 20 min | letter push, like per-order cheap | `demo_out/steer_followup.json` |
+| 37 | inside-the-model | 5 | LoRA answer_only, renormalised-only loss, lr 3e-4 (stopped after 1 epoch) | held-out tune cells (6) | yes | 0.204 | -0.373 | plain (held-out cells) | 0.577 | yes | 7 min | dead end: letter mass collapsed to 0.01 | `logs/demo_lora_answer_only_renorm_loss_dead_end.log` |
+| 38 | take-home | 0 | steercheck toy problem (a vector that should work) | toy (40 cases) | yes | 0.066 [0.04, 0.08] | -0.734 | its negation | 0.800 | yes | — | steercheck detects a working vector and its controls | `demo/steercheck.py` |
 
 ## Three best methods (tuning split; excluding rows that name the answer)
 
@@ -68,5 +74,11 @@ Rebuilt by `python demo/ledger.py` from saved results (do not edit by hand). Sof
 - Row 28: no per-case results saved: no interval
 - Row 29: no per-case results saved: no interval
 - Row 30: 21 grid points done; best so far ['template', 'full', 18, 0.25]; coherence not applied
-- Row 31: regret looks good only because it is read after renormalising over a collapsed 1% of the mass; replaced by the full-vocabulary letter loss
-- Row 32: toy regret is on the toy's own scale
+- Row 31: always-2 scores 0.333 on these cases; negation raises the offer; random directions do nothing; no interval (12 cases = 6 cells)
+- Row 32: order-averaged mean-difference vector at P1; no interval (12 cases = 6 cells)
+- Row 33: order-averaged mean-difference vector at P1; no interval (12 cases = 6 cells)
+- Row 34: uses the evaluated cases' own method-text run; not a deployable method; no interval (12 cases = 6 cells)
+- Row 35: uses the evaluated cases' own method-text run; not a deployable method; no interval (12 cases = 6 cells)
+- Row 36: no interval (12 cases = 6 cells)
+- Row 37: regret looks good only because it is read after renormalising over a collapsed 1% of the mass; replaced by the full-vocabulary letter loss
+- Row 38: toy regret is on the toy's own scale

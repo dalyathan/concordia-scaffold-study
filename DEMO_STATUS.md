@@ -962,3 +962,27 @@ Saved as `reviews/2026-11-22_G2_steering-verdict_{sonnet,fable}.md` (packet `/tm
 **Recorded for a later grid** (positive-finding clause): per-order cheap or sentence vectors at layers 27–39, fractions 0.25–1.0 (first-token readout, a letter push); order-averaged cheap at layer 39, fraction 1.0 for free text.
 
 **Open review points (steering):** the evaluated cases also selected the settings; attention was not patched; free text is 12 cases; whether any steering setting goes to the test cells needs gate G3 and the owner's go.
+
+## 4b. LoRA: loss change, safety checks and launch (2026-11-22, 06:20–06:55 UTC)
+
+**Safety checks — all passed** (`demo/lora_checks.py`, `demo_out/lora_checks.json`, `logs/demo_lora_checks_{train,reload}.log`):
+
+| Check | Result |
+| --- | --- |
+| 1. Training forward pass = scoring path's first-token distribution (letter log-probs) | **exact** (difference 0.0; renormalised distribution ≤ 9e-8), at epoch 0 and after 6 steps (tolerance 1e-4) |
+| 2. Adapter off = plain, bit-for-bit | **exact** (0.0 against the saved plain probabilities); adapter on differs by up to 0.79 |
+| 3. Adapter saved, reloaded in a fresh process | **exact** (0.0), and the reloaded adapter switched off equals plain |
+| 4. `floor.py` caches keyed by adapter | unit test passes; the chain re-runs it before starting |
+
+**The renormalised-only loss was a mistake and was replaced.** The first trainability run (answer_only, lr 3e-4, loss on the letters renormalised over the five) reached held-out soft regret 0.204 after one epoch, but with **letter mass 0.01** (plain 0.64): the loss does not constrain the answer format, so the adapter simply pushed all probability off the letters while the renormalised remainder looked excellent. It was stopped after epoch 1 (log `logs/demo_lora_answer_only_renorm_loss_dead_end.log`, adapter `demo_out/dead_ends/`, ledger row). The loss is now the ordinary answer-token loss: cross-entropy on the letters' **full-vocabulary** log-probabilities, which equals the renormalised cross-entropy plus −log(letter mass). Every arm is then pushed equally to keep the answer format, so arms differ only in which letter they favour. A smoke test of the method arm (2 cases, 1 epoch) shows mass rising to 0.98 and populates the fidelity, say and slope outputs. This reverts a change I had made in response to the plan review; the reviewers' own concern (format effects) is handled by S3 and by the shared mass term.
+
+**Launch:** tmux session `lora` runs `demo/lora_chain.py` (gates, trainability run, then the plan). The chain refuses to run over the 10-hour budget (re-planned after the trainability run and after the method and neutral grids). The pass-rule script is `demo/lora_report.py` (tested on synthetic runs).
+
+Check commands:
+
+```bash
+grep -h "epoch\|COMPLETED\|CHOSEN\|plan" logs/demo_lora_chain.log logs/demo_lora_answer_only_lr3e-04_s0.log | tail -20
+ls demo_out/lora/                                   # one JSON per finished run
+python demo/lora_report.py                          # tables, pass rule and strict criteria (CPU)
+python demo/ledger.py                               # RESULTS_LEDGER.md
+```

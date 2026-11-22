@@ -246,10 +246,47 @@ elif os.path.exists(tp_path):
     if (name, budget) not in by or m[0] < by[(name, budget)][0][0]:
       by[(name, budget)] = (m, r["key"])
   for (name, budget), (m, key) in by.items():
-    add("inside-the-model", 4, f"tune job v3 (RUNNING, partial): {name}, {budget} budget, best point so far",
+    add("inside-the-model", 4, f"tune job v3 (PAUSED, partial): {name}, {budget} budget, best point so far",
         "tuning", "yes", m[0], m[1], PLAIN_T, "plain", PLAIN_T, None,
-        "partial result; job still running", rel(tp_path),
+        "partial result; job paused (resume later)", rel(tp_path),
         note=f"{len(pts)} grid points done; best so far {key}; coherence not applied")
+
+# Steering checks a-c and the follow-up (12 held-out tune cases, vectors from the train cells).
+sc_path = os.path.join(OUT, "steer_checks.json")
+fu_path = os.path.join(OUT, "steer_followup.json")
+if os.path.exists(sc_path):
+  sc = json.load(open(sc_path))
+  p12 = sc["plain_eval12"]["soft_regret"]
+  const_shift_12 = 0.508          # best constant shift fitted on the train cells, scored on these 12 cases
+  HO = "held-out tune cases (12)"
+  def sadd(method, regret, ctrl, creg, verdict, source, note, wall=None):
+    add("inside-the-model", 4, method, HO, "yes", regret, None, p12, ctrl, creg, wall, verdict, source,
+        note=note + "; no interval (12 cases = 6 cells)")
+  a_best = min((r for r in sc["a"] if r["mass_ratio"] >= 0.9), key=lambda r: r["soft_regret"])
+  sadd(f"steering check a: per-order cheap, best coherent (L{a_best['layer']}, f {a_best['fraction']})", a_best["soft_regret"],
+       "best constant shift (fit on train cells)", const_shift_12, "letter push: order-specific; not better than always-2",
+       rel(sc_path), "always-2 scores 0.333 on these cases; negation raises the offer; random directions do nothing", 2645)
+  for name, key in (("cheap", "b_cheap"), ("sentence", "b_sentence")):
+    c = sc["controls"][key]
+    rnd = float(np.mean([x["soft_regret"] for x in c["random"]]))
+    b = c["best"]
+    sadd(f"steering check b: order-averaged {name}, best coherent (L{b['layer']}, f {b['fraction']})", b["soft_regret"],
+         "3 random directions (same setting)", rnd, f"moves offer {b['d_expected']:+.2f} coins; negligible",
+         rel(sc_path), "order-averaged mean-difference vector at P1")
+  for L in (33, 39):
+    x = next(r for r in sc["c"]["patched"] if r["layer"] == L)
+    sadd(f"patch method-text P1 residual into plain at layer {L} (diagnostic)", x["soft_regret"],
+         "method text in the prompt", sc["c"]["method_text"]["soft_regret"],
+         "diagnostic: shows where the text's effect arrives", rel(sc_path),
+         "uses the evaluated cases' own method-text run; not a deployable method")
+if os.path.exists(fu_path):
+  fu = json.load(open(fu_path))
+  p12 = fu["plain"]["soft_regret"]
+  x = next(r for r in fu["P2_sentence_per_order"] if r["layer"] == 36 and r["fraction"] == 1.0)
+  add("inside-the-model", 4, "per-order sentence vector (method - neutral), L36, f 1.0", "held-out tune cases (12)", "yes",
+      x["soft_regret"], None, p12, "wrong-order vector, same setting",
+      next(r for r in fu["P1_wrong_order"] if r["layer"] == 36)["next_order_vector"]["soft_regret"], 1173,
+      "letter push, like per-order cheap", rel(fu_path), note="no interval (12 cases = 6 cells)")
 
 # ------------------------------------------------------------- rung 5: LoRA
 # Runs are saved in demo_out/lora/<run_id>.json (held-out tune cells: the split the
@@ -327,7 +364,7 @@ def lists():
   # positive control, then by change vs plain (worst first).
   controls = ("same-length neutral", "wrong rule", "answer only", "sanity:")
   failed = [r for r in ROWS if r["rung"] >= 3 and "names the best offer" not in r["note"]
-            and not r["method"].startswith(controls) and "RUNNING" not in r["method"]
+            and not r["method"].startswith(controls) and "PAUSED" not in r["method"]
             and (r["soft_regret"] is None or r["change_vs_plain"] > -0.05)]
   def prio(r):
     m = r["method"]
