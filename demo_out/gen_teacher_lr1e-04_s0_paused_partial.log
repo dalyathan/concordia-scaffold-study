@@ -1,0 +1,10 @@
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:00<00:02,  1.42it/s]Loading checkpoint shards:  50%|█████     | 2/4 [00:01<00:01,  1.63it/s]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:01<00:00,  1.71it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:02<00:00,  1.91it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:02<00:00,  1.79it/s]
+gen_teacher_lr1e-04_s0: 100 train cases (300 examples), 84 tune cases; targets built (117s)
+training path vs scoring path max abs log-prob difference 0.0e+00
+epoch 0 (= plain): selection-set soft regret 0.571 (max dev from saved plain 0.0e+00)
+/home/ubuntu/concordia-scaffold-study/.venv/lib/python3.11/site-packages/torch/utils/checkpoint.py:1399: FutureWarning: `torch.cpu.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cpu', args...)` instead.
+  with device_autocast_ctx, torch.cpu.amp.autocast(**cpu_autocast_kwargs), recompute_context:  # type: ignore[attr-defined]
+epoch 1: loss 0.807; selection-set soft 0.502 (mass 1.00); train-sample soft 0.462; 393s
+epoch 2: loss 0.561; selection-set soft 0.454 (mass 1.00); train-sample soft 0.419; 393s
+epoch 3: loss 0.542; selection-set soft 0.398 (mass 1.00); train-sample soft 0.380; 393s
+epoch 4: loss 0.536; selection-set soft 0.457 (mass 1.00); train-sample soft 0.414; 393s
