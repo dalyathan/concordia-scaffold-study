@@ -1,0 +1,19 @@
+{
+ "started": "2026-11-22T18:58:35Z",
+ "commit": "473ca213268a85474bab7a1ab10902c04d99f23a",
+ "script_sha256": "f0f33b83893f984eb5faebc7d32cbf0c194ec5d6d89e4ca463426b351564b042",
+ "torch": "2.4.1+cu121",
+ "transformers": "4.44.2",
+ "peft": "0.12.0",
+ "gpu": "NVIDIA A10G",
+ "files": {
+  "demo/scoring.py": "92e488889147178c932acbed8dd8cc048a600acc515eaecfc9019eed52dabf1b",
+  "demo/textrows.py": "d165951084d751a0967044a198e4cd7358ff44b227673b55a638f12ea3b28dd9",
+  "demo/common.py": "7b6b83066eec794d39b6a1e5ab6cdad5e23aac15d3d311f78470cc5fbcd676e6",
+  "demo/steer_lib.py": "0be0c84ea26a50b5555e9ca9bbba47ef153ab20594488a4b99e3acd91773c829",
+  "refimpl/core.py": "7a83fa03261cf843fa3ed9f7b83791af61189075a8176d7d41b2f74a96a775d8",
+  "demo/splits.json": "eb2c9fce2dc0cf7838b3b29b81539063fd8f68b7602411dcf33d9fee2dcdd5c6",
+  "demo/test_frozen_adapters.json": "f92f470a13fd56105a447b202aed7939fd60a73cb5fe26e4691b687f30843fde",
+  "demo_out/cases.jsonl": "ef699b9bc9ea4429c9a921f79b79e9f862f65a8674503a42e7e5a58c987cdaf4"
+ }
+}
