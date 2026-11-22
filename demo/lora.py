@@ -141,16 +141,23 @@ def main():
   texts = {"method": lambda p: textrows.METHOD, "neutral": lambda p: textrows.row_text("neutral", p),
            "wrong_rule": lambda p: textrows.FIXED["wrong_rule"],
            "template": lambda p: pairs_template.paragraph(p, min(core.oracle_bids(p)))}
+  import hashlib
   cache_path = os.path.join(args.out, f"teacher_{args.arm}{'_smoke' if args.limit else ''}.json")
   teacher_cache = json.load(open(cache_path)) if os.path.exists(cache_path) else {}
   def teacher(p, oi):
-    k = f"{p.pid}|{oi}"
+    """The teacher's renormalised letter distribution; the cache key includes a hash of
+    the teacher text, so an edited text never reuses stale targets."""
+    text = texts[args.arm](p)
+    k = f"{hashlib.sha1(text.encode()).hexdigest()[:12]}|{p.pid}|{oi}"
     if k not in teacher_cache:
-      r = scoring.score(lm, p, notes=texts[args.arm](p), orders=[orders[oi]])
+      r = scoring.score(lm, p, notes=text, orders=[orders[oi]])
       teacher_cache[k] = {str(a): b for a, b in r.per_order[0].items()}
     return {int(a): b for a, b in teacher_cache[k].items()}
   targets, tinfo = build_targets(args.arm, train, args.perm, teacher)
+  teach_eval = {}                      # per-order teacher distributions on train and tune cases, for fidelity
   if args.arm in texts:
+    for p in train + tune:
+      teach_eval[p.pid] = [teacher(p, oi) for oi in range(len(orders))]
     json.dump(teacher_cache, open(cache_path, "w"))
   print(f"{rid}: {len(train)} train cases, {len(tune)} held-out tune cases; targets built "
         f"({time.time() - t_start:.0f}s) {tinfo}", flush=True)
@@ -193,9 +200,20 @@ def main():
     soft = {p.pid: core.soft_regret(p, rs[p.pid].probs) for p in cases}
     hard = {p.pid: core.hard_regret(p, rs[p.pid].top) for p in cases}
     cm = lambda d: float(np.mean(list(analysis.cell_means(d, cases).values())))
-    return {"soft_regret": cm(soft), "hard_regret": cm(hard), "mass": float(np.mean([r.mass for r in rs.values()])),
-            "expected": float(np.mean([r.expected() for r in rs.values()])),
-            "probs": {pid: r.probs for pid, r in rs.items()}, "tops": {pid: r.top for pid, r in rs.items()}}
+    out = {"soft_regret": cm(soft), "hard_regret": cm(hard), "mass": float(np.mean([r.mass for r in rs.values()])),
+           "expected": float(np.mean([r.expected() for r in rs.values()])),
+           "probs": {pid: r.probs for pid, r in rs.items()}, "tops": {pid: r.top for pid, r in rs.items()}}
+    if teach_eval:                                  # fidelity to the arm's own teacher
+      kl = []
+      for p in cases:
+        for oi in range(len(orders)):
+          t, st = teach_eval[p.pid][oi], rs[p.pid].per_order[oi]
+          kl.append(sum(t[k] * (np.log(max(t[k], 1e-12)) - np.log(max(st[k], 1e-12))) for k in core.PRICES if t[k] > 0))
+      out["kl_teacher_student"] = float(np.mean(kl))
+    below = [p for p in cases if p.C is not None and p.C < p.V]      # slope of the offer on the stated cost
+    if len(below) >= 3 and len({p.C for p in below}) >= 2:
+      out["slope_stated_cost"] = float(np.polyfit([p.C for p in below], [rs[p.pid].expected() for p in below], 1)[0])
+    return out
 
   def say_eval(cases, tops):
     model.eval()
@@ -251,6 +269,8 @@ def main():
   res = {"run_id": rid, "arm": args.arm, "perm": args.perm, "lr": args.lr, "seed": args.seed, "rank": args.rank,
          "trainable_parameters": n_train, "targets_info": tinfo, "best_epoch": best["epoch"],
          "tune_best": strip(best["tune"]), "train_best": strip(best["train"]),
+         "train_min_soft_regret": min(h["train"]["soft_regret"] for h in history),
+         "train_final_soft_regret": history[-1]["train"]["soft_regret"],
          "tune_probs_best": best["tune"]["probs"],
          "train_probs_best": best["train"]["probs"], "say_plain": say0, "say_best": best["say"],
          "history": history, "epochs_run": len(history) - 1,

@@ -34,6 +34,7 @@ tune = steer_lib.lora_cases("lora_tune")[:4]
 train = steer_lib.lora_cases("lora_train")[:6]
 plain_saved = {c["pid"]: {int(k): v for k, v in c["probs"].items()} for c in common.load_cases()}
 letter_ids = torch.tensor([tok.convert_tokens_to_ids(l) for l in steer_lib.LETTERS])
+TOL1, TOL3 = 1e-4, 1e-6          # tolerances fixed in advance: check 1 (nats / probability), check 3
 cap = model.config.final_logit_softcapping
 
 
@@ -65,7 +66,7 @@ def compare_paths(label):
         ren = torch.softmax(tl, 0)
         worst_renorm = max(worst_renorm, max(abs(float(ren[j]) - r.per_order[0][l2p[steer_lib.LETTERS[j]]]) for j in range(5)))
   return {"label": label, "max_abs_diff_letter_logprobs": worst_full, "max_abs_diff_renormalised": worst_renorm,
-          "exact": worst_full == 0.0}
+          "exact": worst_full == 0.0, "tolerance": TOL1, "pass": worst_full <= TOL1 and worst_renorm <= TOL1}
 
 
 if args.stage == "train":
@@ -106,7 +107,8 @@ if args.stage == "train":
   diff_off = max(abs(off[p.pid][k] - plain_saved[p.pid][k]) for p in tune for k in core.PRICES)
   diff_on = max(abs(on[p.pid][k] - plain_saved[p.pid][k]) for p in tune for k in core.PRICES)
   c2 = {"adapter_off_vs_saved_plain_max_diff": diff_off, "bit_for_bit": diff_off == 0.0,
-        "adapter_on_vs_plain_max_diff": diff_on, "adapter_on_differs": diff_on > 1e-4}
+        "adapter_on_vs_plain_max_diff": diff_on, "adapter_on_differs": diff_on > 1e-4,
+        "pass": diff_off == 0.0 and diff_on > 1e-4}
   print("check 2:", c2, flush=True)
   peft_model.save_pretrained(os.path.join(ADIR, "check"))
   res.update({"check1_epoch0": c1, "check1_trained": c1b, "check2": c2,
@@ -123,7 +125,7 @@ else:
   with peft.disable_adapter():
     off = {p.pid: scoring.score(lm, p).probs for p in tune}
   d_off = max(abs(off[p.pid][k] - plain_saved[p.pid][k]) for p in tune for k in core.PRICES)
-  res["check3"] = {"reload_vs_saved_max_diff": d, "reproduces": d < 1e-6, "exact": d == 0.0,
+  res["check3"] = {"reload_vs_saved_max_diff": d, "reproduces": d < TOL3, "exact": d == 0.0, "pass": d < TOL3,
                    "reloaded_adapter_off_vs_plain_max_diff": d_off}
   json.dump(res, open(OUT, "w"), indent=1)
   print("check 3:", res["check3"], flush=True)

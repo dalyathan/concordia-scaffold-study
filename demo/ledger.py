@@ -252,22 +252,37 @@ elif os.path.exists(tp_path):
         note=f"{len(pts)} grid points done; best so far {key}; coherence not applied")
 
 # ------------------------------------------------------------- rung 5: LoRA
-lora = {}
-for path in sorted(glob.glob(os.path.join(OUT, "lora_*.json"))):
-  if path.endswith("_smoke.json"):
+# Runs are saved in demo_out/lora/<run_id>.json (held-out tune cells: the split the
+# arms are early-stopped on, so their numbers are selected-on / in-sample).
+lora_runs = []
+for path in sorted(glob.glob(os.path.join(OUT, "lora", "*.json"))):
+  if path.endswith("_smoke.json") or os.path.basename(path).startswith("teacher_"):
     continue
-  r = json.load(open(path))
-  m, ci = cell_stats(soft_from_probs(r["tuning_probs_best"]))
-  lora[r["arm"]] = (m, ci, r, path)
-for arm, (m, ci, r, path) in lora.items():
-  ctrl = "shuffled-label arm" if arm != "shuffled" else "plain"
-  creg = lora["shuffled"][0] if arm != "shuffled" and "shuffled" in lora else (PLAIN_T if arm == "shuffled" else None)
-  better = [n for n, v in (("plain", PLAIN_T), ("always-2", ALWAYS2)) if v is not None and m < v]
-  verdict = (f"best epoch {r['best_epoch']}; beats " + (", ".join(better) if better else "nothing")
-             if r["best_epoch"] else "no epoch beat plain on tuning")
-  add("inside-the-model", 5, f"LoRA {arm.replace('_', '-')} (rank {r['rank']}, letter loss)", "tuning",
-      "yes", m, ci, PLAIN_T, ctrl, creg, r.get("wall_s"), verdict, rel(path),
-      note="early stopping on tuning cases")
+  lora_runs.append((json.load(open(path)), path))
+if lora_runs:
+  split_f = os.path.join(common.DEMO_DIR, "splits_lora.json")
+  ho_ids = [pid for pid, sp in json.load(open(split_f))["case_split"].items() if sp == "lora_tune"]
+  plain_ho = cell_stats({pid: plain_case_soft[pid] for pid in ho_ids})[0]
+  by_id = {r["run_id"]: r for r, _ in lora_runs}
+  for r, path in lora_runs:
+    m, ci = cell_stats(soft_from_probs(r["tune_probs_best"]))
+    arm = r["arm"]
+    twin = {"method": "neutral", "answer_only": "shuffled0"}.get(arm)
+    ctrl_id = r["run_id"].replace(arm + ("%d" % r["perm"] if arm == "shuffled" else ""), twin) if twin else None
+    ctrl = by_id.get(ctrl_id) if ctrl_id else None
+    if ctrl:
+      cm = cell_stats(soft_from_probs(ctrl["tune_probs_best"]))[0]
+      cname, creg = {"method": "neutral-distil", "answer_only": "shuffled arm"}[arm] + " (same lr, seed)", cm
+    else:
+      cname, creg = "plain (held-out cells)", plain_ho
+    leaky = arm == "template"
+    verdict = ("leaky upper bound: teacher names the best offer" if leaky else
+               f"best epoch {r['best_epoch']}; " + ("beats plain" if m < plain_ho - 0.05 else "no clear gain over plain"))
+    add("inside-the-model", 5, f"LoRA {arm}{r['perm'] if arm == 'shuffled' else ''}, lr {r['lr']:.0e}, seed {r['seed']}"
+        + (f", rank {r['rank']}" if r["rank"] != 4 else ""), "held-out tune cells (6)", "yes", m, ci, plain_ho,
+        cname, creg, r.get("wall_s"), verdict[:90], rel(path),
+        note=f"train-cell soft regret {r['train_best']['soft_regret']:.3f}; selected-on the held-out cells"
+        + ("; LEAKY" if leaky else ""))
 
 # ------------------------------------------------------------ take-home
 try:

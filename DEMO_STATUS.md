@@ -869,3 +869,39 @@ Also: floor.py refuses every intervention (text, steer, adapter on) on a test ca
 - `adapter` accepts any saved run name (listed from `demo_out/adapters/`); `adapter on` loads the best run named in `demo/lora_summary.json`; `say` follows the current adapter.
 - Run ids contain no "." (`method_lr3e-04_s0`), because PEFT adapter names become module-dict keys.
 - Caches are keyed by adapter: unit-tested (`test_model_engine_cache_is_keyed_by_adapter`), together with the test-case refusals.
+
+## Gate G1 on the LoRA plan — done: both reviewers **go-with-changes**
+
+Reviews saved as `reviews/2026-11-22_G1_lora-plan_{sonnet,fable}.md` (packet `/tmp/gate_G1_ed994d4f/`, run with the registered `gate-reviewer-*` agents). No training result existed when they ran.
+
+**The owner's pass rule above is unchanged and remains the primary rule.** The reviews showed it can be met by an "offer low" adapter (always-2 scores 0.333 on the held-out cells, better than the plain, neutral-text and wrong-rule comparators). I therefore added **strict criteria, reported separately and never replacing the owner's rule** (`demo/lora_report.py`, committed before any result):
+
+- **S1:** method also beats always-2 and the best shuffled arm, lower bound above 0.
+- **S2:** effect floor: it recovers at least 50% of the gap between plain and the in-prompt method text on the held-out cells.
+- **S3:** coherence: held-out letter mass at least 0.9 × plain's.
+- **S4:** free text: held-out free-text hard regret (`scoring.say`) below plain's.
+- **S5:** content: the slope of the expected offer on the stated cost over the held-out cost-below-resale cases is at least 0.25. Measured on the same 12 cases: plain 0.05, method text 0.53, best offer 1.0.
+
+**Review points and what was done:**
+
+| # | Point (who) | Action |
+| --- | --- | --- |
+| 1 | Pass rule beaten by "offer low": add always-2, shuffled, effect floor, slope (both) | **Applied** as S1, S2, S5. always-2 is computed from the labels; the const2 *training* arm stays optional (owner's reduction order) |
+| 2 | Budget plan overruns; silent fallback; unmeasured time (both) | **Applied**: reduction ladder L0–L5 (adds a one-permutation shuffled step and a non-core-arms-at-method's-rate step); seconds per epoch measured from finished runs; model load counted; the driver **refuses to run over budget** (re-planned after the trainability run, and again after the method and neutral grids) |
+| 3 | Trainability check read the best-held-out epoch; fallback result unread (both) | **Applied**: uses the **minimum** train regret over epochs; the fallback outcome is read; if the fallback also fails the chain halts as "UNDERTRAINED" (`demo/lora_status.json`) |
+| 4 | No coherence floor; free-text not gated (both) | **Applied** as S3 and S4 |
+| 5 | 6 cells, lumpy, fragile percentile bootstrap; null uninformative (both) | **Applied**: per-cell differences and a count of cells where method is better are reported beside the interval; a null is read only as "not shown here". The interval stays as the owner's rule |
+| 6 | Seed asymmetry (both) | **Applied**: the comparison uses seed 0 of every arm at its chosen rate; method's other seeds are reported separately |
+| 7 | Crashed run skipped silently; `chosen_lr` defaults (Fable) | **Applied**: a failed run stops the chain; an incomplete grid is an error |
+| 8 | Teacher cache keyed without text (Fable) | **Applied**: key includes a hash of the teacher text |
+| 9 | Checks not gated; check 4 missing; pass rule unwritten (both) | **Applied**: the chain refuses to start unless `lora_checks.json` shows checks 1–3 passed and the adapter-cache test passes; the pass-rule script is committed first; its logic is unit-tested on synthetic runs |
+| 10 | Check-1 tolerance undefined; rank missing from log names (Sonnet) | **Applied**: tolerances fixed in advance (check 1 ≤ 1e-4, check 2 exact, check 3 ≤ 1e-6); log names include the rank |
+| 11 | wrong_rule is not length-matched (both) | **Applied** (wording): wrong_rule (7 tokens) is a *content* control; neutral text is the length-matched one (same length as the method paragraph, 150 tokens) |
+| 12 | Outcome table (student matches teacher on train × transfers) (Fable) | **Applied** in `lora_report.py`: "matches the teacher on train" = best-epoch train regret within 0.05 of method text's 0.428 |
+| 13 | Fidelity to own teacher (both) | **Applied** as a logged KL(teacher‖student) on train and held-out cells for every distillation arm; **not** a gate |
+| 14 | Selection makes the rule in-sample (both) | **Applied** (wording): a pass licenses spending the one test look, never evidence |
+| 15 | Split chosen with outcome knowledge (Fable) | **Disclosed**: the six held-out cells were hand-picked, balanced by case type and by best offer, *after* the plain failure map on all 140 cases and the step 4 text rows (variants 17–18 of these cells) existed. They were not picked by those results, but the results were visible |
+| 16 | Stop distillation arms on teacher cross-entropy rather than held-out regret (Fable) | **Deferred** (open): the owner specified early stopping on held-out tune cells. Fidelity is logged so that a control stuck at plain can be seen |
+| 17 | Train cells contain no stated cost 4 and no best offer 4, so held-out cell (5, C 4) tests extrapolation (Sonnet) | **Deferred** (open): the split is frozen; per-cell results show it |
+
+**Open review points:** 16 and 17 above; plus that the const2 *training* arm and the template arm are the first to be dropped by the reduction ladder.
