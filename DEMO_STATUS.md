@@ -802,3 +802,17 @@ The hook is correct. Steering the final layer in the direction that raises "1" o
   - (c) patching each case's P1 residual from the method-text run into the plain run, one layer at a time (all 42 layers).
 - **Extras:** the negated vector and 3 random directions at the best settings; the top-10 P1 tokens under steering; steered `say` on 4 cases.
 - **Rule for a positive finding:** any setting with a change in expected offer ≤ −0.25 coins and letter mass ≥ 0.9 × plain is written up and recorded for a later grid.
+
+### Baselines on the LoRA split (`demo/lora_baselines.py` → `demo_out/lora_baselines.json`; CPU, saved results)
+
+Mean cell soft regret with 95% cell-bootstrap intervals (all four variants of each cell). Method text was also measured on the train cells, as asked.
+
+| Baseline | Train cells (11): soft regret [95% CI] | Held-out tune cells (6): soft regret [95% CI] | Tune: cost < resale | Tune letter mass |
+| --- | --- | --- | --- | --- |
+| plain | 0.778 [0.37, 1.19] | 0.577 [0.20, 0.96] | 1.080 | 0.64 |
+| method text | 0.428 [0.13, 0.84] | **0.171** [0.03, 0.36] | 0.290 | 0.91 |
+| neutral text (same length) | 0.755 [0.33, 1.19] | 0.531 [0.16, 0.92] | 1.012 | 0.58 |
+| wrong-rule text | 0.819 [0.30, 1.39] | 0.462 [0.13, 0.79] | 0.902 | 0.70 |
+| always-2 | 0.636 [0.18, 1.18] | 0.333 [0.00, 0.67] | 0.667 | — |
+
+The held-out cells are easier for a constant than the train cells: always-2 is already best (or tied) in 4 of the 6, so its 0.333 is a strong reference there. Every LoRA comparison uses these same cases.

@@ -1,0 +1,166 @@
+{
+ "lora_train": {
+  "plain": {
+   "soft_regret": 0.7780272537894379,
+   "ci": [
+    0.3745583877486614,
+    1.1867448389446476
+   ],
+   "hard_regret": 0.8227272727272728,
+   "by_type": {
+    "cost below resale": 1.3487268659582539,
+    "cost at or above resale": 0.07709716058381562,
+    "no cost": 0.11732355709142352
+   },
+   "letter_mass": 0.6226584922762247,
+   "n_cases": 44,
+   "n_cells": 11
+  },
+  "method text": {
+   "soft_regret": 0.42803755090511403,
+   "ci": [
+    0.12641938942130132,
+    0.8437560420198151
+   ],
+   "hard_regret": 0.4681818181818182,
+   "by_type": {
+    "cost below resale": 0.690490747762317,
+    "cost at or above resale": 0.12671543247966024,
+    "no cost": 0.09266113797168599
+   },
+   "letter_mass": 0.8966438211085801,
+   "n_cases": 44,
+   "n_cells": 11
+  },
+  "neutral text": {
+   "soft_regret": 0.7547484988688289,
+   "ci": [
+    0.3313432061554194,
+    1.185994745253756
+   ],
+   "hard_regret": 0.7727272727272727,
+   "by_type": {
+    "cost below resale": 1.339696202257884,
+    "cost at or above resale": 0.027737950386432526,
+    "no cost": 0.0904212114252578
+   },
+   "letter_mass": 0.5794253704527393,
+   "n_cases": 44,
+   "n_cells": 11
+  },
+  "wrong-rule text": {
+   "soft_regret": 0.8193583458595984,
+   "ci": [
+    0.2998131051541086,
+    1.386301226396696
+   ],
+   "hard_regret": 0.9090909090909091,
+   "by_type": {
+    "cost below resale": 1.4869628849981573,
+    "cost at or above resale": 0.005360972162972475,
+    "no cost": 0.037540788988861915
+   },
+   "letter_mass": 0.6748383830670653,
+   "n_cases": 44,
+   "n_cells": 11
+  },
+  "always-2": {
+   "soft_regret": 0.6363636363636364,
+   "ci": [
+    0.18181818181818182,
+    1.1818181818181819
+   ],
+   "hard_regret": 0.6363636363636364,
+   "by_type": {
+    "cost below resale": 1.1666666666666667,
+    "cost at or above resale": 0.0,
+    "no cost": 0.0
+   },
+   "letter_mass": null,
+   "n_cases": 44,
+   "n_cells": 11
+  }
+ },
+ "lora_tune": {
+  "plain": {
+   "soft_regret": 0.5767025445125867,
+   "ci": [
+    0.20275867736423892,
+    0.9573519864009623
+   ],
+   "hard_regret": 0.5083333333333333,
+   "by_type": {
+    "cost below resale": 1.0800724253232337,
+    "cost at or above resale": 0.0016782573974606539,
+    "no cost": 0.1091598668541798
+   },
+   "letter_mass": 0.638704753121456,
+   "n_cases": 24,
+   "n_cells": 6
+  },
+  "method text": {
+   "soft_regret": 0.17149846885371814,
+   "ci": [
+    0.03441899055166675,
+    0.3621300061875065
+   ],
+   "hard_regret": 0.05833333333333333,
+   "by_type": {
+    "cost below resale": 0.28980395223413896,
+    "cost at or above resale": 0.002785821272917808,
+    "no cost": 0.07839656757348698
+   },
+   "letter_mass": 0.9085153058381895,
+   "n_cases": 24,
+   "n_cells": 6
+  },
+  "neutral text": {
+   "soft_regret": 0.530607996784984,
+   "ci": [
+    0.16112562248000736,
+    0.9184419430426444
+   ],
+   "hard_regret": 0.39166666666666666,
+   "by_type": {
+    "cost below resale": 1.0119885316708224,
+    "cost at or above resale": 0.0047450105962896505,
+    "no cost": 0.07146868755057434
+   },
+   "letter_mass": 0.5828729730699149,
+   "n_cases": 24,
+   "n_cells": 6
+  },
+  "wrong-rule text": {
+   "soft_regret": 0.46229086255711516,
+   "ci": [
+    0.130116596393429,
+    0.7944651287208013
+   ],
+   "hard_regret": 0.5,
+   "by_type": {
+    "cost below resale": 0.9020079305087375,
+    "cost at or above resale": 0.00029807824284013295,
+    "no cost": 0.033711652786819056
+   },
+   "letter_mass": 0.6997497337008313,
+   "n_cases": 24,
+   "n_cells": 6
+  },
+  "always-2": {
+   "soft_regret": 0.3333333333333333,
+   "ci": [
+    0.0,
+    0.6666666666666666
+   ],
+   "hard_regret": 0.3333333333333333,
+   "by_type": {
+    "cost below resale": 0.6666666666666666,
+    "cost at or above resale": 0.0,
+    "no cost": 0.0
+   },
+   "letter_mass": null,
+   "n_cases": 24,
+   "n_cells": 6
+  }
+ }
+}
