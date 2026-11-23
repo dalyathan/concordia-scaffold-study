@@ -69,10 +69,36 @@ def test_rebuild_is_deterministic_and_fingerprints_match():
 def test_new_wording_renders_and_is_not_in_first_dataset_text():
   c = next(c for c in CASES if c["wording"] == 3 and c["line"] == "information")
   text, l2p = g.render(c, g.orders()[0])
-  assert "For your information, the farm asked me" in text and f"{c['C']} coin" in text and set(l2p.values()) == set(c["grid"])
+  assert "For your information, I paid" in text and "at the farm" in text and f"{c['C']} coin" in text and set(l2p.values()) == set(c["grid"])
 
 
 def test_cpu_only_no_cuda_no_model():
   r = subprocess.run([sys.executable, "-c", "import sys; sys.path[:0]=['demo','concordia','.']; import gen_test2; gen_test2.build(); import torch; assert not torch.cuda.is_initialized(), 'CUDA initialised'"],
                      cwd=os.path.dirname(os.path.dirname(os.path.abspath(__file__))), capture_output=True, text=True)
   assert r.returncode == 0, r.stderr[-400:]
+
+
+def test_problem_caps_and_fixed_opening_and_flags():
+  import collections
+  for n, cs in S.items():
+    for t in g.TYPES:
+      per = collections.Counter(json.dumps(c["problem"]) for c in cs if c["type"] == t)
+      assert max(per.values()) <= (2 if t == "at_or_above" else 1), (n, t)         # one cell per decision problem; at-or-above has only 33 / 29 problems
+  for c in CELLS:
+    assert c["novel_V"] == (c["V"] >= 10) and c["novel_grid"] == (c["grid_name"] == "F") and c["novel_wording"] == (c["wording"] == 3)
+  by = collections.defaultdict(set)
+  for c in CASES:
+    by[c["cell"]].add(c["opening"])
+  assert all(len(v) == 1 for v in by.values())                                      # opening scene fixed within a cell; only names differ
+  newkey = S["test2_newkey"]
+  assert sum(1 for c in newkey if c["novel_V"] or c["novel_grid"] or c["novel_wording"]) > 60
+  assert any(c["novel_V"] and not c["novel_grid"] and not c["novel_wording"] for c in newkey)   # the extension is crossed, not all changed at once
+
+
+def test_fingerprint_file_records_current_script_orders_and_outputs():
+  import hashlib
+  fp = json.load(open(os.path.join(g.OUT, "test2_fingerprints.json")))
+  sha = lambda p: hashlib.sha256(open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), p), "rb").read()).hexdigest()
+  for f in ("demo/gen_test2.py", "demo/gen_cases.py", "demo/gen/cells.json", "demo/gen/test2_cells.json", "demo/gen/test2_cases.jsonl", "demo/gen/lora_train_cells.json"):
+    assert fp["files"][f] == sha(f), f
+  assert fp["orders"] == [list(o) for o in g.orders()] and len(fp["orders"]) == 5

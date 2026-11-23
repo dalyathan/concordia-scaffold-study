@@ -1,26 +1,67 @@
 {
  "seed": 20261201,
  "files": {
-  "demo/gen_test2.py": "244f16861f3e5fb903d7ca37394a6c16f2aa6a8cfea20fddb155ec23fa57d512",
+  "demo/gen_test2.py": "3bd42a41fd7b1dd31f31166add21472dbd67a1ccc25427f79b492dcca55a3e75",
   "demo/gen_cases.py": "cc0024b70ee5d53e4dad5966aa312200d9d53fb00248b3826ec4f6b2af01044f",
   "demo/gen/cells.json": "428925050d28a3d0bc23b87551aa837ae0f7daa4465ceb45f5973dbb415bfe86",
   "refimpl/core.py": "7a83fa03261cf843fa3ed9f7b83791af61189075a8176d7d41b2f74a96a775d8",
-  "refimpl/phase3.py": "b5f83cb69b6f332c78a874605e37b145981763c6a7fce25934da3b363328aded"
+  "refimpl/phase3.py": "b5f83cb69b6f332c78a874605e37b145981763c6a7fce25934da3b363328aded",
+  "demo/gen/lora_train_cells.json": "9596560f9028a04cb5f53b486fe2ef206b305e873bf044d0309bf75c5c5d67a4",
+  "demo/gen/test2_cells.json": "2c2b8e2e0844a8a18a8494740ff834fb55b1165607deb772967509f34b787e16",
+  "demo/gen/test2_cases.jsonl": "7889eb0cfa1f3f63dfb1c99aec2f29cb65252c9ed0c42cb2de9d8c6455f86526",
+  "fruitville_haggling.py": "f850d8a8cb0ecac90f4fe70964734f87a000828d7c4482f48b24f2c762f4e5e0"
  },
+ "orders": [
+  [
+   0,
+   1,
+   2,
+   3,
+   4
+  ],
+  [
+   1,
+   2,
+   3,
+   4,
+   0
+  ],
+  [
+   2,
+   3,
+   4,
+   0,
+   1
+  ],
+  [
+   3,
+   4,
+   0,
+   1,
+   2
+  ],
+  [
+   4,
+   0,
+   1,
+   2,
+   3
+  ]
+ ],
  "sets": {
   "test2_same": {
    "n_cells": 120,
    "n_cases": 240,
-   "rendered_prompts_sha256": "c858d8c382495fe7befdf7f93af91bd110d9debfd5a5dbaec5be3a16cd2c478d",
-   "cells_with_labels_sha256": "55cac4ea897df2d9731ad7344097c7d5f95a1bcd6f9a2f34088fadb416bf033f",
-   "cell_ids_sha256": "78ef00d5b7fdb4e309cf4037fac86ae4bb5da2300e07528501cc5e6a251d27eb"
+   "rendered_prompts_sha256": "d46f7a9d7a4252aafbaa752daf082a80c8e253d3601efd943ef536c07b73321f",
+   "cells_with_labels_sha256": "5b9852ce2cfb5dbfdf246e10d9df67182eadcce7950cec248f9126b0e2bff99d",
+   "cell_ids_sha256": "da27049761f960cbd9bdb69e1ce7220496c30e9b4da733c3f4b67eb394314c3f"
   },
   "test2_newkey": {
    "n_cells": 120,
    "n_cases": 240,
-   "rendered_prompts_sha256": "ea166c7506ea6c9a925f730fc3c4bef3e273488dcbcb8b3ceeee43082c059a33",
-   "cells_with_labels_sha256": "d5ea7959755865a73702326fe89307edcf9e1fb82e5476befcd0682f5b8bf8e1",
-   "cell_ids_sha256": "379bcff7d4bd7288819257ccb4f9f84efca02086b8c23136fe841da9111db613"
+   "rendered_prompts_sha256": "2b100bb07bc095dff08ff724074506f64f14abad615d4995fb3dc66312e7fc54",
+   "cells_with_labels_sha256": "9ad626059d9a1e0c580b33042b6258fcbdc9ed2c5e106c8561a18e58bcaa9d3c",
+   "cell_ids_sha256": "7b4f8ae14539f47f61b684f39db1fbc299a876b2fae1852c9bc37428b891ca2e"
   }
  }
 }
