@@ -1,0 +1,17 @@
+name: gemma2_2b
+hf_id: google/gemma-2-2b-it
+revision: 299a8560bedf22ed1c72a8a11e7dce4a7f9f51f8   # project pin in scripts/download_models.py
+dtype: bfloat16
+attn_implementation: eager
+chat_template: gemma
+system_role: false
+answer_letters: [a, b, c, d, e]
+answer_letter_token_ids: [235250, 235268, 235260, 235258, 235249]     # filled by tools/model_checks.py --write (from the tokenizer, in the rendered prompt context)
+num_layers: 26
+hidden_size: 2304
+layer_module: model.layers.{i}    # relative to the HF *ForCausalLM object: lm.model.layers[i]
+final_norm_module: model.norm
+lora_target_modules: [q_proj, k_proj, v_proj, o_proj]
+generation_end_tokens: [<end_of_turn>]
+verified: ['tokenizer', 'chat_template', 'num_layers', 'hidden_size']                      # tools/model_checks.py --write adds the facts it confirmed against the hub files
+notes: "Same family as the 9B; fast CPU-sized sanity model."

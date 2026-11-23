@@ -1,0 +1,17 @@
+name: qwen25_7b
+hf_id: Qwen/Qwen2.5-7B-Instruct
+revision: a09a35458c702b33eeacc393d103063234e8bc28   # hub main on 2026-11-23 (not yet used by any experiment)
+dtype: bfloat16
+attn_implementation: sdpa
+chat_template: chatml
+system_role: true
+answer_letters: [a, b, c, d, e]
+answer_letter_token_ids: [64, 65, 66, 67, 68]     # filled by tools/model_checks.py --write (from the tokenizer, in the rendered prompt context)
+num_layers: 28
+hidden_size: 3584
+layer_module: model.layers.{i}    # relative to the HF *ForCausalLM object: lm.model.layers[i]
+final_norm_module: model.norm
+lora_target_modules: [q_proj, k_proj, v_proj, o_proj]
+generation_end_tokens: [<|im_end|>]
+verified: ['tokenizer', 'chat_template', 'num_layers', 'hidden_size']                      # tools/model_checks.py --write adds the facts it confirmed against the hub files
+notes: "Ungated. The Qwen template inserts a default system prompt when none is given."

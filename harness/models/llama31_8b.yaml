@@ -1,0 +1,17 @@
+name: llama31_8b
+hf_id: meta-llama/Llama-3.1-8B-Instruct
+revision: 0e9e39f249a16976918f6564b8830bc894c89659   # hub main on 2026-11-23 (not yet used by any experiment)
+dtype: bfloat16
+attn_implementation: sdpa
+chat_template: llama3
+system_role: true
+answer_letters: [a, b, c, d, e]
+answer_letter_token_ids: null     # filled by tools/model_checks.py --write (from the tokenizer, in the rendered prompt context)
+num_layers: 32
+hidden_size: 4096
+layer_module: model.layers.{i}    # relative to the HF *ForCausalLM object: lm.model.layers[i]
+final_norm_module: model.norm
+lora_target_modules: [q_proj, k_proj, v_proj, o_proj]
+generation_end_tokens: [<|eot_id|>]
+verified: []                      # tools/model_checks.py --write adds the facts it confirmed against the hub files
+notes: "Gated repo (needs HF_TOKEN). Template accepts a system role."

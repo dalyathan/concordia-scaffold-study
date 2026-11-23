@@ -1,0 +1,17 @@
+name: gemma2_9b
+hf_id: google/gemma-2-9b-it
+revision: 11c9b309abf73637e4b6f9a3fa1e92e615547819   # project pin in scripts/download_models.py (the revision every experiment used)
+dtype: bfloat16
+attn_implementation: eager
+chat_template: gemma
+system_role: false
+answer_letters: [a, b, c, d, e]
+answer_letter_token_ids: [235250, 235268, 235260, 235258, 235249]     # filled by tools/model_checks.py --write (from the tokenizer, in the rendered prompt context)
+num_layers: 42
+hidden_size: 3584
+layer_module: model.layers.{i}    # relative to the HF *ForCausalLM object: lm.model.layers[i]
+final_norm_module: model.norm
+lora_target_modules: [q_proj, k_proj, v_proj, o_proj]
+generation_end_tokens: [<end_of_turn>]
+verified: ['tokenizer', 'chat_template', 'num_layers', 'hidden_size']                      # tools/model_checks.py --write adds the facts it confirmed against the hub files
+notes: "Existing project model. eager attention is required for Gemma 2 (attention soft-capping). Layer/hidden numbers are the published config; confirmed by model_checks when the hub is reachable."

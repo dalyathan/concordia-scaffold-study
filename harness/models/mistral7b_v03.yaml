@@ -1,0 +1,17 @@
+name: mistral7b_v03
+hf_id: mistralai/Mistral-7B-Instruct-v0.3
+revision: c170c708c41dac9275d15a8fff4eca08d52bab71   # hub main on 2026-11-23 (not yet used by any experiment)
+dtype: bfloat16
+attn_implementation: sdpa
+chat_template: mistral
+system_role: false
+answer_letters: [a, b, c, d, e]
+answer_letter_token_ids: [29476, 29494, 29485, 29483, 29474]     # filled by tools/model_checks.py --write (from the tokenizer, in the rendered prompt context)
+num_layers: 32
+hidden_size: 4096
+layer_module: model.layers.{i}    # relative to the HF *ForCausalLM object: lm.model.layers[i]
+final_norm_module: model.norm
+lora_target_modules: [q_proj, k_proj, v_proj, o_proj]
+generation_end_tokens: [</s>]
+verified: ['tokenizer', 'chat_template', 'num_layers', 'hidden_size']                      # tools/model_checks.py --write adds the facts it confirmed against the hub files
+notes: "Gated repo. system_role false is the conservative choice (system text folded into the user turn); model_checks tests whether the template accepts a system message."
