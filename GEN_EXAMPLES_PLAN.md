@@ -1,0 +1,33 @@
+# GEN_EXAMPLES_PLAN.md - Claude teaches by worked examples (written before any training; train and tune cells only)
+
+## Question
+Does fine-tuning (rank-4 LoRA) on single-price labels chosen by a blind Claude teacher for the 100 training cases lower soft regret on unseen tune cells, and is that more than "it learned to offer cheap" (cheapest-label control) or "any labels at these cells" (shuffled labels)?
+
+## Labels (step A, done; no label corrected)
+Packet demo/gen/examples_packet.md (game rules from the original teacher packet, then the 100 LoRA training cases, opaque ids c001-c100, lines that differ; no best offers, regrets, Gemma outputs, paragraphs or earlier results). Blind general-purpose subagent (model opus), given only the packet path (copied to /tmp so the repo was not in its path) and "Read this and follow its instructions." Reply saved verbatim: demo/gen/examples_reply.json. All 100 ids usable on the first reply; no re-ask. The agent reported that it solved the cases with a script (expected payoff over a uniform farm-cost prior, stated cost used when given) and broke ties by the lowest price; its own script is not in the repo. Frozen: demo/gen/claude_labels.json, sha256 0b6f0febaa1d32302bf275bab823893db481d0386e1eccb36e52a1cbb7f95839. Against the oracle: accuracy 1.00 and regret 0.000 in all three types (demo_out/gen_examples_labels.md). Consequences stated now: (1) the labels are essentially the oracle with a "lowest tied price" tie rule (40 of 100 cases have tied best prices), so arm (a) is close to the answer-trained ceiling (uniform over tied best letters) and differs from it only in tie handling; (2) all 33 at-or-above labels are the cheapest price and 65 of the 100 labels are the cheapest price (53% in below cells, 42% in no-cost cells), so the cheapest-label control (b) differs from (a) on only 35 of 100 training cases (all in below and no-cost cells); the (a)-vs-(b) contrast therefore rests on those cases.
+
+## Arms (same gen_lora.py path, 100 training cells, name variant and 3 orders per case, 300 examples, as the answer-trained ceiling; only the target differs)
+(a) **claude-examples:** target = all probability on the letter that shows Claude's labelled price (one-hot).
+(b) **cheapest-label control:** one-hot on the letter showing the cheapest listed price, for every training case.
+(c) **shuffled-Claude-labels control:** Claude's labelled grid position (0-4) permuted within case type (below, at_or_above, no_cost) by a derangement (no case receives its own label slot; numpy PCG64 seed 20261127). Because positions repeat, some cases receive an identical label by chance; the agreement rate and the share of cheapest labels are printed in the run log.
+Same loss (full-vocabulary letter cross-entropy), rank 4, alpha 8, q/k/v/o, fp32 adapter, AdamW, one step per case, gradient checkpointing, at most 5 epochs, early stopping patience 2 on selection set B (42 train cells outside the training cells, loop set A and the packet cells), all assertions of GEN_PLAN.md (training path = scoring path, epoch 0 = saved plain, best-adapter reload).
+Reference rows already on tune (no new runs): plain 0.657, always-cheapest 0.429, stated-cost rule 0.214, teacher-distil 0.376 (3 seeds), our-method-distil 0.373 (3 seeds), wrong-rule-distil 0.589 (1 seed), answer-trained ceiling 0.118 (lr 3e-4) and 0.026 (lr 1e-4).
+
+## Seeds, learning rate, budget (5 GPU-hours, measured)
+Order: (a) lr 1e-4 seed 0; (a) lr 3e-4 seed 0; choose (a)'s lr by the lower selection-set soft regret (ties to the lower lr); (b) seed 0 at that lr; (a) seeds 1-2 at that lr; (c) seed 0 at that lr. Estimate = runs x measured seconds per run (mean wall_s of this chain's finished runs; 2400 s assumed before the first finishes; the earlier runs took 1190-2370 s). 6 runs x 2400 s = 4.0 h, which fits. Before each run the chain checks elapsed + estimated next run <= 5 h; if not, it skips it and everything after it: (c) is cut first because it runs last, then (a) seed 2, etc. (the lr grid for the controls is already omitted: (b) and (c) run only at (a)'s lr).
+Stop rules: halt if both (a) runs keep epoch 0 (nothing was learned); precondition: claude_labels.json sha256 equals the frozen value and covers exactly the 100 training cases.
+
+## Pass rule (on TUNE cells, frozen now; owner's rule, plus the unambiguous handling below)
+Per-cell tune soft regret = mean of the two name variants, then mean over an arm's seeds. (a) PASSES only if ALL hold:
+1. (a) beats plain: lower 95% bound of the paired cell bootstrap of (plain - a) > 0 (42 cells, 10,000 resamples, numpy PCG64 seed 0, percentile);
+2. (a) beats the cheapest-label control (b): lower bound of (b - a) > 0;
+3. (a) beats the always-cheapest baseline (computed from the labels): lower bound of (always-cheapest - a) > 0;
+4. cost-below cells (14): lower bound of (plain - a) > 0;
+5. no case type (below, at_or_above, no_cost) is worse than plain by more than 0.05 (type mean of a minus plain <= 0.05);
+6. letter mass >= 0.9 x plain overall (and reported per type).
+Handling fixed now (lessons of the earlier verdict): no run is dropped; a run whose best epoch is 0 is scored as epoch 0 (= plain) and flagged; (b) and (c) have one seed against (a)'s three, so conditions 2 is also computed with (a) seed 0 only (equal footing) and the label becomes "PASSED (robust to seed count)" or "PASSED on the 3-seed mean only"; the pass is judged on the owner's rule (3-seed mean) and the robustness tag is reported with it. Ties on the label scale: none (strict lower bounds).
+Reported alongside, not part of the rule: the slope of the expected offer on the stated cost over below cells with a bootstrap interval; the mass on the cheapest option by type; (a) vs (c); comparison with teacher-distil (gain over teacher-distil, bootstrap) and with the answer-trained ceiling at both rates; by-type tables; by overlap of the label key with the 100 training cells; per-seed values; letter mass per type.
+If (a) passes: a test plan is written for the owner's approval (no test scoring). If not: the verdict says so, with no mechanism claim.
+
+## Declared limits
+Labels come from a script-solving teacher, so (a) tests "supervised oracle-like labels at 100 cells" rather than "a human-like teacher"; the 100 training cells are few (34/33/33) and label keys overlap with some tune cells (reported); the tie rule makes at-or-above labels all cheapest; (b) and (c) have one seed; no lr grid for the controls; tune was used before for other arms (the verdict here is on tune only, selection on set B); nothing in this plan touches test_same, test_hard, the old test cells, old adapters or name variants 1-14.
