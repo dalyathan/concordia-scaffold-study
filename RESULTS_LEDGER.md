@@ -66,22 +66,23 @@ Rebuilt by `python demo/ledger.py` from saved results (do not edit by hand). Sof
 | 60 | inside-the-model | 5 | generated-data LoRA claude_examples, lr 1e-04, seed 1 | tune cells (42, generated) | yes | 0.026 | -0.631 | plain (tune cells) | 0.657 | yes | 38 min | beats plain on tune | `demo_out/gen_lora/gen_claude_examples_lr1e-04_s1.json` |
 | 61 | inside-the-model | 5 | generated-data LoRA claude_examples, lr 1e-04, seed 2 | tune cells (42, generated) | yes | 0.057 | -0.601 | plain (tune cells) | 0.657 | yes | 31 min | beats plain on tune | `demo_out/gen_lora/gen_claude_examples_lr1e-04_s2.json` |
 | 62 | inside-the-model | 5 | generated-data LoRA claude_examples, lr 3e-04, seed 0 | tune cells (42, generated) | yes | 0.119 | -0.538 | plain (tune cells) | 0.657 | yes | 25 min | beats plain on tune | `demo_out/gen_lora/gen_claude_examples_lr3e-04_s0.json` |
-| 63 | inside-the-model | 5 | generated-data LoRA claude_examples, lr 1e-04, seed 0 | tune cells (42, generated) | yes | 0.043 | -0.614 | plain (tune cells) | 0.657 | yes | 36 min | beats plain on tune | `demo_out/gen_lora/gen_claude_examples_n25_lr1e-04_s0.json` |
-| 64 | inside-the-model | 5 | generated-data LoRA method_original, lr 1e-04, seed 0 | tune cells (42, generated) | yes | 0.402 | -0.255 | plain (tune cells) | 0.657 | yes | 39 min | beats plain on tune | `demo_out/gen_lora/gen_method_original_lr1e-04_s0.json` |
-| 65 | inside-the-model | 5 | generated-data LoRA method_original, lr 1e-04, seed 1 | tune cells (42, generated) | yes | 0.367 | -0.291 | plain (tune cells) | 0.657 | yes | 39 min | beats plain on tune | `demo_out/gen_lora/gen_method_original_lr1e-04_s1.json` |
-| 66 | inside-the-model | 5 | generated-data LoRA method_original, lr 1e-04, seed 2 | tune cells (42, generated) | yes | 0.350 | -0.308 | plain (tune cells) | 0.657 | yes | 33 min | beats plain on tune | `demo_out/gen_lora/gen_method_original_lr1e-04_s2.json` |
-| 67 | inside-the-model | 5 | generated-data LoRA neutral, lr 1e-04, seed 0 | tune cells (42, generated) | yes | 0.657 | +0.000 | plain (tune cells) | 0.657 | no | 20 min | no improvement (epoch 0) | `demo_out/gen_lora/gen_neutral_lr1e-04_s0.json` |
-| 68 | inside-the-model | 5 | generated-data LoRA neutral, lr 1e-04, seed 1 | tune cells (42, generated) | yes | 0.657 | +0.000 | plain (tune cells) | 0.657 | no | 20 min | no improvement (epoch 0) | `demo_out/gen_lora/gen_neutral_lr1e-04_s1.json` |
-| 69 | inside-the-model | 5 | generated-data LoRA neutral, lr 1e-04, seed 2 | tune cells (42, generated) | yes | 0.657 | +0.000 | plain (tune cells) | 0.657 | no | 20 min | no improvement (epoch 0) | `demo_out/gen_lora/gen_neutral_lr1e-04_s2.json` |
-| 70 | inside-the-model | 5 | generated-data LoRA shuffled_claude, lr 1e-04, seed 0 | tune cells (42, generated) | yes | 0.695 | +0.037 | plain (tune cells) | 0.657 | no | 31 min | does not beat plain on tune | `demo_out/gen_lora/gen_shuffled_claude_lr1e-04_s0.json` |
-| 71 | inside-the-model | 5 | generated-data LoRA teacher, lr 1e-03, seed 0 | tune cells (42, generated) | yes | 0.657 | +0.000 | plain (tune cells) | 0.657 | no | 20 min | no improvement (epoch 0) | `demo_out/gen_lora/gen_teacher_lr1e-03_s0.json` |
-| 72 | inside-the-model | 5 | generated-data LoRA teacher, lr 1e-04, seed 0 | tune cells (42, generated) | yes | 0.380 | -0.277 | plain (tune cells) | 0.657 | yes | 40 min | beats plain on tune | `demo_out/gen_lora/gen_teacher_lr1e-04_s0.json` |
-| 73 | inside-the-model | 5 | generated-data LoRA teacher, lr 1e-04, seed 1 | tune cells (42, generated) | yes | 0.352 | -0.306 | plain (tune cells) | 0.657 | yes | 40 min | beats plain on tune | `demo_out/gen_lora/gen_teacher_lr1e-04_s1.json` |
-| 74 | inside-the-model | 5 | generated-data LoRA teacher, lr 1e-04, seed 2 | tune cells (42, generated) | yes | 0.395 | -0.262 | plain (tune cells) | 0.657 | yes | 33 min | beats plain on tune | `demo_out/gen_lora/gen_teacher_lr1e-04_s2.json` |
-| 75 | inside-the-model | 5 | generated-data LoRA teacher, lr 3e-04, seed 0 | tune cells (42, generated) | yes | 0.384 | -0.273 | plain (tune cells) | 0.657 | yes | 40 min | beats plain on tune | `demo_out/gen_lora/gen_teacher_lr3e-04_s0.json` |
-| 76 | inside-the-model | 5 | generated-data LoRA wrong_rule, lr 1e-04, seed 0 | tune cells (42, generated) | yes | 0.589 | -0.068 | plain (tune cells) | 0.657 | yes | 39 min | beats plain on tune | `demo_out/gen_lora/gen_wrong_rule_lr1e-04_s0.json` |
-| 77 | inside-the-model | 5 | LoRA method distillation, 3 seeds, TEST LOOK (72 cases, 18 test cells) | test cells (18) | no | 0.263 | -0.271 | wrong-rule distil (3 seeds) | 0.482 | yes | — | test label: SUPPORT | `demo_out/test_look.json` |
-| 78 | take-home | 0 | steercheck toy problem (a vector that should work) | toy (40 cases) | yes | 0.066 [0.04, 0.08] | -0.734 | its negation | 0.800 | yes | — | steercheck detects a working vector and its controls | `demo/steercheck.py` |
+| 63 | inside-the-model | 5 | generated-data LoRA claude_examples, lr 1e-04, seed 0 | tune cells (42, generated) | yes | 0.071 | -0.586 | plain (tune cells) | 0.657 | yes | 37 min | beats plain on tune | `demo_out/gen_lora/gen_claude_examples_n10_lr1e-04_s0.json` |
+| 64 | inside-the-model | 5 | generated-data LoRA claude_examples, lr 1e-04, seed 0 | tune cells (42, generated) | yes | 0.043 | -0.614 | plain (tune cells) | 0.657 | yes | 36 min | beats plain on tune | `demo_out/gen_lora/gen_claude_examples_n25_lr1e-04_s0.json` |
+| 65 | inside-the-model | 5 | generated-data LoRA method_original, lr 1e-04, seed 0 | tune cells (42, generated) | yes | 0.402 | -0.255 | plain (tune cells) | 0.657 | yes | 39 min | beats plain on tune | `demo_out/gen_lora/gen_method_original_lr1e-04_s0.json` |
+| 66 | inside-the-model | 5 | generated-data LoRA method_original, lr 1e-04, seed 1 | tune cells (42, generated) | yes | 0.367 | -0.291 | plain (tune cells) | 0.657 | yes | 39 min | beats plain on tune | `demo_out/gen_lora/gen_method_original_lr1e-04_s1.json` |
+| 67 | inside-the-model | 5 | generated-data LoRA method_original, lr 1e-04, seed 2 | tune cells (42, generated) | yes | 0.350 | -0.308 | plain (tune cells) | 0.657 | yes | 33 min | beats plain on tune | `demo_out/gen_lora/gen_method_original_lr1e-04_s2.json` |
+| 68 | inside-the-model | 5 | generated-data LoRA neutral, lr 1e-04, seed 0 | tune cells (42, generated) | yes | 0.657 | +0.000 | plain (tune cells) | 0.657 | no | 20 min | no improvement (epoch 0) | `demo_out/gen_lora/gen_neutral_lr1e-04_s0.json` |
+| 69 | inside-the-model | 5 | generated-data LoRA neutral, lr 1e-04, seed 1 | tune cells (42, generated) | yes | 0.657 | +0.000 | plain (tune cells) | 0.657 | no | 20 min | no improvement (epoch 0) | `demo_out/gen_lora/gen_neutral_lr1e-04_s1.json` |
+| 70 | inside-the-model | 5 | generated-data LoRA neutral, lr 1e-04, seed 2 | tune cells (42, generated) | yes | 0.657 | +0.000 | plain (tune cells) | 0.657 | no | 20 min | no improvement (epoch 0) | `demo_out/gen_lora/gen_neutral_lr1e-04_s2.json` |
+| 71 | inside-the-model | 5 | generated-data LoRA shuffled_claude, lr 1e-04, seed 0 | tune cells (42, generated) | yes | 0.695 | +0.037 | plain (tune cells) | 0.657 | no | 31 min | does not beat plain on tune | `demo_out/gen_lora/gen_shuffled_claude_lr1e-04_s0.json` |
+| 72 | inside-the-model | 5 | generated-data LoRA teacher, lr 1e-03, seed 0 | tune cells (42, generated) | yes | 0.657 | +0.000 | plain (tune cells) | 0.657 | no | 20 min | no improvement (epoch 0) | `demo_out/gen_lora/gen_teacher_lr1e-03_s0.json` |
+| 73 | inside-the-model | 5 | generated-data LoRA teacher, lr 1e-04, seed 0 | tune cells (42, generated) | yes | 0.380 | -0.277 | plain (tune cells) | 0.657 | yes | 40 min | beats plain on tune | `demo_out/gen_lora/gen_teacher_lr1e-04_s0.json` |
+| 74 | inside-the-model | 5 | generated-data LoRA teacher, lr 1e-04, seed 1 | tune cells (42, generated) | yes | 0.352 | -0.306 | plain (tune cells) | 0.657 | yes | 40 min | beats plain on tune | `demo_out/gen_lora/gen_teacher_lr1e-04_s1.json` |
+| 75 | inside-the-model | 5 | generated-data LoRA teacher, lr 1e-04, seed 2 | tune cells (42, generated) | yes | 0.395 | -0.262 | plain (tune cells) | 0.657 | yes | 33 min | beats plain on tune | `demo_out/gen_lora/gen_teacher_lr1e-04_s2.json` |
+| 76 | inside-the-model | 5 | generated-data LoRA teacher, lr 3e-04, seed 0 | tune cells (42, generated) | yes | 0.384 | -0.273 | plain (tune cells) | 0.657 | yes | 40 min | beats plain on tune | `demo_out/gen_lora/gen_teacher_lr3e-04_s0.json` |
+| 77 | inside-the-model | 5 | generated-data LoRA wrong_rule, lr 1e-04, seed 0 | tune cells (42, generated) | yes | 0.589 | -0.068 | plain (tune cells) | 0.657 | yes | 39 min | beats plain on tune | `demo_out/gen_lora/gen_wrong_rule_lr1e-04_s0.json` |
+| 78 | inside-the-model | 5 | LoRA method distillation, 3 seeds, TEST LOOK (72 cases, 18 test cells) | test cells (18) | no | 0.263 | -0.271 | wrong-rule distil (3 seeds) | 0.482 | yes | — | test label: SUPPORT | `demo_out/test_look.json` |
+| 79 | take-home | 0 | steercheck toy problem (a vector that should work) | toy (40 cases) | yes | 0.066 [0.04, 0.08] | -0.734 | its negation | 0.800 | yes | — | steercheck detects a working vector and its controls | `demo/steercheck.py` |
 
 ## Three best methods (tuning split; excluding rows that name the answer)
 
@@ -146,19 +147,20 @@ Rebuilt by `python demo/ledger.py` from saved results (do not edit by hand). Sof
 - Row 60: best epoch 5; selection-set soft regret 0.027
 - Row 61: best epoch 2; selection-set soft regret 0.067
 - Row 62: best epoch 1; selection-set soft regret 0.171
-- Row 63: best epoch 20; selection-set soft regret 0.093
-- Row 64: best epoch 3; selection-set soft regret 0.403
-- Row 65: best epoch 3; selection-set soft regret 0.383
-- Row 66: best epoch 2; selection-set soft regret 0.394
-- Row 67: best epoch 0; selection-set soft regret 0.584
+- Row 63: best epoch 50; selection-set soft regret 0.050
+- Row 64: best epoch 20; selection-set soft regret 0.093
+- Row 65: best epoch 3; selection-set soft regret 0.403
+- Row 66: best epoch 3; selection-set soft regret 0.383
+- Row 67: best epoch 2; selection-set soft regret 0.394
 - Row 68: best epoch 0; selection-set soft regret 0.584
 - Row 69: best epoch 0; selection-set soft regret 0.584
-- Row 70: best epoch 2; selection-set soft regret 0.574
-- Row 71: best epoch 0; selection-set soft regret 0.584
-- Row 72: best epoch 4; selection-set soft regret 0.360
-- Row 73: best epoch 3; selection-set soft regret 0.329
-- Row 74: best epoch 2; selection-set soft regret 0.372
-- Row 75: best epoch 3; selection-set soft regret 0.375
-- Row 76: best epoch 5; selection-set soft regret 0.510
-- Row 77: frozen development verdict: NOT PASSED. Control minus method, paired cell bootstrap: plain +0.271 [+0.054, +0.514]; neutral +0.286 [+0.064, +0.536]; wrong-rule +0.219 [+0.048, +0.399]; always-2 +0.115 [-0.066, +0.317] (always-2 0.378); free-text hard regret worse: plain 0.439, method 0.736
-- Row 78: toy regret is on the toy's own scale
+- Row 70: best epoch 0; selection-set soft regret 0.584
+- Row 71: best epoch 2; selection-set soft regret 0.574
+- Row 72: best epoch 0; selection-set soft regret 0.584
+- Row 73: best epoch 4; selection-set soft regret 0.360
+- Row 74: best epoch 3; selection-set soft regret 0.329
+- Row 75: best epoch 2; selection-set soft regret 0.372
+- Row 76: best epoch 3; selection-set soft regret 0.375
+- Row 77: best epoch 5; selection-set soft regret 0.510
+- Row 78: frozen development verdict: NOT PASSED. Control minus method, paired cell bootstrap: plain +0.271 [+0.054, +0.514]; neutral +0.286 [+0.064, +0.536]; wrong-rule +0.219 [+0.048, +0.399]; always-2 +0.115 [-0.066, +0.317] (always-2 0.378); free-text hard regret worse: plain 0.439, method 0.736
+- Row 79: toy regret is on the toy's own scale
