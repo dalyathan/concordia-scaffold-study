@@ -211,3 +211,108 @@ def test_steercheck_checkpoint_resume_skips_done_points():
   assert calls["n"] == 2 * len(cases)                 # only the two plain baselines
   assert n_first > calls["n"]
   assert [r["soft_regret"] for r in first["rows"]] == [r["soft_regret"] for r in second["rows"]]
+
+
+# ------------------------------------------------------------ floor --dataset gen
+def _gen_case(cid="V5-gC-information-C2-p2_10-w1-n0", C=2, line="information"):
+  import gen_cases as g
+  c = {"cid": cid, "cell": cid[:-3], "split": "test_same", "type": g.cell_type(line, 5, C), "V": 5, "grid_name": "C", "grid": [3, 4, 5, 6, 7],
+       "line": line, "C": C, "prior": [2, 10], "wording": 1, "buyer": "Ana Tester", "seller": "Bo Seller", "opening": 0, "name_variant": 0}
+  c.update(g.label(5, c["grid"], C, c["prior"]))
+  return c
+
+
+class FakeGenEngine:
+  """cheapest-leaning 'plain'; the 'examples' adapter picks the best position; records calls"""
+  def __init__(self):
+    c = _gen_case(); self.cases = {c["cid"]: c}
+    self.calls = []
+
+  def score(self, c, condition, orders=None):
+    self.calls.append((c["cid"], condition, orders))
+    if condition == ("adapter", "examples"):
+      probs = [0.0] * 5; probs[c["best_positions"][0]] = 1.0
+    else:
+      probs = [0.1, 0.2, 0.4, 0.2, 0.1]
+    return floor.GenResult(probs, 1.0, 0.01)
+
+  def say(self, c, condition=("plain", None)):
+    return " 4 coins.", 4
+
+
+def test_gen_parser():
+  known = {"V5-gC-information-C2-p2_10-w1-n0": 1}
+  assert floor.gen_parse_command("case V5-gC-information-C2-p2_10-w1", known) == ("case", ["V5-gC-information-C2-p2_10-w1-n0"])
+  assert floor.gen_parse_command("cost none", known) == ("cost", ["none"])
+  assert floor.gen_parse_command("cost 12", known) == ("cost", ["12"])
+  assert floor.gen_parse_command("adapter examples", known) == ("adapter", ["examples"])
+  assert floor.gen_parse_command("adapter off", known) == ("adapter", ["off"])
+  assert floor.gen_parse_command("text method", known) == ("text", ["method"])
+  for bad in ("case nope", "cost 0", "cost 13", "cost x", "adapter wrong_rule", "text original", "steer a.json", "dial show", "say now", ""):
+    with pytest.raises(floor.CommandError):
+      floor.gen_parse_command(bad, known)
+
+
+def test_gen_with_cost_recomputes_labels():
+  c = _gen_case()
+  assert c["best_offers"] == [3]                      # stated cost 2 < grid minimum 3: the cheapest offer is accepted and best
+  q = floor.gen_with_cost(c, None)
+  assert q["line"] == "neutral" and q["C"] is None and q["type"] == "no_cost" and q["best_offers"] != [] and q["cid"].endswith("|cost=none")
+  q4 = floor.gen_with_cost(c, 4)
+  assert q4["line"] == "information" and q4["C"] == 4 and q4["best_offers"] == [4] and q4["type"] == "below"
+  q5 = floor.gen_with_cost(c, 5)                       # cost equal to resale: offers 3-5 pay 0, 6-7 lose money
+  assert q5["type"] == "at_or_above" and q5["best_offers"] == [3, 4, 5]
+  assert c["C"] == 2                                   # the original is untouched
+
+
+def test_gen_floor_session(tmp_path):
+  eng = FakeGenEngine()
+  f = floor.GenFloor(eng, str(tmp_path / "log.jsonl"), colour=True)
+  cid = next(iter(eng.cases))
+  for cmd in (f"case {cid}", "adapter examples", "adapter off", "text method", "plain", "cost none", "cost 4", "shuffle", "say", "table", "help", "dial show", "cost 99"):
+    out = f.run(cmd)
+    assert len(out) <= floor.SCREEN, cmd
+    assert max(floor.visible_len(l) for l in out) <= floor.WIDTH, cmd
+    assert out[-1].startswith("[") and out[-1].endswith("s]"), cmd         # the time is printed
+  out = f.run("adapter examples")
+  assert any("adapter examples" in l for l in out) and any("regret" in l for l in out)
+  assert f.run("dial show")[0].startswith("error")
+  assert f.run("adapter wrong")[0].startswith("error")
+  say = f.run("say")
+  assert any("parsed offer: 4" in l for l in say)
+  t = f.run("table")
+  assert any("adapter examples" in l for l in t) and all(floor.visible_len(l) <= floor.WIDTH for l in t)
+  # a failing engine is shown and kept, never fatal
+  eng.score = lambda *a, **k: (_ for _ in ()).throw(RuntimeError("gpu down"))
+  out = f.run("plain")
+  assert out[0].startswith("failed") and f.rows[-1]["ok"] is False
+
+
+def test_gen_adapter_off_is_plain_switch():
+  eng = FakeGenEngine()
+  f = floor.GenFloor(eng, None, colour=False)
+  cid = next(iter(eng.cases)); f.run(f"case {cid}"); f.run("adapter examples")
+  assert f.condition == ("adapter", "examples")
+  out = f.run("adapter off")
+  assert f.condition == ("plain", None) and "plain" in out[0]
+
+
+def test_gen_offer_parser_and_top():
+  assert floor.gen_parse_offer(" 4 coins.") == 4 and floor.gen_parse_offer("ten coins") == 10 and floor.gen_parse_offer("a lot") is None
+  assert floor.gen_top([0.3, 0.3, 0.4, 0, 0]) == 2 and floor.gen_top([0.5, 0.5, 0, 0, 0]) == 0       # ties go to the cheaper price
+
+
+def test_replay_header(tmp_path, capsys):
+  import json
+  log = tmp_path / "x.jsonl"
+  log.write_text(json.dumps({"cmd": "case a", "out": ["line"]}) + "\n")
+  floor.replay(str(log))
+  first = capsys.readouterr().out.splitlines()[0]
+  assert "RECORDED RUN" in first and len(first) == floor.WIDTH
+
+
+def test_examples_adapter_seed_rule_uses_selection_set_only():
+  import json
+  rid, res = floor.pick_examples_run()
+  vals = {s: json.load(open(os.path.join(common.ROOT, "demo_out", "gen_lora", f"gen_claude_examples_lr1e-04_s{s}.json")))["select_best"]["soft_regret"] for s in (0, 1, 2)}
+  assert rid.endswith(f"_s{min(vals, key=lambda s: (vals[s], s))}")

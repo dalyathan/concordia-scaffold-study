@@ -4,6 +4,8 @@ screen, colour only on the regret value: red above 0, green at 0).
   python demo/floor.py --serve [--model 9b|2b]   load once, read commands from stdin
   python demo/floor.py --map                     print the plain failure map
   python demo/floor.py --replay <log>            replay a saved session
+  python demo/floor.py --serve --dataset gen     generated cases (any split, DISPLAY ONLY), three adapters
+        [--script cmds.txt] [--log out.jsonl]    read commands from a file; write the log there
 
 Commands (--serve):
   case <id>          score a demo case (plain): prompt lines, bars, offer, regret
@@ -427,6 +429,336 @@ class ModelEngine:
       return self.scoring.say(self.lm, p)
 
 
+
+# =====================================================================================
+# --dataset gen: the generated cases (demo/gen), three adapters loaded once, display only
+# =====================================================================================
+GEN_COMMANDS = {"case": 1, "cost": 1, "shuffle": 0, "plain": 0, "text": 1, "adapter": 1, "say": 0, "table": 0, "help": 0, "quit": 0}
+GEN_TEXTS = ("method", "teacher", "neutral")
+GEN_ADAPTERS = ("examples", "teacher", "method")      # aliases; "off" = adapter disabled
+GEN_DOC = """Commands (--dataset gen; any split is shown, display only: no test-set conclusions):
+  case <id>          a generated case (cell id or case id): prompt facts, bars, regret
+  cost <n|none>      same case with only the stated cost changed
+  shuffle            new option order; did the pick change?
+  plain              back to plain
+  text <name>        method | teacher | neutral paragraph in the prompt, vs plain
+  adapter <name>     examples | teacher | method | off, vs plain
+  say                greedy free text under the current condition
+  table              the results table
+  help | quit
+Every --serve session writes a replayable log to logs/floor_<time>.jsonl."""
+
+
+class GenResult:
+  def __init__(self, probs, mass, sec, per_order=None):
+    self.probs, self.mass, self.sec, self.per_order = probs, mass, sec, per_order    # probs: list over grid positions
+
+
+def gen_hard_regret(case, pos):
+  return case["best_payoff"] - case["payoffs"][pos]
+
+
+def gen_soft_regret(case, probs):
+  return case["best_payoff"] - sum(p * x for p, x in zip(probs, case["payoffs"]))
+
+
+def gen_top(probs):
+  """highest-probability grid position; ties go to the cheaper price"""
+  return max(range(len(probs)), key=lambda i: (probs[i], -i))
+
+
+def gen_with_cost(case, n):
+  """The same case with only the stated cost changed (n = int or None); labels recomputed."""
+  import gen_cases as g
+  q = dict(case)
+  q["C"] = n
+  q["line"] = "information" if n is not None else ("neutral" if case["line"] == "information" else case["line"])
+  q.update(g.label(q["V"], q["grid"], q["C"], q["prior"]))
+  q["type"] = g.cell_type(q["line"], q["V"], q["C"])
+  q["cid"] = f"{case['cid']}|cost={'none' if n is None else n}"
+  return q
+
+
+def gen_prompt_lines(c, seller_only=False):
+  import textwrap
+  import gen_cases as g
+  line = g.SELLER_LINES[c["line"]][c["wording"]].format(C=("" if c["C"] is None else f"{c['C']} coin" + ("" if c["C"] == 1 else "s")))
+  if c["C"] is not None:
+    line = line.replace(f"{c['C']} coin" + ("" if c["C"] == 1 else "s"), f">>{c['C']} coin" + ("" if c["C"] == 1 else "s") + "<<", 1)
+  lo, hi = c["prior"]
+  facts = (f"{c['buyer']} can resell for >>{c['V']} coins<<. Prices: {' '.join(map(str, c['grid']))}. "
+           f"Farm cost {lo}-{hi} (uniform).")
+  seller = textwrap.wrap(f'{c["seller"]} -- "{line}"', WIDTH)
+  return seller if seller_only else textwrap.wrap(facts, WIDTH) + seller
+
+
+def gen_bars(probs, case, width=18, label=""):
+  out = [label] if label else []
+  for price, pr in zip(case["grid"], probs):
+    out.append(f"{price:>2}{'*' if price in case['best_offers'] else ' '} {'#' * int(round(pr * width)):<{width}} {pr:4.2f}")
+  return out
+
+
+def gen_parse_offer(text):
+  m = re.search(r"\b(\d+)\b|\b(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)\b", text, re.I)
+  if m is None:
+    return None
+  if m.group(1):
+    return int(m.group(1))
+  return ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve"].index(m.group(2).lower()) + 1
+
+
+def gen_case_id(known, token):
+  """cell id -> its first case (name variant n0)"""
+  for cand in (token, token + "-n0"):
+    if cand in known:
+      return cand
+  raise CommandError(f"unknown generated case id: {token[:40]}")
+
+
+def gen_parse_command(line, known):
+  parts = shlex.split(line.strip())
+  if not parts:
+    raise CommandError("empty command")
+  cmd, args = parts[0].lower(), parts[1:]
+  if cmd not in GEN_COMMANDS:
+    raise CommandError(f"unknown command '{cmd}' (try: help)")
+  if len(args) != GEN_COMMANDS[cmd]:
+    raise CommandError(f"'{cmd}' takes {GEN_COMMANDS[cmd]} argument(s)")
+  if cmd == "case":
+    args = [gen_case_id(known, args[0])]
+  if cmd == "cost" and args[0] != "none" and not (args[0].isdigit() and 1 <= int(args[0]) <= 12):
+    raise CommandError("cost takes 1-12 or none")
+  if cmd == "text" and args[0] not in GEN_TEXTS:
+    raise CommandError(f"text takes one of: {', '.join(GEN_TEXTS)}")
+  if cmd == "adapter" and args[0] not in GEN_ADAPTERS + ("off",):
+    raise CommandError(f"adapter takes one of: {', '.join(GEN_ADAPTERS)}, off")
+  return cmd, args
+
+
+class GenFloor(Floor):
+  """Floor for the generated dataset. The engine scores; injectable for tests. Display only."""
+
+  def __init__(self, engine, log_path=None, colour=True):
+    super().__init__(engine, log_path, colour)
+    self.cases = engine.cases
+
+  def _need_case(self):
+    if self.p is None:
+      raise CommandError("no current case (use: case <id>)")
+
+  def _row(self, what, c, r):
+    top = gen_top(r.probs)
+    row = {"n": len(self.rows) + 1, "case": c["cid"], "condition": what, "offer": c["grid"][top], "best": c["best_offers"],
+           "regret": gen_hard_regret(c, top), "soft": gen_soft_regret(c, r.probs), "sec": round(r.sec, 2), "ok": True, "note": ""}
+    self.rows.append(row)
+    return row
+
+  def _panel(self, c, r, title):
+    top = gen_top(r.probs)
+    return gen_bars(r.probs, c, 18, title) + [
+        f"offer {c['grid'][top]}  best {','.join(map(str, c['best_offers']))}",
+        f"regret {regret_text(gen_hard_regret(c, top), self.colour)} soft {gen_soft_regret(c, r.probs):.2f} ({r.sec:.1f}s)"]
+
+  def run(self, line):
+    t0 = time.perf_counter()
+    try:
+      cmd, args = gen_parse_command(line, self.cases)
+      out = getattr(self, f"cmd_{cmd}")(*args)
+    except CommandError as e:
+      out = [f"error: {e}"]
+    except Exception as e:  # noqa: BLE001
+      out = [f"failed: {type(e).__name__}: {str(e)[:60]}"]
+      if self.p is not None:
+        self.rows.append({"n": len(self.rows) + 1, "case": self.p["cid"], "condition": line.strip()[:17], "offer": None,
+                          "best": self.p["best_offers"], "regret": None, "soft": None, "sec": None, "ok": False, "note": type(e).__name__})
+    out = fit(out + [f"[{time.perf_counter() - t0:.2f}s]"])
+    if self.log:
+      self.log.write(json.dumps({"cmd": line.strip(), "out": [re.sub(r"\033\[\d+m", "", l) for l in out]}) + "\n")
+      self.log.flush()
+    return out
+
+  def cmd_help(self):
+    return GEN_DOC.splitlines()[:-1]
+
+  def _score(self, c, condition=None, orders=None):
+    with self.lock:
+      return self.engine.score(c, condition or ("plain", None), orders)
+
+  def cmd_case(self, cid):
+    self.p = self.cases[cid]
+    self.condition = ("plain", None)
+    r = self._score(self.p)
+    self._row("plain", self.p, r)
+    return [f"{self.p['cell']}  [{self.p['type']}; {self.p['split']}; display only]"] + gen_prompt_lines(self.p) + [""] + \
+        self._panel(self.p, r, "plain")
+
+  def cmd_cost(self, n):
+    self._need_case()
+    q = gen_with_cost(self.p, None if n == "none" else int(n))
+    r = self._score(q, self.condition)
+    self._row(f"cost {n}", q, r)
+    return [f"{self.p['cell']} with stated cost {n}"] + gen_prompt_lines(q, seller_only=True) + [""] + \
+        self._panel(q, r, f"{self.condition[0]}, cost {n}")
+
+  def cmd_shuffle(self):
+    self._need_case()
+    import gen_cases as g
+    base = self._score(self.p, self.condition)
+    order = list(range(5))
+    while tuple(order) in [tuple(o) for o in g.orders()]:
+      self.rng.shuffle(order)
+    r = self._score(self.p, self.condition, [tuple(order)])
+    self._row(f"shuffle {''.join(map(str, order))}", self.p, r)
+    changed = gen_top(r.probs) != gen_top(base.probs)
+    return [f"order (a)-(e) = prices {[self.p['grid'][i] for i in order]}",
+            f"pick under this order: {self.p['grid'][gen_top(r.probs)]}; order-averaged pick: {self.p['grid'][gen_top(base.probs)]}",
+            "PICK CHANGED" if changed else "pick unchanged", ""] + self._panel(self.p, r, "this order")
+
+  def _switch(self, condition, name):
+    self._need_case()
+    self.condition = condition
+    plain = self._score(self.p)
+    if condition[0] == "plain":
+      return [f"{self.p['cell']}: plain"] + self._panel(self.p, plain, "plain")
+    r = self._score(self.p, condition)
+    self._row(name, self.p, r)
+    return [f"{self.p['cell']}: plain vs {name}"] + side_by_side(self._panel(self.p, plain, "plain"), self._panel(self.p, r, name[:30]))
+
+  def cmd_plain(self):
+    return self._switch(("plain", None), "plain")
+
+  def cmd_text(self, name):
+    return self._switch(("text", name), f"text {name}")
+
+  def cmd_adapter(self, name):
+    if name == "off":
+      self._need_case()
+      return self._switch(("plain", None), "plain")
+    return self._switch(("adapter", name), f"adapter {name}")
+
+  def cmd_say(self):
+    self._need_case()
+    import textwrap
+    with self.lock:
+      text, k = self.engine.say(self.p, self.condition)
+    pos = self.p["grid"].index(k) if k in self.p["grid"] else None
+    tail = (f"parsed offer: {k}   best: {self.p['best_offers']}" + ("" if pos is not None else "   (not on the price list)"))
+    return textwrap.wrap(f"{self.p['buyer']} would propose {text.strip()}", WIDTH) + [tail]
+
+  def cmd_table(self):
+    head = [" #  case                       condition         offer best  regret  soft   sec"]
+    body = []
+    for r in self.rows:
+      cid = r["case"].split("|")[0].replace("-information", "-inf").replace("-neutral", "-neu").replace("-pressure", "-pre")[:26]
+      best = ",".join(map(str, r["best"]))
+      reg = "  FAIL" if not r["ok"] else f" {regret_text(r['regret'], self.colour)}"
+      soft = "     -" if r.get("soft") is None else f"{r['soft']:6.2f}"
+      sec = "  -" if r["sec"] is None else f"{r['sec']:5.1f}"
+      body.append(f"{r['n']:>2}  {cid:<26} {r['condition'][:17]:<17} {('FAIL' if not r['ok'] else str(r['offer'])):>5} {best:<5} {reg} {soft} {sec}")
+    if not body:
+      return head + ["(no rows yet)"]
+    hidden = max(0, len(body) - (SCREEN - 3))
+    return head + ([f"... {hidden} earlier rows (all kept in the log)"] if hidden else []) + body[hidden:]
+
+
+GEN_FROZEN_ADAPTERS = {"teacher": "gen_teacher_lr1e-04_s0", "method": "gen_method_original_lr1e-04_s0"}
+
+
+def pick_examples_run():
+  """The claude_examples seed with the lowest selection-set-B soft regret (ties: lower seed). Never looks at test data."""
+  best = None
+  for sd in (0, 1, 2):
+    r = json.load(open(os.path.join(common.ROOT, "demo_out", "gen_lora", f"gen_claude_examples_lr1e-04_s{sd}.json")))
+    v = r["select_best"]["soft_regret"]
+    if best is None or v < best[0] - 1e-12:
+      best = (v, r["run_id"], r)
+  return best[1], best[2]
+
+
+class GenEngine:
+  """Live scoring of generated cases. Three adapters are loaded once (PEFT) and switched with set_adapter; 'plain' runs with the
+  adapter disabled. At startup: adapter-off scores equal the pre-load plain scores bit for bit, and each adapter reproduces its stored
+  tune probabilities (this also catches the inexact load of later adapters: their fp32 weights are re-copied from the files)."""
+
+  def __init__(self, model_name="9b"):
+    import gen_cases as g
+    import gen_lora
+    from refimpl import runtime
+    from refimpl.local_gemma2 import LocalGemma2
+    self.g = g
+    self.cases = {}
+    for l in open(os.path.join(g.OUT, "cases.jsonl")):
+      c = json.loads(l); self.cases[c["cid"]] = c
+    cells = {c["cell"]: c for c in json.load(open(os.path.join(g.OUT, "cells.json")))["cells"]}
+    for c in self.cases.values():
+      c.update({k: cells[c["cell"]][k] for k in ("payoffs", "best_payoff", "best_offers", "best_positions")})
+    self.cells = cells
+    self.score_case = gen_lora.score_case
+    model, tok = runtime.load_gemma(model_name, "cuda")
+    self.lm = LocalGemma2(model, tok)
+    self.cache = {}
+    ex_run, ex_res = pick_examples_run()
+    runs = {"examples": ex_run, **GEN_FROZEN_ADAPTERS}
+    self.runs = runs
+    self.texts = {"teacher": open(os.path.join(g.OUT, "teacher_method.txt")).read().strip(), "method": __import__("textrows").METHOD,
+                  "neutral": open(os.path.join(g.OUT, "neutral_text.txt")).read().strip()}
+    stored = {run: json.load(open(os.path.join(common.ROOT, "demo_out", "gen_lora", run + ".json"))) for run in runs.values()}
+    check = [c for c in self.cases.values() if c["split"] == "tune"][:2]
+    self.plain_before = {c["cid"]: self.score_case(self.lm, c)[0].tolist() for c in check}
+    from peft import PeftModel
+    from peft.utils import set_peft_model_state_dict
+    from safetensors.torch import load_file
+    names = list(runs)
+    dirs = {n: os.path.join(common.ROOT, stored[runs[n]]["adapter_dir"]) for n in names}
+    self.peft = PeftModel.from_pretrained(self.lm.model, dirs[names[0]], adapter_name=names[0])
+    for n in names[1:]:
+      self.peft.load_adapter(dirs[n], adapter_name=n)
+    for n in names:                                   # exact fp32 weights for every adapter
+      rr = set_peft_model_state_dict(self.peft, load_file(os.path.join(dirs[n], "adapter_model.safetensors")), adapter_name=n)
+      assert not getattr(rr, "unexpected_keys", None), f"adapter {n}: unexpected keys"
+    self.peft.eval()
+    with self.peft.disable_adapter():
+      for c in check:
+        assert self.score_case(self.lm, c)[0].tolist() == self.plain_before[c["cid"]], "adapter off does not match plain bit for bit"
+    for n in names:
+      self.peft.set_adapter(n)
+      for c in check:
+        d = max(abs(a - b) for a, b in zip(self.score_case(self.lm, c)[0], stored[runs[n]]["tune_probs_best"][c["cid"]]))
+        assert d < 1e-6, f"adapter {n} does not reproduce its stored tune probabilities (max diff {d})"
+    print(f"startup checks passed: adapter off == plain bit for bit; adapters {runs} reproduce stored tune probabilities", flush=True)
+
+  def score(self, c, condition, orders=None):
+    import contextlib
+    kind, arg = condition
+    orders = orders or self.g.orders()
+    key = (c["cid"], kind, arg, tuple(map(tuple, orders)))
+    if key not in self.cache:
+      notes = self.texts[arg] if kind == "text" else None
+      ctx = self.peft.disable_adapter() if kind != "adapter" else contextlib.nullcontext()
+      if kind == "adapter":
+        self.peft.set_adapter(arg)
+      t0 = time.perf_counter()
+      with ctx:
+        probs, per, mass = self.score_case(self.lm, c, notes, orders)
+      self.cache[key] = GenResult([float(x) for x in probs], mass, time.perf_counter() - t0, per)
+    return self.cache[key]
+
+  def say(self, c, condition=("plain", None)):
+    import contextlib
+    import scoring
+    text, _ = self.g.render(c, self.g.orders()[0])
+    stem = text[:text.index("Question:")]
+    prompt = stem + f"Question: What price would {c['buyer']} propose?\nAnswer: {c['buyer']} would propose"
+    if condition[0] == "adapter":
+      self.peft.set_adapter(condition[1]); ctx = contextlib.nullcontext()
+    else:
+      ctx = self.peft.disable_adapter()
+    with ctx, scoring.call_context(agent="demo-say", pid=c["cid"], temperature_override=0.0):
+      out = self.lm.sample_text(prompt, max_tokens=16, terminators=("\n",))
+    return out, gen_parse_offer(out)
+
+
 def print_map():
   import collections
   import numpy as np
@@ -466,6 +798,9 @@ def main():
   ap.add_argument("--replay")
   ap.add_argument("--model", default="9b", choices=("9b", "2b"))
   ap.add_argument("--no-colour", action="store_true")
+  ap.add_argument("--dataset", default="demo", choices=("demo", "gen"))
+  ap.add_argument("--script", help="read commands from this file instead of stdin")
+  ap.add_argument("--log", help="write the session log here (default logs/floor_<time>_<model>.jsonl)")
   args = ap.parse_args()
   if args.map:
     return print_map()
@@ -475,12 +810,16 @@ def main():
     ap.print_help()
     return
   os.makedirs(os.path.join(common.ROOT, "logs"), exist_ok=True)
-  log = os.path.join(common.ROOT, "logs", f"floor_{time.strftime('%Y%m%d_%H%M%S')}_{args.model}.jsonl")
+  log = args.log or os.path.join(common.ROOT, "logs", f"floor_{time.strftime('%Y%m%d_%H%M%S')}_{args.model}{'_gen' if args.dataset == 'gen' else ''}.jsonl")
+  if args.log:
+    open(log, "w").close()
   t = time.time()
-  engine = ModelEngine(args.model)
-  floor = Floor(engine, log, colour=not args.no_colour)
+  engine = GenEngine(args.model) if args.dataset == "gen" else ModelEngine(args.model)
+  floor = (GenFloor if args.dataset == "gen" else Floor)(engine, log, colour=not args.no_colour)
   print(f"floor: {args.model} loaded in {time.time() - t:.0f}s; log {os.path.relpath(log, common.ROOT)}")
-  for line in sys.stdin:
+  if args.dataset == "gen":
+    print(f"adapters: {engine.runs}", flush=True)
+  for line in (open(args.script) if args.script else sys.stdin):
     if not line.strip():
       continue
     print(f"> {line.strip()}")

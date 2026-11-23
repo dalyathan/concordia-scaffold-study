@@ -1,0 +1,204 @@
+{
+ "rule": "Choose the live demo cases by a FIXED RULE (written before running; display only, no test-set conclusion is drawn or reported).\n\nCandidates: the first case (name variant n0) of each test_same cell, in cases.jsonl order.\nMain case  : the first candidate of type 'below' (stated cost below resale) whose plain soft regret is >= 1 coin and whose examples-adapter\n             top offer (order-averaged) is a best offer.\nBackups    : the same rule for type 'no_cost' and for type 'at_or_above'. If no candidate of a type has plain soft regret >= 1 coin, the\n             fallback is the candidate of that type with the largest plain soft regret among those where the examples top offer is a best\n             offer (first in file order on ties), and the record says so.\nThe scan stops for a type at its first qualifying candidate. Writes demo/gen/demo_live_cases.json.",
+ "main": "V3-gB-information-C2-p1_10-w1-n0",
+ "backup_no_cost": "V9-gB-neutral-p3_7-w0-n0",
+ "backup_at_or_above": "V3-gC-information-C4-p1_5-w0-n0",
+ "how": {
+  "below": "primary rule",
+  "at_or_above": "primary rule",
+  "no_cost": "FALLBACK (no candidate with plain soft regret >= 1.0); largest plain soft regret 0.83"
+ },
+ "n_scanned_per_type": {
+  "below": 2,
+  "at_or_above": 8,
+  "no_cost": 20
+ },
+ "scan": {
+  "below": [
+   {
+    "cid": "V5-gC-information-C2-p1_5-w1-n0",
+    "plain_soft_regret": 0.979,
+    "examples_top": 3,
+    "examples_top_is_best": true
+   },
+   {
+    "cid": "V3-gB-information-C2-p1_10-w1-n0",
+    "plain_soft_regret": 1.47,
+    "examples_top": 2,
+    "examples_top_is_best": true
+   }
+  ],
+  "at_or_above": [
+   {
+    "cid": "V2-gC-information-C3-p1_10-w1-n0",
+    "plain_soft_regret": 0.969,
+    "examples_top": 3,
+    "examples_top_is_best": true
+   },
+   {
+    "cid": "V2-gA-information-C2-p3_7-w0-n0",
+    "plain_soft_regret": 0.707,
+    "examples_top": 1,
+    "examples_top_is_best": true
+   },
+   {
+    "cid": "V3-gA-information-C5-p2_6-w0-n0",
+    "plain_soft_regret": 0.003,
+    "examples_top": 1,
+    "examples_top_is_best": true
+   },
+   {
+    "cid": "V4-gB-information-C4-p1_10-w1-n0",
+    "plain_soft_regret": 0.014,
+    "examples_top": 2,
+    "examples_top_is_best": true
+   },
+   {
+    "cid": "V4-gA-information-C5-p3_7-w0-n0",
+    "plain_soft_regret": 0.003,
+    "examples_top": 1,
+    "examples_top_is_best": true
+   },
+   {
+    "cid": "V6-gC-information-C6-p1_10-w1-n0",
+    "plain_soft_regret": 0.0,
+    "examples_top": 3,
+    "examples_top_is_best": true
+   },
+   {
+    "cid": "V3-gB-information-C4-p2_6-w1-n0",
+    "plain_soft_regret": 0.309,
+    "examples_top": 2,
+    "examples_top_is_best": true
+   },
+   {
+    "cid": "V3-gC-information-C4-p1_5-w0-n0",
+    "plain_soft_regret": 1.186,
+    "examples_top": 3,
+    "examples_top_is_best": true
+   }
+  ],
+  "no_cost": [
+   {
+    "cid": "V3-gC-neutral-p3_7-w0-n0",
+    "plain_soft_regret": 0.354,
+    "examples_top": 3,
+    "examples_top_is_best": true
+   },
+   {
+    "cid": "V8-gA-pressure-p1_5-w0-n0",
+    "plain_soft_regret": 0.367,
+    "examples_top": 4,
+    "examples_top_is_best": true
+   },
+   {
+    "cid": "V8-gC-neutral-p1_10-w0-n0",
+    "plain_soft_regret": 0.099,
+    "examples_top": 4,
+    "examples_top_is_best": true
+   },
+   {
+    "cid": "V2-gB-neutral-p2_10-w0-n0",
+    "plain_soft_regret": 0.196,
+    "examples_top": 2,
+    "examples_top_is_best": true
+   },
+   {
+    "cid": "V5-gA-pressure-p2_6-w0-n0",
+    "plain_soft_regret": 0.198,
+    "examples_top": 3,
+    "examples_top_is_best": true
+   },
+   {
+    "cid": "V2-gB-pressure-p3_7-w0-n0",
+    "plain_soft_regret": 0.203,
+    "examples_top": 2,
+    "examples_top_is_best": true
+   },
+   {
+    "cid": "V9-gA-neutral-p2_6-w0-n0",
+    "plain_soft_regret": 0.793,
+    "examples_top": 4,
+    "examples_top_is_best": false
+   },
+   {
+    "cid": "V7-gB-pressure-p2_6-w1-n0",
+    "plain_soft_regret": 0.148,
+    "examples_top": 3,
+    "examples_top_is_best": false
+   },
+   {
+    "cid": "V7-gC-neutral-p2_6-w1-n0",
+    "plain_soft_regret": 0.051,
+    "examples_top": 4,
+    "examples_top_is_best": true
+   },
+   {
+    "cid": "V6-gB-pressure-p3_7-w1-n0",
+    "plain_soft_regret": 0.198,
+    "examples_top": 4,
+    "examples_top_is_best": true
+   },
+   {
+    "cid": "V9-gA-neutral-p1_5-w0-n0",
+    "plain_soft_regret": 0.582,
+    "examples_top": 4,
+    "examples_top_is_best": true
+   },
+   {
+    "cid": "V2-gB-pressure-p3_7-w1-n0",
+    "plain_soft_regret": 0.194,
+    "examples_top": 2,
+    "examples_top_is_best": true
+   },
+   {
+    "cid": "V2-gB-neutral-p3_7-w1-n0",
+    "plain_soft_regret": 0.179,
+    "examples_top": 2,
+    "examples_top_is_best": true
+   },
+   {
+    "cid": "V8-gA-pressure-p2_10-w1-n0",
+    "plain_soft_regret": 0.463,
+    "examples_top": 4,
+    "examples_top_is_best": true
+   },
+   {
+    "cid": "V4-gC-pressure-p2_10-w0-n0",
+    "plain_soft_regret": 0.579,
+    "examples_top": 3,
+    "examples_top_is_best": true
+   },
+   {
+    "cid": "V9-gC-pressure-p1_10-w1-n0",
+    "plain_soft_regret": 0.095,
+    "examples_top": 4,
+    "examples_top_is_best": true
+   },
+   {
+    "cid": "V2-gA-pressure-p1_10-w0-n0",
+    "plain_soft_regret": 0.046,
+    "examples_top": 1,
+    "examples_top_is_best": true
+   },
+   {
+    "cid": "V9-gB-neutral-p3_7-w0-n0",
+    "plain_soft_regret": 0.826,
+    "examples_top": 5,
+    "examples_top_is_best": true
+   },
+   {
+    "cid": "V7-gA-pressure-p1_10-w0-n0",
+    "plain_soft_regret": 0.103,
+    "examples_top": 4,
+    "examples_top_is_best": true
+   },
+   {
+    "cid": "V6-gB-neutral-p1_5-w0-n0",
+    "plain_soft_regret": 0.138,
+    "examples_top": 3,
+    "examples_top_is_best": true
+   }
+  ]
+ }
+}
