@@ -31,13 +31,14 @@ LETTERS = phase3.LETTERS
 OUT = os.path.join(common.ROOT, "demo_out", "gen_lora")
 ADAPTERS = os.path.join(common.ROOT, "demo_out", "adapters")
 FROZEN_LABELS = "0b6f0febaa1d32302bf275bab823893db481d0386e1eccb36e52a1cbb7f95839"
-ARMS = ("teacher", "method_original", "neutral", "wrong_rule", "answer_only", "claude_examples", "cheapest_label", "shuffled_claude")
+ARMS = ("teacher", "method_original", "neutral", "wrong_rule", "answer_only", "claude_examples", "cheapest_label", "shuffled_claude", "rule_hard")
 TRAIN_CELLS = os.path.join(g.OUT, "lora_train_cells.json")
 SELECT_CELLS = os.path.join(g.OUT, "lora_select_cells_B.json")   # (set A, lora_select_cells.json, is the teacher-loop feedback/winner set)
 
 
-def run_id(arm, lr, seed):
-  return f"gen_{arm}_lr{lr:.0e}_s{seed}"
+def run_id(arm, lr, seed, n=100):
+  """N = 100 keeps the original run ids (the earlier runs are the N = 100 runs of the learning curve)"""
+  return f"gen_{arm}_lr{lr:.0e}_s{seed}" if n == 100 else f"gen_{arm}_n{n}_lr{lr:.0e}_s{seed}"
 
 
 def make_train_cells():
@@ -115,21 +116,34 @@ def main():
   ap.add_argument("--max-epochs", type=int, default=5)
   ap.add_argument("--patience", type=int, default=2)
   ap.add_argument("--limit", type=int, default=0, help="smoke test: this many train cells and tune cases")
+  ap.add_argument("--n-cells", type=int, default=100, choices=(10, 25, 50, 100), help="learning curve: nested stratified subset of the 100 training cells (demo/gen/curve_subsets.json)")
+  ap.add_argument("--max-steps", type=int, default=500, help="curve runs (N < 100): optimizer steps = epochs x N, epochs = ceil(max_steps / N)")
   args = ap.parse_args()
   t_start = time.time()
-  rid = run_id(args.arm, args.lr, args.seed) + ("_smoke" if args.limit else "")
+  rid = run_id(args.arm, args.lr, args.seed, args.n_cells) + ("_smoke" if args.limit else "")
+  curve = args.n_cells < 100
+  if curve:
+    import math
+    args.max_epochs = math.ceil(args.max_steps / args.n_cells)
+  eval_every = max(1, 100 // args.n_cells)          # selection set B every 100 optimizer steps (1 epoch at N = 100)
   os.makedirs(OUT, exist_ok=True)
   cells = {c["cell"]: c for c in json.load(open(os.path.join(g.OUT, "cells.json")))["cells"]}
   allcases = {c["cid"]: c for c in map(json.loads, open(os.path.join(g.OUT, "cases.jsonl")))}
   spec = json.load(open(TRAIN_CELLS)) if os.path.exists(TRAIN_CELLS) else make_train_cells()
-  train = [allcases[f"{k}-n{v['name_variant']}"] for k, v in spec.items()]
+  if args.n_cells < 100:
+    import gen_curve
+    subset = set(gen_curve.load(args.n_cells))
+    assert subset <= set(spec) and len(subset) == args.n_cells
+  else:
+    subset = set(spec)
+  train = [allcases[f"{k}-n{v['name_variant']}"] for k, v in spec.items() if k in subset]
   tune_all = [c for c in allcases.values() if c["split"] == "tune"]
   sel_cells = json.load(open(SELECT_CELLS)) if os.path.exists(SELECT_CELLS) else make_select_cells()
   assert not set(sel_cells) & set(spec), "selection cells overlap the training cells"
   assert not set(sel_cells) & set(json.load(open(os.path.join(g.OUT, "lora_select_cells.json")))), "selection set B overlaps the teacher-loop set A"
   assert not set(sel_cells) & set(json.load(open(os.path.join(g.OUT, "packet_cells.json")))), "selection set B overlaps the teacher packet cells"
   tune_mon = [allcases[f"{k}-n0"] for k in sel_cells]          # SELECTION set (train cells outside the training set), name variant 0
-  mon_train = train[::5][:20]                                  # small train-side monitor (not used for selection)
+  mon_train = [] if curve else train[::5][:20]                 # small train-side monitor (not used for selection); skipped in the small-N curve runs
   if args.limit:
     train, tune_mon, tune_all, mon_train = train[:args.limit], tune_mon[:args.limit], tune_all[:args.limit], mon_train[:args.limit]
   assert all(c["split"] in ("train", "tune") for c in train + tune_all + tune_mon)
@@ -155,7 +169,7 @@ def main():
   lm = LocalGemma2(model, tok)
   letter_ix = torch.tensor([tok.convert_tokens_to_ids(l) for l in LETTERS])
   orders = g.orders()
-  texts = {"teacher": open(os.path.join(g.OUT, "teacher_method.txt")).read().strip(),
+  texts = {"rule_hard": open(os.path.join(g.OUT, "teacher_method.txt")).read().strip(), "teacher": open(os.path.join(g.OUT, "teacher_method.txt")).read().strip(),
            "method_original": __import__("textrows").METHOD, "neutral": open(os.path.join(g.OUT, "neutral_text.txt")).read().strip(),
            "wrong_rule": __import__("textrows").FIXED["wrong_rule"]}
 
@@ -176,6 +190,8 @@ def main():
         _, per, _ = score_case(lm, c, texts[args.arm], [orders[oi]])
         # per is the price distribution by grid position; the target is by letter
         t = [per[0][orders[oi][j]] for j in range(5)]
+        if args.arm == "rule_hard":                               # the argmax letter of the same distribution as a one-hot target (ties: lowest letter)
+          k_ = int(np.argmax(t)); t = [1.0 if j == k_ else 0.0 for j in range(5)]
       targets[(c["cid"], oi)] = t
   print(f"{rid}: {len(train)} train cases ({len(targets)} examples), {len(tune_all)} tune cases; targets built ({time.time() - t_start:.0f}s)", flush=True)
   examples = []
@@ -256,14 +272,15 @@ def main():
   plain_saved = {r["cid"]: r for r in map(json.loads, open(os.path.join(common.ROOT, "demo_out", "gen_plain_scores.jsonl")))}
   dev = max(abs(a - b) for c in tune_mon for a, b in zip(tp[c["cid"]], plain_saved[c["cid"]]["probs"]))
   assert dev < 1e-3, f"epoch-0 scoring differs from the saved plain scores by {dev}"
-  trp, trm = evaluate(mon_train)
-  history.append({"epoch": 0, "train_loss": None, "tune": s0, "train_sample": summarize(trp, trm, mon_train), "sec": None})
+  trp, trm = evaluate(mon_train) if mon_train else (None, None)
+  history.append({"epoch": 0, "train_loss": None, "tune": s0, "train_sample": summarize(trp, trm, mon_train) if mon_train else None, "sec": None})
   print(f"epoch 0 (= plain): selection-set soft regret {s0['soft_regret']:.3f} (max dev from saved plain {dev:.1e})", flush=True)
   best = {"epoch": 0, "tune": s0}
   peft_model.save_pretrained(save_dir)
   bad = 0
   rng = np.random.Generator(np.random.PCG64(args.seed))
   cids = [c["cid"] for c in train]
+  train_time_total = 0.0
   model.train()
   for epoch in range(1, args.max_epochs + 1):
     t = time.time()
@@ -277,14 +294,19 @@ def main():
         losses.append(float(loss) * len(exs))
       opt.step()
     t_train = time.time() - t
+    train_time_total += t_train
+    if epoch % eval_every and epoch != args.max_epochs:
+      continue                                                   # selection set B is scored every 100 optimizer steps (every epoch at N = 100)
     tp, tm = evaluate(tune_mon)
     tn = summarize(tp, tm, tune_mon)
-    trp, trm = evaluate(mon_train)
-    trs = summarize(trp, trm, mon_train)
-    history.append({"epoch": epoch, "train_loss": float(np.mean(losses)), "tune": tn, "train_sample": trs, "sec": time.time() - t, "sec_training": t_train})
-    print(f"epoch {epoch}: loss {np.mean(losses):.3f}; selection-set soft {tn['soft_regret']:.3f} (mass {tn['mass']:.2f}); train-sample soft {trs['soft_regret']:.3f}; {time.time() - t:.0f}s", flush=True)
+    trs = None
+    if mon_train:
+      trp, trm = evaluate(mon_train)
+      trs = summarize(trp, trm, mon_train)
+    history.append({"epoch": epoch, "step": epoch * len(cids), "train_loss": float(np.mean(losses)), "tune": tn, "train_sample": trs, "sec": time.time() - t, "sec_training": t_train})
+    print(f"epoch {epoch} (step {epoch * len(cids)}): loss {np.mean(losses):.3f}; selection-set soft {tn['soft_regret']:.3f} (mass {tn['mass']:.2f}); train-sample soft {trs['soft_regret'] if trs else float('nan'):.3f}; {time.time() - t:.0f}s", flush=True)
     with open(os.path.join(common.ROOT, "demo_out", "lora_progress.jsonl"), "a") as pf:
-      pf.write(json.dumps({"run": rid, "arm": args.arm, "lr": args.lr, "seed": args.seed, "epoch": epoch, "train_soft_regret": trs["soft_regret"],
+      pf.write(json.dumps({"run": rid, "arm": args.arm, "lr": args.lr, "seed": args.seed, "epoch": epoch, "train_soft_regret": trs["soft_regret"] if trs else None,
                            "heldout_soft_regret": tn["soft_regret"], "heldout_letter_mass": tn["mass"], "seconds": time.time() - t}) + "\n")
     if tn["soft_regret"] < best["tune"]["soft_regret"] - 1e-9:
       best = {"epoch": epoch, "tune": tn}
@@ -311,6 +333,8 @@ def main():
          "adapter_sha256": hashlib.sha256(open(os.path.join(save_dir, "adapter_model.safetensors"), "rb").read()).hexdigest(),
          "adapter_config_sha256": hashlib.sha256(open(os.path.join(save_dir, "adapter_config.json"), "rb").read()).hexdigest(),
          "sec_per_epoch": float(np.mean([h["sec"] for h in history[1:]])) if len(history) > 1 else None,
+         "n_cells": args.n_cells, "max_epochs": args.max_epochs, "eval_every_epochs": eval_every, "optimizer_steps_per_epoch": len(cids), "best_step": best["epoch"] * len(cids),
+         "sec_training_total": train_time_total, "train_cells": sorted(c["cell"] for c in train),
          "note": "lr and early stopping use the selection set (train cells outside the training set); the tune cells are scored once at the best epoch"}
   json.dump(res, open(os.path.join(OUT, f"{rid}.json"), "w"), indent=1)
   print(f"GENLORA {rid} COMPLETED: best epoch {best['epoch']}, selection set {best['tune']['soft_regret']:.3f}, tune full {full['soft_regret']:.3f}, {time.time() - t_start:.0f}s", flush=True)
