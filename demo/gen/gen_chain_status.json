@@ -1,9 +1,15 @@
 {
  "preconditions": {
-  "plain": 0.5706938982077263,
-  "teacher_text": 0.43136340601637874,
-  "neutral_text": 0.5406134875008414,
-  "method_original_text": 0.286991877759209,
+  "plain": 0.5840043959176638,
+  "teacher_text": 0.3416119337657627,
+  "neutral_text": 0.6512121870779568,
+  "method_original_text": 0.39528554138759814,
   "ok": true
- }
+ },
+ "plan": {
+  "level": "L2 method_original at teacher's lr only too",
+  "estimate_hours": 7.823283012310664,
+  "teacher_lr": 0.0001
+ },
+ "outcome": "BUDGET GUARD: stopped before gen_wrong_rule_lr1e-04_s1; later runs skipped"
 }
