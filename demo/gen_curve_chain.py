@@ -10,7 +10,7 @@ import gen_cases as g
 import gen_curve
 
 FROZEN = "0b6f0febaa1d32302bf275bab823893db481d0386e1eccb36e52a1cbb7f95839"
-LR, DEFAULT = 1e-4, 2100
+LR, DEFAULT = 1e-4, 2300
 OUT = os.path.join(common.ROOT, "demo_out", "gen_lora")
 RUNS = [("claude_examples", 25, 0), ("claude_examples", 10, 0), ("claude_examples", 50, 0), ("teacher", 25, 0), ("rule_hard", 25, 0), ("rule_hard", 100, 0), ("cheapest_label", 25, 0),
         ("claude_examples", 25, 1), ("claude_examples", 25, 2), ("claude_examples", 10, 1), ("claude_examples", 10, 2),
