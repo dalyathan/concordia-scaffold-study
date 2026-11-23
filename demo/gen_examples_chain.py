@@ -35,10 +35,10 @@ def run(a, lr, s):
   if done(a, lr, s):
     return
   est = mean_wall() / 3600
-  if spent() + est > args.budget_hours:
+  if max(spent(), (time.time() - t0) / 3600) + est > args.budget_hours:
     print(f"BUDGET GUARD: {spent():.2f} h spent + {est:.2f} h estimated > {args.budget_hours} h; skipping {rid(a, lr, s)} and everything after it", flush=True)
     json.dump({"outcome": f"BUDGET GUARD: stopped before {rid(a, lr, s)}"}, open(STATUS, "w"))
-    print("EXAMPLES CHAIN DONE", flush=True)
+    print("EXAMPLES CHAIN DONE (BUDGET STOP: later runs were not run)", flush=True)
     sys.exit(0)
   log = os.path.join(common.ROOT, "logs", f"gen_{a}_lr{lr:.0e}_s{s}.log")
   with open(log, "w") as f:

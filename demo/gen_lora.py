@@ -1,7 +1,7 @@
 """LoRA arms on the GENERATED dataset (train and tune cells only; test_same, test_hard, the old cells and the old adapters are never
 touched). One process per run.
 
-  python demo/gen_lora.py --arm teacher|method_original|neutral|wrong_rule|answer_only [--lr 3e-4] [--seed 0]
+  python demo/gen_lora.py --arm teacher|method_original|neutral|wrong_rule|answer_only|claude_examples|cheapest_label|shuffled_claude [--lr 3e-4] [--seed 0]
 
 Arms (targets are distributions over the five option letters, per case and option order):
   teacher / method_original / neutral / wrong_rule   context distillation: the model's own first-token letter distribution with the
@@ -10,7 +10,7 @@ Arms (targets are distributions over the five option letters, per case and optio
 Loss: cross-entropy of the answer letter at P1 against the target over the five letters, using the letters' FULL-VOCABULARY log-probs.
 LoRA rank 4, alpha 8, q/k/v/o, fp32 adapter weights, AdamW, one optimizer step per case (its fixed 3 option orders), gradient
 checkpointing, at most 5 epochs, early stopping (patience 2) on a SELECTION set of 42 train cells that are not in the training set
-(demo/gen/lora_select_cells.json, 14 per type, name variant 0, five orders). The lr is chosen on the same set. The 42 TUNE cells are scored
+(demo/gen/lora_select_cells_B.json, 14 per type, name variant 0, five orders). The lr is chosen on the same set. The 42 TUNE cells are scored
 only once, at the best epoch, and are used for the verdict only (they are not used for any selection).
 Training set: demo/gen/lora_train_cells.json (100 train cells, one fixed name variant each, 3 fixed orders per case: 300 examples)."""
 from __future__ import annotations
@@ -30,6 +30,7 @@ from refimpl.local_gemma2 import CHOICE_SYSTEM, LocalGemma2, build_messages, ens
 LETTERS = phase3.LETTERS
 OUT = os.path.join(common.ROOT, "demo_out", "gen_lora")
 ADAPTERS = os.path.join(common.ROOT, "demo_out", "adapters")
+FROZEN_LABELS = "0b6f0febaa1d32302bf275bab823893db481d0386e1eccb36e52a1cbb7f95839"
 ARMS = ("teacher", "method_original", "neutral", "wrong_rule", "answer_only", "claude_examples", "cheapest_label", "shuffled_claude")
 TRAIN_CELLS = os.path.join(g.OUT, "lora_train_cells.json")
 SELECT_CELLS = os.path.join(g.OUT, "lora_select_cells_B.json")   # (set A, lora_select_cells.json, is the teacher-loop feedback/winner set)
@@ -68,18 +69,25 @@ def make_select_cells():
 
 
 def shuffled_labels(claude):
-  """Claude's labelled grid positions permuted within case type by a derangement (no case keeps its own label's slot), seed fixed."""
+  """Claude's labelled grid positions permuted within case type (numpy PCG64 seed 20261127). Among 20000 random derangements of the cases of a
+  type, the one with the FEWEST cases that receive a label equal to their own is kept (G1: a derangement of indices alone can leave most labels
+  unchanged; for at-or-above all 33 labels are position 0, so that type cannot be shuffled and agrees completely)."""
   rng = np.random.Generator(np.random.PCG64(20261127))
   out = {}
   for typ in g.TYPES:
     ids = sorted(cid for cid in claude if cid_type[cid] == typ)
     n = len(ids)
-    while True:
+    own = np.array([claude[c] for c in ids])
+    best = None
+    for _ in range(20000):
       perm = rng.permutation(n)
-      if all(perm[i] != i for i in range(n)):
-        break
+      if any(perm[i] == i for i in range(n)):
+        continue
+      agree = int((own[perm] == own).sum())
+      if best is None or agree < best[0]:
+        best = (agree, perm)
     for i, cid in enumerate(ids):
-      out[cid] = claude[ids[perm[i]]]
+      out[cid] = claude[ids[best[1][i]]]
   return out
 
 
@@ -126,13 +134,22 @@ def main():
     train, tune_mon, tune_all, mon_train = train[:args.limit], tune_mon[:args.limit], tune_all[:args.limit], mon_train[:args.limit]
   assert all(c["split"] in ("train", "tune") for c in train + tune_all + tune_mon)
   global LABELS, cid_type
-  cid_type = {c["cid"]: c["type"] for c in train}
+  full_ids = [f"{k}-n{v['name_variant']}" for k, v in spec.items()]
+  cid_type = {cid: allcases[cid]["type"] for cid in full_ids}
   LABELS = {}
+  label_info = {}
   if args.arm in ("claude_examples", "cheapest_label", "shuffled_claude"):
+    assert hashlib.sha256(open(os.path.join(g.OUT, "claude_labels.json"), "rb").read()).hexdigest() == FROZEN_LABELS, "claude_labels.json changed"
+    assert all(allcases[cid]["grid"][0] == min(allcases[cid]["grid"]) for cid in full_ids), "position 0 must be the cheapest price"
     cl = json.load(open(os.path.join(g.OUT, "claude_labels.json")))["labels"]
-    assert set(cl) == {c["cid"] for c in train}, "claude labels must cover exactly the 100 training cases"
+    assert set(cl) == set(full_ids) and len(full_ids) == 100, "claude labels must cover exactly the 100 training cases"
     claude = {k: v["position"] for k, v in cl.items()}
     LABELS = {"claude_examples": claude, "cheapest_label": {k: 0 for k in claude}, "shuffled_claude": shuffled_labels(claude) if args.arm == "shuffled_claude" else None}[args.arm]
+    label_info = {"labels_sha256": hashlib.sha256(json.dumps(LABELS, sort_keys=True).encode()).hexdigest(),
+                  "label_agreement_with_claude_by_type": {t: float(np.mean([LABELS[c] == claude[c] for c in claude if cid_type[c] == t])) for t in g.TYPES},
+                  "label_share_cheapest_by_type": {t: float(np.mean([LABELS[c] == 0 for c in claude if cid_type[c] == t])) for t in g.TYPES},
+                  "code_sha256": hashlib.sha256(open(__file__, "rb").read()).hexdigest()}
+    print("label info:", json.dumps(label_info), flush=True)
     print("labels:", args.arm, "mean grid position", float(np.mean(list(LABELS.values()))), "share cheapest", float(np.mean([v == 0 for v in LABELS.values()])), flush=True)
   model, tok = runtime.load_gemma("9b", "cuda")
   lm = LocalGemma2(model, tok)
@@ -288,7 +305,7 @@ def main():
   assert abs(rl - best["tune"]["soft_regret"]) < 1e-3, f"reloaded best adapter scores {rl}, expected {best['tune']['soft_regret']}"
   fp, fm = evaluate(tune_all)
   full = summarize(fp, fm, tune_all)
-  res = {"run_id": rid, "arm": args.arm, "lr": args.lr, "seed": args.seed, "rank": args.rank, "trainable_parameters": n_train,
+  res = {**label_info, "run_id": rid, "arm": args.arm, "lr": args.lr, "seed": args.seed, "rank": args.rank, "trainable_parameters": n_train,
          "best_epoch": best["epoch"], "best_epoch_is_zero": best["epoch"] == 0, "select_best": best["tune"], "tune_monitor_best": best["tune"], "tune_full_best": full, "tune_probs_best": fp, "tune_mass_best": fm,
          "history": history, "epochs_run": len(history) - 1, "adapter_dir": os.path.relpath(save_dir, common.ROOT), "wall_s": time.time() - t_start,
          "adapter_sha256": hashlib.sha256(open(os.path.join(save_dir, "adapter_model.safetensors"), "rb").read()).hexdigest(),
