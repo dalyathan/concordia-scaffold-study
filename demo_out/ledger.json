@@ -1122,6 +1122,23 @@
   {
    "beat": "inside-the-model",
    "rung": 5,
+   "method": "generated-data LoRA claude_examples, lr 1e-04, seed 2",
+   "split": "tune cells (42, generated)",
+   "in_sample": "yes",
+   "soft_regret": 0.05672710399685209,
+   "ci": null,
+   "change_vs_plain": -0.600514506822216,
+   "control": "plain (tune cells)",
+   "control_regret": 0.6572416108190681,
+   "beats_control": "yes",
+   "wall_time": 1865.6007347106934,
+   "verdict": "beats plain on tune",
+   "source": "demo_out/gen_lora/gen_claude_examples_lr1e-04_s2.json",
+   "note": "best epoch 2; selection-set soft regret 0.067"
+  },
+  {
+   "beat": "inside-the-model",
+   "rung": 5,
    "method": "generated-data LoRA claude_examples, lr 3e-04, seed 0",
    "split": "tune cells (42, generated)",
    "in_sample": "yes",
