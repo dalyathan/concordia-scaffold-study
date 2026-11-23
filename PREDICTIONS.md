@@ -1,0 +1,14 @@
+# PREDICTIONS.md - written and committed before any run of GEN_CURVE_PLAN.md (tune soft regret; lower is better)
+
+Reference numbers known beforehand (tune, 42 cells): plain 0.657; always-cheapest 0.429; stated-cost rule 0.214; examples-100 (3 seeds, already trained) 0.032 (seeds 0.013 / 0.026 / 0.057); rule-soft-100 = teacher-distil (3 seeds) 0.376; the in-prompt teacher paragraph's argmax policy (order-averaged, CPU computation from stored scores, a reference for rule-hard) has hard regret 0.41 on tune (below 0.68, at_or_above 0.14, no_cost 0.41; it picks the cheapest option in 39% / 32% / 61% of cells).
+
+Scoring rule for each prediction: HELD if the direction is right and the observed value is inside the stated range (or the stated comparison holds); FAILED if the direction is wrong or the value is outside the range by more than the range's width; UNCLEAR otherwise (including a bootstrap interval that straddles the stated threshold).
+
+P1 Curve (examples-N, mean of 3 seeds): N=10: 0.30 (range 0.15-0.50); N=25: 0.10 (0.05-0.18); N=50: 0.05 (0.03-0.09); N=100: 0.032 (observed, not predicted). Each step down is a decrease (monotone in the mean).
+P2 Smallest N within 0.05 of examples-100 (examples-N mean <= 0.082): N = 50. At N=25 the mean is above 0.082 (probability 65%); at N=50 it is at or below 0.082 (probability 80%); N=10 is not within 0.05 (probability 90%).
+P3 Examples beat rules at equal N: examples-25 beats rule-soft-25 and rule-hard-25, and examples-100 beats rule-soft-100 and rule-hard-100, each with the lower bound of the clustered paired bootstrap above 0. Expected gaps: rule-soft-25 minus examples-25 = +0.35 (range +0.20 to +0.50); rule-soft-100 minus examples-100 = +0.34 (observed reference); rule-hard-25 minus examples-25 = +0.32 (+0.15 to +0.45); rule-hard-100 minus examples-100 = +0.37 (+0.22 to +0.50).
+P4 Rule-hard does not close the gap to examples: rule-hard-100 = 0.40 (range 0.30-0.50) and rule-hard-25 = 0.42 (0.30-0.55); each within 0.08 of the matching rule-soft run (rule-soft-25 predicted 0.45, range 0.33-0.55), so the share of the rule-soft-to-examples gap closed by hard targets, (rule-soft - rule-hard) / (rule-soft - examples), is below 0.25 at both N. Reading: the content (the paragraph's behaviour), not the target type, limits the rule arms.
+P5 Cheapest-label-25 = 0.43 (0.40-0.46): the same as always-cheapest; examples-25 beats it with lower bound above 0.
+P6 Slope on stated cost over the 14 below cells (oracle 0.76): examples-100 0.76 (observed); examples-50 0.70 (0.55-0.80); examples-25 0.55 (0.30-0.75); examples-10 0.25 (0.0-0.55); rule-soft and rule-hard at N=25 and 100 below 0.4; cheapest-label-25 near 0.0.
+P7 Letter mass 1.00 (>= 0.98) for every trained run.
+P8 No run keeps epoch 0 for examples-N, N >= 25; for N = 10 the probability of at least one seed keeping epoch 0 is 15%.
