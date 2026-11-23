@@ -1,71 +1,101 @@
 # Teaching Gemma to haggle
 
-Can a small open model be made a better negotiator by changing it internally, with a stronger model as the teacher? This repository tests that on **Gemma 2 9B-it** in a one-shot buying decision from the 2024 Concordia haggling game, where the best offer is computable, so every answer gets an exact score: the profit it leaves on the table (regret).
+Can a small open model be made a better negotiator by changing it internally, with a stronger model (Claude) as the teacher? This repository tests that on **Gemma 2 9B-it** in a one-shot buying decision taken from the 2024 Concordia haggling game. The best offer can be calculated exactly, so every answer gets an exact score: **regret**, the profit the buyer left on the table compared with the best possible offer, in coins. Zero is perfect.
 
-The work climbs a ladder. Each rung is a complete result on its own, with its controls:
+The live numbers are in **[RESULTS_LEDGER.md](RESULTS_LEDGER.md)** (one row per method ever tried, dead ends included) and the running log is **[DEMO_STATUS.md](DEMO_STATUS.md)**. This page holds the settled findings, the problem tree with what is solved, and the history of how we got here.
 
-1. **Measure the failure.** Score every decision against the best offer.
-2. **Fix it with text.** How much does one sentence in the prompt buy?
-3. **Fix it with activation steering.** Can a vector added to the model's activations do what the sentence does?
-4. **Fix it in the weights.** Can LoRA training move the sentence's effect into the model, so it works with no sentence?
+## Results at a glance
 
-The full, current numbers are in **[RESULTS_LEDGER.md](RESULTS_LEDGER.md)** (one row per method ever tried, dead ends included) and the running log is **[DEMO_STATUS.md](DEMO_STATUS.md)**.
+Losses are mean regret in coins per decision; lower is better. "Locked test" means a set of cases that was fingerprinted before any model saw it and scored exactly once, under a rule written in advance.
 
-## What we have found so far
+| Question | Answer | Key numbers |
+| --- | --- | --- |
+| Does plain Gemma fail? | Yes. It ignores the cost the seller states and offers about 2 coins almost regardless. | Not optimal in 55% of decisions; its offer moves 0.12 coins per coin of stated cost (should be 1) |
+| Does one sentence in the prompt fix it? | Mostly. Same-length neutral text, a wrong rule and "only your profit matters" do nothing. | Held-out loss 0.58 → 0.17 |
+| Can a steering vector do what the sentence does? | No. Vectors that move offers are only a push toward one answer letter. Patching shows why: the sentence's effect differs case by case and appears only in the last third of the network. | Best coherent move about 0.2 coins; still worse than "always offer 2" |
+| Can the sentence be trained into the weights (LoRA)? | Yes, on the fixed cells. | Locked test: 0.26, same as the sentence in the prompt (0.26); plain 0.53; outcome **SUPPORT** |
+| Does Claude's own written lesson train in? | It improves with feedback, but trained in it mostly becomes an "offer the cheapest" knob and hurts cases with no stated cost. | Tuning: 0.38 vs plain 0.66; **not passed** |
+| Do Claude's worked solutions train in? | Yes, and Gemma's offer now follows the stated cost, including on harder unseen cases. | Locked tests: same-range 0.04 (plain 0.69), harder 0.17 (plain 1.30); both **passed** |
+| Does the fix reach Gemma's written answers? | No. The add-ons fix the multiple-choice pick, not what Gemma says in words. | Written offer agrees with its own pick on about a third of cases |
 
-**The failure is real.** Plain Gemma leaves money on the table in 55% of decisions. When the seller states a cost below resale value, it is wrong 97% of the time. Its offer moves only 0.12 coins per coin of stated cost (it should move 1): it mostly offers 2 coins whatever the cost.
+Two limits to state with every result: Claude's "worked solutions" were the correct answers (it solved the game with a script), so they show that a teacher who can solve a task can produce data that fixes a student, not that Claude taught beyond that. And every fix so far lives in the multiple-choice channel, not in free text.
 
-**One sentence fixes most of it.** A fixed method paragraph with no numbers cuts regret by 58% on tuning cases (0.71 → 0.30 coins) and by 70% on held-out cells (0.58 → 0.17). Controls do nothing: same-length neutral text, a wrong rule, "only your profit matters" and the bare acceptance rule all leave Gemma where it was. "Always offer 2 coins", which uses no model at all, also beats plain Gemma (0.53), so every fix is compared with it too.
+## The problem tree and what is solved
 
-**Steering does not reproduce the sentence.**
+Root: make Gemma 2 9B a better negotiator by changing it internally, with Claude as the teacher. Revised on November 23 after the results.
 
-- Mean-difference vectors at the decision token, averaged over answer orders (layers 12 to 39), never moved the offer by more than about 0.2 coins while the answer format held.
-- Vectors built separately for each answer order do move offers at layers 33 to 39, by up to 1.3 coins. But they behave like a push toward one answer letter: the next order's vector pushes the other way, they match a plain push toward the "1 coin" letter almost exactly, and they still do worse than "always offer 2".
-- Patching shows why. The sentence's effect appears only in the last third of the network (none by layer 24, about half by layer 33, all by layer 41) and is specific to each case, so it cancels when averaged into one direction.
+| | Branch | Question | Status |
+| --- | --- | --- | --- |
+| A | Measure | Can each decision be scored, and is the failure real? | ✅ Solved |
+| A4 | | Do the multiple-choice pick and the written answer agree? | ❌ Open: they mostly don't |
+| B | Where a fix can live | Prompt, activations or weights? | ✅ Answered: prompt yes, activations no (mechanism known), weights yes |
+| C1 | What to train on | Rules, worked examples or answers? | 🟡 Examples won; comparison not yet clean |
+| C2 | | Soft or hard training targets? | 🔄 Running |
+| C3 | | How many examples are needed? | 🔄 Running (learning curve at 10, 25, 50, 100) |
+| D1 | What the teacher adds | With few examples, do a teacher's examples or explanations beat plain answers? | ❌ Open |
+| D2 | | Does a teacher that sees the student's internals fix it better? | ❌ Open: the novel experiment |
+| D3 | | Does teaching work on a task with no calculable answer (multi-round haggle)? | ❌ Open |
+| E1 | Real behaviour | Does the fix reach written answers? | ❌ Open: first priority |
+| E2 | | Multi-round negotiation | ❌ Open |
+| E3 | | The seller role and side effects | ❌ Open |
+| F | Transfer | New values, price grids and wording | ✅ Passed |
+| F | | Other models (Llama 3.1 8B) | ❌ Open |
 
-The steering hook itself is verified: an exact patch at the last layer reproduces the sentence's output.
+Pruned: baking the vector into a bias (convenience, not knowledge), steering side effects (moot), reasoning pairs for steering, and the contest winners' reasoning (it belongs to the separate pre-registered study below).
 
-**LoRA: in progress.** Safety checks pass (the training path equals the scoring path; an adapter switched off equals plain Gemma exactly). The main test distils the method sentence into the weights and compares it with matched controls (neutral-text and wrong-rule distillation, shuffled labels) on held-out cells, under a pass rule written before training.
+## History
 
-All numbers so far are on build and tuning cells. **The test set (18 cells, 72 cases) is locked** and gets one look after every setting is frozen.
+**Nov 20–21: the harness.** Reworked the Concordia haggling game into one buying decision with an exact best offer. Moved from CPU to one NVIDIA A10G on AWS; repeated scoring is bit-identical. Baseline on 140 cases: plain Gemma loses money in 55% of decisions.
+
+**Nov 21: is the failure real, and what does a sentence buy?** The failure is about pricing, not answer position (position explains about 15% of choices). One method sentence cuts losses by 58% on tuning cases; matched control texts do nothing. Blind review gates were added to the process (see below).
+
+**Nov 21–22: steering.** Three tuning runs were stopped and redesigned: the first was mis-scaled, the second too weak, and a dose scan showed the positive control failed. A final-layer patch proved the steering code was correct. Vectors built per answer order did move offers at layers 33–39, but only as a push toward one answer letter. Patching located the sentence's effect: case-specific and late. Steering was closed for this failure.
+
+**Nov 22: training the sentence in.** The first loss function let the adapter dodge the answer format (letter mass fell to 1%); it was caught after one epoch and replaced. Training on the correct answers reached zero held-out loss. The distilled sentence missed its development pass rule by 0.003 against the wrong-rule control; follow-up runs matched seeds and learning rates. One look at the locked test set: **SUPPORT**. Free-text answers got worse.
+
+**Nov 22: a larger generated dataset and Claude as teacher.** A generator built 300 training and 42 tuning cells plus two locked test sets (same-range, and harder: new resale values, price grids and seller wording). A blind Claude wrote a lesson from Gemma's mistakes; one round of feedback improved it (loss 0.43 → 0.25 on its feedback cells), a second round made it worse and was rejected by a rule set in advance. Trained in, the lesson became an "offer cheap" knob and did harm on no-cost cases: **not passed**.
+
+**Nov 23: worked examples.** A blind Claude solved the 100 training cases (by script, all correct). Trained on those, Gemma reached 0.03 on tuning cells and its offer followed the stated cost (slope 0.76, as good as the best play). One look at both generated test sets: **passed** on both, and on each harder slice.
+
+**Nov 23: the demo and what's next.** The stage tool now switches the trained add-ons on and off live; a precision bug in loading several adapters was found and fixed; free text was checked and ruled out as stage evidence; every beat is recorded for replay. Two new locked test sets of 120 cells each were generated for the next experiments. A learning-curve experiment (rules vs examples at matched data, soft vs hard targets) is running, with its predictions committed before the runs.
 
 ## How the work is kept honest
 
-- **Cells, not cases.** A cell is one combination of resale value, seller line and stated cost. Training, tuning and test never share a cell.
-- **A control for every claim.** Same-length neutral text, a wrong rule, random directions tuned on the same budget, negated vectors, shuffled labels and model-free baselines.
-- **Order-averaged readout.** Every answer is scored under all five rotations of the option order, because position alone changes the top answer in two thirds of cases.
-- **Blind review gates** ([REVIEW_GATES.md](REVIEW_GATES.md)). Before a big run, before a conclusion and before the test set, fresh reviewer agents read only a packet of the relevant files and judge the plan or the result. Their reviews are kept in [reviews/](reviews/).
-- **Rules written before results.** Pass rules and decision rules are committed before the runs they judge.
+- **Cells, not cases.** A cell is one combination of resale value, price list, seller line and stated cost. Training, tuning and test never share a cell.
+- **A control for every claim.** Same-length neutral text, a wrong rule, random directions tuned on the same budget, shuffled labels, "always the cheapest" labels, and model-free baselines such as "always offer 2".
+- **Order-averaged readout.** Every answer is scored under all five rotations of the option order.
+- **Blind review gates** ([REVIEW_GATES.md](REVIEW_GATES.md)). Before a big run, before a conclusion and before any test set, fresh reviewer agents read only a packet of the relevant files and judge the plan or the result. Their reviews are in [reviews/](reviews/).
+- **Rules before results.** Pass rules, decision rules and predictions are committed before the runs they judge. Each locked test set is looked at once.
 
 ## Repository map
 
 | Path | What it is |
 | --- | --- |
-| `demo/` | The ladder: splits, failure checks, text rows, steering vectors and checks, LoRA, the stage tool |
-| `demo/floor.py` | Live tool: score a case, change the stated cost, shuffle options, switch text, steering or adapter on and off |
-| `demo/steercheck.py`, [README_DEMO.md](README_DEMO.md) | A reusable five-step recipe for testing whether a steering vector beats a prompt and a constant |
-| `demo_out/` | Saved results (per-case scores, scans, LoRA progress) |
+| `demo/floor.py`, [DEMO_RUNBOOK.md](DEMO_RUNBOOK.md) | Stage tool: score a case, change the stated cost, shuffle options, switch the prompt text or a trained add-on on and off; the runbook gives every command and fallback |
+| `demo/gen_cases.py`, `demo/gen/` | Case generator, frozen cell lists, locked test sets and their fingerprints, Claude's lessons and labels |
+| `demo/gen_lora.py` and its chains | LoRA training arms and controls on the generated data |
+| `demo/` (other files) | The fixed-cell ladder: splits, failure checks, text rows, steering vectors and checks, the first LoRA runs |
+| `demo/steercheck.py`, [README_DEMO.md](README_DEMO.md) | A reusable recipe for testing whether a steering vector beats a prompt and a constant |
+| `demo_out/` | Saved results and reports |
 | [RESULTS_LEDGER.md](RESULTS_LEDGER.md) | Every method tried, its control, and a one-line verdict |
 | [DEMO_STATUS.md](DEMO_STATUS.md) | Running log of every step and choice |
 | `reviews/` | Blind reviews from each gate |
-| `refimpl/`, `tests/` | Core game, scoring, oracle and statistics, with unit tests |
-| [PROTOCOL.md](PROTOCOL.md), `registration/` | A separate, pre-registered study of the top three NeurIPS 2024 Concordia contest agents (see below) |
+| `refimpl/`, `tests/` | Core game, scoring, best-offer calculation and statistics, with unit tests |
+| [PROTOCOL.md](PROTOCOL.md), `registration/` | The separate pre-registered study (see below) |
 
 ## Reproducing
 
-Hardware: one 24 GB GPU (an NVIDIA A10G on AWS g5.2xlarge was used). Each case takes about 1.5 seconds on Gemma 2 9B.
+Hardware: one 24 GB GPU (an NVIDIA A10G on AWS g5.2xlarge was used). Each case takes about 1.5 seconds on Gemma 2 9B; one LoRA run takes about 40 minutes.
 
-1. Python 3.11 and the pinned packages in `requirements.gpu.lock` (torch 2.4.1, transformers 4.44.2), plus `peft==0.12.0` for the LoRA runs.
+1. Python 3.11 and the pinned packages in `requirements.gpu.lock` (torch 2.4.1, transformers 4.44.2), plus `peft==0.12.0`.
 2. Clone [google-deepmind/concordia](https://github.com/google-deepmind/concordia) into `./concordia` at commit `3643ac0466f748b8055b61feb0b7908411f73d84` and use it through `PYTHONPATH`.
 3. Accept the Gemma licence on Hugging Face, then run `HF_TOKEN=… python scripts/download_models.py`, which downloads pinned revisions into `./models` and checks every weight file's SHA-256.
 4. Set `CUBLAS_WORKSPACE_CONFIG=:4096:8` and `HF_HUB_OFFLINE=1`.
-5. Run the tests with `PYTHONPATH=concordia:. python -m pytest -q tests/`, then follow [README_DEMO.md](README_DEMO.md) step by step.
-
-Scoring is deterministic: repeated runs give bit-identical results.
+5. Run the tests with `PYTHONPATH=concordia:. python -m pytest -q tests/`, then follow [DEMO_RUNBOOK.md](DEMO_RUNBOOK.md) or [README_DEMO.md](README_DEMO.md).
 
 ## The pre-registered study
 
-`PROTOCOL.md`, `refimpl/` and `registration/` also hold a separate pre-registered study: do the reasoning texts of the top three NeurIPS 2024 Concordia contest agents lower regret in this decision, and can an activation direction reproduce the effect? The demo work never uses that study's cases (name variants 1 to 14), never imports the contest agents' code, and does not edit its protocol. Contest agent code is not redistributed here; it is downloaded from the NeurIPS supplementary archive and verified by SHA-256.
+`PROTOCOL.md`, `refimpl/` and `registration/` also hold a separate pre-registered study: do the reasoning texts of the top three NeurIPS 2024 Concordia contest agents lower regret in this decision, and can an activation direction reproduce the effect? The work above never uses that study's cases (name variants 1 to 14), never imports the contest agents' code, and does not edit its protocol. Contest agent code is not redistributed here.
 
 ## Talk
 
