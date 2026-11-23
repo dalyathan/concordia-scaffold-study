@@ -1037,6 +1037,23 @@
   {
    "beat": "inside-the-model",
    "rung": 5,
+   "method": "generated-data LoRA answer_only, lr 3e-04, seed 0",
+   "split": "tune cells (42, generated)",
+   "in_sample": "yes",
+   "soft_regret": 0.1183783928864791,
+   "ci": null,
+   "change_vs_plain": -0.538863217932589,
+   "control": "plain (tune cells)",
+   "control_regret": 0.6572416108190681,
+   "beats_control": "yes",
+   "wall_time": 2258.09991979599,
+   "verdict": "beats plain on tune",
+   "source": "demo_out/gen_lora/gen_answer_only_lr3e-04_s0.json",
+   "note": "best epoch 4; selection-set soft regret 0.120"
+  },
+  {
+   "beat": "inside-the-model",
+   "rung": 5,
    "method": "generated-data LoRA teacher, lr 1e-03, seed 0",
    "split": "tune cells (42, generated)",
    "in_sample": "yes",
