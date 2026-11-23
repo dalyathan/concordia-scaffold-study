@@ -1071,6 +1071,23 @@
   {
    "beat": "inside-the-model",
    "rung": 5,
+   "method": "generated-data LoRA cheapest_label, lr 1e-04, seed 0",
+   "split": "tune cells (42, generated)",
+   "in_sample": "yes",
+   "soft_regret": 0.4285981932914673,
+   "ci": null,
+   "change_vs_plain": -0.22864341752760076,
+   "control": "plain (tune cells)",
+   "control_regret": 0.6572416108190681,
+   "beats_control": "yes",
+   "wall_time": 2256.939695119858,
+   "verdict": "beats plain on tune",
+   "source": "demo_out/gen_lora/gen_cheapest_label_lr1e-04_s0.json",
+   "note": "best epoch 5; selection-set soft regret 0.314"
+  },
+  {
+   "beat": "inside-the-model",
+   "rung": 5,
    "method": "generated-data LoRA claude_examples, lr 1e-04, seed 0",
    "split": "tune cells (42, generated)",
    "in_sample": "yes",
