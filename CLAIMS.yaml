@@ -1,0 +1,65 @@
+# Each claim in README.md (and reports) with its evidence. Checked by tools/check_claims.py.
+# kind run_mean  : mean over run records in runs/ (legacy imports from tools/import_legacy.py) of per-case soft regret
+# kind file_value: a number in a stored JSON result file
+# kind none      : no machine-checkable source yet -> listed as UNBACKED (see REFACTOR_STATUS.md)
+scan:
+  - file: README.md
+    from: "## Results at a glance"
+    ignore: ["2", "9", "1"]      # "2 coins" (a price), "9B", "Gemma 2" are labels, not results
+claims:
+  - id: plain-fails-share
+    file: README.md
+    text: "Not optimal in 55% of decisions"
+    numbers:
+      - {shown: "55%", evidence: {kind: file_value, path: demo_out/failure_map.json, key: share_nonzero_hard_regret, scale: 100, decimals: 0}}
+  - id: plain-slope
+    file: README.md
+    text: "its offer moves 0.12 coins per coin of stated cost (should be 1)"
+    numbers:
+      - {shown: "0.12", evidence: {kind: none, reason: "DEMO_STATUS.md line ~226 table; the source script's output is not stored as a run record or JSON file"}}
+      - {shown: "1", evidence: {kind: none, reason: "definition (one-for-one), not a measurement"}}
+  - id: sentence-heldout
+    file: README.md
+    text: "Held-out loss 0.58 → 0.17"
+    numbers:
+      - {shown: "0.58", evidence: {kind: none, reason: "fixed-cell sentence experiment (DEMO_STATUS.md); per-case outputs not imported as run records"}}
+      - {shown: "0.17", evidence: {kind: none, reason: "same"}}
+  - id: steering-coherent
+    file: README.md
+    text: "Best coherent move about 0.2 coins"
+    numbers:
+      - {shown: "0.2", evidence: {kind: none, reason: "steering checks (demo_out/steer_checks.json); the 'coherent' filter is a judgement in DEMO_STATUS.md"}}
+  - id: lora-test-lora
+    file: README.md
+    text: "Locked test: 0.26, same as the sentence in the prompt (0.26); plain 0.53"
+    numbers:
+      - {shown: "0.26", evidence: {kind: file_value, path: demo_out/test_look.json, key: arm_soft_regret.method, decimals: 2}}
+      - {shown: "0.53", evidence: {kind: file_value, path: demo_out/test_look.json, key: arm_soft_regret.plain, decimals: 2}}
+  - id: lora-test-sentence
+    file: README.md
+    text: "same as the sentence in the prompt (0.26)"
+    numbers:
+      - {shown: "0.26", evidence: {kind: file_value, path: demo_out/test_look.json, key: arm_soft_regret.method_text_in_prompt, decimals: 2}}
+  - id: lesson-tune
+    file: README.md
+    text: "Tuning: 0.38 vs plain 0.66"
+    numbers:
+      - {shown: "0.38", evidence: {kind: run_mean, solver: "legacy:teacher", split: tune, decimals: 2}}
+      - {shown: "0.66", evidence: {kind: run_mean, solver: "legacy:plain", split: tune, decimals: 2}}
+  - id: examples-same
+    file: README.md
+    text: "same-range 0.04 (plain 0.69)"
+    numbers:
+      - {shown: "0.04", evidence: {kind: run_mean, solver: "legacy:claude_examples", split: test_same, decimals: 2}}
+      - {shown: "0.69", evidence: {kind: run_mean, solver: "legacy:plain", split: test_same, decimals: 2}}
+  - id: examples-hard
+    file: README.md
+    text: "harder 0.17 (plain 1.30)"
+    numbers:
+      - {shown: "0.17", evidence: {kind: run_mean, solver: "legacy:claude_examples", split: test_hard, decimals: 2}}
+      - {shown: "1.30", evidence: {kind: run_mean, solver: "legacy:plain", split: test_hard, decimals: 2}}
+  - id: say-agreement
+    file: README.md
+    text: "Written offer agrees with its own pick on about a third of cases"
+    qualitative: true
+    numbers: []

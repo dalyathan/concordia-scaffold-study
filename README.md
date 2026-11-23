@@ -40,7 +40,7 @@ Root: make Gemma 2 9B a better negotiator by changing it internally, with Claude
 | E3 | | The seller role and side effects | ❌ Open |
 | F | Transfer | New values, price grids and wording | ✅ Passed |
 | F | | Other models (Llama 3.1 8B) | ❌ Open |
-| G | Infrastructure | Pluggable models and tasks, and numbers that can't be made up | 🟡 Related work surveyed (RELATED_SETUPS.md, Nov 23); refactor not started |
+| G | Infrastructure | Pluggable models and tasks, and numbers that can't be made up | 🟡 Built and unit-tested on CPU (Nov 23, branch `refactor`); GPU parity check, gated-model tokenizer checks and a G2 review still open (REFACTOR_STATUS.md) |
 
 Pruned: baking the vector into a bias (convenience, not knowledge), steering side effects (moot), reasoning pairs for steering, and the contest winners' reasoning (it belongs to the separate pre-registered study below).
 
@@ -61,6 +61,8 @@ Pruned: baking the vector into a bias (convenience, not knowledge), steering sid
 **Nov 23: the demo and what's next.** The stage tool now switches the trained add-ons on and off live; a precision bug in loading several adapters was found and fixed; free text was checked and ruled out as stage evidence; every beat is recorded for replay. Two new locked test sets of 120 cells each were generated for the next experiments. A learning-curve experiment (rules vs examples at matched data, soft vs hard targets) is running, with its predictions committed before the runs.
 
 **Nov 23: related setups (branch `refactor`).** Before refactoring the code to take any model or task, a fresh agent with no project history surveyed similar setups: evaluation harnesses (lm-evaluation-harness, Inspect, HELM), provenance tools (DVC, MLflow, Hydra) and 14 papers, each opened on its arXiv page to check title and first author. A first attempt could fetch no pages, and its unchecked output was discarded. Main lessons: structure each condition as an interchangeable "solver"; generate every reported number from stored per-case records; hash-lock all inputs; keep the scorer out of the experiment code's reach. No paper was found comparing prompt, lesson, steering and LoRA across several small models. See RELATED_SETUPS.md.
+
+**Nov 23: the refactor (branch `refactor`).** Built `harness/` next to the old code (which was left untouched, because the running GPU job uses it): one YAML config per model (five models), a task interface with haggling ported (it reproduces `cells.json`, `cases.jsonl` and `fingerprints.json` byte for byte) and a toy second task, every condition as an interchangeable solver, run records for every run, a protected scorer whose hash must be registered in DECISIONS.md, planted known-answer cases in every evaluation, an independent stdlib-only recompute, generated result tables, and CLAIMS.yaml with a checker that fails on unbacked, mismatched or new hand-typed numbers. The 40 earlier per-case result files were imported as run records and the README numbers they back were re-derived: ten reproduce, five have no machine-checkable source yet (listed in REFACTOR_STATUS.md), none differ. The Qwen tokenizer check passed; the three gated models could not be checked without a token. All 16 checkable arXiv citations in the related-setups survey matched title and first author on arxiv.org. The model-backed solvers are written but have never run on a GPU.
 
 ## How the work is kept honest
 
@@ -83,6 +85,7 @@ Pruned: baking the vector into a bias (convenience, not knowledge), steering sid
 | [RESULTS_LEDGER.md](RESULTS_LEDGER.md) | Every method tried, its control, and a one-line verdict |
 | [DEMO_STATUS.md](DEMO_STATUS.md) | Running log of every step and choice |
 | `reviews/` | Blind reviews from each gate |
+| `harness/`, `tools/`, [TASKS.md](TASKS.md), [MODEL_CHECKS.md](MODEL_CHECKS.md) | Refactor (branch `refactor`): model configs, task interface, solvers, run records, protected scorer, claim and citation checkers; `runs/` holds the run records, [RESULTS_GENERATED.md](RESULTS_GENERATED.md) is generated from them, [CLAIMS.yaml](CLAIMS.yaml) ties README numbers to evidence, [DECISIONS.md](DECISIONS.md) logs choices |
 | `refimpl/`, `tests/` | Core game, scoring, best-offer calculation and statistics, with unit tests |
 | [PROTOCOL.md](PROTOCOL.md), `registration/` | The separate pre-registered study (see below) |
 
