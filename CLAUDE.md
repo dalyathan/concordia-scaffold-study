@@ -4,3 +4,4 @@
 - Never use name variants 1-14 for the demo, never import agent_py_files, and do not edit PROTOCOL.md unless a message explicitly asks.
 - Interventions run on build and tuning cases only. Test cases need G3 and an explicit go from the owner.
 - Do not ask questions in unattended runs: log choices in DEMO_STATUS.md, commit and push after each step.
+- Keep the problem tree in README.md ("The problem tree and what is solved") current. When a step finishes, update the status of every node it touches: ✅ solved or answered, 🟡 partly, 🔄 running, ❌ open. A node is marked ✅ only after its G2 verdict (or a locked test look, where one applies) is written; give the evidence in a few words and the date. Add a dated one-paragraph entry to the README's "History" section for each finished experiment, dead ends included. Commit the README with the step.
