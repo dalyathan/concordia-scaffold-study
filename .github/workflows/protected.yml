@@ -1,0 +1,18 @@
+# Fails when a protected file (see tools/lock_protected.py) differs from the owner's pin tag, or when its hash is not registered.
+# The owner creates the tag (git tag scorer-pin-N <reviewed commit>; git push origin scorer-pin-N) and protects tags `scorer-pin-*`
+# in the repository settings so that no agent session can move or delete them. Not run in the refactor session (no CI access).
+name: protected-files
+on: [push, pull_request]
+jobs:
+  pin:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - run: pip install pyyaml
+      - run: python -m tools.lock_protected
+      - name: compare with the newest owner pin
+        run: |
+          PIN=$(git tag --list 'scorer-pin-*' --sort=-version:refname | head -1)
+          test -n "$PIN" || { echo "no scorer-pin-* tag yet"; exit 1; }
+          python -m tools.lock_protected --pin "$PIN"

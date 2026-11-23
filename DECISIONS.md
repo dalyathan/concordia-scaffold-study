@@ -64,3 +64,27 @@ Both reviewers: **partly justified** (no no-go). Applied = fixed on this branch;
 | Regret of the order-averaged distribution hides position bias (Sonnet) | **Deferred**: `per_order_soft_regret` is already stored; a report column is to be added |
 
 Protected files were not changed by these fixes (hash check still OK).
+
+## Owner pin and widened protected set (2026-11-23, follow-up to the blind reviews)
+
+The protected set now also holds harness/evaluate.py, harness/task.py, tools/recompute.py, tools/check_claims.py and tools/lock_protected.py. The LAST registration line per path wins (an older hash does not cover a current file). Locked-split looks need HARNESS_PIN_REF: a git tag the owner creates and protects on the remote; evaluate() compares every protected file with its content at that tag, so a self-attested line here is not enough. Reasons for the new hashes: evaluate.py gained the pin check and the locked-look rules; check_claims.py gained model-keyed, recomputed, hash-pinned evidence and the 'definition' kind; recompute.py gained order-mean, hard-regret and by-type checks; task.py and lock_protected.py first registered.
+
+PROTECTED harness/evaluate.py sha256 5d331e04c17652aab8e9f758489a14365069fe19c3447cdb79363f793c76fafa
+PROTECTED harness/protected/__init__.py sha256 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+PROTECTED harness/protected/payoffs/__init__.py sha256 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+PROTECTED harness/protected/payoffs/haggling.py sha256 a0423b3a0a2908c6494e8e2e1f2c55e35c6c17eb934122f06cf7455bc95a13e2
+PROTECTED harness/protected/payoffs/parity.py sha256 1f1ea76ad4f5744a4b5d5b9adbc74c7bf99eb31e4bc7f9d518936062a6cb3f21
+PROTECTED harness/protected/scorer.py sha256 3b6141e7cd16ed0c4cab1c058653427f673ecdfbc9fb9436716e4ebb16084265
+PROTECTED harness/task.py sha256 83f681161d65b082c1bec72644c8b227ad8bd971ff79f336bbe05a4586f1132d
+PROTECTED tools/check_claims.py sha256 40233867c69a11c89eca62f2bfe5c23d2b5de5d478002bafac0f559cc1ae23e3
+PROTECTED tools/lock_protected.py sha256 a6b867be22c6131a873fb44bc1410580659825c0b0d1772293edd6d39f5bbf3e
+PROTECTED tools/recompute.py sha256 58a4fd150859f89a2f70ada9909d2475017960c538c898dcf6ae7888801b0600
+
+## Follow-up items 2-6 (2026-11-23)
+
+- **Parity tolerances frozen before any GPU run** (tools/parity_check.py): per case max |p_new - p_old| <= 1e-3 on order-averaged probabilities; |mean soft regret difference| <= 0.005; all planted cases pass; letter-mass floor met. Not run: the GPU is busy; commands are in the script's docstring.
+- **Unbacked README numbers now backed**: 0.12 -> demo/step2.json (regression slope 0.1221); 0.58 and 0.17 -> demo_out/lora_baselines.json (held-out tune cells: plain 0.577, method text 0.171); 0.2 -> demo_out/steer_checks.json (order-averaged cheap vector, L27 f 0.25, offer moves -0.2048); "1" is a `definition` (the ideal slope by the payoff rule), not a measurement. Source files are sha256-pinned in CLAIMS.yaml. `check_claims.py --strict` now passes and a test enforces it.
+- **Old fixed-cell test look imported per case** (tools/import_legacy_testlook.py): 14 records. Their regrets equal the stored `arm_soft_regret` (method 0.2630, plain 0.5339, text-in-prompt 0.2557, wrong-rule 0.4819, neutral 0.5494) and the README's 0.26 / 0.26 / 0.53 now come from the records. No model run, no new look.
+- **Revisions pinned** in every model YAML (`revision:`); Backend uses it. Gemma 9B/2B pins are the project's download_models.py pins (equal to hub main today); Llama, Qwen and Mistral are hub main on 2026-11-23 and have not been used by any experiment yet.
+- **Gated checks**: with a Hugging Face token saved through the credential form, Gemma 2 9B, Gemma 2 2B and Mistral v0.3 pass (letter ids written; layer count and hidden size equal the hub config). Llama 3.1 8B is still NOT CHECKED: the token's account has no access to that repo (its licence is the owner's to accept). Mistral's template accepts a system message; the config keeps `system_role: false` (folding is safe either way).
+- **Environment changes I made** (needed for the above, nothing else): allowlist now also has cas-server.xethub.hf.co, us.aws.cdn.hf.co (Hugging Face file hosts) besides huggingface.co, cdn-lfs, cas-bridge, arxiv.org, export.arxiv.org; and a Hugging Face credential was saved on the environment via the credential form.

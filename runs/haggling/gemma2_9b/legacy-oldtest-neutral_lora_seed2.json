@@ -1,0 +1,4088 @@
+{
+ "cases": [
+  {
+   "cid": "v15-V2-information-C2",
+   "inputs": {
+    "C": 2,
+    "V": 2,
+    "buyer": "Opal Apricot",
+    "cid": "v15-V2-information-C2",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "information",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Orion Apricotwood",
+    "split": "old_test",
+    "type": "cost at or above resale"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.0,
+    0.0,
+    -1.0,
+    -2.0,
+    -3.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.6442991065527583,
+    0.14455305543253943,
+    0.19726389289734733,
+    0.01081837805728713,
+    0.003065567060067778
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 0.22809735019212493,
+    "top_is_best": true,
+    "top_option": 0
+   },
+   "split": "old_test",
+   "type": "cost at or above resale"
+  },
+  {
+   "cid": "v15-V2-information-C4",
+   "inputs": {
+    "C": 4,
+    "V": 2,
+    "buyer": "Opal Apricot",
+    "cid": "v15-V2-information-C4",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "information",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Orion Apricotwood",
+    "split": "old_test",
+    "type": "cost at or above resale"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    -2.0,
+    -3.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.19778291510726836,
+    0.5183334895321645,
+    0.27363932317340234,
+    0.007169028055752168,
+    0.003075244131412798
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1,
+     2
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 0.023563788505742728,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "cost at or above resale"
+  },
+  {
+   "cid": "v15-V2-neutral",
+   "inputs": {
+    "C": null,
+    "V": 2,
+    "buyer": "Opal Apricot",
+    "cid": "v15-V2-neutral",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "neutral",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Orion Apricotwood",
+    "split": "old_test",
+    "type": "no cost"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.2,
+    0.0,
+    -0.6,
+    -1.6,
+    -3.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.4981293351679392,
+    0.41843856255470824,
+    0.07218200593393545,
+    0.007681250385738128,
+    0.0035688459576789684
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0
+    ],
+    "best_payoff": 0.2,
+    "hard_regret": 0.0,
+    "soft_regret": 0.16667987501699133,
+    "top_is_best": true,
+    "top_option": 0
+   },
+   "split": "old_test",
+   "type": "no cost"
+  },
+  {
+   "cid": "v15-V2-pressure",
+   "inputs": {
+    "C": null,
+    "V": 2,
+    "buyer": "Opal Apricot",
+    "cid": "v15-V2-pressure",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "pressure",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Orion Apricotwood",
+    "split": "old_test",
+    "type": "no cost"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.2,
+    0.0,
+    -0.6,
+    -1.6,
+    -3.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.4785152646872243,
+    0.2977027707611089,
+    0.20764655285859793,
+    0.011848221367366327,
+    0.004287190325702637
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0
+    ],
+    "best_payoff": 0.2,
+    "hard_regret": 0.0,
+    "soft_regret": 0.26070360394260794,
+    "top_is_best": true,
+    "top_option": 0
+   },
+   "split": "old_test",
+   "type": "no cost"
+  },
+  {
+   "cid": "v15-V3-information-C1",
+   "inputs": {
+    "C": 1,
+    "V": 3,
+    "buyer": "Opal Apricot",
+    "cid": "v15-V3-information-C1",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "information",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Orion Apricotwood",
+    "split": "old_test",
+    "type": "cost below resale"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    2.0,
+    1.0,
+    0.0,
+    -1.0,
+    -2.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.02885847268717166,
+    0.9394318960331491,
+    0.017288278309783904,
+    0.010524966150777675,
+    0.003896386819117634
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0
+    ],
+    "best_payoff": 2.0,
+    "hard_regret": 1.0,
+    "soft_regret": 1.0211688983815206,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "cost below resale"
+  },
+  {
+   "cid": "v15-V3-information-C3",
+   "inputs": {
+    "C": 3,
+    "V": 3,
+    "buyer": "Opal Apricot",
+    "cid": "v15-V3-information-C3",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "information",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Orion Apricotwood",
+    "split": "old_test",
+    "type": "cost at or above resale"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    -1.0,
+    -2.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.049994414854459567,
+    0.9238045831335278,
+    0.008662919019488926,
+    0.013958375267368959,
+    0.003579707725154857
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1,
+     2
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 0.02111779071767867,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "cost at or above resale"
+  },
+  {
+   "cid": "v15-V3-information-C5",
+   "inputs": {
+    "C": 5,
+    "V": 3,
+    "buyer": "Opal Apricot",
+    "cid": "v15-V3-information-C5",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "information",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Orion Apricotwood",
+    "split": "old_test",
+    "type": "cost at or above resale"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -2.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.06707252210217886,
+    0.8088565099181928,
+    0.0649973882696778,
+    0.054920268917547733,
+    0.004153310792402729
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1,
+     2,
+     3
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 0.008306621584805458,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "cost at or above resale"
+  },
+  {
+   "cid": "v15-V4-information-C2",
+   "inputs": {
+    "C": 2,
+    "V": 4,
+    "buyer": "Opal Apricot",
+    "cid": "v15-V4-information-C2",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "information",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Orion Apricotwood",
+    "split": "old_test",
+    "type": "cost below resale"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.0,
+    2.0,
+    1.0,
+    0.0,
+    -1.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.3167509948496773,
+    0.15086118555804048,
+    0.4870591317223557,
+    0.03937720076295626,
+    0.005951487106970297
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     1
+    ],
+    "best_payoff": 2.0,
+    "hard_regret": 1.0,
+    "soft_regret": 1.2171699842685335,
+    "top_is_best": false,
+    "top_option": 2
+   },
+   "split": "old_test",
+   "type": "cost below resale"
+  },
+  {
+   "cid": "v15-V4-information-C4",
+   "inputs": {
+    "C": 4,
+    "V": 4,
+    "buyer": "Opal Apricot",
+    "cid": "v15-V4-information-C4",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "information",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Orion Apricotwood",
+    "split": "old_test",
+    "type": "cost at or above resale"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -1.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.016712373763173173,
+    0.6326259966824168,
+    0.33607476032549577,
+    0.010994859500652484,
+    0.00359200972826174
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1,
+     2,
+     3
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 0.00359200972826174,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "cost at or above resale"
+  },
+  {
+   "cid": "v15-V4-neutral",
+   "inputs": {
+    "C": null,
+    "V": 4,
+    "buyer": "Opal Apricot",
+    "cid": "v15-V4-neutral",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "neutral",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Orion Apricotwood",
+    "split": "old_test",
+    "type": "no cost"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.6000000000000001,
+    0.8,
+    0.6,
+    0.0,
+    -1.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.05959619674255061,
+    0.7704492268238021,
+    0.13883463210686192,
+    0.026852449970968112,
+    0.004267494355817194
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     1
+    ],
+    "best_payoff": 0.8,
+    "hard_regret": 0.0,
+    "soft_regret": 0.06884961558712788,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "no cost"
+  },
+  {
+   "cid": "v15-V4-pressure",
+   "inputs": {
+    "C": null,
+    "V": 4,
+    "buyer": "Opal Apricot",
+    "cid": "v15-V4-pressure",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "pressure",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Orion Apricotwood",
+    "split": "old_test",
+    "type": "no cost"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.6000000000000001,
+    0.8,
+    0.6,
+    0.0,
+    -1.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.03260553999114422,
+    0.6987428241973629,
+    0.23857175513744217,
+    0.02531151387651407,
+    0.004768366797536694
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     1
+    ],
+    "best_payoff": 0.8,
+    "hard_regret": 0.0,
+    "soft_regret": 0.08306773036249449,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "no cost"
+  },
+  {
+   "cid": "v15-V5-information-C1",
+   "inputs": {
+    "C": 1,
+    "V": 5,
+    "buyer": "Opal Apricot",
+    "cid": "v15-V5-information-C1",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "information",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Orion Apricotwood",
+    "split": "old_test",
+    "type": "cost below resale"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    4.0,
+    3.0,
+    2.0,
+    1.0,
+    0.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.041635372491408106,
+    0.859612764888442,
+    0.06832082881729373,
+    0.023866131028111352,
+    0.006564902774744802
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0
+    ],
+    "best_payoff": 4.0,
+    "hard_regret": 1.0,
+    "soft_regret": 1.0941124267063427,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "cost below resale"
+  },
+  {
+   "cid": "v15-V5-information-C3",
+   "inputs": {
+    "C": 3,
+    "V": 5,
+    "buyer": "Opal Apricot",
+    "cid": "v15-V5-information-C3",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "information",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Orion Apricotwood",
+    "split": "old_test",
+    "type": "cost below resale"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.0,
+    0.0,
+    2.0,
+    1.0,
+    0.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.03124852358386519,
+    0.7605907196699297,
+    0.014535338371039746,
+    0.18539915130058612,
+    0.008226267074579085
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     2
+    ],
+    "best_payoff": 2.0,
+    "hard_regret": 2.0,
+    "soft_regret": 1.7855301719573344,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "cost below resale"
+  },
+  {
+   "cid": "v15-V5-information-C5",
+   "inputs": {
+    "C": 5,
+    "V": 5,
+    "buyer": "Opal Apricot",
+    "cid": "v15-V5-information-C5",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "information",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Orion Apricotwood",
+    "split": "old_test",
+    "type": "cost at or above resale"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.04079951832685659,
+    0.5100457932762854,
+    0.17524154981386722,
+    0.2675961694766706,
+    0.00631696910632021
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 0.0,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "cost at or above resale"
+  },
+  {
+   "cid": "v15-V6-information-C2",
+   "inputs": {
+    "C": 2,
+    "V": 6,
+    "buyer": "Opal Apricot",
+    "cid": "v15-V6-information-C2",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "information",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Orion Apricotwood",
+    "split": "old_test",
+    "type": "cost below resale"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.0,
+    4.0,
+    3.0,
+    2.0,
+    1.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.29756133825548053,
+    0.08712419055369633,
+    0.292873097537481,
+    0.3070744156699898,
+    0.01536695798335247
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     1
+    ],
+    "best_payoff": 4.0,
+    "hard_regret": 2.0,
+    "soft_regret": 2.1433681558494397,
+    "top_is_best": false,
+    "top_option": 3
+   },
+   "split": "old_test",
+   "type": "cost below resale"
+  },
+  {
+   "cid": "v15-V6-information-C4",
+   "inputs": {
+    "C": 4,
+    "V": 6,
+    "buyer": "Opal Apricot",
+    "cid": "v15-V6-information-C4",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "information",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Orion Apricotwood",
+    "split": "old_test",
+    "type": "cost below resale"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    2.0,
+    1.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.02257802440505402,
+    0.6700800072737481,
+    0.28214089906483425,
+    0.014492872976209664,
+    0.010708196280153955
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     3
+    ],
+    "best_payoff": 2.0,
+    "hard_regret": 2.0,
+    "soft_regret": 1.9603060577674267,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "cost below resale"
+  },
+  {
+   "cid": "v15-V6-neutral",
+   "inputs": {
+    "C": null,
+    "V": 6,
+    "buyer": "Opal Apricot",
+    "cid": "v15-V6-neutral",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "neutral",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Orion Apricotwood",
+    "split": "old_test",
+    "type": "no cost"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    1.0,
+    1.6,
+    1.7999999999999998,
+    1.6,
+    1.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.08140420232180112,
+    0.6311988383247198,
+    0.10028306364166004,
+    0.17534894799608663,
+    0.011764947715732449
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     2
+    ],
+    "best_payoff": 1.7999999999999998,
+    "hard_regret": 0.19999999999999973,
+    "soft_regret": 0.2358448772941879,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "no cost"
+  },
+  {
+   "cid": "v15-V6-pressure",
+   "inputs": {
+    "C": null,
+    "V": 6,
+    "buyer": "Opal Apricot",
+    "cid": "v15-V6-pressure",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "pressure",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Orion Apricotwood",
+    "split": "old_test",
+    "type": "no cost"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    1.0,
+    1.6,
+    1.7999999999999998,
+    1.6,
+    1.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.04265957987966259,
+    0.538984122085849,
+    0.181482596626037,
+    0.22048137157375755,
+    0.016392329834693804
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     2
+    ],
+    "best_payoff": 1.7999999999999998,
+    "hard_regret": 0.19999999999999973,
+    "soft_regret": 0.1991346265034062,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "no cost"
+  },
+  {
+   "cid": "v16-V2-information-C2",
+   "inputs": {
+    "C": 2,
+    "V": 2,
+    "buyer": "Sasha Grapevine",
+    "cid": "v16-V2-information-C2",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "information",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Peregrine Grapehill",
+    "split": "old_test",
+    "type": "cost at or above resale"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.0,
+    0.0,
+    -1.0,
+    -2.0,
+    -3.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.5789792096039877,
+    0.23780709428127128,
+    0.17295019679009932,
+    0.007761913766429337,
+    0.002501585558212256
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 0.19597878099759475,
+    "top_is_best": true,
+    "top_option": 0
+   },
+   "split": "old_test",
+   "type": "cost at or above resale"
+  },
+  {
+   "cid": "v16-V2-information-C4",
+   "inputs": {
+    "C": 4,
+    "V": 2,
+    "buyer": "Sasha Grapevine",
+    "cid": "v16-V2-information-C4",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "information",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Peregrine Grapehill",
+    "split": "old_test",
+    "type": "cost at or above resale"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    -2.0,
+    -3.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.08361308029757397,
+    0.787876969473839,
+    0.12244916530860546,
+    0.004165582821943605,
+    0.0018952020980380169
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1,
+     2
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 0.01401677193800126,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "cost at or above resale"
+  },
+  {
+   "cid": "v16-V2-neutral",
+   "inputs": {
+    "C": null,
+    "V": 2,
+    "buyer": "Sasha Grapevine",
+    "cid": "v16-V2-neutral",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "neutral",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Peregrine Grapehill",
+    "split": "old_test",
+    "type": "no cost"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.2,
+    0.0,
+    -0.6,
+    -1.6,
+    -3.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.35457930306708374,
+    0.6046648230381485,
+    0.03197847701267384,
+    0.006096834391762189,
+    0.00268056249033172
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0
+    ],
+    "best_payoff": 0.2,
+    "hard_regret": 0.2,
+    "soft_regret": 0.16606784809200223,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "no cost"
+  },
+  {
+   "cid": "v16-V2-pressure",
+   "inputs": {
+    "C": null,
+    "V": 2,
+    "buyer": "Sasha Grapevine",
+    "cid": "v16-V2-pressure",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "pressure",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Peregrine Grapehill",
+    "split": "old_test",
+    "type": "no cost"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.2,
+    0.0,
+    -0.6,
+    -1.6,
+    -3.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.46680155930859923,
+    0.40245908096998495,
+    0.12036190054496738,
+    0.007551137363538562,
+    0.0028263218129098945
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0
+    ],
+    "best_payoff": 0.2,
+    "hard_regret": 0.0,
+    "soft_regret": 0.19941761368565197,
+    "top_is_best": true,
+    "top_option": 0
+   },
+   "split": "old_test",
+   "type": "no cost"
+  },
+  {
+   "cid": "v16-V3-information-C1",
+   "inputs": {
+    "C": 1,
+    "V": 3,
+    "buyer": "Sasha Grapevine",
+    "cid": "v16-V3-information-C1",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "information",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Peregrine Grapehill",
+    "split": "old_test",
+    "type": "cost below resale"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    2.0,
+    1.0,
+    0.0,
+    -1.0,
+    -2.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.023553184184350737,
+    0.9473815197446678,
+    0.018517761899123547,
+    0.007770574608619832,
+    0.0027769595632380017
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0
+    ],
+    "best_payoff": 2.0,
+    "hard_regret": 1.0,
+    "soft_regret": 1.0188366056217266,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "cost below resale"
+  },
+  {
+   "cid": "v16-V3-information-C3",
+   "inputs": {
+    "C": 3,
+    "V": 3,
+    "buyer": "Sasha Grapevine",
+    "cid": "v16-V3-information-C3",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "information",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Peregrine Grapehill",
+    "split": "old_test",
+    "type": "cost at or above resale"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    -1.0,
+    -2.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.03270424478484976,
+    0.9433079131605069,
+    0.008414894578299418,
+    0.012746432011719957,
+    0.0028265154646239018
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1,
+     2
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 0.01839946294096776,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "cost at or above resale"
+  },
+  {
+   "cid": "v16-V3-information-C5",
+   "inputs": {
+    "C": 5,
+    "V": 3,
+    "buyer": "Sasha Grapevine",
+    "cid": "v16-V3-information-C5",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "information",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Peregrine Grapehill",
+    "split": "old_test",
+    "type": "cost at or above resale"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -2.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.02520305934764539,
+    0.7096101898897996,
+    0.1609122422003473,
+    0.10132284445339741,
+    0.0029516641088103575
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1,
+     2,
+     3
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 0.005903328217620715,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "cost at or above resale"
+  },
+  {
+   "cid": "v16-V4-information-C2",
+   "inputs": {
+    "C": 2,
+    "V": 4,
+    "buyer": "Sasha Grapevine",
+    "cid": "v16-V4-information-C2",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "information",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Peregrine Grapehill",
+    "split": "old_test",
+    "type": "cost below resale"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.0,
+    2.0,
+    1.0,
+    0.0,
+    -1.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.2710164135415064,
+    0.27876409307112265,
+    0.3493312435670433,
+    0.0953166673792751,
+    0.005571582441052615
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     1
+    ],
+    "best_payoff": 2.0,
+    "hard_regret": 1.0,
+    "soft_regret": 1.098712152731764,
+    "top_is_best": false,
+    "top_option": 2
+   },
+   "split": "old_test",
+   "type": "cost below resale"
+  },
+  {
+   "cid": "v16-V4-information-C4",
+   "inputs": {
+    "C": 4,
+    "V": 4,
+    "buyer": "Sasha Grapevine",
+    "cid": "v16-V4-information-C4",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "information",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Peregrine Grapehill",
+    "split": "old_test",
+    "type": "cost at or above resale"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -1.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.01067777374813146,
+    0.7030788133474013,
+    0.2691888592208053,
+    0.013963350717949446,
+    0.0030912029657123906
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1,
+     2,
+     3
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 0.0030912029657123906,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "cost at or above resale"
+  },
+  {
+   "cid": "v16-V4-neutral",
+   "inputs": {
+    "C": null,
+    "V": 4,
+    "buyer": "Sasha Grapevine",
+    "cid": "v16-V4-neutral",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "neutral",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Peregrine Grapehill",
+    "split": "old_test",
+    "type": "no cost"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.6000000000000001,
+    0.8,
+    0.6,
+    0.0,
+    -1.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.04294012278971475,
+    0.802643246654523,
+    0.10908039055618055,
+    0.041014405980850696,
+    0.004321834018730864
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     1
+    ],
+    "best_payoff": 0.8,
+    "hard_regret": 0.0,
+    "soft_regret": 0.07099492868757529,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "no cost"
+  },
+  {
+   "cid": "v16-V4-pressure",
+   "inputs": {
+    "C": null,
+    "V": 4,
+    "buyer": "Sasha Grapevine",
+    "cid": "v16-V4-pressure",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "pressure",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Peregrine Grapehill",
+    "split": "old_test",
+    "type": "no cost"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.6000000000000001,
+    0.8,
+    0.6,
+    0.0,
+    -1.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.028482203251200523,
+    0.8223886860392895,
+    0.12295478662743402,
+    0.02258250513362315,
+    0.0035918189484529955
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     1
+    ],
+    "best_payoff": 0.8,
+    "hard_regret": 0.0,
+    "soft_regret": 0.05481867618984071,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "no cost"
+  },
+  {
+   "cid": "v16-V5-information-C1",
+   "inputs": {
+    "C": 1,
+    "V": 5,
+    "buyer": "Sasha Grapevine",
+    "cid": "v16-V5-information-C1",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "information",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Peregrine Grapehill",
+    "split": "old_test",
+    "type": "cost below resale"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    4.0,
+    3.0,
+    2.0,
+    1.0,
+    0.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.03618670531796992,
+    0.8996887817350224,
+    0.03495311267719649,
+    0.024099759440395236,
+    0.005071640829415847
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0
+    ],
+    "best_payoff": 4.0,
+    "hard_regret": 1.0,
+    "soft_regret": 1.0621808487282647,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "cost below resale"
+  },
+  {
+   "cid": "v16-V5-information-C3",
+   "inputs": {
+    "C": 3,
+    "V": 5,
+    "buyer": "Sasha Grapevine",
+    "cid": "v16-V5-information-C3",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "information",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Peregrine Grapehill",
+    "split": "old_test",
+    "type": "cost below resale"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.0,
+    0.0,
+    2.0,
+    1.0,
+    0.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.01858996613044779,
+    0.7175111596980746,
+    0.012645123400799926,
+    0.24452011140652258,
+    0.006733639364155113
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     2
+    ],
+    "best_payoff": 2.0,
+    "hard_regret": 2.0,
+    "soft_regret": 1.7301896417918776,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "cost below resale"
+  },
+  {
+   "cid": "v16-V5-information-C5",
+   "inputs": {
+    "C": 5,
+    "V": 5,
+    "buyer": "Sasha Grapevine",
+    "cid": "v16-V5-information-C5",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "information",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Peregrine Grapehill",
+    "split": "old_test",
+    "type": "cost at or above resale"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.018537859527907465,
+    0.4074580043894385,
+    0.08128981057065242,
+    0.48647527192762485,
+    0.006239053584376803
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 0.0,
+    "top_is_best": true,
+    "top_option": 3
+   },
+   "split": "old_test",
+   "type": "cost at or above resale"
+  },
+  {
+   "cid": "v16-V6-information-C2",
+   "inputs": {
+    "C": 2,
+    "V": 6,
+    "buyer": "Sasha Grapevine",
+    "cid": "v16-V6-information-C2",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "information",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Peregrine Grapehill",
+    "split": "old_test",
+    "type": "cost below resale"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.0,
+    4.0,
+    3.0,
+    2.0,
+    1.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.2756004435450615,
+    0.17442686583876507,
+    0.1351967452678862,
+    0.4014524952883754,
+    0.013323450059911753
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     1
+    ],
+    "best_payoff": 4.0,
+    "hard_regret": 2.0,
+    "soft_regret": 2.0804738602046187,
+    "top_is_best": false,
+    "top_option": 3
+   },
+   "split": "old_test",
+   "type": "cost below resale"
+  },
+  {
+   "cid": "v16-V6-information-C4",
+   "inputs": {
+    "C": 4,
+    "V": 6,
+    "buyer": "Sasha Grapevine",
+    "cid": "v16-V6-information-C4",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "information",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Peregrine Grapehill",
+    "split": "old_test",
+    "type": "cost below resale"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    2.0,
+    1.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.017331682641822728,
+    0.7556494849458195,
+    0.19791992548244935,
+    0.018497091846343367,
+    0.01060181508356495
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     3
+    ],
+    "best_payoff": 2.0,
+    "hard_regret": 2.0,
+    "soft_regret": 1.9524040012237482,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "cost below resale"
+  },
+  {
+   "cid": "v16-V6-neutral",
+   "inputs": {
+    "C": null,
+    "V": 6,
+    "buyer": "Sasha Grapevine",
+    "cid": "v16-V6-neutral",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "neutral",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Peregrine Grapehill",
+    "split": "old_test",
+    "type": "no cost"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    1.0,
+    1.6,
+    1.7999999999999998,
+    1.6,
+    1.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.05340360923833578,
+    0.5784858568328471,
+    0.07209773844665289,
+    0.28381624999363536,
+    0.012196545488528839
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     2
+    ],
+    "best_payoff": 1.7999999999999998,
+    "hard_regret": 0.19999999999999973,
+    "soft_regret": 0.22494054514678807,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "no cost"
+  },
+  {
+   "cid": "v16-V6-pressure",
+   "inputs": {
+    "C": null,
+    "V": 6,
+    "buyer": "Sasha Grapevine",
+    "cid": "v16-V6-pressure",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "pressure",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Peregrine Grapehill",
+    "split": "old_test",
+    "type": "no cost"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    1.0,
+    1.6,
+    1.7999999999999998,
+    1.6,
+    1.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.03232519057123009,
+    0.59804702007121,
+    0.09237255534819358,
+    0.2648017379938147,
+    0.012453496015551725
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     2
+    ],
+    "best_payoff": 1.7999999999999998,
+    "hard_regret": 0.19999999999999973,
+    "soft_regret": 0.20839270088243,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "no cost"
+  },
+  {
+   "cid": "v17-V2-information-C2",
+   "inputs": {
+    "C": 2,
+    "V": 2,
+    "buyer": "Quinn Cherryblossom",
+    "cid": "v17-V2-information-C2",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "information",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Quentin Cherrybrook",
+    "split": "old_test",
+    "type": "cost at or above resale"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.0,
+    0.0,
+    -1.0,
+    -2.0,
+    -3.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.5160428068212918,
+    0.22200420238636337,
+    0.24548848580591515,
+    0.013525229810565665,
+    0.002939275175863996
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 0.28135677095463846,
+    "top_is_best": true,
+    "top_option": 0
+   },
+   "split": "old_test",
+   "type": "cost at or above resale"
+  },
+  {
+   "cid": "v17-V2-information-C4",
+   "inputs": {
+    "C": 4,
+    "V": 2,
+    "buyer": "Quinn Cherryblossom",
+    "cid": "v17-V2-information-C4",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "information",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Quentin Cherrybrook",
+    "split": "old_test",
+    "type": "cost at or above resale"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    -2.0,
+    -3.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.07520410988201852,
+    0.642900654658116,
+    0.2732404597065356,
+    0.006297321000687216,
+    0.0023574547526426966
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1,
+     2
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 0.01966700625930252,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "cost at or above resale"
+  },
+  {
+   "cid": "v17-V2-neutral",
+   "inputs": {
+    "C": null,
+    "V": 2,
+    "buyer": "Quinn Cherryblossom",
+    "cid": "v17-V2-neutral",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "neutral",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Quentin Cherrybrook",
+    "split": "old_test",
+    "type": "no cost"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.2,
+    0.0,
+    -0.6,
+    -1.6,
+    -3.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.4183799769561526,
+    0.5300429527230215,
+    0.04184263659265621,
+    0.006894535747337329,
+    0.002839897980832467
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0
+    ],
+    "best_payoff": 0.2,
+    "hard_regret": 0.2,
+    "soft_regret": 0.16098053770260035,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "no cost"
+  },
+  {
+   "cid": "v17-V2-pressure",
+   "inputs": {
+    "C": null,
+    "V": 2,
+    "buyer": "Quinn Cherryblossom",
+    "cid": "v17-V2-pressure",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "pressure",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Quentin Cherrybrook",
+    "split": "old_test",
+    "type": "no cost"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.2,
+    0.0,
+    -0.6,
+    -1.6,
+    -3.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.3908018510730307,
+    0.3981558885110662,
+    0.19450985815779095,
+    0.012985613925080247,
+    0.003546788333031961
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0
+    ],
+    "best_payoff": 0.2,
+    "hard_regret": 0.2,
+    "soft_regret": 0.2699628919592927,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "no cost"
+  },
+  {
+   "cid": "v17-V3-information-C1",
+   "inputs": {
+    "C": 1,
+    "V": 3,
+    "buyer": "Quinn Cherryblossom",
+    "cid": "v17-V3-information-C1",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "information",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Quentin Cherrybrook",
+    "split": "old_test",
+    "type": "cost below resale"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    2.0,
+    1.0,
+    0.0,
+    -1.0,
+    -2.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.0171613642547986,
+    0.9398136968418956,
+    0.02724027097363358,
+    0.012062943843538818,
+    0.0037217240861332273
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0
+    ],
+    "best_payoff": 2.0,
+    "hard_regret": 1.0,
+    "soft_regret": 1.0453699666643126,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "cost below resale"
+  },
+  {
+   "cid": "v17-V3-information-C3",
+   "inputs": {
+    "C": 3,
+    "V": 3,
+    "buyer": "Quinn Cherryblossom",
+    "cid": "v17-V3-information-C3",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "information",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Quentin Cherrybrook",
+    "split": "old_test",
+    "type": "cost at or above resale"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    -1.0,
+    -2.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.025147186132966147,
+    0.9433256465212156,
+    0.00922145578685232,
+    0.01879944801281123,
+    0.0035062635461547455
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1,
+     2
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 0.025811975105120722,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "cost at or above resale"
+  },
+  {
+   "cid": "v17-V3-information-C5",
+   "inputs": {
+    "C": 5,
+    "V": 3,
+    "buyer": "Quinn Cherryblossom",
+    "cid": "v17-V3-information-C5",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "information",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Quentin Cherrybrook",
+    "split": "old_test",
+    "type": "cost at or above resale"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -2.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.020105497258914175,
+    0.5970074867798333,
+    0.19534753135442268,
+    0.18293827519131087,
+    0.004601209415519059
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1,
+     2,
+     3
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 0.009202418831038117,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "cost at or above resale"
+  },
+  {
+   "cid": "v17-V4-information-C2",
+   "inputs": {
+    "C": 2,
+    "V": 4,
+    "buyer": "Quinn Cherryblossom",
+    "cid": "v17-V4-information-C2",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "information",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Quentin Cherrybrook",
+    "split": "old_test",
+    "type": "cost below resale"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.0,
+    2.0,
+    1.0,
+    0.0,
+    -1.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.10218586993872328,
+    0.13720577567075887,
+    0.6548460807474935,
+    0.1000299381229625,
+    0.005732335520061924
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     1
+    ],
+    "best_payoff": 2.0,
+    "hard_regret": 1.0,
+    "soft_regret": 1.0764747034310507,
+    "top_is_best": false,
+    "top_option": 2
+   },
+   "split": "old_test",
+   "type": "cost below resale"
+  },
+  {
+   "cid": "v17-V4-information-C4",
+   "inputs": {
+    "C": 4,
+    "V": 4,
+    "buyer": "Quinn Cherryblossom",
+    "cid": "v17-V4-information-C4",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "information",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Quentin Cherrybrook",
+    "split": "old_test",
+    "type": "cost at or above resale"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -1.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.00768000590420192,
+    0.5880774201827706,
+    0.38627948003790147,
+    0.014774778890623697,
+    0.003188314984502107
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1,
+     2,
+     3
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 0.003188314984502107,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "cost at or above resale"
+  },
+  {
+   "cid": "v17-V4-neutral",
+   "inputs": {
+    "C": null,
+    "V": 4,
+    "buyer": "Quinn Cherryblossom",
+    "cid": "v17-V4-neutral",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "neutral",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Quentin Cherrybrook",
+    "split": "old_test",
+    "type": "no cost"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.6000000000000001,
+    0.8,
+    0.6,
+    0.0,
+    -1.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.04146775080406119,
+    0.7741133239870349,
+    0.144764121981815,
+    0.035520294496046864,
+    0.004134508731042009
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     1
+    ],
+    "best_payoff": 0.8,
+    "hard_regret": 0.0,
+    "soft_regret": 0.07310472586988837,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "no cost"
+  },
+  {
+   "cid": "v17-V4-pressure",
+   "inputs": {
+    "C": null,
+    "V": 4,
+    "buyer": "Quinn Cherryblossom",
+    "cid": "v17-V4-pressure",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "pressure",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Quentin Cherrybrook",
+    "split": "old_test",
+    "type": "no cost"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.6000000000000001,
+    0.8,
+    0.6,
+    0.0,
+    -1.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.023290178296483253,
+    0.7075105661641923,
+    0.22986041091415274,
+    0.03492434867295169,
+    0.004414495952220135
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     1
+    ],
+    "best_payoff": 0.8,
+    "hard_regret": 0.0,
+    "soft_regret": 0.08651568949448474,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "no cost"
+  },
+  {
+   "cid": "v17-V5-information-C1",
+   "inputs": {
+    "C": 1,
+    "V": 5,
+    "buyer": "Quinn Cherryblossom",
+    "cid": "v17-V5-information-C1",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "information",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Quentin Cherrybrook",
+    "split": "old_test",
+    "type": "cost below resale"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    4.0,
+    3.0,
+    2.0,
+    1.0,
+    0.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.027251532668395313,
+    0.8153120318290433,
+    0.09142032747487602,
+    0.0586303123620048,
+    0.007385795665680542
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0
+    ],
+    "best_payoff": 4.0,
+    "hard_regret": 1.0,
+    "soft_regret": 1.203586806527532,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "cost below resale"
+  },
+  {
+   "cid": "v17-V5-information-C3",
+   "inputs": {
+    "C": 3,
+    "V": 5,
+    "buyer": "Quinn Cherryblossom",
+    "cid": "v17-V5-information-C3",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "information",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Quentin Cherrybrook",
+    "split": "old_test",
+    "type": "cost below resale"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.0,
+    0.0,
+    2.0,
+    1.0,
+    0.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.015694783185404862,
+    0.6333456799575694,
+    0.015971831836742823,
+    0.32583473427232335,
+    0.00915297074795957
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     2
+    ],
+    "best_payoff": 2.0,
+    "hard_regret": 2.0,
+    "soft_regret": 1.642221602054191,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "cost below resale"
+  },
+  {
+   "cid": "v17-V5-information-C5",
+   "inputs": {
+    "C": 5,
+    "V": 5,
+    "buyer": "Quinn Cherryblossom",
+    "cid": "v17-V5-information-C5",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "information",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Quentin Cherrybrook",
+    "split": "old_test",
+    "type": "cost at or above resale"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.011229706227316245,
+    0.24952882979420404,
+    0.2084043055356231,
+    0.522800051216936,
+    0.008037107225920572
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 0.0,
+    "top_is_best": true,
+    "top_option": 3
+   },
+   "split": "old_test",
+   "type": "cost at or above resale"
+  },
+  {
+   "cid": "v17-V6-information-C2",
+   "inputs": {
+    "C": 2,
+    "V": 6,
+    "buyer": "Quinn Cherryblossom",
+    "cid": "v17-V6-information-C2",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "information",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Quentin Cherrybrook",
+    "split": "old_test",
+    "type": "cost below resale"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.0,
+    4.0,
+    3.0,
+    2.0,
+    1.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.12679580819871122,
+    0.06777495435453591,
+    0.3338784864725229,
+    0.45437995027604516,
+    0.017170800698184732
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     1
+    ],
+    "best_payoff": 4.0,
+    "hard_regret": 2.0,
+    "soft_regret": 1.8013340219140126,
+    "top_is_best": false,
+    "top_option": 3
+   },
+   "split": "old_test",
+   "type": "cost below resale"
+  },
+  {
+   "cid": "v17-V6-information-C4",
+   "inputs": {
+    "C": 4,
+    "V": 6,
+    "buyer": "Quinn Cherryblossom",
+    "cid": "v17-V6-information-C4",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "information",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Quentin Cherrybrook",
+    "split": "old_test",
+    "type": "cost below resale"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    2.0,
+    1.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.012959959527758021,
+    0.5637854200047165,
+    0.3789098740822367,
+    0.023565310047802136,
+    0.020779436337486547
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     3
+    ],
+    "best_payoff": 2.0,
+    "hard_regret": 2.0,
+    "soft_regret": 1.9320899435669092,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "cost below resale"
+  },
+  {
+   "cid": "v17-V6-neutral",
+   "inputs": {
+    "C": null,
+    "V": 6,
+    "buyer": "Quinn Cherryblossom",
+    "cid": "v17-V6-neutral",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "neutral",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Quentin Cherrybrook",
+    "split": "old_test",
+    "type": "no cost"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    1.0,
+    1.6,
+    1.7999999999999998,
+    1.6,
+    1.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.06198248527221125,
+    0.5575226455804347,
+    0.087379382175619,
+    0.2800391232801317,
+    0.013076363691603251
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     2
+    ],
+    "best_payoff": 1.7999999999999998,
+    "hard_regret": 0.19999999999999973,
+    "soft_regret": 0.22755943294316472,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "no cost"
+  },
+  {
+   "cid": "v17-V6-pressure",
+   "inputs": {
+    "C": null,
+    "V": 6,
+    "buyer": "Quinn Cherryblossom",
+    "cid": "v17-V6-pressure",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "pressure",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Quentin Cherrybrook",
+    "split": "old_test",
+    "type": "no cost"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    1.0,
+    1.6,
+    1.7999999999999998,
+    1.6,
+    1.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.03544715863637468,
+    0.46325627435434324,
+    0.1660016846367623,
+    0.31505883313082295,
+    0.020236049241696804
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     2
+    ],
+    "best_payoff": 1.7999999999999998,
+    "hard_regret": 0.19999999999999973,
+    "soft_regret": 0.20020958779949027,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "no cost"
+  },
+  {
+   "cid": "v18-V2-information-C2",
+   "inputs": {
+    "C": 2,
+    "V": 2,
+    "buyer": "Sage Honeycomb",
+    "cid": "v18-V2-information-C2",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "information",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Silas Honeybrook",
+    "split": "old_test",
+    "type": "cost at or above resale"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.0,
+    0.0,
+    -1.0,
+    -2.0,
+    -3.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.5425169572295756,
+    0.2051241516299558,
+    0.23844802330133544,
+    0.010884107503475841,
+    0.00302676033565744
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 0.26929651931525944,
+    "top_is_best": true,
+    "top_option": 0
+   },
+   "split": "old_test",
+   "type": "cost at or above resale"
+  },
+  {
+   "cid": "v18-V2-information-C4",
+   "inputs": {
+    "C": 4,
+    "V": 2,
+    "buyer": "Sage Honeycomb",
+    "cid": "v18-V2-information-C4",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "information",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Silas Honeybrook",
+    "split": "old_test",
+    "type": "cost at or above resale"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    -2.0,
+    -3.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.10886209750779692,
+    0.504948685798811,
+    0.3768173522583545,
+    0.006824273792570654,
+    0.0025475906424668993
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1,
+     2
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 0.021291319512542005,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "cost at or above resale"
+  },
+  {
+   "cid": "v18-V2-neutral",
+   "inputs": {
+    "C": null,
+    "V": 2,
+    "buyer": "Sage Honeycomb",
+    "cid": "v18-V2-neutral",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "neutral",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Silas Honeybrook",
+    "split": "old_test",
+    "type": "no cost"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.2,
+    0.0,
+    -0.6,
+    -1.6,
+    -3.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.45588170547294327,
+    0.4485734684984159,
+    0.08480687916750608,
+    0.007809569365257729,
+    0.0029283774958770376
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0
+    ],
+    "best_payoff": 0.2,
+    "hard_regret": 0.0,
+    "soft_regret": 0.18098822987795848,
+    "top_is_best": true,
+    "top_option": 0
+   },
+   "split": "old_test",
+   "type": "no cost"
+  },
+  {
+   "cid": "v18-V2-pressure",
+   "inputs": {
+    "C": null,
+    "V": 2,
+    "buyer": "Sage Honeycomb",
+    "cid": "v18-V2-pressure",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "pressure",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Silas Honeybrook",
+    "split": "old_test",
+    "type": "no cost"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.2,
+    0.0,
+    -0.6,
+    -1.6,
+    -3.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.48258984496794,
+    0.31403169730016567,
+    0.18978828303979198,
+    0.010117637794233362,
+    0.0034725368978690677
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0
+    ],
+    "best_payoff": 0.2,
+    "hard_regret": 0.0,
+    "soft_regret": 0.24396083199466778,
+    "top_is_best": true,
+    "top_option": 0
+   },
+   "split": "old_test",
+   "type": "no cost"
+  },
+  {
+   "cid": "v18-V3-information-C1",
+   "inputs": {
+    "C": 1,
+    "V": 3,
+    "buyer": "Sage Honeycomb",
+    "cid": "v18-V3-information-C1",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "information",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Silas Honeybrook",
+    "split": "old_test",
+    "type": "cost below resale"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    2.0,
+    1.0,
+    0.0,
+    -1.0,
+    -2.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.024677956710062447,
+    0.9366382152279226,
+    0.0232099943516711,
+    0.011370973531418934,
+    0.0041028601789250526
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0
+    ],
+    "best_payoff": 2.0,
+    "hard_regret": 1.0,
+    "soft_regret": 1.0335825652412216,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "cost below resale"
+  },
+  {
+   "cid": "v18-V3-information-C3",
+   "inputs": {
+    "C": 3,
+    "V": 3,
+    "buyer": "Sage Honeycomb",
+    "cid": "v18-V3-information-C3",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "information",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Silas Honeybrook",
+    "split": "old_test",
+    "type": "cost at or above resale"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    -1.0,
+    -2.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.03040878530474021,
+    0.9374025460096848,
+    0.01005575080938009,
+    0.01857727244570847,
+    0.003555645430486474
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1,
+     2
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 0.025688563306681417,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "cost at or above resale"
+  },
+  {
+   "cid": "v18-V3-information-C5",
+   "inputs": {
+    "C": 5,
+    "V": 3,
+    "buyer": "Sage Honeycomb",
+    "cid": "v18-V3-information-C5",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "information",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Silas Honeybrook",
+    "split": "old_test",
+    "type": "cost at or above resale"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -2.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.023331340867068295,
+    0.6466183196569865,
+    0.14071961489473653,
+    0.18409786823824736,
+    0.005232856342961404
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1,
+     2,
+     3
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 0.010465712685922808,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "cost at or above resale"
+  },
+  {
+   "cid": "v18-V4-information-C2",
+   "inputs": {
+    "C": 2,
+    "V": 4,
+    "buyer": "Sage Honeycomb",
+    "cid": "v18-V4-information-C2",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "information",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Silas Honeybrook",
+    "split": "old_test",
+    "type": "cost below resale"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.0,
+    2.0,
+    1.0,
+    0.0,
+    -1.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.1473437527281533,
+    0.1685063040392189,
+    0.6104652804271921,
+    0.06756286633029474,
+    0.006121796475140965
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     1
+    ],
+    "best_payoff": 2.0,
+    "hard_regret": 1.0,
+    "soft_regret": 1.0586439079695111,
+    "top_is_best": false,
+    "top_option": 2
+   },
+   "split": "old_test",
+   "type": "cost below resale"
+  },
+  {
+   "cid": "v18-V4-information-C4",
+   "inputs": {
+    "C": 4,
+    "V": 4,
+    "buyer": "Sage Honeycomb",
+    "cid": "v18-V4-information-C4",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "information",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Silas Honeybrook",
+    "split": "old_test",
+    "type": "cost at or above resale"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -1.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.009027226421775777,
+    0.5972403121144981,
+    0.37679402601781337,
+    0.013862714320129732,
+    0.003075721125783029
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1,
+     2,
+     3
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 0.003075721125783029,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "cost at or above resale"
+  },
+  {
+   "cid": "v18-V4-neutral",
+   "inputs": {
+    "C": null,
+    "V": 4,
+    "buyer": "Sage Honeycomb",
+    "cid": "v18-V4-neutral",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "neutral",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Silas Honeybrook",
+    "split": "old_test",
+    "type": "no cost"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.6000000000000001,
+    0.8,
+    0.6,
+    0.0,
+    -1.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.04100666100506416,
+    0.744710990588118,
+    0.17622757601044742,
+    0.03368992049933668,
+    0.0043648518970337774
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     1
+    ],
+    "best_payoff": 0.8,
+    "hard_regret": 0.0,
+    "soft_regret": 0.07825551721723245,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "no cost"
+  },
+  {
+   "cid": "v18-V4-pressure",
+   "inputs": {
+    "C": null,
+    "V": 4,
+    "buyer": "Sage Honeycomb",
+    "cid": "v18-V4-pressure",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "pressure",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Silas Honeybrook",
+    "split": "old_test",
+    "type": "no cost"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.6000000000000001,
+    0.8,
+    0.6,
+    0.0,
+    -1.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.02940282107032834,
+    0.6840403409456115,
+    0.25561763844865165,
+    0.026811976614305656,
+    0.004127222921102742
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     1
+    ],
+    "best_payoff": 0.8,
+    "hard_regret": 0.0,
+    "soft_regret": 0.08588267445322562,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "no cost"
+  },
+  {
+   "cid": "v18-V5-information-C1",
+   "inputs": {
+    "C": 1,
+    "V": 5,
+    "buyer": "Sage Honeycomb",
+    "cid": "v18-V5-information-C1",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "information",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Silas Honeybrook",
+    "split": "old_test",
+    "type": "cost below resale"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    4.0,
+    3.0,
+    2.0,
+    1.0,
+    0.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.027016200759831244,
+    0.8028945352935818,
+    0.10240575456704548,
+    0.060673923091025116,
+    0.007009586288516436
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0
+    ],
+    "best_payoff": 4.0,
+    "hard_regret": 1.0,
+    "soft_regret": 1.2177661588548134,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "cost below resale"
+  },
+  {
+   "cid": "v18-V5-information-C3",
+   "inputs": {
+    "C": 3,
+    "V": 5,
+    "buyer": "Sage Honeycomb",
+    "cid": "v18-V5-information-C3",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "information",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Silas Honeybrook",
+    "split": "old_test",
+    "type": "cost below resale"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.0,
+    0.0,
+    2.0,
+    1.0,
+    0.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.020324686976112574,
+    0.6808948129624253,
+    0.01866426285861757,
+    0.2721069705038881,
+    0.008009266698956505
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     2
+    ],
+    "best_payoff": 2.0,
+    "hard_regret": 2.0,
+    "soft_regret": 1.6905645037788768,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "cost below resale"
+  },
+  {
+   "cid": "v18-V5-information-C5",
+   "inputs": {
+    "C": 5,
+    "V": 5,
+    "buyer": "Sage Honeycomb",
+    "cid": "v18-V5-information-C5",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "information",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Silas Honeybrook",
+    "split": "old_test",
+    "type": "cost at or above resale"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.014882013821622141,
+    0.27165052468793743,
+    0.18901055937389166,
+    0.5166503768336573,
+    0.00780652528289139
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 0.0,
+    "top_is_best": true,
+    "top_option": 3
+   },
+   "split": "old_test",
+   "type": "cost at or above resale"
+  },
+  {
+   "cid": "v18-V6-information-C2",
+   "inputs": {
+    "C": 2,
+    "V": 6,
+    "buyer": "Sage Honeycomb",
+    "cid": "v18-V6-information-C2",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "information",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Silas Honeybrook",
+    "split": "old_test",
+    "type": "cost below resale"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.0,
+    4.0,
+    3.0,
+    2.0,
+    1.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.16095516053399758,
+    0.08911535060793781,
+    0.3260497543377238,
+    0.40685663982910525,
+    0.017023094691235495
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     1
+    ],
+    "best_payoff": 4.0,
+    "hard_regret": 2.0,
+    "soft_regret": 1.8346529602056312,
+    "top_is_best": false,
+    "top_option": 3
+   },
+   "split": "old_test",
+   "type": "cost below resale"
+  },
+  {
+   "cid": "v18-V6-information-C4",
+   "inputs": {
+    "C": 4,
+    "V": 6,
+    "buyer": "Sage Honeycomb",
+    "cid": "v18-V6-information-C4",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "information",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Silas Honeybrook",
+    "split": "old_test",
+    "type": "cost below resale"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    2.0,
+    1.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.015270689842524022,
+    0.5898060631106531,
+    0.3516429823582582,
+    0.02464069172805001,
+    0.01863957296051471
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     3
+    ],
+    "best_payoff": 2.0,
+    "hard_regret": 2.0,
+    "soft_regret": 1.9320790435833852,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "cost below resale"
+  },
+  {
+   "cid": "v18-V6-neutral",
+   "inputs": {
+    "C": null,
+    "V": 6,
+    "buyer": "Sage Honeycomb",
+    "cid": "v18-V6-neutral",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "neutral",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Silas Honeybrook",
+    "split": "old_test",
+    "type": "no cost"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    1.0,
+    1.6,
+    1.7999999999999998,
+    1.6,
+    1.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.05679495259201521,
+    0.5360892368865289,
+    0.12684749415064575,
+    0.26604579816192786,
+    0.014222518208882337
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     2
+    ],
+    "best_payoff": 1.7999999999999998,
+    "hard_regret": 0.19999999999999973,
+    "soft_regret": 0.21724098365040923,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "no cost"
+  },
+  {
+   "cid": "v18-V6-pressure",
+   "inputs": {
+    "C": null,
+    "V": 6,
+    "buyer": "Sage Honeycomb",
+    "cid": "v18-V6-pressure",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "line": "pressure",
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Silas Honeybrook",
+    "split": "old_test",
+    "type": "no cost"
+   },
+   "letter_mass": null,
+   "payoffs": [
+    1.0,
+    1.6,
+    1.7999999999999998,
+    1.6,
+    1.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.042039715809236544,
+    0.46233007440514795,
+    0.20663210857504213,
+    0.27067653568746874,
+    0.018321565523104565
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     2
+    ],
+    "best_payoff": 1.7999999999999998,
+    "hard_regret": 0.19999999999999973,
+    "soft_regret": 0.19489034708439612,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "old_test",
+   "type": "no cost"
+  }
+ ],
+ "config": {
+  "note": "per-case probabilities produced by the pre-refactor GPU code (g5.2xlarge A10G, Gemma 2 9B-it); imported, not re-run"
+ },
+ "environment": {
+  "provider": "aws (historic)"
+ },
+ "git": {
+  "branch": "refactor",
+  "commit": "612d230c4027d515df79bfdda0152b1d0ee21fae",
+  "dirty": false,
+  "note": "commit of the importer; the run itself predates it"
+ },
+ "input_hashes": {
+  "cases_sha256": "198dee1a01e4593692f4b98c6bf3fc1cdd9bbc51cb5b03b7c041942533d2150f",
+  "source_files_sha256": {
+   "demo_out/cases.jsonl": "ef699b9bc9ea4429c9a921f79b79e9f862f65a8674503a42e7e5a58c987cdaf4",
+   "demo_out/test_look_raw.json": "035918e4189fcff3d3d9465eb2ce2f2b981e9cc7aebf552006d96d07315f102a"
+  }
+ },
+ "model": "gemma2_9b",
+ "model_config": null,
+ "planted": {
+  "all_ok": null,
+  "failed": [],
+  "n": 0,
+  "n_ok": 0,
+  "note": "legacy imports had no planted cases"
+ },
+ "run_id": "legacy-oldtest-neutral_lora_seed2",
+ "schema": 1,
+ "seed": 0,
+ "solver": "legacy:oldtest:neutral_lora_seed2",
+ "solver_config": {
+  "legacy_import": true,
+  "note": "old fixed-cell test look (18 cells, 72 cases); arm = mean of seeds' probabilities where named 3seed_mean_probs",
+  "solver": "neutral_lora_seed2"
+ },
+ "split": "old_test",
+ "summary": {
+  "by_type": {
+   "cost at or above resale": {
+    "n": 24,
+    "soft_regret_mean": 0.04962964291122088
+   },
+   "cost below resale": {
+    "n": 24,
+    "soft_regret_mean": 1.4847007912093353
+   },
+   "no cost": {
+    "n": 24,
+    "soft_regret_mean": 0.1649360038099131
+   }
+  },
+  "hard_regret_mean": 0.5305555555555554,
+  "n_cases": 72,
+  "soft_regret_mean": 0.566422145976823
+ },
+ "task": "haggling",
+ "timing": {
+  "approx_usd": null,
+  "gpu_seconds": null,
+  "note": "not recorded in the legacy files",
+  "wall_seconds": null
+ }
+}

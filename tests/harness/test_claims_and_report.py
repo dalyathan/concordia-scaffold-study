@@ -76,11 +76,9 @@ def test_shared_code_names_no_model():
     assert not hits, (f, hits[:2])
 
 
-def test_unbacked_numbers_are_exactly_the_known_five():
-  """The checker is non-strict on the repo; this pins the unbacked set so a new unbacked number fails the suite."""
-  r = subprocess.run([sys.executable, "tools/check_claims.py", "--list-unbacked"], cwd=ROOT, capture_output=True, text=True)
-  got = sorted(l.split(":")[1].split("--")[0].strip() for l in r.stdout.splitlines() if l.startswith("UNBACKED"))
-  assert got == sorted(["0.12", "1", "0.58", "0.17", "0.2"]), got
+def test_no_unbacked_numbers_in_the_repo():
+  r = subprocess.run([sys.executable, "tools/check_claims.py", "--strict"], cwd=ROOT, capture_output=True, text=True)
+  assert r.returncode == 0, r.stdout
 
 
 def test_recompute_passes_on_all_run_records():

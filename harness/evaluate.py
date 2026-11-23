@@ -57,6 +57,16 @@ def evaluate(task, solver, split: str, seed: int = 0, model_spec=None, config: d
                               f"(pass lock_token='{LOCK_TOKEN_PREFIX}<date>')")
     if not write:
       raise EvaluationRefused("a look at a locked split must be written to a record (write=True)")
+    ref = os.environ.get("HARNESS_PIN_REF")
+    if not ref:
+      raise EvaluationRefused("a look at a locked split needs HARNESS_PIN_REF: the owner's git tag that pins the protected files "
+                              "(see DECISIONS.md, 'Owner pin')")
+    try:
+      drift = lock_protected.pin_mismatches(ref)
+    except RuntimeError as e:
+      raise EvaluationRefused(f"pin {ref} unreadable: {e}")
+    if drift:
+      raise EvaluationRefused(f"protected files differ from the owner's pin {ref}: {[f for f, _ in drift]}")
     prior = _prior_look(directory, task.name, split, model_spec.name if model_spec else None, solver_cfg_sha)
     if prior:
       raise EvaluationRefused(f"locked split {split} was already scored with this exact solver config: {prior[0]} (each look is once)")

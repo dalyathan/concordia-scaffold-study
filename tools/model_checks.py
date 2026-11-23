@@ -37,7 +37,8 @@ def messages(spec, user):
 def load_tokenizer_and_config(spec, local_dir):
   from transformers import AutoConfig, AutoTokenizer
   src = os.path.join(local_dir, spec.name) if local_dir and os.path.isdir(os.path.join(local_dir, spec.name)) else spec.hf_id
-  return AutoTokenizer.from_pretrained(src), AutoConfig.from_pretrained(src), src
+  kw = {"revision": spec.revision} if (spec.revision and not os.path.isdir(src)) else {}
+  return AutoTokenizer.from_pretrained(src, **kw), AutoConfig.from_pretrained(src, **kw), src
 
 
 def check(spec, local_dir, user):

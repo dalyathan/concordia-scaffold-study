@@ -52,3 +52,15 @@ README "Results at a glance" (15 numbers): **10 reproduce, 5 unbacked, 0 differ.
 ## Blind review (G2, Sonnet and Opus, both "partly justified")
 
 Reviews: `reviews/2026-11-23_G2_refactor_{sonnet,opus}.md`. Triage table: end of DECISIONS.md. Fixed on this branch: locked-split once-only guard with recorded token, stricter planted cases, claims checker (model-keyed, recomputed, hash-pinned, every number listed), stronger recompute plus a test over `runs/`, generator overwrite guard, model-load guards, LoRA adapter leak. Still open and for the owner: a fresh locked split before any new look (test_same and test_hard are already spent), an owner-held pin of the protected hashes, GPU readout parity, the five unbacked README numbers, revision pins, gated-model checks.
+
+## Follow-up (items 2-6 of the open list)
+
+| # | Item | State |
+| --- | --- | --- |
+| 2 | Scorer protection outside the agent's write access | **Mechanism built, owner step open.** Protected set widened (evaluate.py, task.py, recompute.py, check_claims.py, lock_protected.py); the newest registration per path wins; a locked-split look needs `HARNESS_PIN_REF` and every protected file must equal its content at that git tag; CI workflow `.github/workflows/protected.yml` written, not run. **Owner:** `git tag scorer-pin-1 <reviewed commit> && git push origin scorer-pin-1`, protect `scorer-pin-*` tags in the repo settings, and set `HARNESS_PIN_REF=scorer-pin-1` on the GPU box. Until the tag exists, locked looks are refused |
+| 3 | GPU readout parity | **Script and frozen tolerances done; not run (GPU busy).** `tools/parity_check.py`; commands in its docstring |
+| 4 | Five unbacked README numbers | **Done**: `check_claims.py --strict` passes (15 numbers, 0 unbacked) |
+| 5 | Old fixed-cell test look per case | **Done**: 14 records reproduce the stored arm regrets exactly |
+| 6 | Revision pins, gated checks | **Mostly done**: pins in all 5 configs; Gemma 9B, Gemma 2B, Mistral, Qwen checked. **Llama 3.1 8B not checked** (access to the gated repo not granted to the token's account) |
+
+Tests: 44 pass, 1 skipped (CPU only).

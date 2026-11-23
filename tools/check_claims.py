@@ -10,6 +10,7 @@ Evidence kinds:
                                                                    payoffs and probs (stored scores are not trusted); `n_records` pins the count
   file_value {path, key (dotted), sha256, [scale]}                a number in a stored JSON file whose sha256 is pinned
   decimals are derived from the number as shown in the text ("0.4" is compared at 1 decimal).
+  definition {reason}                                             true by the task's own rules, not a measurement
   none       {reason}
 Reads run records directly (JSON); re-derives metrics from the per-case rows, not from the stored summary.
 
@@ -99,6 +100,8 @@ def main(argv):
         problems.append(f"{cid}: number {shown!r} is not in the claim text"); continue
       if ev["kind"] == "none":
         unbacked.append(f"{cid}: {shown} -- {ev['reason']}"); continue
+      if ev["kind"] == "definition":
+        ok += 1; continue            # a definition of the task, not a measurement; the reason is read by reviewers
       try:
         v = evidence_value(ev, recs)
       except Exception as e:

@@ -35,6 +35,7 @@ class Backend:
   """One loaded model + tokenizer, shared by solvers (adapters are switched on it, not reloaded)."""
   def __init__(self, spec: modelspec.ModelSpec, device="cuda", revision=None):
     import torch
+    revision = revision or spec.revision
     from transformers import AutoModelForCausalLM, AutoTokenizer
     if spec.answer_letter_token_ids is None or "tokenizer" not in spec.verified:
       raise RuntimeError(f"{spec.name}: answer_letter_token_ids not filled and verified; run tools/model_checks.py --write first")

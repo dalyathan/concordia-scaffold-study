@@ -32,6 +32,7 @@ class ModelSpec:
   lora_target_modules: tuple
   generation_end_tokens: tuple = ()
   verified: tuple = ()
+  revision: str | None = None   # hub commit hash of the weights and tokenizer; Backend refuses to load without one
   notes: str = ""
 
   def layer_names(self) -> list[str]:

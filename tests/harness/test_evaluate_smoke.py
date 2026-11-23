@@ -5,6 +5,13 @@ from harness.solvers import cpu
 from harness.task import get_task
 
 
+@pytest.fixture(autouse=True)
+def _owner_pin(monkeypatch):
+  """The locked-look tests need an owner pin; the pin mechanism itself is tested in test_protected.py."""
+  monkeypatch.setenv("HARNESS_PIN_REF", "test-pin")
+  monkeypatch.setattr(evaluate.lock_protected, "pin_mismatches", lambda ref: [])
+
+
 def run(task, solver, split, tmp_path, **kw):
   return evaluate.evaluate(get_task(task), solver, split, directory=str(tmp_path), **kw)
 
