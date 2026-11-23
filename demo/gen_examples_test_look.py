@@ -135,23 +135,27 @@ def run_scoring(split_names, mode):
   lm, score_case = make_scorer()
   from peft import PeftModel
   names = list(ADAPTERS)
-  peft = PeftModel.from_pretrained(lm.model, fr[names[0]]["dir"], adapter_name=names[0])
-  for n in names[1:]:
-    peft.load_adapter(fr[n]["dir"], adapter_name=n)
-  peft.eval()
-  for _, prm in peft.named_parameters():
-    if "lora_" in _ and prm.dtype != __import__("torch").float32:
-      prm.data = prm.data.float()
   os.makedirs(OUTD, exist_ok=True)
   tag = "tune_preflight" if mode == "preflight" else "test"
   res = {}
-  for arm in ["plain"] + names:
-    f = os.path.join(OUTD, f"{tag}_{arm}.json")
-    if os.path.exists(f):
-      res[arm] = json.load(open(f)); print(f"  {arm}: reuse {f}", flush=True); continue
-    sc = score_set(lm, score_case, use, arm, peft, None if arm == "plain" else arm)
-    json.dump(sc, open(f, "w"))
-    res[arm] = sc
+  fpath = lambda arm: os.path.join(OUTD, f"{tag}_{arm}.json")
+  # one adapter at a time (several adapters in one PEFT model were found to load the later ones inexactly): plain first on the clean
+  # model, then each adapter loaded alone and unloaded after scoring; the clean model is re-checked at the end.
+  if os.path.exists(fpath("plain")):
+    res["plain"] = json.load(open(fpath("plain")))
+  else:
+    res["plain"] = score_set(lm, score_case, use, "plain"); json.dump(res["plain"], open(fpath("plain"), "w"))
+  for arm in names:
+    if os.path.exists(fpath(arm)):
+      res[arm] = json.load(open(fpath(arm))); print(f"  {arm}: reuse", flush=True); continue
+    peft = PeftModel.from_pretrained(lm.model, fr[arm]["dir"], adapter_name="a"); peft.eval()
+    assert {prm.dtype for n_, prm in peft.named_parameters() if "lora_" in n_} == {__import__("torch").float32}
+    res[arm] = score_set(lm, score_case, use, arm); json.dump(res[arm], open(fpath(arm), "w"))
+    lm.model = peft.unload()
+  chk = use[:10]
+  again = score_set(lm, score_case, chk, "clean-model recheck")
+  dev = max(abs(a - b) for c in chk for a, b in zip(again[c["cid"]][0], res["plain"][c["cid"]][0]))
+  assert dev < 1e-6, f"the model after unloading all adapters no longer reproduces plain (max diff {dev})"
   return res, fr, cells, cases
 
 
