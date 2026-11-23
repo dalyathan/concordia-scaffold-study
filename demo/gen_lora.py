@@ -30,7 +30,7 @@ from refimpl.local_gemma2 import CHOICE_SYSTEM, LocalGemma2, build_messages, ens
 LETTERS = phase3.LETTERS
 OUT = os.path.join(common.ROOT, "demo_out", "gen_lora")
 ADAPTERS = os.path.join(common.ROOT, "demo_out", "adapters")
-ARMS = ("teacher", "method_original", "neutral", "wrong_rule", "answer_only")
+ARMS = ("teacher", "method_original", "neutral", "wrong_rule", "answer_only", "claude_examples", "cheapest_label", "shuffled_claude")
 TRAIN_CELLS = os.path.join(g.OUT, "lora_train_cells.json")
 SELECT_CELLS = os.path.join(g.OUT, "lora_select_cells_B.json")   # (set A, lora_select_cells.json, is the teacher-loop feedback/winner set)
 
@@ -65,6 +65,26 @@ def make_select_cells():
     chosen += [pool[i] for i in sorted(rng.choice(len(pool), 14, replace=False))]
   json.dump(chosen, open(SELECT_CELLS, "w"), indent=1)
   return chosen
+
+
+def shuffled_labels(claude):
+  """Claude's labelled grid positions permuted within case type by a derangement (no case keeps its own label's slot), seed fixed."""
+  rng = np.random.Generator(np.random.PCG64(20261127))
+  out = {}
+  for typ in g.TYPES:
+    ids = sorted(cid for cid in claude if cid_type[cid] == typ)
+    n = len(ids)
+    while True:
+      perm = rng.permutation(n)
+      if all(perm[i] != i for i in range(n)):
+        break
+    for i, cid in enumerate(ids):
+      out[cid] = claude[ids[perm[i]]]
+  return out
+
+
+def example_label(cid):
+  return LABELS[cid]
 
 
 def score_case(lm, c, notes=None, orders=None):
@@ -105,6 +125,15 @@ def main():
   if args.limit:
     train, tune_mon, tune_all, mon_train = train[:args.limit], tune_mon[:args.limit], tune_all[:args.limit], mon_train[:args.limit]
   assert all(c["split"] in ("train", "tune") for c in train + tune_all + tune_mon)
+  global LABELS, cid_type
+  cid_type = {c["cid"]: c["type"] for c in train}
+  LABELS = {}
+  if args.arm in ("claude_examples", "cheapest_label", "shuffled_claude"):
+    cl = json.load(open(os.path.join(g.OUT, "claude_labels.json")))["labels"]
+    assert set(cl) == {c["cid"] for c in train}, "claude labels must cover exactly the 100 training cases"
+    claude = {k: v["position"] for k, v in cl.items()}
+    LABELS = {"claude_examples": claude, "cheapest_label": {k: 0 for k in claude}, "shuffled_claude": shuffled_labels(claude) if args.arm == "shuffled_claude" else None}[args.arm]
+    print("labels:", args.arm, "mean grid position", float(np.mean(list(LABELS.values()))), "share cheapest", float(np.mean([v == 0 for v in LABELS.values()])), flush=True)
   model, tok = runtime.load_gemma("9b", "cuda")
   lm = LocalGemma2(model, tok)
   letter_ix = torch.tensor([tok.convert_tokens_to_ids(l) for l in LETTERS])
@@ -118,7 +147,10 @@ def main():
   targets = {}
   for c in train:
     for oi in spec[c["cell"]]["orders"]:
-      if args.arm == "answer_only":
+      if args.arm in ("claude_examples", "cheapest_label", "shuffled_claude"):
+        t = [0.0] * 5                                              # one-hot on the letter that shows the labelled grid position
+        t[list(orders[oi]).index(example_label(c["cid"]))] = 1.0
+      elif args.arm == "answer_only":
         lab = cells[c["cell"]]["best_positions"]
         t = [0.0] * 5
         for pos in lab:                                           # letter j shows grid position orders[oi][j]

@@ -1,0 +1,18 @@
+```json
+{"c001":2,"c002":2,"c003":3,"c004":5,"c005":2,"c006":2,"c007":3,"c008":2,"c009":1,"c010":3,"c011":3,"c012":2,"c013":1,"c014":3,"c015":3,"c016":2,"c017":3,"c018":2,"c019":5,"c020":4,"c021":3,"c022":3,"c023":2,"c024":2,"c025":4,"c026":4,"c027":3,"c028":4,"c029":3,"c030":5,"c031":5,"c032":2,"c033":4,"c034":3,"c035":1,"c036":2,"c037":3,"c038":3,"c039":1,"c040":3,"c041":2,"c042":3,"c043":2,"c044":4,"c045":1,"c046":3,"c047":5,"c048":4,"c049":2,"c050":2,"c051":2,"c052":4,"c053":2,"c054":3,"c055":3,"c056":4,"c057":3,"c058":4,"c059":3,"c060":6,"c061":2,"c062":2,"c063":3,"c064":3,"c065":5,"c066":3,"c067":3,"c068":7,"c069":2,"c070":3,"c071":3,"c072":3,"c073":3,"c074":3,"c075":2,"c076":2,"c077":1,"c078":2,"c079":2,"c080":2,"c081":2,"c082":1,"c083":2,"c084":4,"c085":2,"c086":2,"c087":3,"c088":4,"c089":4,"c090":3,"c091":4,"c092":2,"c093":2,"c094":1,"c095":2,"c096":3,"c097":3,"c098":2,"c099":3,"c100":3}
+```
+
+The packet asks for the JSON object alone; this note is only for you and should be removed if you pass the answer on.
+
+**Ties:** 40 of the 100 cases have more than one price with the same highest expected profit, and the packet gives no rule for choosing between them. I used the same rule every time: pick the lowest of the tied prices. In these 40 cases the label above is a convention, not the only correct answer, so you may want to drop them, mark them as ties, or add a tie rule to the packet before using it as training material.
+
+- **12 cases where the seller's cost is unknown:** c001, c003, c033, c048, c056, c058, c071, c088, c092, c096, and two more. In each, two neighbouring prices have exactly the same expected profit.
+- **28 cases where the seller states the cost:** the cost is at or above the resale value, so every offer at least breaks even at 0 at best. For example, c002, c007, c017, c040 and c077. No offer can make a profit, and several offers (including those below cost) all come out at 0.
+
+**How I got the answers:** I parsed all 100 cases with a script and checked that every line matched the expected format. There were no unusual lines, hidden characters or embedded instructions in the packet. When the seller stated the farm cost, I used that cost. Otherwise I averaged over every whole-number cost in the stated range.
+
+Files are in /tmp/claude-1000/-home-ubuntu-concordia-scaffold-study/95f682ba-988d-4c17-8b03-23ef2c0ab043/scratchpad/:
+- solve.py
+- answers.json
+
+I made no changes to the repository.

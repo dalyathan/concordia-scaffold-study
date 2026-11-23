@@ -1,0 +1,606 @@
+{
+ "labels": {
+  "V2-gA-information-C1-p1_5-w0-n1": {
+   "id": "c039",
+   "position": 0,
+   "price": 1,
+   "source": "examples_reply.json"
+  },
+  "V2-gA-information-C2-p3_7-w1-n0": {
+   "id": "c035",
+   "position": 0,
+   "price": 1,
+   "source": "examples_reply.json"
+  },
+  "V2-gA-information-C3-p1_10-w1-n0": {
+   "id": "c013",
+   "position": 0,
+   "price": 1,
+   "source": "examples_reply.json"
+  },
+  "V2-gA-information-C4-p2_6-w0-n1": {
+   "id": "c045",
+   "position": 0,
+   "price": 1,
+   "source": "examples_reply.json"
+  },
+  "V2-gA-information-C4-p2_6-w1-n1": {
+   "id": "c094",
+   "position": 0,
+   "price": 1,
+   "source": "examples_reply.json"
+  },
+  "V2-gB-information-C1-p2_6-w0-n0": {
+   "id": "c062",
+   "position": 0,
+   "price": 2,
+   "source": "examples_reply.json"
+  },
+  "V2-gB-neutral-p2_10-w1-n0": {
+   "id": "c012",
+   "position": 0,
+   "price": 2,
+   "source": "examples_reply.json"
+  },
+  "V2-gB-neutral-p3_7-w0-n0": {
+   "id": "c081",
+   "position": 0,
+   "price": 2,
+   "source": "examples_reply.json"
+  },
+  "V2-gB-pressure-p2_10-w1-n1": {
+   "id": "c083",
+   "position": 0,
+   "price": 2,
+   "source": "examples_reply.json"
+  },
+  "V2-gC-information-C3-p1_5-w1-n0": {
+   "id": "c046",
+   "position": 0,
+   "price": 3,
+   "source": "examples_reply.json"
+  },
+  "V2-gC-information-C3-p3_7-w1-n0": {
+   "id": "c054",
+   "position": 0,
+   "price": 3,
+   "source": "examples_reply.json"
+  },
+  "V2-gC-neutral-p2_10-w1-n0": {
+   "id": "c055",
+   "position": 0,
+   "price": 3,
+   "source": "examples_reply.json"
+  },
+  "V2-gC-pressure-p2_10-w0-n0": {
+   "id": "c010",
+   "position": 0,
+   "price": 3,
+   "source": "examples_reply.json"
+  },
+  "V3-gA-information-C2-p3_7-w0-n0": {
+   "id": "c036",
+   "position": 1,
+   "price": 2,
+   "source": "examples_reply.json"
+  },
+  "V3-gA-information-C4-p1_5-w0-n0": {
+   "id": "c009",
+   "position": 0,
+   "price": 1,
+   "source": "examples_reply.json"
+  },
+  "V3-gB-information-C1-p1_5-w1-n1": {
+   "id": "c024",
+   "position": 0,
+   "price": 2,
+   "source": "examples_reply.json"
+  },
+  "V3-gB-information-C2-p2_6-w0-n0": {
+   "id": "c098",
+   "position": 0,
+   "price": 2,
+   "source": "examples_reply.json"
+  },
+  "V3-gB-information-C3-p3_7-w0-n1": {
+   "id": "c093",
+   "position": 0,
+   "price": 2,
+   "source": "examples_reply.json"
+  },
+  "V3-gB-information-C4-p1_10-w1-n0": {
+   "id": "c041",
+   "position": 0,
+   "price": 2,
+   "source": "examples_reply.json"
+  },
+  "V3-gB-information-C5-p1_10-w0-n1": {
+   "id": "c016",
+   "position": 0,
+   "price": 2,
+   "source": "examples_reply.json"
+  },
+  "V3-gB-information-C5-p3_7-w0-n1": {
+   "id": "c085",
+   "position": 0,
+   "price": 2,
+   "source": "examples_reply.json"
+  },
+  "V3-gB-neutral-p1_5-w1-n1": {
+   "id": "c080",
+   "position": 0,
+   "price": 2,
+   "source": "examples_reply.json"
+  },
+  "V3-gB-pressure-p1_10-w1-n0": {
+   "id": "c049",
+   "position": 0,
+   "price": 2,
+   "source": "examples_reply.json"
+  },
+  "V3-gB-pressure-p2_6-w1-n1": {
+   "id": "c032",
+   "position": 0,
+   "price": 2,
+   "source": "examples_reply.json"
+  },
+  "V3-gC-information-C1-p1_10-w0-n1": {
+   "id": "c042",
+   "position": 0,
+   "price": 3,
+   "source": "examples_reply.json"
+  },
+  "V3-gC-information-C3-p2_6-w0-n0": {
+   "id": "c070",
+   "position": 0,
+   "price": 3,
+   "source": "examples_reply.json"
+  },
+  "V3-gC-information-C5-p3_7-w1-n1": {
+   "id": "c067",
+   "position": 0,
+   "price": 3,
+   "source": "examples_reply.json"
+  },
+  "V3-gC-neutral-p2_6-w0-n1": {
+   "id": "c022",
+   "position": 0,
+   "price": 3,
+   "source": "examples_reply.json"
+  },
+  "V4-gA-information-C2-p1_10-w1-n0": {
+   "id": "c005",
+   "position": 1,
+   "price": 2,
+   "source": "examples_reply.json"
+  },
+  "V4-gA-information-C2-p2_6-w0-n1": {
+   "id": "c006",
+   "position": 1,
+   "price": 2,
+   "source": "examples_reply.json"
+  },
+  "V4-gA-information-C4-p3_7-w0-n1": {
+   "id": "c077",
+   "position": 0,
+   "price": 1,
+   "source": "examples_reply.json"
+  },
+  "V4-gA-pressure-p1_10-w0-n0": {
+   "id": "c076",
+   "position": 1,
+   "price": 2,
+   "source": "examples_reply.json"
+  },
+  "V4-gA-pressure-p1_10-w1-n1": {
+   "id": "c069",
+   "position": 1,
+   "price": 2,
+   "source": "examples_reply.json"
+  },
+  "V4-gB-information-C4-p1_10-w0-n1": {
+   "id": "c018",
+   "position": 0,
+   "price": 2,
+   "source": "examples_reply.json"
+  },
+  "V4-gB-information-C5-p1_5-w1-n0": {
+   "id": "c051",
+   "position": 0,
+   "price": 2,
+   "source": "examples_reply.json"
+  },
+  "V4-gB-information-C5-p2_6-w0-n1": {
+   "id": "c078",
+   "position": 0,
+   "price": 2,
+   "source": "examples_reply.json"
+  },
+  "V4-gB-information-C6-p1_10-w0-n1": {
+   "id": "c079",
+   "position": 0,
+   "price": 2,
+   "source": "examples_reply.json"
+  },
+  "V4-gB-information-C6-p3_7-w0-n0": {
+   "id": "c086",
+   "position": 0,
+   "price": 2,
+   "source": "examples_reply.json"
+  },
+  "V4-gB-neutral-p1_10-w0-n0": {
+   "id": "c023",
+   "position": 0,
+   "price": 2,
+   "source": "examples_reply.json"
+  },
+  "V4-gC-information-C2-p1_5-w0-n1": {
+   "id": "c057",
+   "position": 0,
+   "price": 3,
+   "source": "examples_reply.json"
+  },
+  "V4-gC-information-C3-p2_6-w1-n1": {
+   "id": "c073",
+   "position": 0,
+   "price": 3,
+   "source": "examples_reply.json"
+  },
+  "V4-gC-information-C4-p1_10-w1-n0": {
+   "id": "c064",
+   "position": 0,
+   "price": 3,
+   "source": "examples_reply.json"
+  },
+  "V4-gC-information-C4-p2_10-w0-n0": {
+   "id": "c021",
+   "position": 0,
+   "price": 3,
+   "source": "examples_reply.json"
+  },
+  "V4-gC-information-C6-p1_5-w0-n1": {
+   "id": "c037",
+   "position": 0,
+   "price": 3,
+   "source": "examples_reply.json"
+  },
+  "V4-gC-information-C6-p2_10-w0-n0": {
+   "id": "c099",
+   "position": 0,
+   "price": 3,
+   "source": "examples_reply.json"
+  },
+  "V4-gC-pressure-p3_7-w0-n1": {
+   "id": "c097",
+   "position": 0,
+   "price": 3,
+   "source": "examples_reply.json"
+  },
+  "V5-gA-neutral-p2_6-w1-n1": {
+   "id": "c090",
+   "position": 2,
+   "price": 3,
+   "source": "examples_reply.json"
+  },
+  "V5-gA-pressure-p1_5-w0-n0": {
+   "id": "c092",
+   "position": 1,
+   "price": 2,
+   "source": "examples_reply.json"
+  },
+  "V5-gB-information-C1-p1_5-w0-n1": {
+   "id": "c095",
+   "position": 0,
+   "price": 2,
+   "source": "examples_reply.json"
+  },
+  "V5-gB-information-C1-p2_10-w0-n1": {
+   "id": "c061",
+   "position": 0,
+   "price": 2,
+   "source": "examples_reply.json"
+  },
+  "V5-gB-information-C5-p3_7-w1-n1": {
+   "id": "c002",
+   "position": 0,
+   "price": 2,
+   "source": "examples_reply.json"
+  },
+  "V5-gB-information-C6-p1_5-w0-n1": {
+   "id": "c053",
+   "position": 0,
+   "price": 2,
+   "source": "examples_reply.json"
+  },
+  "V5-gB-information-C6-p2_6-w1-n1": {
+   "id": "c050",
+   "position": 0,
+   "price": 2,
+   "source": "examples_reply.json"
+  },
+  "V5-gB-neutral-p1_10-w0-n0": {
+   "id": "c001",
+   "position": 0,
+   "price": 2,
+   "source": "examples_reply.json"
+  },
+  "V5-gC-information-C1-p2_10-w0-n1": {
+   "id": "c034",
+   "position": 0,
+   "price": 3,
+   "source": "examples_reply.json"
+  },
+  "V5-gC-information-C1-p2_10-w1-n1": {
+   "id": "c087",
+   "position": 0,
+   "price": 3,
+   "source": "examples_reply.json"
+  },
+  "V5-gC-information-C3-p1_10-w0-n0": {
+   "id": "c014",
+   "position": 0,
+   "price": 3,
+   "source": "examples_reply.json"
+  },
+  "V5-gC-information-C4-p2_6-w0-n0": {
+   "id": "c025",
+   "position": 1,
+   "price": 4,
+   "source": "examples_reply.json"
+  },
+  "V5-gC-information-C5-p1_5-w1-n0": {
+   "id": "c100",
+   "position": 0,
+   "price": 3,
+   "source": "examples_reply.json"
+  },
+  "V5-gC-information-C5-p2_6-w1-n1": {
+   "id": "c007",
+   "position": 0,
+   "price": 3,
+   "source": "examples_reply.json"
+  },
+  "V5-gC-information-C5-p3_7-w1-n0": {
+   "id": "c027",
+   "position": 0,
+   "price": 3,
+   "source": "examples_reply.json"
+  },
+  "V5-gC-information-C6-p1_10-w1-n0": {
+   "id": "c074",
+   "position": 0,
+   "price": 3,
+   "source": "examples_reply.json"
+  },
+  "V5-gC-information-C6-p2_10-w1-n0": {
+   "id": "c015",
+   "position": 0,
+   "price": 3,
+   "source": "examples_reply.json"
+  },
+  "V5-gC-information-C7-p3_7-w1-n0": {
+   "id": "c040",
+   "position": 0,
+   "price": 3,
+   "source": "examples_reply.json"
+  },
+  "V5-gC-pressure-p1_5-w1-n0": {
+   "id": "c038",
+   "position": 0,
+   "price": 3,
+   "source": "examples_reply.json"
+  },
+  "V5-gC-pressure-p2_6-w0-n0": {
+   "id": "c029",
+   "position": 0,
+   "price": 3,
+   "source": "examples_reply.json"
+  },
+  "V6-gA-information-C1-p3_7-w0-n1": {
+   "id": "c082",
+   "position": 0,
+   "price": 1,
+   "source": "examples_reply.json"
+  },
+  "V6-gA-neutral-p2_10-w1-n1": {
+   "id": "c096",
+   "position": 2,
+   "price": 3,
+   "source": "examples_reply.json"
+  },
+  "V6-gA-pressure-p2_6-w1-n1": {
+   "id": "c071",
+   "position": 2,
+   "price": 3,
+   "source": "examples_reply.json"
+  },
+  "V6-gB-information-C1-p2_10-w1-n1": {
+   "id": "c008",
+   "position": 0,
+   "price": 2,
+   "source": "examples_reply.json"
+  },
+  "V6-gB-pressure-p3_7-w0-n0": {
+   "id": "c020",
+   "position": 2,
+   "price": 4,
+   "source": "examples_reply.json"
+  },
+  "V6-gC-information-C1-p3_7-w0-n0": {
+   "id": "c063",
+   "position": 0,
+   "price": 3,
+   "source": "examples_reply.json"
+  },
+  "V6-gC-information-C2-p1_10-w0-n1": {
+   "id": "c011",
+   "position": 0,
+   "price": 3,
+   "source": "examples_reply.json"
+  },
+  "V6-gC-information-C5-p1_10-w1-n0": {
+   "id": "c031",
+   "position": 2,
+   "price": 5,
+   "source": "examples_reply.json"
+  },
+  "V6-gC-information-C6-p1_10-w0-n1": {
+   "id": "c017",
+   "position": 0,
+   "price": 3,
+   "source": "examples_reply.json"
+  },
+  "V7-gA-information-C3-p2_6-w0-n1": {
+   "id": "c059",
+   "position": 2,
+   "price": 3,
+   "source": "examples_reply.json"
+  },
+  "V7-gA-information-C4-p1_10-w1-n1": {
+   "id": "c028",
+   "position": 3,
+   "price": 4,
+   "source": "examples_reply.json"
+  },
+  "V7-gA-information-C4-p3_7-w0-n1": {
+   "id": "c026",
+   "position": 3,
+   "price": 4,
+   "source": "examples_reply.json"
+  },
+  "V7-gA-pressure-p2_10-w0-n1": {
+   "id": "c052",
+   "position": 3,
+   "price": 4,
+   "source": "examples_reply.json"
+  },
+  "V7-gA-pressure-p2_10-w1-n1": {
+   "id": "c089",
+   "position": 3,
+   "price": 4,
+   "source": "examples_reply.json"
+  },
+  "V7-gB-information-C5-p2_6-w0-n0": {
+   "id": "c030",
+   "position": 3,
+   "price": 5,
+   "source": "examples_reply.json"
+  },
+  "V7-gB-neutral-p2_6-w1-n1": {
+   "id": "c044",
+   "position": 2,
+   "price": 4,
+   "source": "examples_reply.json"
+  },
+  "V7-gB-pressure-p1_10-w1-n1": {
+   "id": "c003",
+   "position": 1,
+   "price": 3,
+   "source": "examples_reply.json"
+  },
+  "V7-gB-pressure-p3_7-w1-n1": {
+   "id": "c033",
+   "position": 2,
+   "price": 4,
+   "source": "examples_reply.json"
+  },
+  "V7-gC-information-C5-p2_10-w0-n0": {
+   "id": "c047",
+   "position": 2,
+   "price": 5,
+   "source": "examples_reply.json"
+  },
+  "V8-gA-information-C2-p2_6-w1-n1": {
+   "id": "c075",
+   "position": 1,
+   "price": 2,
+   "source": "examples_reply.json"
+  },
+  "V8-gA-information-C2-p3_7-w1-n1": {
+   "id": "c043",
+   "position": 1,
+   "price": 2,
+   "source": "examples_reply.json"
+  },
+  "V8-gB-information-C4-p1_5-w0-n0": {
+   "id": "c091",
+   "position": 2,
+   "price": 4,
+   "source": "examples_reply.json"
+  },
+  "V8-gB-information-C6-p2_6-w1-n0": {
+   "id": "c060",
+   "position": 4,
+   "price": 6,
+   "source": "examples_reply.json"
+  },
+  "V8-gB-neutral-p2_10-w1-n0": {
+   "id": "c088",
+   "position": 2,
+   "price": 4,
+   "source": "examples_reply.json"
+  },
+  "V8-gB-neutral-p3_7-w1-n1": {
+   "id": "c019",
+   "position": 3,
+   "price": 5,
+   "source": "examples_reply.json"
+  },
+  "V8-gB-pressure-p2_6-w0-n1": {
+   "id": "c048",
+   "position": 2,
+   "price": 4,
+   "source": "examples_reply.json"
+  },
+  "V8-gC-information-C2-p3_7-w0-n1": {
+   "id": "c072",
+   "position": 0,
+   "price": 3,
+   "source": "examples_reply.json"
+  },
+  "V8-gC-information-C4-p1_5-w1-n1": {
+   "id": "c084",
+   "position": 1,
+   "price": 4,
+   "source": "examples_reply.json"
+  },
+  "V8-gC-information-C7-p3_7-w0-n1": {
+   "id": "c068",
+   "position": 4,
+   "price": 7,
+   "source": "examples_reply.json"
+  },
+  "V9-gB-neutral-p2_10-w0-n1": {
+   "id": "c004",
+   "position": 3,
+   "price": 5,
+   "source": "examples_reply.json"
+  },
+  "V9-gB-pressure-p2_6-w0-n1": {
+   "id": "c065",
+   "position": 3,
+   "price": 5,
+   "source": "examples_reply.json"
+  },
+  "V9-gC-information-C1-p2_10-w0-n1": {
+   "id": "c066",
+   "position": 0,
+   "price": 3,
+   "source": "examples_reply.json"
+  },
+  "V9-gC-pressure-p1_5-w0-n0": {
+   "id": "c056",
+   "position": 1,
+   "price": 4,
+   "source": "examples_reply.json"
+  },
+  "V9-gC-pressure-p1_5-w1-n1": {
+   "id": "c058",
+   "position": 1,
+   "price": 4,
+   "source": "examples_reply.json"
+  }
+ },
+ "n_labels": 100,
+ "unusable_ids": []
+}
