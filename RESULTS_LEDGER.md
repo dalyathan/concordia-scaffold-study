@@ -60,11 +60,12 @@ Rebuilt by `python demo/ledger.py` from saved results (do not edit by hand). Sof
 | 54 | inside-the-model | 5 | LoRA wrong_rule, lr 3e-04, seed 0 | held-out tune cells (6) | yes | 0.473 [0.14, 0.80] | -0.103 | plain (held-out cells) | 0.577 | yes | 46 min | best epoch 6; beats plain | `demo_out/lora/wrong_rule_lr3e-04_s0.json` |
 | 55 | inside-the-model | 5 | LoRA answer_only, renormalised-only loss, lr 3e-4 (stopped after 1 epoch) | held-out tune cells (6) | yes | 0.204 | -0.373 | plain (held-out cells) | 0.577 | yes | 7 min | dead end: letter mass collapsed to 0.01 | `logs/demo_lora_answer_only_renorm_loss_dead_end.log` |
 | 56 | inside-the-model | 5 | generated-data LoRA answer_only, lr 3e-04, seed 0 | tune cells (42, generated) | yes | 0.118 | -0.539 | plain (tune cells) | 0.657 | yes | 38 min | beats plain on tune | `demo_out/gen_lora/gen_answer_only_lr3e-04_s0.json` |
-| 57 | inside-the-model | 5 | generated-data LoRA teacher, lr 1e-03, seed 0 | tune cells (42, generated) | yes | 0.657 | +0.000 | plain (tune cells) | 0.657 | no | 20 min | no improvement (epoch 0) | `demo_out/gen_lora/gen_teacher_lr1e-03_s0.json` |
-| 58 | inside-the-model | 5 | generated-data LoRA teacher, lr 1e-04, seed 0 | tune cells (42, generated) | yes | 0.380 | -0.277 | plain (tune cells) | 0.657 | yes | 40 min | beats plain on tune | `demo_out/gen_lora/gen_teacher_lr1e-04_s0.json` |
-| 59 | inside-the-model | 5 | generated-data LoRA teacher, lr 3e-04, seed 0 | tune cells (42, generated) | yes | 0.384 | -0.273 | plain (tune cells) | 0.657 | yes | 40 min | beats plain on tune | `demo_out/gen_lora/gen_teacher_lr3e-04_s0.json` |
-| 60 | inside-the-model | 5 | LoRA method distillation, 3 seeds, TEST LOOK (72 cases, 18 test cells) | test cells (18) | no | 0.263 | -0.271 | wrong-rule distil (3 seeds) | 0.482 | yes | — | test label: SUPPORT | `demo_out/test_look.json` |
-| 61 | take-home | 0 | steercheck toy problem (a vector that should work) | toy (40 cases) | yes | 0.066 [0.04, 0.08] | -0.734 | its negation | 0.800 | yes | — | steercheck detects a working vector and its controls | `demo/steercheck.py` |
+| 57 | inside-the-model | 5 | generated-data LoRA neutral, lr 1e-04, seed 0 | tune cells (42, generated) | yes | 0.657 | +0.000 | plain (tune cells) | 0.657 | no | 20 min | no improvement (epoch 0) | `demo_out/gen_lora/gen_neutral_lr1e-04_s0.json` |
+| 58 | inside-the-model | 5 | generated-data LoRA teacher, lr 1e-03, seed 0 | tune cells (42, generated) | yes | 0.657 | +0.000 | plain (tune cells) | 0.657 | no | 20 min | no improvement (epoch 0) | `demo_out/gen_lora/gen_teacher_lr1e-03_s0.json` |
+| 59 | inside-the-model | 5 | generated-data LoRA teacher, lr 1e-04, seed 0 | tune cells (42, generated) | yes | 0.380 | -0.277 | plain (tune cells) | 0.657 | yes | 40 min | beats plain on tune | `demo_out/gen_lora/gen_teacher_lr1e-04_s0.json` |
+| 60 | inside-the-model | 5 | generated-data LoRA teacher, lr 3e-04, seed 0 | tune cells (42, generated) | yes | 0.384 | -0.273 | plain (tune cells) | 0.657 | yes | 40 min | beats plain on tune | `demo_out/gen_lora/gen_teacher_lr3e-04_s0.json` |
+| 61 | inside-the-model | 5 | LoRA method distillation, 3 seeds, TEST LOOK (72 cases, 18 test cells) | test cells (18) | no | 0.263 | -0.271 | wrong-rule distil (3 seeds) | 0.482 | yes | — | test label: SUPPORT | `demo_out/test_look.json` |
+| 62 | take-home | 0 | steercheck toy problem (a vector that should work) | toy (40 cases) | yes | 0.066 [0.04, 0.08] | -0.734 | its negation | 0.800 | yes | — | steercheck detects a working vector and its controls | `demo/steercheck.py` |
 
 ## Three best methods (tuning split; excluding rows that name the answer)
 
@@ -124,7 +125,8 @@ Rebuilt by `python demo/ledger.py` from saved results (do not edit by hand). Sof
 - Row 55: regret looks good only because it is read after renormalising over a collapsed 1% of the mass; replaced by the full-vocabulary letter loss
 - Row 56: best epoch 4; selection-set soft regret 0.120
 - Row 57: best epoch 0; selection-set soft regret 0.584
-- Row 58: best epoch 4; selection-set soft regret 0.360
-- Row 59: best epoch 3; selection-set soft regret 0.375
-- Row 60: frozen development verdict: NOT PASSED. Control minus method, paired cell bootstrap: plain +0.271 [+0.054, +0.514]; neutral +0.286 [+0.064, +0.536]; wrong-rule +0.219 [+0.048, +0.399]; always-2 +0.115 [-0.066, +0.317] (always-2 0.378); free-text hard regret worse: plain 0.439, method 0.736
-- Row 61: toy regret is on the toy's own scale
+- Row 58: best epoch 0; selection-set soft regret 0.584
+- Row 59: best epoch 4; selection-set soft regret 0.360
+- Row 60: best epoch 3; selection-set soft regret 0.375
+- Row 61: frozen development verdict: NOT PASSED. Control minus method, paired cell bootstrap: plain +0.271 [+0.054, +0.514]; neutral +0.286 [+0.064, +0.536]; wrong-rule +0.219 [+0.048, +0.399]; always-2 +0.115 [-0.066, +0.317] (always-2 0.378); free-text hard regret worse: plain 0.439, method 0.736
+- Row 62: toy regret is on the toy's own scale

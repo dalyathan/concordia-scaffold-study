@@ -1054,6 +1054,23 @@
   {
    "beat": "inside-the-model",
    "rung": 5,
+   "method": "generated-data LoRA neutral, lr 1e-04, seed 0",
+   "split": "tune cells (42, generated)",
+   "in_sample": "yes",
+   "soft_regret": 0.6572416108190681,
+   "ci": null,
+   "change_vs_plain": 0.0,
+   "control": "plain (tune cells)",
+   "control_regret": 0.6572416108190681,
+   "beats_control": "no",
+   "wall_time": 1192.1892983913422,
+   "verdict": "no improvement (epoch 0)",
+   "source": "demo_out/gen_lora/gen_neutral_lr1e-04_s0.json",
+   "note": "best epoch 0; selection-set soft regret 0.584"
+  },
+  {
+   "beat": "inside-the-model",
+   "rung": 5,
    "method": "generated-data LoRA teacher, lr 1e-03, seed 0",
    "split": "tune cells (42, generated)",
    "in_sample": "yes",
