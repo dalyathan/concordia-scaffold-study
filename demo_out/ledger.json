@@ -1054,6 +1054,23 @@
   {
    "beat": "inside-the-model",
    "rung": 5,
+   "method": "generated-data LoRA teacher, lr 3e-04, seed 0",
+   "split": "tune cells (42, generated)",
+   "in_sample": "yes",
+   "soft_regret": 0.38383217043373385,
+   "ci": null,
+   "change_vs_plain": -0.2734094403853342,
+   "control": "plain (tune cells)",
+   "control_regret": 0.6572416108190681,
+   "beats_control": "yes",
+   "wall_time": 2371.54159617424,
+   "verdict": "beats plain on tune",
+   "source": "demo_out/gen_lora/gen_teacher_lr3e-04_s0.json",
+   "note": "best epoch 3; selection-set soft regret 0.375"
+  },
+  {
+   "beat": "inside-the-model",
+   "rung": 5,
    "method": "LoRA method distillation, 3 seeds, TEST LOOK (72 cases, 18 test cells)",
    "split": "test cells (18)",
    "in_sample": "no",
