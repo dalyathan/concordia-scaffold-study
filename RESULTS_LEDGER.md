@@ -65,8 +65,9 @@ Rebuilt by `python demo/ledger.py` from saved results (do not edit by hand). Sof
 | 59 | inside-the-model | 5 | generated-data LoRA teacher, lr 1e-03, seed 0 | tune cells (42, generated) | yes | 0.657 | +0.000 | plain (tune cells) | 0.657 | no | 20 min | no improvement (epoch 0) | `demo_out/gen_lora/gen_teacher_lr1e-03_s0.json` |
 | 60 | inside-the-model | 5 | generated-data LoRA teacher, lr 1e-04, seed 0 | tune cells (42, generated) | yes | 0.380 | -0.277 | plain (tune cells) | 0.657 | yes | 40 min | beats plain on tune | `demo_out/gen_lora/gen_teacher_lr1e-04_s0.json` |
 | 61 | inside-the-model | 5 | generated-data LoRA teacher, lr 3e-04, seed 0 | tune cells (42, generated) | yes | 0.384 | -0.273 | plain (tune cells) | 0.657 | yes | 40 min | beats plain on tune | `demo_out/gen_lora/gen_teacher_lr3e-04_s0.json` |
-| 62 | inside-the-model | 5 | LoRA method distillation, 3 seeds, TEST LOOK (72 cases, 18 test cells) | test cells (18) | no | 0.263 | -0.271 | wrong-rule distil (3 seeds) | 0.482 | yes | — | test label: SUPPORT | `demo_out/test_look.json` |
-| 63 | take-home | 0 | steercheck toy problem (a vector that should work) | toy (40 cases) | yes | 0.066 [0.04, 0.08] | -0.734 | its negation | 0.800 | yes | — | steercheck detects a working vector and its controls | `demo/steercheck.py` |
+| 62 | inside-the-model | 5 | generated-data LoRA wrong_rule, lr 1e-04, seed 0 | tune cells (42, generated) | yes | 0.589 | -0.068 | plain (tune cells) | 0.657 | yes | 39 min | beats plain on tune | `demo_out/gen_lora/gen_wrong_rule_lr1e-04_s0.json` |
+| 63 | inside-the-model | 5 | LoRA method distillation, 3 seeds, TEST LOOK (72 cases, 18 test cells) | test cells (18) | no | 0.263 | -0.271 | wrong-rule distil (3 seeds) | 0.482 | yes | — | test label: SUPPORT | `demo_out/test_look.json` |
+| 64 | take-home | 0 | steercheck toy problem (a vector that should work) | toy (40 cases) | yes | 0.066 [0.04, 0.08] | -0.734 | its negation | 0.800 | yes | — | steercheck detects a working vector and its controls | `demo/steercheck.py` |
 
 ## Three best methods (tuning split; excluding rows that name the answer)
 
@@ -130,5 +131,6 @@ Rebuilt by `python demo/ledger.py` from saved results (do not edit by hand). Sof
 - Row 59: best epoch 0; selection-set soft regret 0.584
 - Row 60: best epoch 4; selection-set soft regret 0.360
 - Row 61: best epoch 3; selection-set soft regret 0.375
-- Row 62: frozen development verdict: NOT PASSED. Control minus method, paired cell bootstrap: plain +0.271 [+0.054, +0.514]; neutral +0.286 [+0.064, +0.536]; wrong-rule +0.219 [+0.048, +0.399]; always-2 +0.115 [-0.066, +0.317] (always-2 0.378); free-text hard regret worse: plain 0.439, method 0.736
-- Row 63: toy regret is on the toy's own scale
+- Row 62: best epoch 5; selection-set soft regret 0.510
+- Row 63: frozen development verdict: NOT PASSED. Control minus method, paired cell bootstrap: plain +0.271 [+0.054, +0.514]; neutral +0.286 [+0.064, +0.536]; wrong-rule +0.219 [+0.048, +0.399]; always-2 +0.115 [-0.066, +0.317] (always-2 0.378); free-text hard regret worse: plain 0.439, method 0.736
+- Row 64: toy regret is on the toy's own scale
