@@ -1,0 +1,9758 @@
+{
+ "seed": 20261201,
+ "stats": {
+  "ties_dropped": {
+   "below": 1635,
+   "at_or_above": 1517
+  },
+  "original_study_excluded": 144,
+  "newkey_space": {
+   "below": {
+    "in_range_available": 120,
+    "extension_available": 2645
+   },
+   "at_or_above": {
+    "in_range_available": 5,
+    "extension_available": 255
+   },
+   "no_cost": {
+    "in_range_available": 11,
+    "extension_available": 710
+   }
+  }
+ },
+ "cells": [
+  {
+   "cell": "V4-gB-information-C2-p2_6-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "below",
+   "V": 4,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "information",
+   "C": 2,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 0,
+   "payoffs": [
+    2.0,
+    1.0,
+    0.0,
+    -1.0,
+    -2.0
+   ],
+   "best_payoff": 2.0,
+   "best_offers": [
+    2
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V4-gB-information-C2-p1_10-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "below",
+   "V": 4,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "information",
+   "C": 2,
+   "prior": [
+    1,
+    10
+   ],
+   "wording": 0,
+   "payoffs": [
+    2.0,
+    1.0,
+    0.0,
+    -1.0,
+    -2.0
+   ],
+   "best_payoff": 2.0,
+   "best_offers": [
+    2
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V5-gA-information-C4-p2_6-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "below",
+   "V": 5,
+   "grid_name": "A",
+   "grid": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "line": "information",
+   "C": 4,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    1.0,
+    0.0
+   ],
+   "best_payoff": 1.0,
+   "best_offers": [
+    4
+   ],
+   "best_positions": [
+    3
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V3-gA-information-C1-p3_7-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "below",
+   "V": 3,
+   "grid_name": "A",
+   "grid": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "line": "information",
+   "C": 1,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 0,
+   "payoffs": [
+    2.0,
+    1.0,
+    0.0,
+    -1.0,
+    -2.0
+   ],
+   "best_payoff": 2.0,
+   "best_offers": [
+    1
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V5-gA-information-C3-p3_7-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "below",
+   "V": 5,
+   "grid_name": "A",
+   "grid": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "line": "information",
+   "C": 3,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    0.0,
+    2.0,
+    1.0,
+    0.0
+   ],
+   "best_payoff": 2.0,
+   "best_offers": [
+    3
+   ],
+   "best_positions": [
+    2
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V7-gA-information-C1-p3_7-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "below",
+   "V": 7,
+   "grid_name": "A",
+   "grid": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "line": "information",
+   "C": 1,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 1,
+   "payoffs": [
+    6.0,
+    5.0,
+    4.0,
+    3.0,
+    2.0
+   ],
+   "best_payoff": 6.0,
+   "best_offers": [
+    1
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V9-gA-information-C5-p3_7-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "below",
+   "V": 9,
+   "grid_name": "A",
+   "grid": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "line": "information",
+   "C": 5,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    4.0
+   ],
+   "best_payoff": 4.0,
+   "best_offers": [
+    5
+   ],
+   "best_positions": [
+    4
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V3-gB-information-C2-p2_6-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "below",
+   "V": 3,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "information",
+   "C": 2,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 1,
+   "payoffs": [
+    1.0,
+    0.0,
+    -1.0,
+    -2.0,
+    -3.0
+   ],
+   "best_payoff": 1.0,
+   "best_offers": [
+    2
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V4-gB-information-C3-p3_7-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "below",
+   "V": 4,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "information",
+   "C": 3,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    1.0,
+    0.0,
+    -1.0,
+    -2.0
+   ],
+   "best_payoff": 1.0,
+   "best_offers": [
+    3
+   ],
+   "best_positions": [
+    1
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V6-gB-information-C3-p1_10-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "below",
+   "V": 6,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "information",
+   "C": 3,
+   "prior": [
+    1,
+    10
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    3.0,
+    2.0,
+    1.0,
+    0.0
+   ],
+   "best_payoff": 3.0,
+   "best_offers": [
+    3
+   ],
+   "best_positions": [
+    1
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V9-gC-information-C7-p1_5-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "below",
+   "V": 9,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 7,
+   "prior": [
+    1,
+    5
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    2.0
+   ],
+   "best_payoff": 2.0,
+   "best_offers": [
+    7
+   ],
+   "best_positions": [
+    4
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V3-gC-information-C2-p1_5-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "below",
+   "V": 3,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 2,
+   "prior": [
+    1,
+    5
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    -1.0,
+    -2.0,
+    -3.0,
+    -4.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    3
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V7-gC-information-C5-p3_7-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "below",
+   "V": 7,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 5,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    0.0,
+    2.0,
+    1.0,
+    0.0
+   ],
+   "best_payoff": 2.0,
+   "best_offers": [
+    5
+   ],
+   "best_positions": [
+    2
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V9-gA-information-C1-p2_10-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "below",
+   "V": 9,
+   "grid_name": "A",
+   "grid": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "line": "information",
+   "C": 1,
+   "prior": [
+    2,
+    10
+   ],
+   "wording": 1,
+   "payoffs": [
+    8.0,
+    7.0,
+    6.0,
+    5.0,
+    4.0
+   ],
+   "best_payoff": 8.0,
+   "best_offers": [
+    1
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V6-gB-information-C1-p3_7-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "below",
+   "V": 6,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "information",
+   "C": 1,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 1,
+   "payoffs": [
+    4.0,
+    3.0,
+    2.0,
+    1.0,
+    0.0
+   ],
+   "best_payoff": 4.0,
+   "best_offers": [
+    2
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V4-gC-information-C2-p2_6-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "below",
+   "V": 4,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 2,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 0,
+   "payoffs": [
+    1.0,
+    0.0,
+    -1.0,
+    -2.0,
+    -3.0
+   ],
+   "best_payoff": 1.0,
+   "best_offers": [
+    3
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V2-gB-information-C1-p3_7-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "below",
+   "V": 2,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "information",
+   "C": 1,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    -1.0,
+    -2.0,
+    -3.0,
+    -4.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    2
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V7-gB-information-C1-p1_10-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "below",
+   "V": 7,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "information",
+   "C": 1,
+   "prior": [
+    1,
+    10
+   ],
+   "wording": 0,
+   "payoffs": [
+    5.0,
+    4.0,
+    3.0,
+    2.0,
+    1.0
+   ],
+   "best_payoff": 5.0,
+   "best_offers": [
+    2
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V6-gB-information-C4-p3_7-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "below",
+   "V": 6,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "information",
+   "C": 4,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    2.0,
+    1.0,
+    0.0
+   ],
+   "best_payoff": 2.0,
+   "best_offers": [
+    4
+   ],
+   "best_positions": [
+    2
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V3-gA-information-C2-p2_6-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "below",
+   "V": 3,
+   "grid_name": "A",
+   "grid": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "line": "information",
+   "C": 2,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    1.0,
+    0.0,
+    -1.0,
+    -2.0
+   ],
+   "best_payoff": 1.0,
+   "best_offers": [
+    2
+   ],
+   "best_positions": [
+    1
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V8-gC-information-C7-p1_10-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "below",
+   "V": 8,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 7,
+   "prior": [
+    1,
+    10
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0
+   ],
+   "best_payoff": 1.0,
+   "best_offers": [
+    7
+   ],
+   "best_positions": [
+    4
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V7-gC-information-C1-p1_10-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "below",
+   "V": 7,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 1,
+   "prior": [
+    1,
+    10
+   ],
+   "wording": 0,
+   "payoffs": [
+    4.0,
+    3.0,
+    2.0,
+    1.0,
+    0.0
+   ],
+   "best_payoff": 4.0,
+   "best_offers": [
+    3
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V4-gB-information-C1-p3_7-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "below",
+   "V": 4,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "information",
+   "C": 1,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 1,
+   "payoffs": [
+    2.0,
+    1.0,
+    0.0,
+    -1.0,
+    -2.0
+   ],
+   "best_payoff": 2.0,
+   "best_offers": [
+    2
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V4-gC-information-C2-p3_7-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "below",
+   "V": 4,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 2,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 0,
+   "payoffs": [
+    1.0,
+    0.0,
+    -1.0,
+    -2.0,
+    -3.0
+   ],
+   "best_payoff": 1.0,
+   "best_offers": [
+    3
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V6-gC-information-C2-p2_10-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "below",
+   "V": 6,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 2,
+   "prior": [
+    2,
+    10
+   ],
+   "wording": 1,
+   "payoffs": [
+    3.0,
+    2.0,
+    1.0,
+    0.0,
+    -1.0
+   ],
+   "best_payoff": 3.0,
+   "best_offers": [
+    3
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V8-gC-information-C1-p1_5-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "below",
+   "V": 8,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 1,
+   "prior": [
+    1,
+    5
+   ],
+   "wording": 1,
+   "payoffs": [
+    5.0,
+    4.0,
+    3.0,
+    2.0,
+    1.0
+   ],
+   "best_payoff": 5.0,
+   "best_offers": [
+    3
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V5-gC-information-C2-p2_10-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "below",
+   "V": 5,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 2,
+   "prior": [
+    2,
+    10
+   ],
+   "wording": 0,
+   "payoffs": [
+    2.0,
+    1.0,
+    0.0,
+    -1.0,
+    -2.0
+   ],
+   "best_payoff": 2.0,
+   "best_offers": [
+    3
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V4-gB-information-C3-p1_5-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "below",
+   "V": 4,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "information",
+   "C": 3,
+   "prior": [
+    1,
+    5
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    1.0,
+    0.0,
+    -1.0,
+    -2.0
+   ],
+   "best_payoff": 1.0,
+   "best_offers": [
+    3
+   ],
+   "best_positions": [
+    1
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V6-gB-information-C4-p2_6-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "below",
+   "V": 6,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "information",
+   "C": 4,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    2.0,
+    1.0,
+    0.0
+   ],
+   "best_payoff": 2.0,
+   "best_offers": [
+    4
+   ],
+   "best_positions": [
+    2
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V2-gB-information-C1-p1_5-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "below",
+   "V": 2,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "information",
+   "C": 1,
+   "prior": [
+    1,
+    5
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    -1.0,
+    -2.0,
+    -3.0,
+    -4.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    2
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V7-gA-information-C4-p1_5-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "below",
+   "V": 7,
+   "grid_name": "A",
+   "grid": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "line": "information",
+   "C": 4,
+   "prior": [
+    1,
+    5
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    3.0,
+    2.0
+   ],
+   "best_payoff": 3.0,
+   "best_offers": [
+    4
+   ],
+   "best_positions": [
+    3
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V3-gC-information-C2-p2_6-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "below",
+   "V": 3,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 2,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    -1.0,
+    -2.0,
+    -3.0,
+    -4.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    3
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V7-gC-information-C5-p2_6-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "below",
+   "V": 7,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 5,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    2.0,
+    1.0,
+    0.0
+   ],
+   "best_payoff": 2.0,
+   "best_offers": [
+    5
+   ],
+   "best_positions": [
+    2
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V5-gB-information-C3-p2_6-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "below",
+   "V": 5,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "information",
+   "C": 3,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    2.0,
+    1.0,
+    0.0,
+    -1.0
+   ],
+   "best_payoff": 2.0,
+   "best_offers": [
+    3
+   ],
+   "best_positions": [
+    1
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V3-gB-information-C2-p3_7-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "below",
+   "V": 3,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "information",
+   "C": 2,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 0,
+   "payoffs": [
+    1.0,
+    0.0,
+    -1.0,
+    -2.0,
+    -3.0
+   ],
+   "best_payoff": 1.0,
+   "best_offers": [
+    2
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V9-gC-information-C6-p1_10-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "below",
+   "V": 9,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 6,
+   "prior": [
+    1,
+    10
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    3.0,
+    2.0
+   ],
+   "best_payoff": 3.0,
+   "best_offers": [
+    6
+   ],
+   "best_positions": [
+    3
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V3-gC-information-C1-p3_7-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "below",
+   "V": 3,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 1,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    -1.0,
+    -2.0,
+    -3.0,
+    -4.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    3
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V5-gB-information-C2-p1_10-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "below",
+   "V": 5,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "information",
+   "C": 2,
+   "prior": [
+    1,
+    10
+   ],
+   "wording": 0,
+   "payoffs": [
+    3.0,
+    2.0,
+    1.0,
+    0.0,
+    -1.0
+   ],
+   "best_payoff": 3.0,
+   "best_offers": [
+    2
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V9-gB-information-C2-p1_10-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "below",
+   "V": 9,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "information",
+   "C": 2,
+   "prior": [
+    1,
+    10
+   ],
+   "wording": 0,
+   "payoffs": [
+    7.0,
+    6.0,
+    5.0,
+    4.0,
+    3.0
+   ],
+   "best_payoff": 7.0,
+   "best_offers": [
+    2
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V9-gB-information-C2-p3_7-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "below",
+   "V": 9,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "information",
+   "C": 2,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 1,
+   "payoffs": [
+    7.0,
+    6.0,
+    5.0,
+    4.0,
+    3.0
+   ],
+   "best_payoff": 7.0,
+   "best_offers": [
+    2
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V4-gA-information-C5-p2_6-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "at_or_above",
+   "V": 4,
+   "grid_name": "A",
+   "grid": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "line": "information",
+   "C": 5,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -1.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "best_positions": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V3-gC-information-C4-p2_6-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "at_or_above",
+   "V": 3,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 4,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    -1.0,
+    -2.0,
+    -3.0,
+    -4.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    3
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V3-gA-information-C4-p2_10-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "at_or_above",
+   "V": 3,
+   "grid_name": "A",
+   "grid": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "line": "information",
+   "C": 4,
+   "prior": [
+    2,
+    10
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    -1.0,
+    -2.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    1,
+    2,
+    3
+   ],
+   "best_positions": [
+    0,
+    1,
+    2
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V5-gB-information-C5-p1_5-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "at_or_above",
+   "V": 5,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "information",
+   "C": 5,
+   "prior": [
+    1,
+    5
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -1.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "best_positions": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V3-gB-information-C5-p2_6-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "at_or_above",
+   "V": 3,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "information",
+   "C": 5,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    -2.0,
+    -3.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    2,
+    3,
+    4
+   ],
+   "best_positions": [
+    0,
+    1,
+    2
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V2-gC-information-C3-p2_6-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "at_or_above",
+   "V": 2,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 3,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 1,
+   "payoffs": [
+    -1.0,
+    -2.0,
+    -3.0,
+    -4.0,
+    -5.0
+   ],
+   "best_payoff": -1.0,
+   "best_offers": [
+    3
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V6-gC-information-C6-p2_6-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "at_or_above",
+   "V": 6,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 6,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -1.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    3,
+    4,
+    5,
+    6
+   ],
+   "best_positions": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V4-gB-information-C6-p2_6-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "at_or_above",
+   "V": 4,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "information",
+   "C": 6,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -2.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "best_positions": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V5-gC-information-C6-p2_10-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "at_or_above",
+   "V": 5,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 6,
+   "prior": [
+    2,
+    10
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    -1.0,
+    -2.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    3,
+    4,
+    5
+   ],
+   "best_positions": [
+    0,
+    1,
+    2
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V5-gC-information-C5-p1_10-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "at_or_above",
+   "V": 5,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 5,
+   "prior": [
+    1,
+    10
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    -1.0,
+    -2.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    3,
+    4,
+    5
+   ],
+   "best_positions": [
+    0,
+    1,
+    2
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V3-gC-information-C4-p3_7-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "at_or_above",
+   "V": 3,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 4,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    -1.0,
+    -2.0,
+    -3.0,
+    -4.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    3
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V3-gB-information-C3-p1_5-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "at_or_above",
+   "V": 3,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "information",
+   "C": 3,
+   "prior": [
+    1,
+    5
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    0.0,
+    -1.0,
+    -2.0,
+    -3.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    2,
+    3
+   ],
+   "best_positions": [
+    0,
+    1
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V2-gA-information-C3-p1_10-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "at_or_above",
+   "V": 2,
+   "grid_name": "A",
+   "grid": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "line": "information",
+   "C": 3,
+   "prior": [
+    1,
+    10
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    0.0,
+    -1.0,
+    -2.0,
+    -3.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    1,
+    2
+   ],
+   "best_positions": [
+    0,
+    1
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V4-gA-information-C5-p1_10-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "at_or_above",
+   "V": 4,
+   "grid_name": "A",
+   "grid": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "line": "information",
+   "C": 5,
+   "prior": [
+    1,
+    10
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -1.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "best_positions": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V6-gC-information-C7-p1_5-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "at_or_above",
+   "V": 6,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 7,
+   "prior": [
+    1,
+    5
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -1.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    3,
+    4,
+    5,
+    6
+   ],
+   "best_positions": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V4-gA-information-C4-p2_10-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "at_or_above",
+   "V": 4,
+   "grid_name": "A",
+   "grid": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "line": "information",
+   "C": 4,
+   "prior": [
+    2,
+    10
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -1.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "best_positions": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V5-gC-information-C7-p3_7-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "at_or_above",
+   "V": 5,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 7,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -2.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    3,
+    4,
+    5,
+    6
+   ],
+   "best_positions": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V6-gC-information-C7-p1_10-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "at_or_above",
+   "V": 6,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 7,
+   "prior": [
+    1,
+    10
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -1.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    3,
+    4,
+    5,
+    6
+   ],
+   "best_positions": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V5-gC-information-C6-p3_7-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "at_or_above",
+   "V": 5,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 6,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    -1.0,
+    -2.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    3,
+    4,
+    5
+   ],
+   "best_positions": [
+    0,
+    1,
+    2
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V6-gC-information-C7-p1_10-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "at_or_above",
+   "V": 6,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 7,
+   "prior": [
+    1,
+    10
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -1.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    3,
+    4,
+    5,
+    6
+   ],
+   "best_positions": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V2-gB-information-C4-p1_5-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "at_or_above",
+   "V": 2,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "information",
+   "C": 4,
+   "prior": [
+    1,
+    5
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    0.0,
+    -2.0,
+    -3.0,
+    -4.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    2,
+    3
+   ],
+   "best_positions": [
+    0,
+    1
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V3-gB-information-C5-p3_7-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "at_or_above",
+   "V": 3,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "information",
+   "C": 5,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    -2.0,
+    -3.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    2,
+    3,
+    4
+   ],
+   "best_positions": [
+    0,
+    1,
+    2
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V3-gB-information-C3-p1_5-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "at_or_above",
+   "V": 3,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "information",
+   "C": 3,
+   "prior": [
+    1,
+    5
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    -1.0,
+    -2.0,
+    -3.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    2,
+    3
+   ],
+   "best_positions": [
+    0,
+    1
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V5-gC-information-C7-p2_6-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "at_or_above",
+   "V": 5,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 7,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -2.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    3,
+    4,
+    5,
+    6
+   ],
+   "best_positions": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V4-gB-information-C5-p3_7-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "at_or_above",
+   "V": 4,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "information",
+   "C": 5,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    -1.0,
+    -2.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    2,
+    3,
+    4
+   ],
+   "best_positions": [
+    0,
+    1,
+    2
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V6-gC-information-C6-p3_7-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "at_or_above",
+   "V": 6,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 6,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -1.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    3,
+    4,
+    5,
+    6
+   ],
+   "best_positions": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V3-gB-information-C5-p1_5-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "at_or_above",
+   "V": 3,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "information",
+   "C": 5,
+   "prior": [
+    1,
+    5
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    -2.0,
+    -3.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    2,
+    3,
+    4
+   ],
+   "best_positions": [
+    0,
+    1,
+    2
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V4-gB-information-C4-p1_5-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "at_or_above",
+   "V": 4,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "information",
+   "C": 4,
+   "prior": [
+    1,
+    5
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    -1.0,
+    -2.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    2,
+    3,
+    4
+   ],
+   "best_positions": [
+    0,
+    1,
+    2
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V3-gB-information-C5-p2_6-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "at_or_above",
+   "V": 3,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "information",
+   "C": 5,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    -2.0,
+    -3.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    2,
+    3,
+    4
+   ],
+   "best_positions": [
+    0,
+    1,
+    2
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V2-gB-information-C2-p3_7-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "at_or_above",
+   "V": 2,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "information",
+   "C": 2,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    -1.0,
+    -2.0,
+    -3.0,
+    -4.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    2
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V2-gC-information-C2-p2_6-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "at_or_above",
+   "V": 2,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 2,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 0,
+   "payoffs": [
+    -1.0,
+    -2.0,
+    -3.0,
+    -4.0,
+    -5.0
+   ],
+   "best_payoff": -1.0,
+   "best_offers": [
+    3
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V4-gB-information-C6-p3_7-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "at_or_above",
+   "V": 4,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "information",
+   "C": 6,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -2.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "best_positions": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V4-gC-information-C4-p3_7-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "at_or_above",
+   "V": 4,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 4,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    -1.0,
+    -2.0,
+    -3.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    3,
+    4
+   ],
+   "best_positions": [
+    0,
+    1
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V3-gB-information-C3-p2_6-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "at_or_above",
+   "V": 3,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "information",
+   "C": 3,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    -1.0,
+    -2.0,
+    -3.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    2,
+    3
+   ],
+   "best_positions": [
+    0,
+    1
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V4-gC-information-C6-p2_10-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "at_or_above",
+   "V": 4,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 6,
+   "prior": [
+    2,
+    10
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    -2.0,
+    -3.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    3,
+    4,
+    5
+   ],
+   "best_positions": [
+    0,
+    1,
+    2
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V2-gA-information-C3-p2_6-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "at_or_above",
+   "V": 2,
+   "grid_name": "A",
+   "grid": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "line": "information",
+   "C": 3,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    0.0,
+    -1.0,
+    -2.0,
+    -3.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    1,
+    2
+   ],
+   "best_positions": [
+    0,
+    1
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V3-gC-information-C3-p2_10-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "at_or_above",
+   "V": 3,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 3,
+   "prior": [
+    2,
+    10
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    -1.0,
+    -2.0,
+    -3.0,
+    -4.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    3
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V2-gB-information-C3-p2_10-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "at_or_above",
+   "V": 2,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "information",
+   "C": 3,
+   "prior": [
+    2,
+    10
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    -1.0,
+    -2.0,
+    -3.0,
+    -4.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    2
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V6-gC-information-C7-p1_5-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "at_or_above",
+   "V": 6,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 7,
+   "prior": [
+    1,
+    5
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -1.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    3,
+    4,
+    5,
+    6
+   ],
+   "best_positions": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V4-gC-information-C6-p2_6-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "at_or_above",
+   "V": 4,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 6,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    -2.0,
+    -3.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    3,
+    4,
+    5
+   ],
+   "best_positions": [
+    0,
+    1,
+    2
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V8-gC-pressure-p1_10-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 8,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "pressure",
+   "C": null,
+   "prior": [
+    1,
+    10
+   ],
+   "wording": 0,
+   "payoffs": [
+    1.5,
+    1.6,
+    1.5,
+    1.2,
+    0.7
+   ],
+   "best_payoff": 1.6,
+   "best_offers": [
+    4
+   ],
+   "best_positions": [
+    1
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V6-gC-neutral-p1_5-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 6,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "neutral",
+   "C": null,
+   "prior": [
+    1,
+    5
+   ],
+   "wording": 1,
+   "payoffs": [
+    1.7999999999999998,
+    1.6,
+    1.0,
+    0.0,
+    -1.0
+   ],
+   "best_payoff": 1.7999999999999998,
+   "best_offers": [
+    3
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V9-gC-pressure-p2_6-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 9,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "pressure",
+   "C": null,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 1,
+   "payoffs": [
+    2.4000000000000004,
+    3.0,
+    3.2,
+    3.0,
+    2.0
+   ],
+   "best_payoff": 3.2,
+   "best_offers": [
+    5
+   ],
+   "best_positions": [
+    2
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V8-gC-neutral-p2_6-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 8,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "neutral",
+   "C": null,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 1,
+   "payoffs": [
+    2.0,
+    2.4,
+    2.4000000000000004,
+    2.0,
+    1.0
+   ],
+   "best_payoff": 2.4000000000000004,
+   "best_offers": [
+    4,
+    5
+   ],
+   "best_positions": [
+    1,
+    2
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V8-gC-pressure-p3_7-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 8,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "pressure",
+   "C": null,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 1,
+   "payoffs": [
+    1.0,
+    1.6,
+    1.7999999999999998,
+    1.6,
+    1.0
+   ],
+   "best_payoff": 1.7999999999999998,
+   "best_offers": [
+    5
+   ],
+   "best_positions": [
+    2
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V4-gA-pressure-p2_6-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 4,
+   "grid_name": "A",
+   "grid": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "line": "pressure",
+   "C": null,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    0.4,
+    0.4,
+    0.0,
+    -0.8
+   ],
+   "best_payoff": 0.4,
+   "best_offers": [
+    2,
+    3
+   ],
+   "best_positions": [
+    1,
+    2
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V2-gA-pressure-p2_6-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 2,
+   "grid_name": "A",
+   "grid": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "line": "pressure",
+   "C": null,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    0.0,
+    -0.4,
+    -1.2,
+    -2.4000000000000004
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    1,
+    2
+   ],
+   "best_positions": [
+    0,
+    1
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V2-gC-neutral-p1_5-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 2,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "neutral",
+   "C": null,
+   "prior": [
+    1,
+    5
+   ],
+   "wording": 1,
+   "payoffs": [
+    -0.6,
+    -1.6,
+    -3.0,
+    -4.0,
+    -5.0
+   ],
+   "best_payoff": -0.6,
+   "best_offers": [
+    3
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V9-gB-neutral-p2_10-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 9,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "neutral",
+   "C": null,
+   "prior": [
+    2,
+    10
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.7777777777777777,
+    1.3333333333333333,
+    1.6666666666666665,
+    1.7777777777777777,
+    1.6666666666666667
+   ],
+   "best_payoff": 1.7777777777777777,
+   "best_offers": [
+    5
+   ],
+   "best_positions": [
+    3
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V3-gC-neutral-p3_7-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 3,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "neutral",
+   "C": null,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    -0.4,
+    -1.2,
+    -2.4000000000000004,
+    -4.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    3
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V4-gC-pressure-p1_10-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 4,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "pressure",
+   "C": null,
+   "prior": [
+    1,
+    10
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.3,
+    0.0,
+    -0.5,
+    -1.2,
+    -2.0999999999999996
+   ],
+   "best_payoff": 0.3,
+   "best_offers": [
+    3
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V8-gC-neutral-p2_10-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 8,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "neutral",
+   "C": null,
+   "prior": [
+    2,
+    10
+   ],
+   "wording": 0,
+   "payoffs": [
+    1.1111111111111112,
+    1.3333333333333333,
+    1.3333333333333333,
+    1.1111111111111112,
+    0.6666666666666666
+   ],
+   "best_payoff": 1.3333333333333333,
+   "best_offers": [
+    4,
+    5
+   ],
+   "best_positions": [
+    1,
+    2
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V7-gC-pressure-p1_10-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 7,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "pressure",
+   "C": null,
+   "prior": [
+    1,
+    10
+   ],
+   "wording": 0,
+   "payoffs": [
+    1.2,
+    1.2000000000000002,
+    1.0,
+    0.6,
+    0.0
+   ],
+   "best_payoff": 1.2000000000000002,
+   "best_offers": [
+    3,
+    4
+   ],
+   "best_positions": [
+    0,
+    1
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V8-gB-neutral-p1_10-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 8,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "neutral",
+   "C": null,
+   "prior": [
+    1,
+    10
+   ],
+   "wording": 0,
+   "payoffs": [
+    1.2000000000000002,
+    1.5,
+    1.6,
+    1.5,
+    1.2
+   ],
+   "best_payoff": 1.6,
+   "best_offers": [
+    4
+   ],
+   "best_positions": [
+    2
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V7-gA-pressure-p1_10-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 7,
+   "grid_name": "A",
+   "grid": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "line": "pressure",
+   "C": null,
+   "prior": [
+    1,
+    10
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.6000000000000001,
+    1.0,
+    1.2,
+    1.2000000000000002,
+    1.0
+   ],
+   "best_payoff": 1.2000000000000002,
+   "best_offers": [
+    3,
+    4
+   ],
+   "best_positions": [
+    2,
+    3
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V4-gA-pressure-p3_7-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 4,
+   "grid_name": "A",
+   "grid": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "line": "pressure",
+   "C": null,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.2,
+    0.0,
+    -0.6
+   ],
+   "best_payoff": 0.2,
+   "best_offers": [
+    3
+   ],
+   "best_positions": [
+    2
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V3-gA-pressure-p1_10-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 3,
+   "grid_name": "A",
+   "grid": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "line": "pressure",
+   "C": null,
+   "prior": [
+    1,
+    10
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.2,
+    0.2,
+    0.0,
+    -0.4,
+    -1.0
+   ],
+   "best_payoff": 0.2,
+   "best_offers": [
+    1,
+    2
+   ],
+   "best_positions": [
+    0,
+    1
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V7-gC-neutral-p1_10-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 7,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "neutral",
+   "C": null,
+   "prior": [
+    1,
+    10
+   ],
+   "wording": 1,
+   "payoffs": [
+    1.2,
+    1.2000000000000002,
+    1.0,
+    0.6,
+    0.0
+   ],
+   "best_payoff": 1.2000000000000002,
+   "best_offers": [
+    3,
+    4
+   ],
+   "best_positions": [
+    0,
+    1
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V8-gC-neutral-p3_7-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 8,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "neutral",
+   "C": null,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 1,
+   "payoffs": [
+    1.0,
+    1.6,
+    1.7999999999999998,
+    1.6,
+    1.0
+   ],
+   "best_payoff": 1.7999999999999998,
+   "best_offers": [
+    5
+   ],
+   "best_positions": [
+    2
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V9-gC-neutral-p2_10-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 9,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "neutral",
+   "C": null,
+   "prior": [
+    2,
+    10
+   ],
+   "wording": 0,
+   "payoffs": [
+    1.3333333333333333,
+    1.6666666666666665,
+    1.7777777777777777,
+    1.6666666666666667,
+    1.3333333333333333
+   ],
+   "best_payoff": 1.7777777777777777,
+   "best_offers": [
+    5
+   ],
+   "best_positions": [
+    2
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V5-gC-pressure-p1_10-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 5,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "pressure",
+   "C": null,
+   "prior": [
+    1,
+    10
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.6,
+    0.4,
+    0.0,
+    -0.6,
+    -1.4
+   ],
+   "best_payoff": 0.6,
+   "best_offers": [
+    3
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V6-gA-pressure-p3_7-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 6,
+   "grid_name": "A",
+   "grid": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "line": "pressure",
+   "C": null,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.6000000000000001,
+    0.8,
+    0.6
+   ],
+   "best_payoff": 0.8,
+   "best_offers": [
+    4
+   ],
+   "best_positions": [
+    3
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V7-gC-pressure-p1_5-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 7,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "pressure",
+   "C": null,
+   "prior": [
+    1,
+    5
+   ],
+   "wording": 1,
+   "payoffs": [
+    2.4,
+    2.4000000000000004,
+    2.0,
+    1.0,
+    0.0
+   ],
+   "best_payoff": 2.4000000000000004,
+   "best_offers": [
+    3,
+    4
+   ],
+   "best_positions": [
+    0,
+    1
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V7-gB-pressure-p1_5-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 7,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "pressure",
+   "C": null,
+   "prior": [
+    1,
+    5
+   ],
+   "wording": 1,
+   "payoffs": [
+    2.0,
+    2.4,
+    2.4000000000000004,
+    2.0,
+    1.0
+   ],
+   "best_payoff": 2.4000000000000004,
+   "best_offers": [
+    3,
+    4
+   ],
+   "best_positions": [
+    1,
+    2
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V7-gA-neutral-p1_5-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 7,
+   "grid_name": "A",
+   "grid": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "line": "neutral",
+   "C": null,
+   "prior": [
+    1,
+    5
+   ],
+   "wording": 0,
+   "payoffs": [
+    1.2000000000000002,
+    2.0,
+    2.4,
+    2.4000000000000004,
+    2.0
+   ],
+   "best_payoff": 2.4000000000000004,
+   "best_offers": [
+    3,
+    4
+   ],
+   "best_positions": [
+    2,
+    3
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V2-gC-neutral-p1_10-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 2,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "neutral",
+   "C": null,
+   "prior": [
+    1,
+    10
+   ],
+   "wording": 1,
+   "payoffs": [
+    -0.3,
+    -0.8,
+    -1.5,
+    -2.4,
+    -3.5
+   ],
+   "best_payoff": -0.3,
+   "best_offers": [
+    3
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V4-gB-neutral-p2_10-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 4,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "neutral",
+   "C": null,
+   "prior": [
+    2,
+    10
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.2222222222222222,
+    0.2222222222222222,
+    0.0,
+    -0.4444444444444444,
+    -1.1111111111111112
+   ],
+   "best_payoff": 0.2222222222222222,
+   "best_offers": [
+    2,
+    3
+   ],
+   "best_positions": [
+    0,
+    1
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V3-gA-pressure-p3_7-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 3,
+   "grid_name": "A",
+   "grid": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "line": "pressure",
+   "C": null,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    -0.4,
+    -1.2
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    1,
+    2,
+    3
+   ],
+   "best_positions": [
+    0,
+    1,
+    2
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V8-gA-pressure-p2_6-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 8,
+   "grid_name": "A",
+   "grid": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "line": "pressure",
+   "C": null,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    1.2000000000000002,
+    2.0,
+    2.4,
+    2.4000000000000004
+   ],
+   "best_payoff": 2.4000000000000004,
+   "best_offers": [
+    4,
+    5
+   ],
+   "best_positions": [
+    3,
+    4
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V3-gB-neutral-p2_6-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 3,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "neutral",
+   "C": null,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.2,
+    0.0,
+    -0.6,
+    -1.6,
+    -3.0
+   ],
+   "best_payoff": 0.2,
+   "best_offers": [
+    2
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V6-gB-pressure-p1_5-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 6,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "pressure",
+   "C": null,
+   "prior": [
+    1,
+    5
+   ],
+   "wording": 1,
+   "payoffs": [
+    1.6,
+    1.7999999999999998,
+    1.6,
+    1.0,
+    0.0
+   ],
+   "best_payoff": 1.7999999999999998,
+   "best_offers": [
+    3
+   ],
+   "best_positions": [
+    1
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V5-gB-pressure-p3_7-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 5,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "pressure",
+   "C": null,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    0.4,
+    0.4,
+    0.0,
+    -0.8
+   ],
+   "best_payoff": 0.4,
+   "best_offers": [
+    3,
+    4
+   ],
+   "best_positions": [
+    1,
+    2
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V3-gA-pressure-p3_7-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 3,
+   "grid_name": "A",
+   "grid": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "line": "pressure",
+   "C": null,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    -0.4,
+    -1.2
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    1,
+    2,
+    3
+   ],
+   "best_positions": [
+    0,
+    1,
+    2
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V6-gB-neutral-p1_5-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 6,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "neutral",
+   "C": null,
+   "prior": [
+    1,
+    5
+   ],
+   "wording": 1,
+   "payoffs": [
+    1.6,
+    1.7999999999999998,
+    1.6,
+    1.0,
+    0.0
+   ],
+   "best_payoff": 1.7999999999999998,
+   "best_offers": [
+    3
+   ],
+   "best_positions": [
+    1
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V9-gB-pressure-p1_5-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 9,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "pressure",
+   "C": null,
+   "prior": [
+    1,
+    5
+   ],
+   "wording": 1,
+   "payoffs": [
+    2.8000000000000003,
+    3.5999999999999996,
+    4.0,
+    4.0,
+    3.0
+   ],
+   "best_payoff": 4.0,
+   "best_offers": [
+    4,
+    5
+   ],
+   "best_positions": [
+    2,
+    3
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V2-gA-neutral-p3_7-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 2,
+   "grid_name": "A",
+   "grid": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "line": "neutral",
+   "C": null,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    0.0,
+    -0.2,
+    -0.8,
+    -1.7999999999999998
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    1,
+    2
+   ],
+   "best_positions": [
+    0,
+    1
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V3-gA-neutral-p2_6-w0",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 3,
+   "grid_name": "A",
+   "grid": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "line": "neutral",
+   "C": null,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    0.2,
+    0.0,
+    -0.6,
+    -1.6
+   ],
+   "best_payoff": 0.2,
+   "best_offers": [
+    2
+   ],
+   "best_positions": [
+    1
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V2-gB-neutral-p1_10-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 2,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "neutral",
+   "C": null,
+   "prior": [
+    1,
+    10
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    -0.3,
+    -0.8,
+    -1.5,
+    -2.4
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    2
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V7-gA-pressure-p1_5-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 7,
+   "grid_name": "A",
+   "grid": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "line": "pressure",
+   "C": null,
+   "prior": [
+    1,
+    5
+   ],
+   "wording": 1,
+   "payoffs": [
+    1.2000000000000002,
+    2.0,
+    2.4,
+    2.4000000000000004,
+    2.0
+   ],
+   "best_payoff": 2.4000000000000004,
+   "best_offers": [
+    3,
+    4
+   ],
+   "best_positions": [
+    2,
+    3
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V4-gB-pressure-p3_7-w1",
+   "split": "test2_same",
+   "slice": "test2_same",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 4,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "pressure",
+   "C": null,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.2,
+    0.0,
+    -0.6,
+    -1.6
+   ],
+   "best_payoff": 0.2,
+   "best_offers": [
+    3
+   ],
+   "best_positions": [
+    1
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V7-gB-information-C6-p3_7-w0",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "training ranges",
+   "type": "below",
+   "V": 7,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "information",
+   "C": 6,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0
+   ],
+   "best_payoff": 1.0,
+   "best_offers": [
+    6
+   ],
+   "best_positions": [
+    4
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V9-gC-information-C6-p1_10-w1",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "training ranges",
+   "type": "below",
+   "V": 9,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 6,
+   "prior": [
+    1,
+    10
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    3.0,
+    2.0
+   ],
+   "best_payoff": 3.0,
+   "best_offers": [
+    6
+   ],
+   "best_positions": [
+    3
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V6-gB-information-C3-p1_5-w1",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "training ranges",
+   "type": "below",
+   "V": 6,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "information",
+   "C": 3,
+   "prior": [
+    1,
+    5
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    3.0,
+    2.0,
+    1.0,
+    0.0
+   ],
+   "best_payoff": 3.0,
+   "best_offers": [
+    3
+   ],
+   "best_positions": [
+    1
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V8-gA-information-C5-p2_6-w1",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "training ranges",
+   "type": "below",
+   "V": 8,
+   "grid_name": "A",
+   "grid": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "line": "information",
+   "C": 5,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    3.0
+   ],
+   "best_payoff": 3.0,
+   "best_offers": [
+    5
+   ],
+   "best_positions": [
+    4
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V7-gC-information-C6-p1_5-w1",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "training ranges",
+   "type": "below",
+   "V": 7,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 6,
+   "prior": [
+    1,
+    5
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    1.0,
+    0.0
+   ],
+   "best_payoff": 1.0,
+   "best_offers": [
+    6
+   ],
+   "best_positions": [
+    3
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V8-gC-information-C5-p1_5-w0",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "training ranges",
+   "type": "below",
+   "V": 8,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 5,
+   "prior": [
+    1,
+    5
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    0.0,
+    3.0,
+    2.0,
+    1.0
+   ],
+   "best_payoff": 3.0,
+   "best_offers": [
+    5
+   ],
+   "best_positions": [
+    2
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V7-gC-information-C6-p3_7-w1",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "training ranges",
+   "type": "below",
+   "V": 7,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 6,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    1.0,
+    0.0
+   ],
+   "best_payoff": 1.0,
+   "best_offers": [
+    6
+   ],
+   "best_positions": [
+    3
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V7-gB-information-C6-p3_7-w1",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "training ranges",
+   "type": "below",
+   "V": 7,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "information",
+   "C": 6,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0
+   ],
+   "best_payoff": 1.0,
+   "best_offers": [
+    6
+   ],
+   "best_positions": [
+    4
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V7-gB-information-C6-p1_10-w0",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "training ranges",
+   "type": "below",
+   "V": 7,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "information",
+   "C": 6,
+   "prior": [
+    1,
+    10
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0
+   ],
+   "best_payoff": 1.0,
+   "best_offers": [
+    6
+   ],
+   "best_positions": [
+    4
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V7-gB-information-C6-p2_6-w0",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "training ranges",
+   "type": "below",
+   "V": 7,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "information",
+   "C": 6,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0
+   ],
+   "best_payoff": 1.0,
+   "best_offers": [
+    6
+   ],
+   "best_positions": [
+    4
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V7-gC-information-C6-p1_10-w1",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "training ranges",
+   "type": "below",
+   "V": 7,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 6,
+   "prior": [
+    1,
+    10
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    1.0,
+    0.0
+   ],
+   "best_payoff": 1.0,
+   "best_offers": [
+    6
+   ],
+   "best_positions": [
+    3
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V9-gB-information-C6-p1_10-w0",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "training ranges",
+   "type": "below",
+   "V": 9,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "information",
+   "C": 6,
+   "prior": [
+    1,
+    10
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    3.0
+   ],
+   "best_payoff": 3.0,
+   "best_offers": [
+    6
+   ],
+   "best_positions": [
+    4
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V8-gC-information-C5-p3_7-w1",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "training ranges",
+   "type": "below",
+   "V": 8,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 5,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    3.0,
+    2.0,
+    1.0
+   ],
+   "best_payoff": 3.0,
+   "best_offers": [
+    5
+   ],
+   "best_positions": [
+    2
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V6-gC-information-C3-p1_5-w0",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "training ranges",
+   "type": "below",
+   "V": 6,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 3,
+   "prior": [
+    1,
+    5
+   ],
+   "wording": 0,
+   "payoffs": [
+    3.0,
+    2.0,
+    1.0,
+    0.0,
+    -1.0
+   ],
+   "best_payoff": 3.0,
+   "best_offers": [
+    3
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V9-gB-information-C6-p2_6-w0",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "training ranges",
+   "type": "below",
+   "V": 9,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "information",
+   "C": 6,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    3.0
+   ],
+   "best_payoff": 3.0,
+   "best_offers": [
+    6
+   ],
+   "best_positions": [
+    4
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V8-gC-information-C5-p1_5-w1",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "training ranges",
+   "type": "below",
+   "V": 8,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 5,
+   "prior": [
+    1,
+    5
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    3.0,
+    2.0,
+    1.0
+   ],
+   "best_payoff": 3.0,
+   "best_offers": [
+    5
+   ],
+   "best_positions": [
+    2
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V9-gC-information-C2-p1_10-w1",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "training ranges",
+   "type": "below",
+   "V": 9,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 2,
+   "prior": [
+    1,
+    10
+   ],
+   "wording": 1,
+   "payoffs": [
+    6.0,
+    5.0,
+    4.0,
+    3.0,
+    2.0
+   ],
+   "best_payoff": 6.0,
+   "best_offers": [
+    3
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V9-gC-information-C2-p3_7-w0",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "training ranges",
+   "type": "below",
+   "V": 9,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 2,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 0,
+   "payoffs": [
+    6.0,
+    5.0,
+    4.0,
+    3.0,
+    2.0
+   ],
+   "best_payoff": 6.0,
+   "best_offers": [
+    3
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V6-gB-information-C3-p3_7-w0",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "training ranges",
+   "type": "below",
+   "V": 6,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "information",
+   "C": 3,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    3.0,
+    2.0,
+    1.0,
+    0.0
+   ],
+   "best_payoff": 3.0,
+   "best_offers": [
+    3
+   ],
+   "best_positions": [
+    1
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V9-gC-information-C2-p1_5-w0",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "training ranges",
+   "type": "below",
+   "V": 9,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 2,
+   "prior": [
+    1,
+    5
+   ],
+   "wording": 0,
+   "payoffs": [
+    6.0,
+    5.0,
+    4.0,
+    3.0,
+    2.0
+   ],
+   "best_payoff": 6.0,
+   "best_offers": [
+    3
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V13-gF-information-C4-p2_10-w3",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "below",
+   "V": 13,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "information",
+   "C": 4,
+   "prior": [
+    2,
+    10
+   ],
+   "wording": 3,
+   "payoffs": [
+    5.0,
+    3.0,
+    1.0,
+    -1.0,
+    -3.0
+   ],
+   "best_payoff": 5.0,
+   "best_offers": [
+    8
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V12-gB-information-C1-p1_5-w1",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "below",
+   "V": 12,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "information",
+   "C": 1,
+   "prior": [
+    1,
+    5
+   ],
+   "wording": 1,
+   "payoffs": [
+    10.0,
+    9.0,
+    8.0,
+    7.0,
+    6.0
+   ],
+   "best_payoff": 10.0,
+   "best_offers": [
+    2
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V15-gA-information-C2-p2_10-w1",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "below",
+   "V": 15,
+   "grid_name": "A",
+   "grid": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "line": "information",
+   "C": 2,
+   "prior": [
+    2,
+    10
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    13.0,
+    12.0,
+    11.0,
+    10.0
+   ],
+   "best_payoff": 13.0,
+   "best_offers": [
+    2
+   ],
+   "best_positions": [
+    1
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V13-gA-information-C5-p2_6-w1",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "below",
+   "V": 13,
+   "grid_name": "A",
+   "grid": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "line": "information",
+   "C": 5,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    8.0
+   ],
+   "best_payoff": 8.0,
+   "best_offers": [
+    5
+   ],
+   "best_positions": [
+    4
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V14-gB-information-C6-p2_10-w1",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "below",
+   "V": 14,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "information",
+   "C": 6,
+   "prior": [
+    2,
+    10
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    8.0
+   ],
+   "best_payoff": 8.0,
+   "best_offers": [
+    6
+   ],
+   "best_positions": [
+    4
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V11-gF-information-C4-p3_7-w1",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "below",
+   "V": 11,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "information",
+   "C": 4,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 1,
+   "payoffs": [
+    3.0,
+    1.0,
+    -1.0,
+    -3.0,
+    -5.0
+   ],
+   "best_payoff": 3.0,
+   "best_offers": [
+    8
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V12-gF-information-C5-p1_10-w3",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "below",
+   "V": 12,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "information",
+   "C": 5,
+   "prior": [
+    1,
+    10
+   ],
+   "wording": 3,
+   "payoffs": [
+    4.0,
+    2.0,
+    0.0,
+    -2.0,
+    -4.0
+   ],
+   "best_payoff": 4.0,
+   "best_offers": [
+    8
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V11-gF-information-C2-p1_5-w0",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "below",
+   "V": 11,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "information",
+   "C": 2,
+   "prior": [
+    1,
+    5
+   ],
+   "wording": 0,
+   "payoffs": [
+    3.0,
+    1.0,
+    -1.0,
+    -3.0,
+    -5.0
+   ],
+   "best_payoff": 3.0,
+   "best_offers": [
+    8
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V14-gC-information-C7-p1_5-w3",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "below",
+   "V": 14,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 7,
+   "prior": [
+    1,
+    5
+   ],
+   "wording": 3,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    7.0
+   ],
+   "best_payoff": 7.0,
+   "best_offers": [
+    7
+   ],
+   "best_positions": [
+    4
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V12-gF-information-C8-p2_6-w1",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "below",
+   "V": 12,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "information",
+   "C": 8,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 1,
+   "payoffs": [
+    4.0,
+    2.0,
+    0.0,
+    -2.0,
+    -4.0
+   ],
+   "best_payoff": 4.0,
+   "best_offers": [
+    8
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V13-gA-information-C5-p1_5-w0",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "below",
+   "V": 13,
+   "grid_name": "A",
+   "grid": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "line": "information",
+   "C": 5,
+   "prior": [
+    1,
+    5
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    8.0
+   ],
+   "best_payoff": 8.0,
+   "best_offers": [
+    5
+   ],
+   "best_positions": [
+    4
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V13-gC-information-C6-p2_6-w3",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "below",
+   "V": 13,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 6,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 3,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    7.0,
+    6.0
+   ],
+   "best_payoff": 7.0,
+   "best_offers": [
+    6
+   ],
+   "best_positions": [
+    3
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V11-gA-information-C5-p1_10-w1",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "below",
+   "V": 11,
+   "grid_name": "A",
+   "grid": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "line": "information",
+   "C": 5,
+   "prior": [
+    1,
+    10
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    6.0
+   ],
+   "best_payoff": 6.0,
+   "best_offers": [
+    5
+   ],
+   "best_positions": [
+    4
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V11-gF-information-C8-p2_10-w0",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "below",
+   "V": 11,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "information",
+   "C": 8,
+   "prior": [
+    2,
+    10
+   ],
+   "wording": 0,
+   "payoffs": [
+    3.0,
+    1.0,
+    -1.0,
+    -3.0,
+    -5.0
+   ],
+   "best_payoff": 3.0,
+   "best_offers": [
+    8
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V10-gC-information-C2-p2_10-w3",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "below",
+   "V": 10,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 2,
+   "prior": [
+    2,
+    10
+   ],
+   "wording": 3,
+   "payoffs": [
+    7.0,
+    6.0,
+    5.0,
+    4.0,
+    3.0
+   ],
+   "best_payoff": 7.0,
+   "best_offers": [
+    3
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V12-gF-information-C7-p1_10-w3",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "below",
+   "V": 12,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "information",
+   "C": 7,
+   "prior": [
+    1,
+    10
+   ],
+   "wording": 3,
+   "payoffs": [
+    4.0,
+    2.0,
+    0.0,
+    -2.0,
+    -4.0
+   ],
+   "best_payoff": 4.0,
+   "best_offers": [
+    8
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V12-gA-information-C3-p3_7-w3",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "below",
+   "V": 12,
+   "grid_name": "A",
+   "grid": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "line": "information",
+   "C": 3,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 3,
+   "payoffs": [
+    0.0,
+    0.0,
+    9.0,
+    8.0,
+    7.0
+   ],
+   "best_payoff": 9.0,
+   "best_offers": [
+    3
+   ],
+   "best_positions": [
+    2
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V14-gC-information-C4-p2_10-w1",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "below",
+   "V": 14,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 4,
+   "prior": [
+    2,
+    10
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    10.0,
+    9.0,
+    8.0,
+    7.0
+   ],
+   "best_payoff": 10.0,
+   "best_offers": [
+    4
+   ],
+   "best_positions": [
+    1
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V14-gC-information-C5-p1_10-w1",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "below",
+   "V": 14,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 5,
+   "prior": [
+    1,
+    10
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    9.0,
+    8.0,
+    7.0
+   ],
+   "best_payoff": 9.0,
+   "best_offers": [
+    5
+   ],
+   "best_positions": [
+    2
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V13-gC-information-C7-p1_10-w3",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "below",
+   "V": 13,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 7,
+   "prior": [
+    1,
+    10
+   ],
+   "wording": 3,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    6.0
+   ],
+   "best_payoff": 6.0,
+   "best_offers": [
+    7
+   ],
+   "best_positions": [
+    4
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V6-gC-information-C7-p3_7-w0",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "training ranges",
+   "type": "at_or_above",
+   "V": 6,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 7,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -1.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    3,
+    4,
+    5,
+    6
+   ],
+   "best_positions": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V6-gC-information-C7-p2_6-w1",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "training ranges",
+   "type": "at_or_above",
+   "V": 6,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 7,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -1.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    3,
+    4,
+    5,
+    6
+   ],
+   "best_positions": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V6-gC-information-C7-p2_6-w0",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "training ranges",
+   "type": "at_or_above",
+   "V": 6,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 7,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -1.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    3,
+    4,
+    5,
+    6
+   ],
+   "best_positions": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V6-gC-information-C7-p2_10-w1",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "training ranges",
+   "type": "at_or_above",
+   "V": 6,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 7,
+   "prior": [
+    2,
+    10
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -1.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    3,
+    4,
+    5,
+    6
+   ],
+   "best_positions": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V6-gC-information-C7-p2_10-w0",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "training ranges",
+   "type": "at_or_above",
+   "V": 6,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "information",
+   "C": 7,
+   "prior": [
+    2,
+    10
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -1.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    3,
+    4,
+    5,
+    6
+   ],
+   "best_positions": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V14-gF-information-C16-p2_10-w3",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "at_or_above",
+   "V": 14,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "information",
+   "C": 16,
+   "prior": [
+    2,
+    10
+   ],
+   "wording": 3,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -2.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    8,
+    10,
+    12,
+    14
+   ],
+   "best_positions": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V11-gF-information-C12-p1_10-w3",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "at_or_above",
+   "V": 11,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "information",
+   "C": 12,
+   "prior": [
+    1,
+    10
+   ],
+   "wording": 3,
+   "payoffs": [
+    0.0,
+    0.0,
+    -1.0,
+    -3.0,
+    -5.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    8,
+    10
+   ],
+   "best_positions": [
+    0,
+    1
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V10-gF-information-C11-p1_5-w0",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "at_or_above",
+   "V": 10,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "information",
+   "C": 11,
+   "prior": [
+    1,
+    5
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    0.0,
+    -2.0,
+    -4.0,
+    -6.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    8,
+    10
+   ],
+   "best_positions": [
+    0,
+    1
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V15-gF-information-C16-p2_6-w0",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "at_or_above",
+   "V": 15,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "information",
+   "C": 16,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -1.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    8,
+    10,
+    12,
+    14
+   ],
+   "best_positions": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V14-gF-information-C14-p1_10-w0",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "at_or_above",
+   "V": 14,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "information",
+   "C": 14,
+   "prior": [
+    1,
+    10
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -2.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    8,
+    10,
+    12,
+    14
+   ],
+   "best_positions": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V14-gF-information-C15-p3_7-w3",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "at_or_above",
+   "V": 14,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "information",
+   "C": 15,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 3,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -2.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    8,
+    10,
+    12,
+    14
+   ],
+   "best_positions": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V11-gF-information-C11-p1_5-w0",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "at_or_above",
+   "V": 11,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "information",
+   "C": 11,
+   "prior": [
+    1,
+    5
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    0.0,
+    -1.0,
+    -3.0,
+    -5.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    8,
+    10
+   ],
+   "best_positions": [
+    0,
+    1
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V11-gF-information-C12-p1_10-w0",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "at_or_above",
+   "V": 11,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "information",
+   "C": 12,
+   "prior": [
+    1,
+    10
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    0.0,
+    -1.0,
+    -3.0,
+    -5.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    8,
+    10
+   ],
+   "best_positions": [
+    0,
+    1
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V13-gF-information-C15-p3_7-w0",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "at_or_above",
+   "V": 13,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "information",
+   "C": 15,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -3.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    8,
+    10,
+    12,
+    14
+   ],
+   "best_positions": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V11-gF-information-C13-p1_5-w0",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "at_or_above",
+   "V": 11,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "information",
+   "C": 13,
+   "prior": [
+    1,
+    5
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    -3.0,
+    -5.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    8,
+    10,
+    12
+   ],
+   "best_positions": [
+    0,
+    1,
+    2
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V12-gF-information-C14-p1_5-w1",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "at_or_above",
+   "V": 12,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "information",
+   "C": 14,
+   "prior": [
+    1,
+    5
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    -2.0,
+    -4.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    8,
+    10,
+    12
+   ],
+   "best_positions": [
+    0,
+    1,
+    2
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V11-gF-information-C13-p1_10-w3",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "at_or_above",
+   "V": 11,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "information",
+   "C": 13,
+   "prior": [
+    1,
+    10
+   ],
+   "wording": 3,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    -3.0,
+    -5.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    8,
+    10,
+    12
+   ],
+   "best_positions": [
+    0,
+    1,
+    2
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V11-gF-information-C11-p2_6-w3",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "at_or_above",
+   "V": 11,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "information",
+   "C": 11,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 3,
+   "payoffs": [
+    0.0,
+    0.0,
+    -1.0,
+    -3.0,
+    -5.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    8,
+    10
+   ],
+   "best_positions": [
+    0,
+    1
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V13-gF-information-C15-p2_10-w1",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "at_or_above",
+   "V": 13,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "information",
+   "C": 15,
+   "prior": [
+    2,
+    10
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -3.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    8,
+    10,
+    12,
+    14
+   ],
+   "best_positions": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V10-gF-information-C11-p2_10-w0",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "at_or_above",
+   "V": 10,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "information",
+   "C": 11,
+   "prior": [
+    2,
+    10
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    0.0,
+    -2.0,
+    -4.0,
+    -6.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    8,
+    10
+   ],
+   "best_positions": [
+    0,
+    1
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V10-gF-information-C11-p3_7-w1",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "at_or_above",
+   "V": 10,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "information",
+   "C": 11,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    -2.0,
+    -4.0,
+    -6.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    8,
+    10
+   ],
+   "best_positions": [
+    0,
+    1
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V11-gF-information-C11-p2_10-w1",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "at_or_above",
+   "V": 11,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "information",
+   "C": 11,
+   "prior": [
+    2,
+    10
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    -1.0,
+    -3.0,
+    -5.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    8,
+    10
+   ],
+   "best_positions": [
+    0,
+    1
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V12-gF-information-C13-p1_5-w1",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "at_or_above",
+   "V": 12,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "information",
+   "C": 13,
+   "prior": [
+    1,
+    5
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    -2.0,
+    -4.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    8,
+    10,
+    12
+   ],
+   "best_positions": [
+    0,
+    1,
+    2
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V11-gF-information-C13-p1_5-w1",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "at_or_above",
+   "V": 11,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "information",
+   "C": 13,
+   "prior": [
+    1,
+    5
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    -3.0,
+    -5.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    8,
+    10,
+    12
+   ],
+   "best_positions": [
+    0,
+    1,
+    2
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V10-gF-information-C12-p2_10-w3",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "at_or_above",
+   "V": 10,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "information",
+   "C": 12,
+   "prior": [
+    2,
+    10
+   ],
+   "wording": 3,
+   "payoffs": [
+    0.0,
+    0.0,
+    -2.0,
+    -4.0,
+    -6.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    8,
+    10
+   ],
+   "best_positions": [
+    0,
+    1
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V14-gF-information-C15-p2_10-w0",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "at_or_above",
+   "V": 14,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "information",
+   "C": 15,
+   "prior": [
+    2,
+    10
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -2.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    8,
+    10,
+    12,
+    14
+   ],
+   "best_positions": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V11-gF-information-C12-p3_7-w3",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "at_or_above",
+   "V": 11,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "information",
+   "C": 12,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 3,
+   "payoffs": [
+    0.0,
+    0.0,
+    -1.0,
+    -3.0,
+    -5.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    8,
+    10
+   ],
+   "best_positions": [
+    0,
+    1
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V13-gF-information-C13-p1_10-w3",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "at_or_above",
+   "V": 13,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "information",
+   "C": 13,
+   "prior": [
+    1,
+    10
+   ],
+   "wording": 3,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    -1.0,
+    -3.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    8,
+    10,
+    12
+   ],
+   "best_positions": [
+    0,
+    1,
+    2
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V15-gF-information-C15-p1_5-w1",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "at_or_above",
+   "V": 15,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "information",
+   "C": 15,
+   "prior": [
+    1,
+    5
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -1.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    8,
+    10,
+    12,
+    14
+   ],
+   "best_positions": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V14-gF-information-C14-p1_10-w3",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "at_or_above",
+   "V": 14,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "information",
+   "C": 14,
+   "prior": [
+    1,
+    10
+   ],
+   "wording": 3,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -2.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    8,
+    10,
+    12,
+    14
+   ],
+   "best_positions": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V11-gF-information-C13-p3_7-w3",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "at_or_above",
+   "V": 11,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "information",
+   "C": 13,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 3,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    -3.0,
+    -5.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    8,
+    10,
+    12
+   ],
+   "best_positions": [
+    0,
+    1,
+    2
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V15-gF-information-C16-p1_5-w0",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "at_or_above",
+   "V": 15,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "information",
+   "C": 16,
+   "prior": [
+    1,
+    5
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -1.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    8,
+    10,
+    12,
+    14
+   ],
+   "best_positions": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V15-gF-information-C16-p2_6-w1",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "at_or_above",
+   "V": 15,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "information",
+   "C": 16,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -1.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    8,
+    10,
+    12,
+    14
+   ],
+   "best_positions": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V10-gF-information-C11-p3_7-w0",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "at_or_above",
+   "V": 10,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "information",
+   "C": 11,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    0.0,
+    -2.0,
+    -4.0,
+    -6.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    8,
+    10
+   ],
+   "best_positions": [
+    0,
+    1
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V12-gF-information-C14-p2_10-w3",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "at_or_above",
+   "V": 12,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "information",
+   "C": 14,
+   "prior": [
+    2,
+    10
+   ],
+   "wording": 3,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    -2.0,
+    -4.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    8,
+    10,
+    12
+   ],
+   "best_positions": [
+    0,
+    1,
+    2
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V14-gF-information-C14-p2_6-w3",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "at_or_above",
+   "V": 14,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "information",
+   "C": 14,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 3,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -2.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    8,
+    10,
+    12,
+    14
+   ],
+   "best_positions": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V12-gF-information-C14-p3_7-w1",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "at_or_above",
+   "V": 12,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "information",
+   "C": 14,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    -2.0,
+    -4.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    8,
+    10,
+    12
+   ],
+   "best_positions": [
+    0,
+    1,
+    2
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V15-gF-information-C15-p1_10-w3",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "at_or_above",
+   "V": 15,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "information",
+   "C": 15,
+   "prior": [
+    1,
+    10
+   ],
+   "wording": 3,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -1.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    8,
+    10,
+    12,
+    14
+   ],
+   "best_positions": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V11-gF-information-C13-p1_5-w3",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "at_or_above",
+   "V": 11,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "information",
+   "C": 13,
+   "prior": [
+    1,
+    5
+   ],
+   "wording": 3,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    -3.0,
+    -5.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    8,
+    10,
+    12
+   ],
+   "best_positions": [
+    0,
+    1,
+    2
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V15-gF-information-C15-p1_5-w3",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "at_or_above",
+   "V": 15,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "information",
+   "C": 15,
+   "prior": [
+    1,
+    5
+   ],
+   "wording": 3,
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -1.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    8,
+    10,
+    12,
+    14
+   ],
+   "best_positions": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V2-gC-neutral-p2_6-w1",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 2,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "neutral",
+   "C": null,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 1,
+   "payoffs": [
+    -0.4,
+    -1.2,
+    -2.4000000000000004,
+    -4.0,
+    -5.0
+   ],
+   "best_payoff": -0.4,
+   "best_offers": [
+    3
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V2-gB-neutral-p2_6-w1",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 2,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "neutral",
+   "C": null,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    -0.4,
+    -1.2,
+    -2.4000000000000004,
+    -4.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    2
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V2-gC-pressure-p2_6-w1",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 2,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "pressure",
+   "C": null,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 1,
+   "payoffs": [
+    -0.4,
+    -1.2,
+    -2.4000000000000004,
+    -4.0,
+    -5.0
+   ],
+   "best_payoff": -0.4,
+   "best_offers": [
+    3
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V2-gA-neutral-p2_6-w1",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 2,
+   "grid_name": "A",
+   "grid": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "line": "neutral",
+   "C": null,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    -0.4,
+    -1.2,
+    -2.4000000000000004
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    1,
+    2
+   ],
+   "best_positions": [
+    0,
+    1
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V2-gC-pressure-p2_6-w0",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 2,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "pressure",
+   "C": null,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 0,
+   "payoffs": [
+    -0.4,
+    -1.2,
+    -2.4000000000000004,
+    -4.0,
+    -5.0
+   ],
+   "best_payoff": -0.4,
+   "best_offers": [
+    3
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V2-gA-pressure-p2_6-w1",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 2,
+   "grid_name": "A",
+   "grid": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "line": "pressure",
+   "C": null,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    -0.4,
+    -1.2,
+    -2.4000000000000004
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    1,
+    2
+   ],
+   "best_positions": [
+    0,
+    1
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V2-gB-pressure-p2_6-w1",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 2,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "pressure",
+   "C": null,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    -0.4,
+    -1.2,
+    -2.4000000000000004,
+    -4.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    2
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V2-gC-neutral-p2_6-w0",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 2,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "neutral",
+   "C": null,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 0,
+   "payoffs": [
+    -0.4,
+    -1.2,
+    -2.4000000000000004,
+    -4.0,
+    -5.0
+   ],
+   "best_payoff": -0.4,
+   "best_offers": [
+    3
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V2-gA-neutral-p2_6-w0",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 2,
+   "grid_name": "A",
+   "grid": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "line": "neutral",
+   "C": null,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    0.0,
+    -0.4,
+    -1.2,
+    -2.4000000000000004
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    1,
+    2
+   ],
+   "best_positions": [
+    0,
+    1
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V2-gB-neutral-p2_6-w0",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 2,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "neutral",
+   "C": null,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    -0.4,
+    -1.2,
+    -2.4000000000000004,
+    -4.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    2
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V2-gB-pressure-p2_6-w0",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "training ranges",
+   "type": "no_cost",
+   "V": 2,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "pressure",
+   "C": null,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 0,
+   "payoffs": [
+    0.0,
+    -0.4,
+    -1.2,
+    -2.4000000000000004,
+    -4.0
+   ],
+   "best_payoff": 0.0,
+   "best_offers": [
+    2
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V13-gA-neutral-p1_10-w1",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "no_cost",
+   "V": 13,
+   "grid_name": "A",
+   "grid": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "line": "neutral",
+   "C": null,
+   "prior": [
+    1,
+    10
+   ],
+   "wording": 1,
+   "payoffs": [
+    1.2000000000000002,
+    2.2,
+    3.0,
+    3.6,
+    4.0
+   ],
+   "best_payoff": 4.0,
+   "best_offers": [
+    5
+   ],
+   "best_positions": [
+    4
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V14-gF-pressure-p2_6-w1",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "no_cost",
+   "V": 14,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "pressure",
+   "C": null,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 1,
+   "payoffs": [
+    6.0,
+    4.0,
+    2.0,
+    0.0,
+    -2.0
+   ],
+   "best_payoff": 6.0,
+   "best_offers": [
+    8
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V11-gC-neutral-p2_6-w3",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "no_cost",
+   "V": 11,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "neutral",
+   "C": null,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 3,
+   "payoffs": [
+    3.2,
+    4.2,
+    4.800000000000001,
+    5.0,
+    4.0
+   ],
+   "best_payoff": 5.0,
+   "best_offers": [
+    6
+   ],
+   "best_positions": [
+    3
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V11-gB-neutral-p1_5-w3",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "no_cost",
+   "V": 11,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "neutral",
+   "C": null,
+   "prior": [
+    1,
+    5
+   ],
+   "wording": 3,
+   "payoffs": [
+    3.6,
+    4.8,
+    5.6000000000000005,
+    6.0,
+    5.0
+   ],
+   "best_payoff": 6.0,
+   "best_offers": [
+    5
+   ],
+   "best_positions": [
+    3
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V10-gB-pressure-p2_10-w1",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "no_cost",
+   "V": 10,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "pressure",
+   "C": null,
+   "prior": [
+    2,
+    10
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.8888888888888888,
+    1.5555555555555554,
+    2.0,
+    2.2222222222222223,
+    2.2222222222222223
+   ],
+   "best_payoff": 2.2222222222222223,
+   "best_offers": [
+    5,
+    6
+   ],
+   "best_positions": [
+    3,
+    4
+   ],
+   "all_tie": false,
+   "unique_best": false
+  },
+  {
+   "cell": "V13-gF-neutral-p2_10-w0",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "no_cost",
+   "V": 13,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "neutral",
+   "C": null,
+   "prior": [
+    2,
+    10
+   ],
+   "wording": 0,
+   "payoffs": [
+    3.888888888888889,
+    3.0,
+    1.0,
+    -1.0,
+    -3.0
+   ],
+   "best_payoff": 3.888888888888889,
+   "best_offers": [
+    8
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V12-gF-pressure-p1_10-w0",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "no_cost",
+   "V": 12,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "pressure",
+   "C": null,
+   "prior": [
+    1,
+    10
+   ],
+   "wording": 0,
+   "payoffs": [
+    3.2,
+    2.0,
+    0.0,
+    -2.0,
+    -4.0
+   ],
+   "best_payoff": 3.2,
+   "best_offers": [
+    8
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V10-gF-pressure-p2_10-w1",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "no_cost",
+   "V": 10,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "pressure",
+   "C": null,
+   "prior": [
+    2,
+    10
+   ],
+   "wording": 1,
+   "payoffs": [
+    1.5555555555555556,
+    0.0,
+    -2.0,
+    -4.0,
+    -6.0
+   ],
+   "best_payoff": 1.5555555555555556,
+   "best_offers": [
+    8
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V10-gF-pressure-p2_6-w0",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "no_cost",
+   "V": 10,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "pressure",
+   "C": null,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 0,
+   "payoffs": [
+    2.0,
+    0.0,
+    -2.0,
+    -4.0,
+    -6.0
+   ],
+   "best_payoff": 2.0,
+   "best_offers": [
+    8
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V13-gB-neutral-p1_5-w1",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "no_cost",
+   "V": 13,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "neutral",
+   "C": null,
+   "prior": [
+    1,
+    5
+   ],
+   "wording": 1,
+   "payoffs": [
+    4.4,
+    6.0,
+    7.2,
+    8.0,
+    7.0
+   ],
+   "best_payoff": 8.0,
+   "best_offers": [
+    5
+   ],
+   "best_positions": [
+    3
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V14-gB-pressure-p1_10-w1",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "no_cost",
+   "V": 14,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "pressure",
+   "C": null,
+   "prior": [
+    1,
+    10
+   ],
+   "wording": 1,
+   "payoffs": [
+    2.4000000000000004,
+    3.3,
+    4.0,
+    4.5,
+    4.8
+   ],
+   "best_payoff": 4.8,
+   "best_offers": [
+    6
+   ],
+   "best_positions": [
+    4
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V14-gB-pressure-p1_10-w0",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "no_cost",
+   "V": 14,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "pressure",
+   "C": null,
+   "prior": [
+    1,
+    10
+   ],
+   "wording": 0,
+   "payoffs": [
+    2.4000000000000004,
+    3.3,
+    4.0,
+    4.5,
+    4.8
+   ],
+   "best_payoff": 4.8,
+   "best_offers": [
+    6
+   ],
+   "best_positions": [
+    4
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V13-gC-pressure-p3_7-w0",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "no_cost",
+   "V": 13,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "pressure",
+   "C": null,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 0,
+   "payoffs": [
+    2.0,
+    3.6,
+    4.8,
+    5.6000000000000005,
+    6.0
+   ],
+   "best_payoff": 6.0,
+   "best_offers": [
+    7
+   ],
+   "best_positions": [
+    4
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V13-gA-pressure-p1_10-w1",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "no_cost",
+   "V": 13,
+   "grid_name": "A",
+   "grid": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "line": "pressure",
+   "C": null,
+   "prior": [
+    1,
+    10
+   ],
+   "wording": 1,
+   "payoffs": [
+    1.2000000000000002,
+    2.2,
+    3.0,
+    3.6,
+    4.0
+   ],
+   "best_payoff": 4.0,
+   "best_offers": [
+    5
+   ],
+   "best_positions": [
+    4
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V15-gF-neutral-p2_6-w0",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "no_cost",
+   "V": 15,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "neutral",
+   "C": null,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 0,
+   "payoffs": [
+    7.0,
+    5.0,
+    3.0,
+    1.0,
+    -1.0
+   ],
+   "best_payoff": 7.0,
+   "best_offers": [
+    8
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V11-gB-pressure-p2_6-w0",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "no_cost",
+   "V": 11,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "pressure",
+   "C": null,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 0,
+   "payoffs": [
+    1.8,
+    3.2,
+    4.2,
+    4.800000000000001,
+    5.0
+   ],
+   "best_payoff": 5.0,
+   "best_offers": [
+    6
+   ],
+   "best_positions": [
+    4
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V10-gA-pressure-p3_7-w1",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "no_cost",
+   "V": 10,
+   "grid_name": "A",
+   "grid": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "line": "pressure",
+   "C": null,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 1,
+   "payoffs": [
+    0.0,
+    0.0,
+    1.4000000000000001,
+    2.4000000000000004,
+    3.0
+   ],
+   "best_payoff": 3.0,
+   "best_offers": [
+    5
+   ],
+   "best_positions": [
+    4
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V12-gB-neutral-p1_10-w0",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "no_cost",
+   "V": 12,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "neutral",
+   "C": null,
+   "prior": [
+    1,
+    10
+   ],
+   "wording": 0,
+   "payoffs": [
+    2.0,
+    2.6999999999999997,
+    3.2,
+    3.5,
+    3.5999999999999996
+   ],
+   "best_payoff": 3.5999999999999996,
+   "best_offers": [
+    6
+   ],
+   "best_positions": [
+    4
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V13-gF-neutral-p2_6-w1",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "no_cost",
+   "V": 13,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "neutral",
+   "C": null,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 1,
+   "payoffs": [
+    5.0,
+    3.0,
+    1.0,
+    -1.0,
+    -3.0
+   ],
+   "best_payoff": 5.0,
+   "best_offers": [
+    8
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V10-gC-neutral-p1_10-w3",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "no_cost",
+   "V": 10,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "neutral",
+   "C": null,
+   "prior": [
+    1,
+    10
+   ],
+   "wording": 3,
+   "payoffs": [
+    2.1,
+    2.4000000000000004,
+    2.5,
+    2.4,
+    2.0999999999999996
+   ],
+   "best_payoff": 2.5,
+   "best_offers": [
+    5
+   ],
+   "best_positions": [
+    2
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V13-gF-neutral-p3_7-w3",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "no_cost",
+   "V": 13,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "neutral",
+   "C": null,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 3,
+   "payoffs": [
+    5.0,
+    3.0,
+    1.0,
+    -1.0,
+    -3.0
+   ],
+   "best_payoff": 5.0,
+   "best_offers": [
+    8
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V14-gF-neutral-p2_6-w1",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "no_cost",
+   "V": 14,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "neutral",
+   "C": null,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 1,
+   "payoffs": [
+    6.0,
+    4.0,
+    2.0,
+    0.0,
+    -2.0
+   ],
+   "best_payoff": 6.0,
+   "best_offers": [
+    8
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V14-gB-pressure-p1_5-w3",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "no_cost",
+   "V": 14,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "pressure",
+   "C": null,
+   "prior": [
+    1,
+    5
+   ],
+   "wording": 3,
+   "payoffs": [
+    4.800000000000001,
+    6.6,
+    8.0,
+    9.0,
+    8.0
+   ],
+   "best_payoff": 9.0,
+   "best_offers": [
+    5
+   ],
+   "best_positions": [
+    3
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V14-gB-neutral-p2_6-w0",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "no_cost",
+   "V": 14,
+   "grid_name": "B",
+   "grid": [
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "line": "neutral",
+   "C": null,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 0,
+   "payoffs": [
+    2.4000000000000004,
+    4.4,
+    6.0,
+    7.2,
+    8.0
+   ],
+   "best_payoff": 8.0,
+   "best_offers": [
+    6
+   ],
+   "best_positions": [
+    4
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V11-gF-neutral-p2_10-w0",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "no_cost",
+   "V": 11,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "neutral",
+   "C": null,
+   "prior": [
+    2,
+    10
+   ],
+   "wording": 0,
+   "payoffs": [
+    2.3333333333333335,
+    1.0,
+    -1.0,
+    -3.0,
+    -5.0
+   ],
+   "best_payoff": 2.3333333333333335,
+   "best_offers": [
+    8
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V11-gC-pressure-p2_6-w3",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "no_cost",
+   "V": 11,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "pressure",
+   "C": null,
+   "prior": [
+    2,
+    6
+   ],
+   "wording": 3,
+   "payoffs": [
+    3.2,
+    4.2,
+    4.800000000000001,
+    5.0,
+    4.0
+   ],
+   "best_payoff": 5.0,
+   "best_offers": [
+    6
+   ],
+   "best_positions": [
+    3
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V13-gC-pressure-p2_10-w3",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "no_cost",
+   "V": 13,
+   "grid_name": "C",
+   "grid": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "line": "pressure",
+   "C": null,
+   "prior": [
+    2,
+    10
+   ],
+   "wording": 3,
+   "payoffs": [
+    2.2222222222222223,
+    3.0,
+    3.5555555555555554,
+    3.8888888888888893,
+    4.0
+   ],
+   "best_payoff": 4.0,
+   "best_offers": [
+    7
+   ],
+   "best_positions": [
+    4
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V14-gF-pressure-p1_5-w1",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "no_cost",
+   "V": 14,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "pressure",
+   "C": null,
+   "prior": [
+    1,
+    5
+   ],
+   "wording": 1,
+   "payoffs": [
+    6.0,
+    4.0,
+    2.0,
+    0.0,
+    -2.0
+   ],
+   "best_payoff": 6.0,
+   "best_offers": [
+    8
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  },
+  {
+   "cell": "V10-gF-neutral-p3_7-w0",
+   "split": "test2_newkey",
+   "slice": "test2_newkey",
+   "region": "extension",
+   "type": "no_cost",
+   "V": 10,
+   "grid_name": "F",
+   "grid": [
+    8,
+    10,
+    12,
+    14,
+    16
+   ],
+   "line": "neutral",
+   "C": null,
+   "prior": [
+    3,
+    7
+   ],
+   "wording": 0,
+   "payoffs": [
+    2.0,
+    0.0,
+    -2.0,
+    -4.0,
+    -6.0
+   ],
+   "best_payoff": 2.0,
+   "best_offers": [
+    8
+   ],
+   "best_positions": [
+    0
+   ],
+   "all_tie": false,
+   "unique_best": true
+  }
+ ]
+}
