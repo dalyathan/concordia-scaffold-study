@@ -30,6 +30,8 @@ claude_examples lr chosen on selection set B: 1e-04 (selection soft regret {0.00
 
 - T1a plain - a on the 26 non-overlapping cells: +0.668 [+0.416, +0.953], lower bound > 0: **yes**
 - T1b (b) - a on the 26 non-overlapping cells: +0.577 [+0.224, +0.989], lower bound > 0: **yes**
+- T1 POST-HOC strict key (V and C only): plain - a on 5 non-overlapping cells: +1.562 [+1.112, +2.230], lower bound > 0: **yes**
+- T1 POST-HOC strict key (V and C only): (b) - a on 5 non-overlapping cells: +1.386 [-0.003, +2.971], lower bound > 0: **no**
 - T2 plain - a (seeds 1-2): +0.616 [+0.420, +0.827], lower bound > 0: **yes**
 - T2 (b) - a (seeds 1-2): +0.387 [+0.164, +0.665], lower bound > 0: **yes**
 - T2 always-cheapest - a (seeds 1-2): +0.387 [+0.164, +0.665], lower bound > 0: **yes**
@@ -39,7 +41,11 @@ claude_examples lr chosen on selection set B: 1e-04 (selection soft regret {0.00
 - T4 (b) - a on no_cost cells: +0.566 [+0.258, +0.927], lower bound > 0: **yes**
 - T4 (c) - a on below cells (differing labels): +1.330 [+0.967, +1.832], lower bound > 0: **yes**
 - T4 (c) - a on no_cost cells (differing labels): +0.505 [+0.299, +0.759], lower bound > 0: **yes**
-- T5 (a) minus ceiling at lr 1e-04: +0.006 [-0.019, +0.028]; mean <= 0.05: **yes**
+- POST-HOC per-seed (c) - a seed 0 on below+no_cost cells: +0.940 [+0.668, +1.270]
+- POST-HOC per-seed (c) - a seed 1 on below+no_cost cells: +0.930 [+0.656, +1.261]
+- POST-HOC per-seed (c) - a seed 2 on below+no_cost cells: +0.881 [+0.621, +1.201]
+- T5 (a) minus ceiling at lr 1e-04: +0.006 [-0.019, +0.028]; mean <= 0.05: **yes** (upper bound +0.028; ceiling has ONE seed; (a) per-seed spread 0.013-0.057); by type (a) - ceiling: below +0.006, at_or_above -0.042, no_cost +0.055
+- POST-HOC (not in rule) stated-cost rule - a: +0.182 [+0.060, +0.336]; rule soft regret 0.214
 - (a) vs earlier teacher-distil: teacher-distil minus (a) +0.344 [+0.218, +0.496]
 
 ## Slope of the expected offer on the stated cost over the 14 below cells (OLS; bootstrap interval over cells)

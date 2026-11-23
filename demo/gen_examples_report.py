@@ -10,6 +10,7 @@ ROOT = common.ROOT
 cells = {c["cell"]: c for c in json.load(open(os.path.join(g.OUT, "cells.json")))["cells"]}
 cases = {c["cid"]: c for c in map(json.loads, open(os.path.join(g.OUT, "cases.jsonl")))}
 TUNE = sorted(k for k, c in cells.items() if c["split"] == "tune")
+assert all(cells[k]["grid"][0] == min(cells[k]["grid"]) for k in cells), "grid position 0 must be the cheapest price"
 BELOW = [k for k in TUNE if cells[k]["type"] == "below"]
 tr = json.load(open(os.path.join(g.OUT, "lora_train_cells.json")))
 key = lambda k: (cells[k]["V"], cells[k]["grid_name"], cells[k]["C"], None if cells[k]["C"] is not None else tuple(cells[k]["prior"]))
@@ -99,25 +100,38 @@ verdict = "INCOMPLETE (cheapest-label control missing)" if B is None else ("PASS
 L += ["", f"**Owner's pass rule: {verdict}** (mean over completed seeds {[r['seed'] for r in A]})", "", "## Tags (not part of the rule; they decide how a pass may be worded)", ""]
 T = {}
 if B:
-  T["T1"] = (cond("T1a plain - a on the 26 non-overlapping cells", {k: sP[k] - sA[k] for k in NOV}, NOV) and cond("T1b (b) - a on the 26 non-overlapping cells", {k: sB[k] - sA[k] for k in NOV}, NOV))
+  t1a = cond("T1a plain - a on the 26 non-overlapping cells", {k: sP[k] - sA[k] for k in NOV}, NOV)
+  t1b = cond("T1b (b) - a on the 26 non-overlapping cells", {k: sB[k] - sA[k] for k in NOV}, NOV)
+  T["T1"] = t1a and t1b
+  # stricter overlap keys (post-hoc, added after G2): ignore the grid / ignore the prior
+  for nm, kf in (("V and C only", lambda k: (cells[k]["V"], cells[k]["C"])), ("V and grid only", lambda k: (cells[k]["V"], cells[k]["grid_name"]))):
+    tk = {kf(k) for k in tr}; nv = [k for k in TUNE if kf(k) not in tk]
+    if len(nv) >= 5:
+      cond(f"T1 POST-HOC strict key ({nm}): plain - a on {len(nv)} non-overlapping cells", {k: sP[k] - sA[k] for k in nv}, nv)
+      cond(f"T1 POST-HOC strict key ({nm}): (b) - a on {len(nv)} non-overlapping cells", {k: sB[k] - sA[k] for k in nv}, nv)
 a12 = [r for r in A if r["seed"] in (1, 2)]
 if len(a12) == 2 and B:
   s12 = cellsoft(avgp(a12))
   T["T2"] = all([cond("T2 plain - a (seeds 1-2)", {k: sP[k] - s12[k] for k in TUNE}), cond("T2 (b) - a (seeds 1-2)", {k: sB[k] - s12[k] for k in TUNE}), cond("T2 always-cheapest - a (seeds 1-2)", {k: sCheap[k] - s12[k] for k in TUNE}),
                 cond("T2 plain - a below (seeds 1-2)", {k: sP[k] - s12[k] for k in BELOW}, BELOW)] + [byt(s12, t) - byt(sP, t) <= 0.05 for t in g.TYPES])
-s0 = cellsoft(avgp([A[0]]))
+s0 = cellsoft(avgp([next(r for r in A if r["seed"] == 0)]))
 if B:
   T["T3"] = cond("T3 (b) - a seed 0 (equal footing)", {k: sB[k] - s0[k] for k in TUNE})
   for t in ("below", "no_cost"):
-    ks = [k for k in TUNE if cells[k]["type"] == t]; cond(f"T4 (b) - a on {t} cells", {k: sB[k] - sA[k] for k in ks}, ks)
+    ks = [k for k in TUNE if cells[k]["type"] == t]; T[f"T4b_{t}"] = cond(f"T4 (b) - a on {t} cells", {k: sB[k] - sA[k] for k in ks}, ks)
 if C:
   sC = cellsoft(avgp([C]))
   for t in ("below", "no_cost"):
-    ks = [k for k in TUNE if cells[k]["type"] == t]; cond(f"T4 (c) - a on {t} cells (differing labels)", {k: sC[k] - sA[k] for k in ks}, ks)
+    ks = [k for k in TUNE if cells[k]["type"] == t]; T[f"T4c_{t}"] = cond(f"T4 (c) - a on {t} cells (differing labels)", {k: sC[k] - sA[k] for k in ks}, ks)
+  for r in A:
+    sr = cellsoft(avgp([r])); L.append(f"- POST-HOC per-seed (c) - a seed {r['seed']} on below+no_cost cells: {fmt(boot([sC[k] - sr[k] for k in TUNE if cells[k]['type'] != 'at_or_above']))}")
 if CEIL.get(lr):
   sCe = cellsoft(avgp([CEIL[lr]])); b = boot([sA[k] - sCe[k] for k in TUNE])
   T["T5"] = b[0] <= 0.05
-  L.append(f"- T5 (a) minus ceiling at lr {lr:.0e}: {fmt(b)}; mean <= 0.05: **{'yes' if T['T5'] else 'no'}**")
+  L.append(f"- T5 (a) minus ceiling at lr {lr:.0e}: {fmt(b)}; mean <= 0.05: **{'yes' if T['T5'] else 'no'}** (upper bound {b[2]:+.3f}; ceiling has ONE seed; (a) per-seed spread {min(boot(list(cellsoft(avgp([r])).values()))[0] for r in A):.3f}-{max(boot(list(cellsoft(avgp([r])).values()))[0] for r in A):.3f}); by type (a) - ceiling: " + ", ".join(f"{t} {byt(sA, t) - byt(sCe, t):+.3f}" for t in g.TYPES))
+# post-hoc (added after G2, not in the frozen rule): the stated-cost rule as a stronger simple comparator
+sRule = {k: cells[k]["best_payoff"] - cells[k]["payoffs"][(next((i for i, x in enumerate(cells[k]["grid"]) if x >= cells[k]["C"]), 4) if cells[k]["C"] is not None and cells[k]["C"] < cells[k]["V"] else 0)] for k in TUNE}
+L.append(f"- POST-HOC (not in rule) stated-cost rule - a: {fmt(boot([sRule[k] - sA[k] for k in TUNE]))}; rule soft regret {np.mean(list(sRule.values())):.3f}")
 if TEACH:
   sT = cellsoft(avgp(TEACH)); L.append(f"- (a) vs earlier teacher-distil: teacher-distil minus (a) {fmt(boot([sT[k] - sA[k] for k in TUNE]))}")
 # slope on stated cost over below cells
