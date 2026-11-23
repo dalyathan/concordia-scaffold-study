@@ -16,7 +16,24 @@
   "method_s2": 0.0
  },
  "leakage_files": [],
- "script_sha256": "4fd6ca89aff8517be164a6ff95fa0b94bb10b3e8516942899e7a9039695b34fa",
+ "script_sha256": "52ea926f2a8a787820ae332e8f5cc1df8156fa471843227190f75bb26ac27c10",
+ "code_state": {
+  "files": {
+   "demo/gen_lora.py": "a959a612914123a340729444700dc91cd69e0668cf225faf68ec881e7e9bafa0",
+   "demo/gen_notes.py": "eb601c0ba3fa6729219f402451b1e3706476e378efad1fa76f78466894cc3c27",
+   "demo/gen_cases.py": "cc0024b70ee5d53e4dad5966aa312200d9d53fb00248b3826ec4f6b2af01044f",
+   "demo/common.py": "7b6b83066eec794d39b6a1e5ab6cdad5e23aac15d3d311f78470cc5fbcd676e6",
+   "refimpl/core.py": "7a83fa03261cf843fa3ed9f7b83791af61189075a8176d7d41b2f74a96a775d8",
+   "refimpl/phase3.py": "b5f83cb69b6f332c78a874605e37b145981763c6a7fce25934da3b363328aded",
+   "refimpl/local_gemma2.py": "594f82e030c5273c7c69373eae5a7fcff0d641c316efa58dce4f3a2f7a20b25d",
+   "refimpl/runtime.py": "602e9697f76d00f35520c2a1c1a664df819c60ada774499aaca542bf33387319"
+  },
+  "versions": {
+   "torch": "2.4.1+cu121",
+   "transformers": "4.44.2",
+   "peft": "0.12.0"
+  }
+ },
  "adapters": {
   "claude_examples_s0": {
    "run_id": "gen_claude_examples_lr1e-04_s0",
@@ -79,5 +96,5 @@
    "best_epoch": 2
   }
  },
- "time": "2026-11-23 16:09:27 UTC"
+ "time": "2026-11-23 16:42:38 UTC"
 }

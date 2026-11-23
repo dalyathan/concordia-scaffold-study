@@ -10,7 +10,7 @@ the GENERATED dataset's test_same and test_hard; the original study's sets are n
   python demo/gen_examples_test_look.py --mode analyse     CPU. Re-runs only the analysis on the saved test scores (for a crash after scoring).
 
 No adapter, seed, epoch or learning rate is chosen here: the frozen list is built from the stored run files and checked against the sha256
-values written in GEN_EXAMPLES_TEST_PLAN.md section 6. Scoring path = gen_lora.score_case (five cyclic orders, first-token letter
+values written in GEN_EXAMPLES_TEST_PLAN.md section 1. Scoring path = gen_lora.score_case (five cyclic orders, first-token letter
 probabilities renormalised over the five letters, order- and name-variant-averaged), the same as for tune."""
 from __future__ import annotations
 
@@ -56,6 +56,22 @@ FAMILY = {"a": ["claude_examples_s0", "claude_examples_s1", "claude_examples_s2"
 TEST_SPLITS = ("test_same", "test_hard")
 sha = lambda p: hashlib.sha256(open(p, "rb").read()).hexdigest()
 SELF = os.path.abspath(__file__)
+STOP_UTC = "2026-11-26 05:00:00"   # Nov 25 23:00 CST
+
+
+def jdump(obj, path, **kw):
+  """atomic json write (temp file + rename), so a crash never leaves a truncated file"""
+  tmp = path + ".tmp"
+  json.dump(obj, open(tmp, "w"), **kw); os.replace(tmp, path)
+
+
+def code_state():
+  """sha256 of every code file the scoring path imports, adapter_config hashes, and library versions"""
+  import importlib, torch, transformers, peft
+  from refimpl import core, phase3, local_gemma2, runtime
+  files = [os.path.join(ROOT, "demo", n) for n in ("gen_lora.py", "gen_notes.py", "gen_cases.py", "common.py")] + [m.__file__ for m in (core, phase3, local_gemma2, runtime)]
+  return {"files": {os.path.relpath(f, ROOT): sha(f) for f in files},
+          "versions": {"torch": torch.__version__, "transformers": transformers.__version__, "peft": peft.__version__}}
 
 
 def load_data():
@@ -72,6 +88,8 @@ def frozen_adapters():
     got = sha(os.path.join(d, "adapter_model.safetensors"))
     assert got == r["adapter_sha256"], f"{name}: adapter file differs from the stored run result"
     assert want is None or got == want, f"{name}: adapter sha256 differs from the plan"
+    assert sha(os.path.join(d, "adapter_config.json")) == r["adapter_config_sha256"], f"{name}: adapter_config differs from the stored run result"
+    assert rid.startswith("gen_" + r["arm"] + "_lr1e-04_s" + str(r["seed"])) and name.endswith("_s" + str(r["seed"])), f"{name}: run file arm/seed does not match"
     assert r["lr"] == 1e-4 and r["arm"] in ("claude_examples", "cheapest_label", "shuffled_claude", "answer_only", "teacher", "method_original")
     out[name] = {"run_id": rid, "dir": d, "sha256": got, "best_epoch": r["best_epoch"], "stored_tune": r["tune_probs_best"]}
   return out
@@ -88,6 +106,12 @@ def verify_hashes(cells, cases):
     assert fp[k]["sha256"] == h, f"fingerprint mismatch for {k}"
     assert fp[k]["n_cells"] == {"test_same": 60, "test_hard": 62}[k]
   assert all(c["grid"][0] == min(c["grid"]) for c in cells.values()), "grid position 0 must be the cheapest price"
+  assert all(list(c["grid"]) == sorted(c["grid"]) for c in cells.values()), "grids must be ascending"
+  per = collections.Counter(c["cell"] for c in cases if c["split"] in TEST_SPLITS)
+  assert set(per.values()) == {2} and len(per) == 122, "every test cell must have exactly 2 cases"
+  sl = collections.Counter(c["slice"] for c in cells.values() if c["split"] == "test_hard")
+  assert sl == {"hard_V": 20, "hard_grid": 21, "hard_wording": 21}, sl
+  assert sum(1 for c in cells.values() if c["slice"] == "hard_grid" and c["grid_name"] == "D") == 15
   return fp
 
 
@@ -122,7 +146,7 @@ def score_set(lm, score_case, cases, label, peft=None, adapter=None):
   return out
 
 
-def run_scoring(split_names, mode):
+def run_scoring(split_names, mode, reuse_ok=False):
   cells, cases = load_data()
   fp = verify_hashes(cells, cases)
   fr = frozen_adapters()
@@ -139,28 +163,40 @@ def run_scoring(split_names, mode):
   tag = "tune_preflight" if mode == "preflight" else "test"
   res = {}
   fpath = lambda arm: os.path.join(OUTD, f"{tag}_{arm}.json")
+  want_ids = {c["cid"] for c in use}
+  def reuse(arm):
+    """only a complete, correctly-keyed file of an interrupted look of this same lock may be reused (never in the preflight)"""
+    if not os.path.exists(fpath(arm)):
+      return None
+    assert mode == "look" and reuse_ok, f"{fpath(arm)} exists already: refusing to reuse it"
+    d = json.load(open(fpath(arm)))
+    assert set(d) == want_ids, f"{fpath(arm)} does not cover exactly the expected cases"
+    reused[arm] = sha(fpath(arm))
+    return d
   # one adapter at a time (several adapters in one PEFT model were found to load the later ones inexactly): plain first on the clean
   # model, then each adapter loaded alone and unloaded after scoring; the clean model is re-checked at the end.
-  if os.path.exists(fpath("plain")):
-    res["plain"] = json.load(open(fpath("plain")))
-  else:
-    res["plain"] = score_set(lm, score_case, use, "plain"); json.dump(res["plain"], open(fpath("plain"), "w"))
+  reused = {}
+  res["plain"] = reuse("plain")
+  if res["plain"] is None:
+    res["plain"] = score_set(lm, score_case, use, "plain"); jdump(res["plain"], fpath("plain"))
   for arm in names:
-    if os.path.exists(fpath(arm)):
-      res[arm] = json.load(open(fpath(arm))); print(f"  {arm}: reuse", flush=True); continue
+    r_ = reuse(arm)
+    if r_ is not None:
+      res[arm] = r_; print(f"  {arm}: reused after an interrupted look", flush=True); continue
     peft = PeftModel.from_pretrained(lm.model, fr[arm]["dir"], adapter_name="a"); peft.eval()
     assert {prm.dtype for n_, prm in peft.named_parameters() if "lora_" in n_} == {__import__("torch").float32}
-    res[arm] = score_set(lm, score_case, use, arm); json.dump(res[arm], open(fpath(arm), "w"))
+    res[arm] = score_set(lm, score_case, use, arm); jdump(res[arm], fpath(arm))
     lm.model = peft.unload()
   chk = use[:10]
   again = score_set(lm, score_case, chk, "clean-model recheck")
   dev = max(abs(a - b) for c in chk for a, b in zip(again[c["cid"]][0], res["plain"][c["cid"]][0]))
   assert dev < 1e-6, f"the model after unloading all adapters no longer reproduces plain (max diff {dev})"
-  return res, fr, cells, cases
+  return res, fr, cells, cases, reused
 
 
 def preflight():
-  res, fr, cells, cases = run_scoring(("tune",), "preflight")
+  assert not glob.glob(os.path.join(OUTD, "tune_preflight_*.json")), "stale preflight scores exist: delete them so that every arm is scored fresh"
+  res, fr, cells, cases, _ = run_scoring(("tune",), "preflight")
   plain_saved = {r["cid"]: r for r in map(json.loads, open(os.path.join(ROOT, "demo_out", "gen_plain_scores.jsonl")))}
   worst = {}
   worst["plain"] = max(abs(a - b) for cid, (p, _) in res["plain"].items() for a, b in zip(p, plain_saved[cid]["probs"]))
@@ -169,10 +205,10 @@ def preflight():
   ok = worst["plain"] < 1e-3 and all(v < 1e-3 for k, v in worst.items() if k != "plain")
   leak = leakage_check(cells, cases)
   selftest()
-  st = {"ok": bool(ok and not leak), "max_abs_diff": worst, "leakage_files": leak, "script_sha256": sha(SELF), "adapters": {k: {x: v[x] for x in ("run_id", "sha256", "best_epoch")} for k, v in fr.items()},
+  st = {"ok": bool(ok and not leak), "max_abs_diff": worst, "leakage_files": leak, "script_sha256": sha(SELF), "code_state": code_state(), "adapters": {k: {x: v[x] for x in ("run_id", "sha256", "best_epoch")} for k, v in fr.items()},
         "time": time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime())}
-  json.dump(st, open(PREFLIGHT, "w"), indent=1)
-  json.dump({k: {x: v[x] for x in ("run_id", "sha256", "best_epoch")} for k, v in fr.items()}, open(FROZEN_JSON, "w"), indent=1)
+  jdump(st, PREFLIGHT, indent=1)
+  jdump({k: {x: v[x] for x in ("run_id", "sha256", "best_epoch")} for k, v in fr.items()}, FROZEN_JSON, indent=1)
   print("PREFLIGHT", "OK" if st["ok"] else "FAILED", json.dumps(worst), flush=True)
   assert st["ok"], "preflight failed"
 
@@ -245,6 +281,7 @@ def analyse(res=None, report=None, summary_path=None):
        f"script sha256 {sha(SELF)}; adapters per demo/gen/test_frozen_adapters.json; conditions as frozen in GEN_EXAMPLES_TEST_PLAN.md; paired cell bootstrap 10,000 resamples, numpy default_rng(0), two-sided 95% percentile; "
        "no adapter, seed, epoch or lr was chosen on test data. The development verdict on tune was PASSED (soft regret 0.032 vs plain 0.657).", ""]
   summary = {"script_sha256": sha(SELF), "sets": {}}
+  outcomes = {}
   TP = {"plain": lambda k: cell_p("plain", k), "always-cheapest": lambda k: np.eye(5)[0],
         "stated-cost rule": lambda k: np.eye(5)[rule_pos(k)], "(a) claude-examples (3 seeds)": lambda k: fam_p("a", k),
         "(b) cheapest-label": lambda k: fam_p("b", k), "(c) shuffled-Claude": lambda k: fam_p("c", k), "answer-trained ceiling lr 1e-4": lambda k: fam_p("ceiling", k),
@@ -264,6 +301,8 @@ def analyse(res=None, report=None, summary_path=None):
     sc = {}
     def cond(name, d, kk=None):
       kk = kk or ks
+      if len(kk) < 5:
+        L.append(f"- {name}: only {len(kk)} cells, no interval computed"); return None
       b = boot([d[k] for k in kk]); sc[name] = b
       L.append(f"- {name}: {fmt(b)}, lower bound > 0: **{'yes' if b[1] > 0 else 'no'}**")
       return b[1] > 0
@@ -273,16 +312,19 @@ def analyse(res=None, report=None, summary_path=None):
     c2 = cond("2. (b) - a", {k: sB[k] - sA[k] for k in ks})
     c3 = cond("3. always-cheapest - a", {k: sCh[k] - sA[k] for k in ks})
     bl = [k for k in ks if cells[k]["type"] == "below"]
-    c4 = cond(f"4. plain - a on below cells ({len(bl)})", {k: sP[k] - sA[k] for k in bl}, bl) if bl else None
+    c4 = cond(f"4. plain - a on below cells ({len(bl)})" + (" [descriptive: fewer than 8 below cells, not part of this set's outcome]" if 0 < len(bl) < 8 else ""), {k: sP[k] - sA[k] for k in bl}, bl) if bl else None
+    c4_desc = 0 < len(bl) < 8
     d5 = {t: byt(sA, t) - byt(sP, t) for t in types}
     c5 = all(v <= 0.05 for v in d5.values())
     L.append("- 5. type means (a) minus plain: " + ", ".join(f"{t} {v:+.3f}" for t, v in d5.items()) + f" (each <= +0.05): **{'yes' if c5 else 'no'}**")
     c6 = a_mass >= 0.9 * plain_mass
     L.append(f"- 6. letter mass {a_mass:.2f} vs 0.9 x plain {0.9 * plain_mass:.2f}: **{'yes' if c6 else 'no'}**")
-    conds = [c1, c2, c3, c4 if c4 is not None else True, c5, c6]
+    conds = [bool(c1), bool(c2), bool(c3), True if (c4 is None or c4_desc) else bool(c4), c5, c6]
     small = len(ks) < 8
-    outcome = ("DESCRIPTIVE ONLY (fewer than 8 cells); " if small else "") + ("PASSED" if all(conds) else "NOT PASSED")
     failed = [i + 1 for i, v in enumerate(conds) if not v]
+    outcome = ("DESCRIPTIVE ONLY: fewer than 8 cells, no PASSED/NOT PASSED label (conditions failing: %s)" % (failed or "none") if small else
+               ("PASSED" if all(conds) else "NOT PASSED") + (" (condition 4 descriptive: fewer than 8 below cells)" if c4_desc else ""))
+    outcomes[sname] = outcome
     L += ["", f"**Outcome for {sname}: {outcome}**" + (f" (failed conditions: {failed})" if failed else "") + ("; condition 4 not applicable (no below cells)" if c4 is None else ""), ""]
     L.append("Reported, outside the rule:")
     for nm in ("stated-cost rule", "answer-trained ceiling lr 1e-4", "teacher-distil (3 seeds; reported only)", "our-method-distil (3 seeds; reported only)"):
@@ -294,6 +336,16 @@ def analyse(res=None, report=None, summary_path=None):
       if kk:
         cond(f"(b) - a on {t} cells", {k: sB[k] - sA[k] for k in kk}, kk)
         cond(f"(c) - a on {t} cells", {k: sC[k] - sA[k] for k in kk}, kk)
+    for a in FAMILY["a"]:
+      sa_ = {k: soft(cell_p(a, k), k) for k in ks}
+      for nm_, ref in (("plain", sP), ("(b)", sB), ("always-cheapest", sCh)):
+        cond(f"per-seed: {nm_} - {a}", {k: ref[k] - sa_[k] for k in ks})
+    kb = [k for k in ks if cells[k]["type"] == "below"]; kn = [k for k in ks if cells[k]["type"] == "no_cost"]
+    cc = [cond(f"wording check: (c) - a on {t} cells", {k: sC[k] - sA[k] for k in kk}, kk) for t, kk in (("below", kb), ("no_cost", kn))]
+    shuffle_ok = all(x is True for x in cc)
+    nov = [k for k in ks if key(k) not in trk]
+    nov_ok = len(nov) >= 8 and bool(cond(f"wording check: plain - a on the {len(nov)} cells whose current label key is not in the 100 training cells", {k: sP[k] - sA[k] for k in nov}, nov))
+    L.append(f"- WORDING FLAGS (fixed in the plan): 'beyond shuffled labels' allowed: **{'yes' if shuffle_ok else 'no'}**; 'generalises to cells with new label keys' allowed: **{'yes' if nov_ok else 'no'}** (else a pass is worded as holding on the same generator, largely on repeated parameter combinations)" + (f"; 'transfer to unseen V / grid / wording' allowed only if test_hard as a whole passed (test_hard: {outcomes.get('test_hard', 'n/a')}) and this slice passed" if sname.startswith("test_hard/") else ""))
     L.append("- by type, (a) minus ceiling: " + ", ".join(f"{t} {byt(sA, t) - byt(S['answer-trained ceiling lr 1e-4'], t):+.3f}" for t in types))
     for fam in ("a", "b", "c", "ceiling", "teacher", "method"):
       per = []
@@ -303,12 +355,14 @@ def analyse(res=None, report=None, summary_path=None):
     bk = [k for k in ks if cells[k]["type"] == "below" and cells[k]["C"] is not None]
     if len({cells[k]["C"] for k in bk}) >= 2:
       sl = lambda f, kk: float(np.polyfit([cells[k]["C"] for k in kk], [float(np.dot(f(k), cells[k]["grid"])) for k in kk], 1)[0])
-      rng = np.random.default_rng(0); bs = []
+      rng = np.random.default_rng(0); bs = []; ndrop = 0
       for _ in range(10000):
         ii = rng.choice(len(bk), len(bk)); kk = [bk[i] for i in ii]
         if len({cells[k]["C"] for k in kk}) >= 2:
           bs.append(sl(TP["(a) claude-examples (3 seeds)"], kk))
-      L.append(f"- slope of the expected offer on the stated cost, below cells: (a) {sl(TP['(a) claude-examples (3 seeds)'], bk):.2f} [{np.quantile(bs, .025):.2f}, {np.quantile(bs, .975):.2f}], plain {sl(TP['plain'], bk):.2f}, oracle {sl(lambda k: np.eye(5)[cells[k]['best_positions'][0]], bk):.2f}")
+        else:
+          ndrop += 1
+      L.append(f"- slope of the expected offer on the stated cost, below cells: (a) {sl(TP['(a) claude-examples (3 seeds)'], bk):.2f} [{np.quantile(bs, .025):.2f}, {np.quantile(bs, .975):.2f}], plain {sl(TP['plain'], bk):.2f} ({ndrop} of 10000 resamples dropped for a single stated cost), oracle {sl(lambda k: np.eye(5)[cells[k]['best_positions'][0]], bk):.2f}")
     for nm, kf, tk in (("current key", key, trk), ("V and C only", key2, trk2)):
       ov = [k for k in ks if kf(k) in tk]; nov = [k for k in ks if kf(k) not in tk]
       L.append(f"- overlap with the 100 training cells, {nm}: {len(ov)} overlapping, {len(nov)} not" +
@@ -323,21 +377,36 @@ def analyse(res=None, report=None, summary_path=None):
 
 
 def look():
+  assert time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()) < STOP_UTC, "the stop time (Nov 25 23:00 CST) has passed: the look is not run"
   pf = json.load(open(PREFLIGHT))
   assert pf["ok"] and pf["script_sha256"] == sha(SELF), "preflight missing, failed, or made by a different script"
+  assert code_state() == pf["code_state"], "scoring code files or library versions differ from the preflight: the look is void"
+  reuse_ok = False
   if os.path.exists(LOCK):
     lk = json.load(open(LOCK))
     assert lk["script_sha256"] == sha(SELF), "lock exists for a different script: the look is void"
     assert lk["status"] != "complete", "the look has already been made"
-    print("RE-RUN after an interrupted look (identical hash-verified script); partial outputs are re-scored where missing", flush=True)
+    reuse_ok = True
+    print("RE-RUN after an interrupted look (identical hash-verified script); only complete, correctly-keyed arm files are reused", flush=True)
   else:
-    lk = {"script_sha256": sha(SELF), "status": "started", "time": time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime()), "git_head": subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True, text=True).stdout.strip()}
-  json.dump(lk, open(LOCK, "w"), indent=1)
-  res, fr, cells, cases = run_scoring(TEST_SPLITS, "look")
-  lk["status"] = "scored"; json.dump(lk, open(LOCK, "w"), indent=1)
+    assert not glob.glob(os.path.join(OUTD, "test_*.json")), "test score files exist but there is no lock: refusing to start"
+    lk = {"script_sha256": sha(SELF), "status": "started", "time": time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime()), "code_state": pf["code_state"],
+          "git_head": subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True, text=True).stdout.strip()}
+  jdump(lk, LOCK, indent=1)
+  res, fr, cells, cases, reused = run_scoring(TEST_SPLITS, "look", reuse_ok)
+  lk["reused_files_sha256"] = reused
+  lk["status"] = "scored"; lk["score_file_sha256"] = {os.path.basename(f): sha(f) for f in sorted(glob.glob(os.path.join(OUTD, "test_*.json")))}; jdump(lk, LOCK, indent=1)
   analyse(res)
-  lk["status"] = "complete"; json.dump(lk, open(LOCK, "w"), indent=1)
+  lk["status"] = "complete"; jdump(lk, LOCK, indent=1)
   print("TEST LOOK COMPLETE", flush=True)
+
+
+def analyse_saved():
+  lk = json.load(open(LOCK))
+  assert lk["status"] in ("scored", "complete") and lk["script_sha256"] == sha(SELF)
+  files = sorted(glob.glob(os.path.join(OUTD, "test_*.json")))
+  assert len(files) == 13 and {os.path.basename(f): sha(f) for f in files} == lk["score_file_sha256"], "score files differ from the lock"
+  analyse()
 
 
 if __name__ == "__main__":
@@ -352,4 +421,4 @@ if __name__ == "__main__":
     os.makedirs(a.out, exist_ok=True)
     analyse(fake, os.path.join(a.out, "fake_report.md"), os.path.join(a.out, "fake_summary.json"))
   else:
-    {"preflight": preflight, "look": look, "analyse": analyse}[a.mode]()
+    {"preflight": preflight, "look": look, "analyse": analyse_saved}[a.mode]()
