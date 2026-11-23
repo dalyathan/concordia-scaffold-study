@@ -1,7 +1,7 @@
 """Chain for the learning-curve runs (GEN_CURVE_PLAN.md). One process per run, resumable, budget 8 GPU-hours (measured).
   python demo/gen_curve_chain.py --plan | python demo/gen_curve_chain.py
-Order (a cut falls on the last runs first): examples-25 s0, examples-10 s0, rule-soft-25, rule-hard-25, rule-hard-100, cheapest-label-25,
-examples-25 s1-2, examples-10 s1-2, examples-50 s0-2. All at lr 1e-4. N = 100 examples and rule-soft runs already exist and are reused."""
+Order (a cut falls on the last runs first): examples-25 s0, examples-10 s0, examples-50 s0, rule-soft-25, rule-hard-25, rule-hard-100, cheapest-label-25,
+examples-25 s1-2, examples-10 s1-2, examples-50 s1-2. All at lr 1e-4. N = 100 examples and rule-soft runs already exist and are reused."""
 import argparse, glob, hashlib, json, os, subprocess, sys, time
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import numpy as np
@@ -12,9 +12,9 @@ import gen_curve
 FROZEN = "0b6f0febaa1d32302bf275bab823893db481d0386e1eccb36e52a1cbb7f95839"
 LR, DEFAULT = 1e-4, 2100
 OUT = os.path.join(common.ROOT, "demo_out", "gen_lora")
-RUNS = [("claude_examples", 25, 0), ("claude_examples", 10, 0), ("teacher", 25, 0), ("rule_hard", 25, 0), ("rule_hard", 100, 0), ("cheapest_label", 25, 0),
+RUNS = [("claude_examples", 25, 0), ("claude_examples", 10, 0), ("claude_examples", 50, 0), ("teacher", 25, 0), ("rule_hard", 25, 0), ("rule_hard", 100, 0), ("cheapest_label", 25, 0),
         ("claude_examples", 25, 1), ("claude_examples", 25, 2), ("claude_examples", 10, 1), ("claude_examples", 10, 2),
-        ("claude_examples", 50, 0), ("claude_examples", 50, 1), ("claude_examples", 50, 2)]
+        ("claude_examples", 50, 1), ("claude_examples", 50, 2)]
 ap = argparse.ArgumentParser(); ap.add_argument("--plan", action="store_true"); ap.add_argument("--budget-hours", type=float, default=8.0)
 args = ap.parse_args()
 rid = lambda a, n, s: f"gen_{a}_lr{LR:.0e}_s{s}" if n == 100 else f"gen_{a}_n{n}_lr{LR:.0e}_s{s}"
@@ -64,6 +64,8 @@ if args.plan:
   sys.exit(0)
 assert hashlib.sha256(open(os.path.join(g.OUT, "claude_labels.json"), "rb").read()).hexdigest() == FROZEN, "claude_labels.json changed"
 gen_curve.load(10)                                           # asserts curve_subsets.json equals its rebuild
+import gen_curve_freeze
+gen_curve_freeze.verify()                                    # every input, reused run, code file and library version equals the frozen record
 for a, n, s in RUNS:
   run(a, n, s)
 print("CURVE CHAIN DONE", flush=True)

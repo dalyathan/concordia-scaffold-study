@@ -1,0 +1,42 @@
+{
+ "inputs": {
+  "demo/gen/curve_subsets.json": "e5025b2a5e9970a4ae75968fea39f8b97c54a77e8fd65065c51d456588a9a29d",
+  "demo/gen/lora_train_cells.json": "9596560f9028a04cb5f53b486fe2ef206b305e873bf044d0309bf75c5c5d67a4",
+  "demo/gen/lora_select_cells_B.json": "6ce46dfa405393884a51ee0b3b8bc62c4cb0ffc4e04500d76d7ab6f578b7ae5a",
+  "demo/gen/lora_select_cells.json": "a37a730110a3478ee4206c6662de971a8f00bef2275a80666672392bd5355497",
+  "demo/gen/packet_cells.json": "ff1399151eb84db5aa583e02f75b286ad33110e2691220efdfb88fbff1f432f7",
+  "demo/gen/claude_labels.json": "0b6f0febaa1d32302bf275bab823893db481d0386e1eccb36e52a1cbb7f95839",
+  "demo/gen/teacher_method.txt": "f41ae9b32010fcf2dbf87a7d207393eed31cf6a99294a7ed425abb98abf9b4b9",
+  "demo/gen/cells.json": "428925050d28a3d0bc23b87551aa837ae0f7daa4465ceb45f5973dbb415bfe86",
+  "demo/gen/cases.jsonl": "63e26a25e8a945b68cbcefe1b3433a1b443d7a32da93922e20498d994f7666f0",
+  "demo_out/gen_plain_scores.jsonl": "19c665fbe37758ae7d5d5aed67666b254a979e71f1f6dcab8487a16e4e15e84e",
+  "demo_out/gen_text_rows.jsonl": "cd0cf37fda1dfaf9841740936fead2fe1a51e75c2625a4be58e60397a81cc697"
+ },
+ "reused_runs": {
+  "demo_out/gen_lora/gen_claude_examples_lr1e-04_s0.json": "7e5bf734ebf094e86a02a37eb10d9455108144b6fc12f60431966e0affc3984f",
+  "demo_out/gen_lora/gen_claude_examples_lr1e-04_s1.json": "4eb9096e2ffda7f48e5e97e202762a6630f715505714ee3cf0626b25a0d814f4",
+  "demo_out/gen_lora/gen_claude_examples_lr1e-04_s2.json": "6bfe8b7db3a4b6d751f10991124ccc61b4d1d15aaec85969f0b4bea91480b6e0",
+  "demo_out/gen_lora/gen_teacher_lr1e-04_s0.json": "4f56fd938da0511b7d7aec96cdc6d0203f856a60f68b00a1fece1affd5ccb4c2",
+  "demo_out/gen_lora/gen_teacher_lr1e-04_s1.json": "e621dce11bf0e551c65495f3071d061dfba55b1203916116305aaa6e9e4f6b3d",
+  "demo_out/gen_lora/gen_teacher_lr1e-04_s2.json": "51a478c52e91ff3313c8c27237535463bd209d9e792d181ed01d7f5ddd9a2c0b"
+ },
+ "code": {
+  "demo/gen_lora.py": "8dc3d9a6adbe1318e6427c50fec48beb6ee2d3c352805d8c351b4551b35b067c",
+  "demo/gen_curve.py": "78ec7f8ada4a400cf8e2f0f7edd0083c3e75e0123db78b80d6e2bc19f51f2211",
+  "demo/gen_curve_chain.py": "52f09954f3d673fc0ab17626f6105c41fc25b2af6a01ea52dfd3e8cf10fe2649",
+  "demo/gen_curve_report.py": "9c8166913e6695bd4dc96fb2d4471dd54a46988dbf7565d7e3e0bb4a825a57ad",
+  "demo/gen_curve_freeze.py": "45025cd8a077274d58101ab06ecf9aac2b65ada5ff94d05e5e3cfa96ee089cde",
+  "demo/gen_cases.py": "cc0024b70ee5d53e4dad5966aa312200d9d53fb00248b3826ec4f6b2af01044f",
+  "demo/gen_notes.py": "eb601c0ba3fa6729219f402451b1e3706476e378efad1fa76f78466894cc3c27",
+  "refimpl/core.py": "7a83fa03261cf843fa3ed9f7b83791af61189075a8176d7d41b2f74a96a775d8",
+  "refimpl/phase3.py": "b5f83cb69b6f332c78a874605e37b145981763c6a7fce25934da3b363328aded",
+  "refimpl/local_gemma2.py": "594f82e030c5273c7c69373eae5a7fcff0d641c316efa58dce4f3a2f7a20b25d",
+  "PREDICTIONS.md": "c1ff6057da5374d3e27c48ad21a7d86a4117c95f5ffdf4657e4d0caec9f40173",
+  "GEN_CURVE_PLAN.md": "fd894d06ac5e5a0dac01e54a5114cb290c20e23f4333c481585390d118d121cf"
+ },
+ "versions": {
+  "torch": "2.4.1+cu121",
+  "transformers": "4.44.2",
+  "peft": "0.12.0"
+ }
+}

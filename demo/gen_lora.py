@@ -7,6 +7,10 @@ Arms (targets are distributions over the five option letters, per case and optio
   teacher / method_original / neutral / wrong_rule   context distillation: the model's own first-token letter distribution with the
         frozen teacher paragraph / the earlier method paragraph / the same-length neutral text / "Offer half the stated cost." as the
         Notes block, computed before training;   answer_only  uniform over the letters of the case's best offers (ceiling).
+Learning-curve runs (GEN_CURVE_PLAN.md): --n-cells N in {10, 25, 50, 100} trains on a nested type-stratified subset of the 100 training cells with
+the number of optimizer steps held at 500 (epochs = ceil(500 / N)); selection set B is scored at the optimizer steps in SCHEDULE below, patience 2 scorings;
+the N = 100 schedule (every epoch, 5 epochs) is the one the earlier runs used. Arm rule_hard = the argmax letter of the teacher-paragraph distribution
+as a one-hot target (the teacher arm is the soft version).
 Loss: cross-entropy of the answer letter at P1 against the target over the five letters, using the letters' FULL-VOCABULARY log-probs.
 LoRA rank 4, alpha 8, q/k/v/o, fp32 adapter weights, AdamW, one optimizer step per case (its fixed 3 option orders), gradient
 checkpointing, at most 5 epochs, early stopping (patience 2) on a SELECTION set of 42 train cells that are not in the training set
@@ -32,6 +36,10 @@ OUT = os.path.join(common.ROOT, "demo_out", "gen_lora")
 ADAPTERS = os.path.join(common.ROOT, "demo_out", "adapters")
 FROZEN_LABELS = "0b6f0febaa1d32302bf275bab823893db481d0386e1eccb36e52a1cbb7f95839"
 ARMS = ("teacher", "method_original", "neutral", "wrong_rule", "answer_only", "claude_examples", "cheapest_label", "shuffled_claude", "rule_hard")
+TEACHER_SHA = "f41ae9b32010fcf2dbf87a7d207393eed31cf6a99294a7ed425abb98abf9b4b9"
+# epochs after which selection set B is scored (optimizer steps = epoch x N): N=10: steps 20, 50, 100, 200, 300, 400, 500; N=25 and N=50: steps 50, 100, 200, 300, 400, 500;
+# N=100: steps 100, 200, ..., 500 (= every epoch, as in the earlier runs)
+SCHEDULE = {10: (2, 5, 10, 20, 30, 40, 50), 25: (2, 4, 8, 12, 16, 20), 50: (1, 2, 4, 6, 8, 10), 100: (1, 2, 3, 4, 5)}
 TRAIN_CELLS = os.path.join(g.OUT, "lora_train_cells.json")
 SELECT_CELLS = os.path.join(g.OUT, "lora_select_cells_B.json")   # (set A, lora_select_cells.json, is the teacher-loop feedback/winner set)
 
@@ -125,7 +133,8 @@ def main():
   if curve:
     import math
     args.max_epochs = math.ceil(args.max_steps / args.n_cells)
-  eval_every = max(1, 100 // args.n_cells)          # selection set B every 100 optimizer steps (1 epoch at N = 100)
+  eval_epochs = set(SCHEDULE[args.n_cells])
+  assert max(eval_epochs) == args.max_epochs or not curve or args.limit, "the schedule must end at the last epoch"
   os.makedirs(OUT, exist_ok=True)
   cells = {c["cell"]: c for c in json.load(open(os.path.join(g.OUT, "cells.json")))["cells"]}
   allcases = {c["cid"]: c for c in map(json.loads, open(os.path.join(g.OUT, "cases.jsonl")))}
@@ -159,12 +168,16 @@ def main():
     assert set(cl) == set(full_ids) and len(full_ids) == 100, "claude labels must cover exactly the 100 training cases"
     claude = {k: v["position"] for k, v in cl.items()}
     LABELS = {"claude_examples": claude, "cheapest_label": {k: 0 for k in claude}, "shuffled_claude": shuffled_labels(claude) if args.arm == "shuffled_claude" else None}[args.arm]
+    sub_ids = [c for c in claude if allcases[c]["cell"] in subset]
     label_info = {"labels_sha256": hashlib.sha256(json.dumps(LABELS, sort_keys=True).encode()).hexdigest(),
-                  "label_agreement_with_claude_by_type": {t: float(np.mean([LABELS[c] == claude[c] for c in claude if cid_type[c] == t])) for t in g.TYPES},
-                  "label_share_cheapest_by_type": {t: float(np.mean([LABELS[c] == 0 for c in claude if cid_type[c] == t])) for t in g.TYPES},
+                  "label_agreement_with_claude_by_type": {t: float(np.mean([LABELS[c] == claude[c] for c in sub_ids if cid_type[c] == t])) for t in g.TYPES},
+                  "label_share_cheapest_by_type": {t: float(np.mean([LABELS[c] == 0 for c in sub_ids if cid_type[c] == t])) for t in g.TYPES},
+                  "label_share_cheapest_subset": float(np.mean([LABELS[c] == 0 for c in sub_ids])),
                   "code_sha256": hashlib.sha256(open(__file__, "rb").read()).hexdigest()}
     print("label info:", json.dumps(label_info), flush=True)
     print("labels:", args.arm, "mean grid position", float(np.mean(list(LABELS.values()))), "share cheapest", float(np.mean([v == 0 for v in LABELS.values()])), flush=True)
+  if args.arm in ("teacher", "rule_hard"):
+    assert hashlib.sha256(open(os.path.join(g.OUT, "teacher_method.txt"), "rb").read()).hexdigest() == TEACHER_SHA, "teacher paragraph changed"
   model, tok = runtime.load_gemma("9b", "cuda")
   lm = LocalGemma2(model, tok)
   letter_ix = torch.tensor([tok.convert_tokens_to_ids(l) for l in LETTERS])
@@ -176,6 +189,7 @@ def main():
   # ---------------------------------------------------------------- targets
   teach = {}
   targets = {}
+  hard_price = {}                                                  # rule_hard: the set of target prices a case gets over its three orders
   for c in train:
     for oi in spec[c["cell"]]["orders"]:
       if args.arm in ("claude_examples", "cheapest_label", "shuffled_claude"):
@@ -192,6 +206,7 @@ def main():
         t = [per[0][orders[oi][j]] for j in range(5)]
         if args.arm == "rule_hard":                               # the argmax letter of the same distribution as a one-hot target (ties: lowest letter)
           k_ = int(np.argmax(t)); t = [1.0 if j == k_ else 0.0 for j in range(5)]
+          hard_price.setdefault(c["cid"], set()).add(c["grid"][orders[oi][k_]])
       targets[(c["cid"], oi)] = t
   print(f"{rid}: {len(train)} train cases ({len(targets)} examples), {len(tune_all)} tune cases; targets built ({time.time() - t_start:.0f}s)", flush=True)
   examples = []
@@ -295,8 +310,8 @@ def main():
       opt.step()
     t_train = time.time() - t
     train_time_total += t_train
-    if epoch % eval_every and epoch != args.max_epochs:
-      continue                                                   # selection set B is scored every 100 optimizer steps (every epoch at N = 100)
+    if curve and epoch not in eval_epochs:
+      continue                                                   # selection set B is scored at the steps of SCHEDULE (every epoch at N = 100)
     tp, tm = evaluate(tune_mon)
     tn = summarize(tp, tm, tune_mon)
     trs = None
@@ -327,13 +342,17 @@ def main():
   assert abs(rl - best["tune"]["soft_regret"]) < 1e-3, f"reloaded best adapter scores {rl}, expected {best['tune']['soft_regret']}"
   fp, fm = evaluate(tune_all)
   full = summarize(fp, fm, tune_all)
-  res = {**label_info, "run_id": rid, "arm": args.arm, "lr": args.lr, "seed": args.seed, "rank": args.rank, "trainable_parameters": n_train,
+  if hard_price:
+    label_info["rule_hard_cases_with_order_disagreement"] = float(np.mean([len(v) > 1 for v in hard_price.values()]))
+    label_info["rule_hard_share_cheapest_target"] = float(np.mean([min(v) == c0["grid"][0] for c0 in train for v in [hard_price[c0["cid"]]]]))
+  res = {**label_info, "git_head": __import__("subprocess").run(["git", "rev-parse", "HEAD"], cwd=common.ROOT, capture_output=True, text=True).stdout.strip(),
+         "code_sha256": hashlib.sha256(open(__file__, "rb").read()).hexdigest(), "run_id": rid, "arm": args.arm, "lr": args.lr, "seed": args.seed, "rank": args.rank, "trainable_parameters": n_train,
          "best_epoch": best["epoch"], "best_epoch_is_zero": best["epoch"] == 0, "select_best": best["tune"], "tune_monitor_best": best["tune"], "tune_full_best": full, "tune_probs_best": fp, "tune_mass_best": fm,
          "history": history, "epochs_run": len(history) - 1, "adapter_dir": os.path.relpath(save_dir, common.ROOT), "wall_s": time.time() - t_start,
          "adapter_sha256": hashlib.sha256(open(os.path.join(save_dir, "adapter_model.safetensors"), "rb").read()).hexdigest(),
          "adapter_config_sha256": hashlib.sha256(open(os.path.join(save_dir, "adapter_config.json"), "rb").read()).hexdigest(),
          "sec_per_epoch": float(np.mean([h["sec"] for h in history[1:]])) if len(history) > 1 else None,
-         "n_cells": args.n_cells, "max_epochs": args.max_epochs, "eval_every_epochs": eval_every, "optimizer_steps_per_epoch": len(cids), "best_step": best["epoch"] * len(cids),
+         "n_cells": args.n_cells, "max_epochs": args.max_epochs, "eval_epochs": sorted(eval_epochs), "patience": args.patience, "optimizer_steps_per_epoch": len(cids), "best_step": best["epoch"] * len(cids),
          "sec_training_total": train_time_total, "train_cells": sorted(c["cell"] for c in train),
          "note": "lr and early stopping use the selection set (train cells outside the training set); the tune cells are scored once at the best epoch"}
   json.dump(res, open(os.path.join(OUT, f"{rid}.json"), "w"), indent=1)
