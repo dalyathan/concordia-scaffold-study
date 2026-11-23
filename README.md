@@ -40,6 +40,7 @@ Root: make Gemma 2 9B a better negotiator by changing it internally, with Claude
 | E3 | | The seller role and side effects | ❌ Open |
 | F | Transfer | New values, price grids and wording | ✅ Passed |
 | F | | Other models (Llama 3.1 8B) | ❌ Open |
+| G | Infrastructure | Pluggable models and tasks, and numbers that can't be made up | 🟡 Related work surveyed (RELATED_SETUPS.md, Nov 23); refactor not started |
 
 Pruned: baking the vector into a bias (convenience, not knowledge), steering side effects (moot), reasoning pairs for steering, and the contest winners' reasoning (it belongs to the separate pre-registered study below).
 
@@ -58,6 +59,8 @@ Pruned: baking the vector into a bias (convenience, not knowledge), steering sid
 **Nov 23: worked examples.** A blind Claude solved the 100 training cases (by script, all correct). Trained on those, Gemma reached 0.03 on tuning cells and its offer followed the stated cost (slope 0.76, as good as the best play). One look at both generated test sets: **passed** on both, and on each harder slice.
 
 **Nov 23: the demo and what's next.** The stage tool now switches the trained add-ons on and off live; a precision bug in loading several adapters was found and fixed; free text was checked and ruled out as stage evidence; every beat is recorded for replay. Two new locked test sets of 120 cells each were generated for the next experiments. A learning-curve experiment (rules vs examples at matched data, soft vs hard targets) is running, with its predictions committed before the runs.
+
+**Nov 23: related setups (branch `refactor`).** Before refactoring the code to take any model or task, a fresh agent with no project history surveyed similar setups: evaluation harnesses (lm-evaluation-harness, Inspect, HELM), provenance tools (DVC, MLflow, Hydra) and 14 papers, each opened on its arXiv page to check title and first author. A first attempt could fetch no pages, and its unchecked output was discarded. Main lessons: structure each condition as an interchangeable "solver"; generate every reported number from stored per-case records; hash-lock all inputs; keep the scorer out of the experiment code's reach. No paper was found comparing prompt, lesson, steering and LoRA across several small models. See RELATED_SETUPS.md.
 
 ## How the work is kept honest
 
