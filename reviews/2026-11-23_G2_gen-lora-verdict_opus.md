@@ -1,0 +1,9 @@
+# G2 gen LoRA verdict, Opus (verdict: partly justified; summary of the reply)
+1. Neutral control could never be counted: neutral text in the prompt is worse than plain, so early stopping keeps epoch 0 and rule 1 is unsatisfiable; the table's "not run" is false (3 runs, all = plain). Outcome rests on rule 4 alone. Later: neutral at a fixed epoch.
+2. Rule 3 does not separate the teacher from "offer cheap": always-cheapest is as good on below cells (0.643 vs 0.614) and the teacher is significantly worse than the stated-cost rule (-0.161), which the paragraph tells the model to do (omitted from the proposed conclusion). Check: paired bootstrap on below cells and mass on the cheapest option by type.
+3. Part of the gain may be memorised repeated problems (0.417 overlapping vs 0.198 non-overlapping), but groups differ at baseline; check the in-prompt row.
+4. Ceiling reported at the hard-coded 3e-4 instead of 1e-4.
+5. Wrong-rule has 1 seed: budget accounting did not count the extra answer_only run and mean run time was pulled down by early-stopped runs.
+6. Overstatements: "equals our-method" (use: no detectable difference); slope claim and "learned to offer lower, not to track the cost" is a mechanism claim; plain's tune slope is 0.32, not 0.26; distillation copies the in-prompt text including the no-cost harm.
+7. Plan/code gaps: replication only rule 1; letter mass not per type; wrong-rule below-cell comparison missing; stale docstring.
+Freeze: whether a test look happens after a failed tune run, with which claim; adapters by sha256 (lr 1e-4 seeds 0-2); controls with equal seeds and neutral at a fixed epoch; primary endpoint and multiplicity; stronger rule 3 (beat always-cheapest on below cells); overlap stratum computed on CPU; ceiling lr 1e-4; slope CI; letter mass per type; bootstrap settings.
