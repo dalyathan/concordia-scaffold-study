@@ -5,13 +5,13 @@
 scan:
   - file: README.md
     from: "## Results at a glance"
-    ignore: ["2", "9", "1"]      # "2 coins" (a price), "9B", "Gemma 2" are labels, not results
+    ignore_contexts: ["Gemma 2", "9B", "\\b2 coins\\b", "offer 2"]      # model names and a price, not results
 claims:
   - id: plain-fails-share
     file: README.md
     text: "Not optimal in 55% of decisions"
     numbers:
-      - {shown: "55%", evidence: {kind: file_value, path: demo_out/failure_map.json, key: share_nonzero_hard_regret, scale: 100, decimals: 0}}
+      - {shown: "55%", evidence: {kind: file_value, path: demo_out/failure_map.json, sha256: 90ef5eaadda56e4c05a0f612c78abc5d74386a218187d84c8324a0ec0d7d65c7, key: share_nonzero_hard_regret, scale: 100, }}
   - id: plain-slope
     file: README.md
     text: "its offer moves 0.12 coins per coin of stated cost (should be 1)"
@@ -33,31 +33,31 @@ claims:
     file: README.md
     text: "Locked test: 0.26, same as the sentence in the prompt (0.26); plain 0.53"
     numbers:
-      - {shown: "0.26", evidence: {kind: file_value, path: demo_out/test_look.json, key: arm_soft_regret.method, decimals: 2}}
-      - {shown: "0.53", evidence: {kind: file_value, path: demo_out/test_look.json, key: arm_soft_regret.plain, decimals: 2}}
+      - {shown: "0.26", evidence: {kind: file_value, path: demo_out/test_look.json, sha256: 8b68615e9b1f785ff97d7d053f987f1c2fa8eb8cb0af3b84d91b7cc78d731243, key: arm_soft_regret.method}}
+      - {shown: "0.53", evidence: {kind: file_value, path: demo_out/test_look.json, sha256: 8b68615e9b1f785ff97d7d053f987f1c2fa8eb8cb0af3b84d91b7cc78d731243, key: arm_soft_regret.plain}}
   - id: lora-test-sentence
     file: README.md
     text: "same as the sentence in the prompt (0.26)"
     numbers:
-      - {shown: "0.26", evidence: {kind: file_value, path: demo_out/test_look.json, key: arm_soft_regret.method_text_in_prompt, decimals: 2}}
+      - {shown: "0.26", evidence: {kind: file_value, path: demo_out/test_look.json, sha256: 8b68615e9b1f785ff97d7d053f987f1c2fa8eb8cb0af3b84d91b7cc78d731243, key: arm_soft_regret.method_text_in_prompt}}
   - id: lesson-tune
     file: README.md
     text: "Tuning: 0.38 vs plain 0.66"
     numbers:
-      - {shown: "0.38", evidence: {kind: run_mean, solver: "legacy:teacher", split: tune, decimals: 2}}
-      - {shown: "0.66", evidence: {kind: run_mean, solver: "legacy:plain", split: tune, decimals: 2}}
+      - {shown: "0.38", evidence: {kind: run_mean, task: haggling, model: gemma2_9b, solver: "legacy:teacher", split: tune}}
+      - {shown: "0.66", evidence: {kind: run_mean, task: haggling, model: gemma2_9b, solver: "legacy:plain", split: tune}}
   - id: examples-same
     file: README.md
     text: "same-range 0.04 (plain 0.69)"
     numbers:
-      - {shown: "0.04", evidence: {kind: run_mean, solver: "legacy:claude_examples", split: test_same, decimals: 2}}
-      - {shown: "0.69", evidence: {kind: run_mean, solver: "legacy:plain", split: test_same, decimals: 2}}
+      - {shown: "0.04", evidence: {kind: run_mean, task: haggling, model: gemma2_9b, solver: "legacy:claude_examples", split: test_same}}
+      - {shown: "0.69", evidence: {kind: run_mean, task: haggling, model: gemma2_9b, solver: "legacy:plain", split: test_same}}
   - id: examples-hard
     file: README.md
     text: "harder 0.17 (plain 1.30)"
     numbers:
-      - {shown: "0.17", evidence: {kind: run_mean, solver: "legacy:claude_examples", split: test_hard, decimals: 2}}
-      - {shown: "1.30", evidence: {kind: run_mean, solver: "legacy:plain", split: test_hard, decimals: 2}}
+      - {shown: "0.17", evidence: {kind: run_mean, task: haggling, model: gemma2_9b, solver: "legacy:claude_examples", split: test_hard}}
+      - {shown: "1.30", evidence: {kind: run_mean, task: haggling, model: gemma2_9b, solver: "legacy:plain", split: test_hard}}
   - id: say-agreement
     file: README.md
     text: "Written offer agrees with its own pick on about a third of cases"

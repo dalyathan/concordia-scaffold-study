@@ -48,3 +48,7 @@ README "Results at a glance" (15 numbers): **10 reproduce, 5 unbacked, 0 differ.
 - The claims scan covers one README section; a number outside it is not caught. Add a `scan:` entry per section to widen it.
 - `evaluate()` accepts a lock token as a string; it does not verify the owner go. The gate is procedural (CLAUDE.md), the code only stops accidents.
 - No blind review gate was run (decision 13). A G2-style review of the claims machinery, with these files as the packet, is the sensible next step before it is relied on.
+
+## Blind review (G2, Sonnet and Opus, both "partly justified")
+
+Reviews: `reviews/2026-11-23_G2_refactor_{sonnet,opus}.md`. Triage table: end of DECISIONS.md. Fixed on this branch: locked-split once-only guard with recorded token, stricter planted cases, claims checker (model-keyed, recomputed, hash-pinned, every number listed), stronger recompute plus a test over `runs/`, generator overwrite guard, model-load guards, LoRA adapter leak. Still open and for the owner: a fresh locked split before any new look (test_same and test_hard are already spent), an owner-held pin of the protected hashes, GPU readout parity, the five unbacked README numbers, revision pins, gated-model checks.

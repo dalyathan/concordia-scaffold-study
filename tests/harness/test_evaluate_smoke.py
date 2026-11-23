@@ -78,3 +78,48 @@ def test_recompute_does_not_import_project_code():
     elif isinstance(n, ast.ImportFrom):
       mods.add((n.module or "").split(".")[0])
   assert mods <= {"json", "math", "os", "sys"}, mods
+
+
+# ---- fixes after the blind reviews
+def test_locked_look_is_recorded_once(tmp_path):
+  tok = "G3-OWNER-GO:test-only"
+  rec = run("parity", cpu.OracleSolver(), "test", tmp_path, lock_token=tok)
+  assert rec["lock_token"] == tok and rec["_written_to"]
+  with pytest.raises(evaluate.EvaluationRefused):                       # same solver config again: refused
+    run("parity", cpu.OracleSolver(), "test", tmp_path, lock_token=tok)
+  with pytest.raises(evaluate.EvaluationRefused):                       # an unrecorded look is refused
+    run("parity", cpu.UniformSolver(), "test", tmp_path, lock_token=tok, write=False)
+  run("parity", cpu.UniformSolver(), "test", tmp_path, lock_token=tok)  # a different solver is a different arm
+
+
+def test_unknown_split_is_an_error(tmp_path):
+  with pytest.raises(evaluate.EvaluationRefused):
+    run("parity", cpu.OracleSolver(), "tuen", tmp_path)
+
+
+def test_planted_cases_catch_always_offer_two_and_uniform(tmp_path):
+  assert run("haggling", cpu.OracleSolver(), "tune", tmp_path)["planted"]["all_ok"]
+  two = run("haggling", cpu.ConstantSolver(option=1), "tune", tmp_path)["planted"]
+  assert "planted-high" in two["failed"]                                 # the known failure of the plain model
+  uni = run("haggling", cpu.UniformSolver(), "tune", tmp_path)["planted"]
+  assert not uni["all_ok"] and len(uni["failed"]) == 4                  # ties do not pass
+
+
+def test_letter_mass_floor_is_recorded(tmp_path):
+  rec = run("parity", cpu.OracleSolver(), "tune", tmp_path)
+  assert rec["letter_mass"]["ok"] and rec["letter_mass"]["floor"] == 0.5
+
+
+def test_recompute_catches_probs_not_matching_order_mean(tmp_path):
+  from tools import recompute
+  rec = json.loads(json.dumps(run("parity", cpu.RandomSolver(seed=2), "tune", tmp_path)))
+  r0 = rec["cases"][0]
+  r0["probs"] = list(reversed(r0["probs"]))
+  assert any("mean of per_order_probs" in q for q in recompute.recompute(rec)[1])
+
+
+def test_generator_refuses_to_overwrite_reference():
+  import subprocess, sys
+  from conftest import ROOT
+  r = subprocess.run([sys.executable, "-m", "harness.tasks.haggling", "demo/gen"], cwd=ROOT, capture_output=True, text=True)
+  assert r.returncode != 0 and "refusing" in (r.stderr + r.stdout)

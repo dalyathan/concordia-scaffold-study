@@ -35,6 +35,13 @@ def recompute(rec):
     if any(abs(a - b) > TOL for a, b in zip(pay, r["payoffs"])):
       problems.append(f"{r['cid']}: stored payoffs differ from the independent rule")
     p = r["probs"]
+    if len(p) != len(pay):
+      problems.append(f"{r['cid']}: {len(p)} probabilities for {len(pay)} options"); continue
+    po = r.get("per_order_probs")
+    if po:
+      mean = [sum(o[i] for o in po) / len(po) for i in range(len(p))]
+      if any(abs(a - b) > 1e-9 for a, b in zip(mean, p)):
+        problems.append(f"{r['cid']}: probs differ from the mean of per_order_probs")
     if abs(sum(p) - 1) > 1e-6:
       problems.append(f"{r['cid']}: probabilities sum to {sum(p)}")
     sr = max(pay) - sum(a * b for a, b in zip(p, pay))
@@ -42,11 +49,20 @@ def recompute(rec):
       problems.append(f"{r['cid']}: soft regret {r['score']['soft_regret']} stored, {sr} recomputed")
     top = max(range(len(p)), key=lambda i: (p[i], -i))
     hr = max(pay) - pay[top]
+    if abs(hr - r["score"]["hard_regret"]) > TOL:
+      problems.append(f"{r['cid']}: hard regret {r['score']['hard_regret']} stored, {hr} recomputed")
     if not r["planted"]:
       soft.append(sr); hard.append(hr); by.setdefault(r["type"], []).append(sr)
   m = lambda x: sum(x) / len(x) if x else None
   out = {"n_cases": len(rows), "soft_regret_mean": m(soft), "hard_regret_mean": m(hard),
          "by_type": {k: {"n": len(v), "soft_regret_mean": m(v)} for k, v in sorted(by.items())}}
+  for k, v in out["by_type"].items():
+    sv = rec["summary"]["by_type"].get(k)
+    if sv is None or sv["n"] != v["n"] or abs(sv["soft_regret_mean"] - v["soft_regret_mean"]) > TOL:
+      problems.append(f"by_type {k}: stored {sv}, recomputed {v}")
+  ids = [r["cid"] for r in rec["cases"]]
+  if len(ids) != len(set(ids)):
+    problems.append("duplicate case ids")
   s = rec["summary"]
   for k in ("n_cases", "soft_regret_mean", "hard_regret_mean"):
     if (out[k] is None) != (s[k] is None) or (out[k] is not None and abs(out[k] - s[k]) > TOL):

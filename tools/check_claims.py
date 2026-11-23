@@ -5,9 +5,11 @@
   * a number is not in the claim text, or differs from what the evidence gives (rounded to `decimals`);
   * (default) a number in a scanned table section of a file is covered by no claim (a new hand-typed number).
 Evidence kinds:
-  run_mean   {solver, split, metric, [type], decimals, [scale]}   mean over all run records (runs/) with that solver and split
-                                                                   (= over seeds) of the record's per-case recomputed metric
-  file_value {path, key (dotted), decimals, [scale]}              a number in a stored JSON file
+  run_mean   {task, model, solver, split, [metric], [type], [scale]}   mean over all run records (runs/) with that task, model, solver and
+                                                                   split (= over seeds) of the metric RE-DERIVED here from each case's
+                                                                   payoffs and probs (stored scores are not trusted); `n_records` pins the count
+  file_value {path, key (dotted), sha256, [scale]}                a number in a stored JSON file whose sha256 is pinned
+  decimals are derived from the number as shown in the text ("0.4" is compared at 1 decimal).
   none       {reason}
 Reads run records directly (JSON); re-derives metrics from the per-case rows, not from the stored summary.
 
@@ -26,20 +28,33 @@ def records():
   return out
 
 
+def case_metric(x, key):
+  pay, p = x["payoffs"], x["probs"]
+  if key == "soft_regret":
+    return max(pay) - sum(a * b for a, b in zip(pay, p))
+  top = max(range(len(p)), key=lambda i: (p[i], -i))
+  return max(pay) - pay[top]
+
+
 def run_mean(ev, recs):
-  sel = [r for r in recs if r["solver"] == ev["solver"] and r["split"] == ev["split"]]
+  sel = [r for r in recs if r["task"] == ev["task"] and r["model"] == ev["model"] and r["solver"] == ev["solver"] and r["split"] == ev["split"]]
   if not sel:
-    raise LookupError(f"no run records for solver={ev['solver']} split={ev['split']}")
+    raise LookupError(f"no run records for {ev['task']}/{ev['model']}/{ev['solver']}/{ev['split']}")
+  if "n_records" in ev and len(sel) != ev["n_records"]:
+    raise LookupError(f"expected {ev['n_records']} records, found {len(sel)} (a rerun or a removed seed?)")
   vals = []
   for r in sel:
     rows = [x for x in r["cases"] if not x["planted"] and (not ev.get("type") or x["type"] == ev["type"])]
-    key = ev.get("metric", "soft_regret")
-    vals.append(sum(x["score"][key] for x in rows) / len(rows))
+    vals.append(sum(case_metric(x, ev.get("metric", "soft_regret")) for x in rows) / len(rows))
   return sum(vals) / len(vals), len(sel)
 
 
 def file_value(ev):
-  d = json.load(open(os.path.join(ROOT, ev["path"])))
+  import hashlib
+  raw = open(os.path.join(ROOT, ev["path"]), "rb").read()
+  if hashlib.sha256(raw).hexdigest() != ev["sha256"]:
+    raise LookupError(f"{ev['path']} changed since the claim was written (sha256 differs)")
+  d = json.loads(raw)
   for k in ev["key"].split("."):
     d = d[int(k)] if isinstance(d, list) else d[k]
   return float(d)
@@ -80,7 +95,7 @@ def main(argv):
     for n in c.get("numbers", []):
       ev = n["evidence"]
       shown = n["shown"]
-      if shown not in c["text"]:
+      if not re.search(r"(?<![\w.])" + re.escape(shown) + r"(?![\w]|\.\d)", c["text"]):
         problems.append(f"{cid}: number {shown!r} is not in the claim text"); continue
       if ev["kind"] == "none":
         unbacked.append(f"{cid}: {shown} -- {ev['reason']}"); continue
@@ -88,12 +103,16 @@ def main(argv):
         v = evidence_value(ev, recs)
       except Exception as e:
         problems.append(f"{cid}: evidence for {shown} unreadable: {e}"); continue
-      dec = ev["decimals"]
+      dec = len(shown.rstrip("%").split(".")[1]) if "." in shown else 0
       want = float(shown.rstrip("%"))
       if abs(round(v, dec) - want) > 10 ** -dec / 2 + 1e-12:
         problems.append(f"{cid}: text says {shown} but evidence gives {v:.6f} (rounded {round(v, dec)})")
       else:
         ok += 1
+    listed = {n["shown"] for n in c.get("numbers", [])}
+    for m in NUM.finditer(c["text"]):
+      if m.group() not in listed:
+        problems.append(f"{cid}: number {m.group()!r} appears in the claim text but has no evidence entry")
     if not c.get("numbers") and not c.get("qualitative"):
       problems.append(f"{cid}: no numbers and not marked qualitative: add evidence")
   # scan for uncovered numbers in declared sections
@@ -103,7 +122,8 @@ def main(argv):
     if span is None:
       problems.append(f"scan: heading {scan['from']!r} not found in {scan['file']}"); continue
     for m in NUM.finditer(text, *span):
-      if m.group() in scan.get("ignore", []):
+      ctx = text[max(0, m.start() - 8):m.end() + 8]
+      if any(re.search(rx, ctx) for rx in scan.get("ignore_contexts", [])):
         continue
       if not any(a <= m.start() < b for a, b in covered.get(scan["file"], [])):
         problems.append(f"uncovered number {m.group()!r} in {scan['file']} at char {m.start()} (no claim): "

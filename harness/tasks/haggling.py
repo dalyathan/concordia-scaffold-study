@@ -312,10 +312,12 @@ class HagglingTask:
     out.append({**base, "cid": "planted-nocost", "cell": "planted-nocost", "type": "no_cost", "V": 6, "line": "neutral", "C": None})
     # stated cost 4 >= resale 3: every offer pays 0 or is below cost; offers of 4+ pay (3-k)<0 -> best is any offer < 4 (payoff 0)
     out.append({**base, "cid": "planted-atabove", "cell": "planted-atabove", "type": "at_or_above", "V": 3, "line": "information", "C": 4})
+    # stated cost 5, resale 9: only an offer of 5 pays (4); "always offer 2" fails it, so the known failure of the plain model is caught
+    out.append({**base, "cid": "planted-high", "cell": "planted-high", "type": "below", "V": 9, "line": "information", "C": 5})
     return out
 
   def planted_expected(self) -> dict:
-    return {"planted-below": [1], "planted-nocost": [2], "planted-atabove": [0, 1, 2]}
+    return {"planted-below": [1], "planted-nocost": [2], "planted-atabove": [0, 1, 2], "planted-high": [4]}
 
 
 TASK = HagglingTask
@@ -329,7 +331,11 @@ def main():
 
 if __name__ == "__main__":
   import sys as _s
-  out = _s.argv[1] if len(_s.argv) > 1 else GEN_DIR
+  if len(_s.argv) < 2:
+    raise SystemExit("usage: python -m harness.tasks.haggling <scratch output dir>   (never demo/gen: it is the reference)")
+  out = _s.argv[1]
+  if os.path.realpath(out).startswith(os.path.realpath(GEN_DIR)):
+    raise SystemExit("refusing to write into demo/gen (the byte-for-byte reference, fingerprinted elsewhere)")
   os.makedirs(out, exist_ok=True)
   cells, cases, rej = build()
   json.dump({"seed": SEED, "rejected": rej, "cells": cells}, open(os.path.join(out, "cells.json"), "w"), indent=1)
