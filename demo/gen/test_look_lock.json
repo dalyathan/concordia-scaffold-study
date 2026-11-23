@@ -1,6 +1,6 @@
 {
  "script_sha256": "52ea926f2a8a787820ae332e8f5cc1df8156fa471843227190f75bb26ac27c10",
- "status": "started",
+ "status": "complete",
  "time": "2026-11-23 16:43:45 UTC",
  "code_state": {
   "files": {
@@ -19,5 +19,21 @@
    "peft": "0.12.0"
   }
  },
- "git_head": "9a9c6ddf810837bfbbfb718f811a7b1ad871511b"
+ "git_head": "9a9c6ddf810837bfbbfb718f811a7b1ad871511b",
+ "reused_files_sha256": {},
+ "score_file_sha256": {
+  "test_ceiling_s0.json": "cebe14c86d5e9c9ef9ee0086b08df38df2501c43fb901ac6f3cd91ff12ba06f6",
+  "test_cheapest_label_s0.json": "39d14de0efb5b20ee57823c4bb9b67653726e4b8e11a7d84bf45550bc92d85f2",
+  "test_claude_examples_s0.json": "913e459e7ac06575460ae820219d7948354c290398d777e8bdc6ce307e623205",
+  "test_claude_examples_s1.json": "9d931616dc04066b808c9a76df7b561f5aeb6b90f4d5832d1028bdc7c2e25cfe",
+  "test_claude_examples_s2.json": "c9b00e63fa04bc228df78d41778d6562870c26de65265afe0b6fca5d2fc88ad4",
+  "test_method_s0.json": "4fd4858f861a13390d457f40dec69f179f571dbb6c723c1faab7ee330af8b7ff",
+  "test_method_s1.json": "64e64867300f5f3330317247abfcc4ba2c9f4787167fb030f8fc8d0efee05d2a",
+  "test_method_s2.json": "bc55ac42837f59f95748720e5deba26b97196b8206c8f43f5d38f3000377bf2c",
+  "test_plain.json": "1cc1ec48fbae110041f65b6a403657a86eebf98b42e80cc0c92448f77df1158d",
+  "test_shuffled_claude_s0.json": "fba15c68a2cfcd8c1673d64df9656fa1e00bf2b5d733257f20099c496724938d",
+  "test_teacher_s0.json": "ee8512bab518ffd783d5efab8d7373c72763eb65eeec79911f4104d2bf497fda",
+  "test_teacher_s1.json": "a5961c8e776e17bfbe922f391ab0d1dc56b2861f0661bdd9f1962c949626e183",
+  "test_teacher_s2.json": "909ffe2c2f40c0b5d1ac9a4dcad7f63398d5ae197340e7c87966eea842b858a8"
+ }
 }
