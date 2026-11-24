@@ -1175,7 +1175,7 @@ Owner request: rescore the 42 gen tune cells for plain and every adapter with a 
 - The 18 original-dataset adapters have no stored A10G probabilities on the gen cells. They were rescored on their own 24 stored tune cases with `scoring.score`, as `demo/lora.py` scored them.
 - The `_smoke` folders and the `teacher_*` cache files were skipped.
 - Gate G1 was not run: a projected 55 min with already-reviewed scoring code. The actual run took 57 min of scoring plus loads, slightly over 1 h.
-- The A40 pod has no git identity or GitHub credentials (no GH_TOKEN, no gh). Commits use the repo's existing author "Claude <noreply@anthropic.com>" per commit (git config unchanged). **Push failed: the commits are local only** until a GH_TOKEN is provided.
+- The A40 pod has no git identity or GitHub credentials (no GH_TOKEN, no gh). Commits use the repo's existing author "Claude <noreply@anthropic.com>" per commit (git config unchanged). Push first failed (no credentials); retried after gh was logged in on the pod, using gh as a one-off credential helper (git config unchanged): pushed 9461afe and dfd400c to origin/demo.
 
 **Result** (`demo/hw_parity.py`, `demo/hw_parity_report.py`, `demo/hw_parity_checks.py`; `demo_out/hw_parity/`):
 - Original dataset: bit-identical for plain and all 18 adapters.
