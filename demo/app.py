@@ -75,13 +75,23 @@ class App:
   def row(self, title, c, r):
     top = floor.gen_top(r.probs)
     lost = floor.gen_hard_regret(c, top)
-    return {"setup": title, "offer": c["grid"][top], "best": "/".join(map(str, c["best_offers"])), "right": lost == 0,
+    return {"setup": title, "offer": c["grid"][top], "best": "/".join(map(str, c["best_offers"])), "right": c["grid"][top] in c["best_offers"],
             "lost": round(lost, 2), "sure": round(max(r.probs), 2), "dist": [[p, round(q, 2)] for p, q in zip(c["grid"], r.probs)]}
 
-  def prompt(self, c):
-    text = html.escape(" ".join(floor.gen_prompt_lines(c))).replace("&gt;&gt;", "<b>").replace("&lt;&lt;", "</b>")
-    at = text.find(html.escape(c["seller"]))
-    return {"facts": text[:at].strip(), "seller": text[at:].strip()}
+  def deal(self, c):
+    g = self.engine.g
+    coins = lambda n: f"{n} coin" + ("" if n == 1 else "s")
+    line = g.SELLER_LINES[c["line"]][c["wording"]].format(C=("" if c["C"] is None else coins(c["C"])))
+    return {"buyer": c["buyer"], "seller": c["seller"], "V": c["V"], "grid": c["grid"], "C": c["C"], "prior": c["prior"], "line": line}
+
+  def reaction(self, c, offer):
+    """What happens to this offer under the game's own payoff rule (refimpl via gen_cases.payoff)."""
+    if c["C"] is not None:
+      ok = offer >= c["C"]
+      return {"accepted": ok, "p_accept": 1.0 if ok else 0.0, "profit": c["V"] - offer if ok else 0}
+    lo, hi = c["prior"]
+    p = min(1.0, max(0.0, (offer - lo + 1) / (hi - lo + 1)))
+    return {"accepted": None, "p_accept": round(p, 2), "profit": c["V"] - offer}
 
   def run(self, case_label, cond_key, cost, shuffle):
     base = self.engine.cases[CASES[case_label]]
@@ -101,68 +111,96 @@ class App:
     last = rows[-1]
     self.log.write(json.dumps({"t": time.time(), "case": c["cid"], "what": what, "probs": r.probs, **last}) + "\n")
     self.log.flush()
-    return {"prompt": self.prompt(c), "rows": rows, "sec": round(sec, 2), "what": what}
+    return {"deal": self.deal(c), "rows": rows, "sec": round(sec, 2), "what": what, "cond": cond_key, "shuffled": shuffle,
+            "reaction": self.reaction(c, last["offer"]), "best_profit": round(c["best_payoff"], 2)}
 
 
 PAGE = """<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Teaching a small open model to haggle</title><style>
-body{font:16px/1.45 -apple-system,Segoe UI,Helvetica,Arial,sans-serif;max-width:900px;margin:24px auto;padding:0 16px;color:#202124}
-h1{font-size:26px;margin:0 0 8px} .note{color:#5f6368} .fake{color:#d93025;font-weight:600}
-fieldset{border:1px solid #dadce0;border-radius:8px;margin:14px 0;padding:8px 12px} legend{color:#5f6368;font-size:14px}
-label{display:inline-block;margin:4px 12px 4px 0} .case{background:#f8f9fa;border-radius:8px;padding:12px 14px;margin:14px 0}
-.seller{border-left:3px solid #dadce0;padding-left:10px;margin-top:8px} .grp{margin:12px 0 4px;font-weight:600}
-button{font:inherit;padding:10px 14px;margin:4px 6px 4px 0;border-radius:8px;border:1px solid #dadce0;background:#fff;cursor:pointer}
-button.primary{background:#1a73e8;color:#fff;border-color:#1a73e8} button:disabled{opacity:.5}
-#head{font-size:20px;margin:18px 0 8px} table{border-collapse:collapse;width:100%;margin:6px 0} th,td{text-align:left;padding:6px 8px;border-bottom:1px solid #eee}
-.no{color:#d93025;font-weight:600} .yes{color:#188038;font-weight:600} #log td{font-size:13px;color:#5f6368}
-</style></head><body>
-<h1>Teaching a small open model to haggle</h1>
-<p>Gemma 2 9B is the buyer. It can resell the item for the amount shown and must pick one of five prices. The seller accepts any offer
-at or above their cost. The best price can be calculated, so every answer is scored: <b>right</b> or not, and <b>coins lost</b>
-compared with the best price.</p><p class="WHERECLASS">WHERE</p>
-<fieldset><legend>Case</legend>CASES</fieldset>
-<fieldset><legend>What the seller says the farm charged</legend>COSTS</fieldset>
-<div class="case" id="prompt"></div>
-<div><button data-c="plain">Base model</button><button id="shuffle">Shuffle the options</button></div>
-<div class="grp">Prompt fixes</div>
-<div><button data-c="method">Add the one-sentence rule</button><button data-c="teacher">Add Claude's lesson</button></div>
-<div class="grp">LoRA adapters <span class="note">(no prompt change)</span></div>
-<div><button data-c="examples" class="primary">Adapter ON: Claude's worked examples</button><button data-c="lesson_adapter">Adapter ON: Claude's lesson</button><button data-c="plain">Adapter OFF</button></div>
-<div id="head"></div><table id="res"></table><div id="dist" class="note"></div>
-<h3>Every click, newest first</h3><table id="log"></table>
+<title>Haggle Lab</title><style>
+:root{--bg:#0f1115;--panel:#171a21;--line:#262a33;--text:#e8eaed;--muted:#9aa0a6;--me:#2563eb;--them:#2a2f3a;--good:#22c55e;--bad:#f87171}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font:15px/1.45 -apple-system,Segoe UI,Helvetica,Arial,sans-serif}
+.app{max-width:780px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+header{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;position:sticky;top:0;background:var(--bg);z-index:5}
+h1{font-size:19px;margin:0} .sub{color:var(--muted);font-size:13px} .sub.fake{color:var(--bad);font-weight:600}
+.score{display:flex;gap:6px;flex-wrap:wrap} .pill{background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:4px 10px;font-size:13px;color:var(--muted)} .pill b{color:var(--text)}
+#chat{flex:1;padding:16px;display:flex;flex-direction:column;gap:10px}
+.sys{align-self:center;text-align:center;color:var(--muted);font-size:13px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:6px 12px;max-width:92%}
+.sys b{color:var(--text)}
+.msg{display:flex;gap:8px;align-items:flex-end;max-width:86%} .msg.them{align-self:flex-start} .msg.me{align-self:flex-end;flex-direction:row-reverse}
+.av{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:13px;flex:none}
+.them .av{background:#f59e0b;color:#111} .me .av{background:var(--me);color:#fff}
+.bub{padding:9px 13px;border-radius:18px} .them .bub{background:var(--them);border-bottom-left-radius:6px} .me .bub{background:var(--me);border-bottom-right-radius:6px;color:#fff}
+.who{font-size:12px;color:var(--muted);margin:0 4px 3px} .me .who{text-align:right}
+.big{font-size:18px} .brain{display:inline-block;font-size:11px;background:rgba(255,255,255,.18);border-radius:6px;padding:1px 6px;margin-bottom:4px}
+.chips{display:flex;gap:4px;margin-top:6px;flex-wrap:wrap} .chip{font-size:12px;border-radius:8px;padding:2px 7px;background:rgba(255,255,255,.12)} .chip.pick{background:#fff;color:var(--me);font-weight:700} .chip.best{outline:2px solid var(--good)}
+.verdict{font-size:13px;margin:4px 6px 0;color:var(--muted)} .me .verdict{text-align:right} .ok{color:var(--good);font-weight:700} .no{color:var(--bad);font-weight:700}
+.typing .bub{opacity:.75} .dots span{animation:b 1s infinite;display:inline-block} .dots span:nth-child(2){animation-delay:.15s} .dots span:nth-child(3){animation-delay:.3s} @keyframes b{50%{transform:translateY(-4px)}}
+footer{position:sticky;bottom:0;background:var(--panel);border-top:1px solid var(--line);padding:10px 12px 12px}
+.row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:4px 0} .lab{font-size:12px;color:var(--muted);width:100%;margin-top:4px}
+button{font:inherit;font-size:14px;border-radius:999px;border:1px solid var(--line);background:#20242c;color:var(--text);padding:7px 12px;cursor:pointer}
+button.on{background:var(--text);color:#111;border-color:var(--text)} button.go{background:var(--me);border-color:var(--me);color:#fff;font-weight:600}
+button:disabled{opacity:.45;cursor:default}
+@media(max-width:560px){button{font-size:13px;padding:5px 10px} footer{padding:6px 10px 8px} .lab{margin-top:2px} .msg{max-width:94%}}
+</style></head><body><div class="app">
+<header><div><h1>Haggle Lab</h1><div class="sub WHERECLASS">WHERE</div></div>
+<div class="score"><span class="pill">offers <b id="n">0</b></span><span class="pill">right <b id="k">0</b></span><span class="pill">coins lost <b id="lost">0.00</b></span></div></header>
+<div id="chat"></div>
+<footer>
+<div class="lab">Deal</div><div class="row" id="cases">CASES</div>
+<div class="lab">What the seller says the farm charged</div><div class="row" id="costs">COSTS</div>
+<div class="lab">Make an offer with...</div>
+<div class="row"><button class="go" data-c="plain">Base model</button><button class="go" data-c="method">+ one-sentence rule</button><button class="go" data-c="teacher">+ Claude's lesson</button></div>
+<div class="row"><button class="go" data-c="examples">LoRA: Claude's worked examples</button><button class="go" data-c="lesson_adapter">LoRA: Claude's lesson</button><button id="shuffle">Shuffle the options, same brain</button></div>
+</footer></div>
 <script>
-let cond="plain";
-const val=n=>document.querySelector(`input[name=${n}]:checked`).value;
-async function go(c,shuffle=false){
-  cond=c; document.querySelectorAll("button").forEach(b=>b.disabled=true); document.getElementById("head").textContent="Scoring...";
+const BRAIN={plain:"Base model",method:"Prompt fix: one-sentence rule",teacher:"Prompt fix: Claude's lesson",examples:"LoRA adapter: Claude's worked examples",lesson_adapter:"LoRA adapter: Claude's lesson"};
+let st={case:document.querySelector("#cases button").dataset.v,cost:"as written",cond:"plain",dealKey:"",n:0,k:0,lost:0};
+const chat=document.getElementById("chat");
+const esc=t=>String(t).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
+const ini=n=>n.split(" ").map(w=>w[0]).join("").slice(0,2);
+function add(html){chat.insertAdjacentHTML("beforeend",html);window.scrollTo(0,document.body.scrollHeight);return chat.lastElementChild}
+function sel(group,v){document.querySelectorAll(`#${group} button`).forEach(b=>b.classList.toggle("on",b.dataset.v===v))}
+function newDeal(d){
+  add(`<div class="sys">New deal. <b>${esc(d.buyer.split(" ")[0])}</b> (our buyer) can resell for <b>${d.V} coins</b>. Prices on offer: <b>${d.grid.join(" · ")}</b>.`+
+      (d.C===null?` The farm's cost is somewhere from ${d.prior[0]} to ${d.prior[1]}.`:"")+`</div>`);
+  add(`<div class="msg them"><div class="av">${ini(d.seller)}</div><div><div class="who">${esc(d.seller)} · seller</div><div class="bub">${esc(d.line)}</div></div></div>`);
+}
+async function offer(cond,shuffle=false){
+  st.cond=cond; document.querySelectorAll("button").forEach(b=>b.disabled=true);
+  const typing=add(`<div class="msg me typing"><div class="av">AI</div><div><div class="who">Our buyer · Gemma 2 9B</div><div class="bub"><span class="dots"><span>.</span><span>.</span><span>.</span></span></div></div></div>`);
   try{
-    const r=await (await fetch("run",{method:"POST",body:JSON.stringify({case:val("case"),cost:val("cost"),cond:c,shuffle})})).json();
-    if(r.error){document.getElementById("head").textContent="Error: "+r.error;return}
-    document.getElementById("prompt").innerHTML=r.prompt.facts+'<div class="seller">'+r.prompt.seller+"</div>";
-    const last=r.rows[r.rows.length-1];
-    document.getElementById("head").innerHTML=`Gemma offers <b>${last.offer}</b>: `+(last.right?'<span class="yes">the best price</span>':`<span class="no">loses ${last.lost.toFixed(2)} coins</span> vs the best price`)+` <span class="note">(${r.sec.toFixed(2)} s)</span>`;
-    document.getElementById("res").innerHTML="<tr><th>Setup</th><th>Offer</th><th>Best</th><th>Right?</th><th>Coins lost</th><th>Sure</th></tr>"+
-      r.rows.map(x=>`<tr><td>${x.setup}</td><td><b>${x.offer}</b></td><td>${x.best}</td><td class="${x.right?"yes":"no"}">${x.right?"yes":"no"}</td><td>${x.lost.toFixed(2)}</td><td>${Math.round(x.sure*100)}%</td></tr>`).join("");
-    document.getElementById("dist").textContent="How sure it is about each price: "+last.dist.map(([p,q])=>`${p}: ${Math.round(q*100)}%`).join(" · ");
-    const log=document.getElementById("log");
-    log.insertAdjacentHTML("afterbegin",`<tr><td>${r.what}</td><td>offer ${last.offer}</td><td class="${last.right?"yes":"no"}">${last.right?"right":"lost "+last.lost.toFixed(2)}</td><td>sure ${Math.round(last.sure*100)}%</td></tr>`);
+    const r=await (await fetch("run",{method:"POST",body:JSON.stringify({case:st.case,cost:st.cost,cond,shuffle})})).json();
+    typing.remove();
+    if(r.error){add(`<div class="sys">Error: ${esc(r.error)}</div>`);return}
+    const d=r.deal, key=st.case+"|"+st.cost;
+    if(key!==st.dealKey){st.dealKey=key;newDeal(d)}
+    const x=r.rows[r.rows.length-1], best=x.best.split("/").map(Number);
+    const chips=x.dist.map(([p,q])=>`<span class="chip ${p===x.offer?"pick":""} ${best.includes(p)?"best":""}">${p}: ${Math.round(q*100)}%</span>`).join("");
+    add(`<div class="msg me"><div class="av">AI</div><div><div class="who">Our buyer · Gemma 2 9B</div><div class="bub"><div class="brain">${esc(BRAIN[cond])}${shuffle?" · options shuffled":""}</div><div class="big">I'll offer <b>${x.offer} coins</b>.</div><div class="chips">${chips}</div></div>`+
+        `<div class="verdict">${x.right?'<span class="ok">✓ best price</span>':`<span class="no">✗ ${x.lost.toFixed(2)} coins lost</span> (best: ${x.best})`} · ${Math.round(x.sure*100)}% sure · ${r.sec.toFixed(2)} s</div></div></div>`);
+    const re=r.reaction;
+    if(re.accepted===true) add(`<div class="msg them"><div class="av">${ini(d.seller)}</div><div><div class="bub">Deal! ${x.offer} coins it is.</div></div></div>`);
+    else if(re.accepted===false) add(`<div class="msg them"><div class="av">${ini(d.seller)}</div><div><div class="bub">No. That's below what I paid.</div></div></div>`);
+    else add(`<div class="sys">The seller's cost is hidden, so an offer of ${x.offer} is accepted ${Math.round(re.p_accept*100)}% of the time.</div>`);
+    st.n++; if(x.right) st.k++; st.lost+=x.lost;
+    document.getElementById("n").textContent=st.n; document.getElementById("k").textContent=st.k; document.getElementById("lost").textContent=st.lost.toFixed(2);
   }finally{document.querySelectorAll("button").forEach(b=>b.disabled=false)}
 }
-document.querySelectorAll("button[data-c]").forEach(b=>b.onclick=()=>go(b.dataset.c));
-document.getElementById("shuffle").onclick=()=>go(cond,true);
-document.querySelectorAll("input").forEach(i=>i.onchange=()=>go(cond));
-go("plain");
+document.querySelectorAll("button[data-c]").forEach(b=>b.onclick=()=>offer(b.dataset.c));
+document.getElementById("shuffle").onclick=()=>offer(st.cond,true);
+document.querySelectorAll("#cases button").forEach(b=>b.onclick=()=>{st.case=b.dataset.v;sel("cases",st.case);offer("plain")});
+document.querySelectorAll("#costs button").forEach(b=>b.onclick=()=>{st.cost=b.dataset.v;sel("costs",st.cost);offer(st.cond)});
+sel("cases",st.case); sel("costs",st.cost); offer("plain");
 </script></body></html>"""
 
 
 def radios(name, options):
-  return "".join(f'<label><input type="radio" name="{name}" value="{html.escape(o)}"{" checked" if i == 0 else ""}> {html.escape(o)}</label>'
-                 for i, o in enumerate(options))
+  return "".join(f'<button data-v="{html.escape(o)}">{html.escape(o)}</button>' for o in options)
 
 
 def serve(app, where, fake, port):
   page = (PAGE.replace("CASES", radios("case", list(CASES))).replace("COSTS", radios("cost", COSTS))
-          .replace("WHERECLASS", "fake" if fake else "note").replace("WHERE", html.escape(where))).encode()
+          .replace("WHERECLASS", "fake" if fake else "").replace("WHERE", html.escape(where))).encode()
 
   class H(BaseHTTPRequestHandler):
     def _send(self, code, body, ctype):
