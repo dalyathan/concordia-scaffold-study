@@ -1,0 +1,343 @@
+{
+ "arms": {
+  "plain": {
+   "soft": 0.6572416108190681,
+   "by_type": {
+    "below": 1.3764957496496388,
+    "at_or_above": 0.39107216760790914,
+    "no_cost": 0.2041569151996561
+   },
+   "mass": NaN,
+   "slope": [
+    0.322918602200637,
+    0.051584619780828594,
+    0.7977271071933766
+   ],
+   "hard": 0.5455026455026455
+  },
+  "always-cheapest": {
+   "soft": 0.42857142857142855,
+   "by_type": {
+    "below": 0.6428571428571429,
+    "at_or_above": 0.0,
+    "no_cost": 0.6428571428571429
+   },
+   "mass": NaN,
+   "slope": null,
+   "hard": null
+  },
+  "stated-cost rule": {
+   "soft": 0.21428571428571427,
+   "by_type": {
+    "below": 0.0,
+    "at_or_above": 0.0,
+    "no_cost": 0.6428571428571429
+   },
+   "mass": NaN,
+   "slope": null,
+   "hard": null
+  },
+  "examples-10": {
+   "soft": 0.09204594889662318,
+   "by_type": {
+    "below": 0.03259241683221593,
+    "at_or_above": 0.04947176124903866,
+    "no_cost": 0.194073668608615
+   },
+   "mass": 0.9999206094089809,
+   "slope": [
+    0.6630207033964376,
+    0.419623763486161,
+    0.933673824368457
+   ],
+   "hard": 0.04761904761904764
+  },
+  "examples-25": {
+   "soft": 0.041645612302701834,
+   "by_type": {
+    "below": 0.014918867573375263,
+    "at_or_above": 0.018653243032427554,
+    "no_cost": 0.09136472630230268
+   },
+   "mass": 0.9999352989078547,
+   "slope": [
+    0.7453497535539056,
+    0.46692704135945634,
+    0.9996792032981368
+   ],
+   "hard": 0.01904761904761908
+  },
+  "examples-50": {
+   "soft": 0.03969207056870972,
+   "by_type": {
+    "below": 0.015749518811578194,
+    "at_or_above": 0.027908816123602447,
+    "no_cost": 0.07541787677094851
+   },
+   "mass": 0.9994101207180942,
+   "slope": [
+    0.7474131690270959,
+    0.47123490043523913,
+    0.9990101454217557
+   ],
+   "hard": 2.6433881538694202e-17
+  },
+  "examples-100": {
+   "soft": 0.03206784077141946,
+   "by_type": {
+    "below": 0.008136515984378836,
+    "at_or_above": 0.011214335552664772,
+    "no_cost": 0.07685267077721478
+   },
+   "mass": 0.9994741271657972,
+   "slope": [
+    0.7559160360567866,
+    0.4928070496922635,
+    0.9961566062370569
+   ],
+   "hard": 1.586032892321652e-17
+  },
+  "rule-soft-25": {
+   "soft": 0.3779536444756444,
+   "by_type": {
+    "below": 0.5660461195441074,
+    "at_or_above": 0.13421660114617243,
+    "no_cost": 0.4335982127366533
+   },
+   "mass": 0.9978846450592513,
+   "slope": [
+    0.26680407968435027,
+    -0.047917201119426864,
+    0.6655937762155275
+   ],
+   "hard": 0.2571428571428571
+  },
+  "rule-soft-100 (3 seeds)": {
+   "soft": 0.3757045296829928,
+   "by_type": {
+    "below": 0.6141977542279153,
+    "at_or_above": 0.11876502413534959,
+    "no_cost": 0.3941508106857134
+   },
+   "mass": 0.9988615552478978,
+   "slope": [
+    0.2577918771173564,
+    -0.04476802316839762,
+    0.6544187820945001
+   ],
+   "hard": 0.3238095238095238
+  },
+  "rule-soft-100 seed 0": {
+   "soft": 0.3804447192675015,
+   "by_type": {
+    "below": 0.6197549884667778,
+    "at_or_above": 0.12179186070975052,
+    "no_cost": 0.3997873086259762
+   },
+   "mass": 0.9988190435101748,
+   "slope": [
+    0.25003831381191693,
+    -0.06402951364681178,
+    0.6601568501689719
+   ],
+   "hard": 0.34761904761904766
+  },
+  "rule-hard-25": {
+   "soft": 0.34261703263664245,
+   "by_type": {
+    "below": 0.5086813980800565,
+    "at_or_above": 0.1126731967148745,
+    "no_cost": 0.4064965031149964
+   },
+   "mass": 0.9996095885672952,
+   "slope": [
+    0.2762455500026649,
+    -0.0947187408327284,
+    0.7054466159379763
+   ],
+   "hard": 0.335978835978836
+  },
+  "rule-hard-100": {
+   "soft": 0.35106015481838665,
+   "by_type": {
+    "below": 0.5182941592773674,
+    "at_or_above": 0.1020148873892535,
+    "no_cost": 0.4328714177885393
+   },
+   "mass": 0.9993327168738377,
+   "slope": [
+    0.33633939493021053,
+    0.051586895487156066,
+    0.6782910443515974
+   ],
+   "hard": 0.30264550264550266
+  },
+  "cheapest-label-25": {
+   "soft": 0.4285975658383111,
+   "by_type": {
+    "below": 0.6429177637765119,
+    "at_or_above": 1.971039525111827e-05,
+    "no_cost": 0.6428552233431705
+   },
+   "mass": 0.9999880347207858,
+   "slope": [
+    0.0615204579015511,
+    -0.28499501382471354,
+    0.6108886666206
+   ],
+   "hard": 0.42857142857142855
+  }
+ },
+ "predictions": [
+  {
+   "id": "P1a",
+   "verdict": "FAILED",
+   "detail": "examples-10 = 0.092 (range 0.15..0.5)"
+  },
+  {
+   "id": "P1b",
+   "verdict": "FAILED",
+   "detail": "examples-25 = 0.042 (range 0.05..0.18)"
+  },
+  {
+   "id": "P1c",
+   "verdict": "HELD",
+   "detail": "examples-50 = 0.040 (range 0.03..0.09)"
+  },
+  {
+   "id": "P1m",
+   "verdict": "HELD",
+   "detail": "means 0.092 > 0.042 > 0.040; 50 - 100 = +0.008"
+  },
+  {
+   "id": "P2a",
+   "verdict": "FAILED",
+   "detail": "examples-25 mean 0.042 > 0.082: no (stated p = 0.65; Brier term 0.423)"
+  },
+  {
+   "id": "P2b",
+   "verdict": "HELD",
+   "detail": "examples-50 mean 0.040 <= 0.082: yes (stated p = 0.8; Brier term 0.040)"
+  },
+  {
+   "id": "P2c",
+   "verdict": "HELD",
+   "detail": "examples-10 mean 0.092 > 0.082: yes (stated p = 0.9; Brier term 0.010)"
+  },
+  {
+   "id": "P3a",
+   "verdict": "HELD",
+   "detail": "rule-soft-25 - examples-25 = +0.336 [+0.198, +0.535] (range 0.2..0.5)"
+  },
+  {
+   "id": "P3b",
+   "verdict": "HELD",
+   "detail": "rule-hard-25 - examples-25 = +0.301 [+0.182, +0.456] (range 0.15..0.45)"
+  },
+  {
+   "id": "P3c",
+   "verdict": "HELD",
+   "detail": "rule-soft-100 (3 seeds) - examples-100 = +0.344 [+0.198, +0.543] (range 0.2..0.5)"
+  },
+  {
+   "id": "P3d",
+   "verdict": "HELD",
+   "detail": "rule-hard-100 - examples-100 = +0.319 [+0.195, +0.484] (range 0.22..0.5)"
+  },
+  {
+   "id": "P4a",
+   "verdict": "HELD",
+   "detail": "rule-soft-25 = 0.378 (range 0.33..0.55)"
+  },
+  {
+   "id": "P4b",
+   "verdict": "HELD",
+   "detail": "rule-hard-25 = 0.343 (range 0.3..0.55)"
+  },
+  {
+   "id": "P4c",
+   "verdict": "HELD",
+   "detail": "rule-hard-100 = 0.351 (range 0.3..0.5)"
+  },
+  {
+   "id": "P4d N=25",
+   "verdict": "HELD",
+   "detail": "|rule-hard-25 - rule-soft-25| = 0.035 (limit 0.08; seed spread of rule-soft-100: 0.04340647142481524)"
+  },
+  {
+   "id": "P4e N=25",
+   "verdict": "HELD",
+   "detail": "closed share 0.11 (denominator 0.336)"
+  },
+  {
+   "id": "P4f N=25",
+   "verdict": "HELD",
+   "detail": "rule-hard-25 argmax regret 0.336 (>= 0.25)"
+  },
+  {
+   "id": "P4d N=100",
+   "verdict": "HELD",
+   "detail": "|rule-hard-100 - rule-soft-100 seed 0| = 0.029 (limit 0.08; seed spread of rule-soft-100: 0.04340647142481524)"
+  },
+  {
+   "id": "P4e N=100",
+   "verdict": "HELD",
+   "detail": "closed share 0.08 (denominator 0.348)"
+  },
+  {
+   "id": "P4f N=100",
+   "verdict": "HELD",
+   "detail": "rule-hard-100 argmax regret 0.303 (>= 0.25)"
+  },
+  {
+   "id": "P5a",
+   "verdict": "HELD",
+   "detail": "cheapest-label-25 = 0.429 (range 0.4..0.46)"
+  },
+  {
+   "id": "P5b",
+   "verdict": "HELD",
+   "detail": "cheapest-label-25 - examples-25 = +0.387 [+0.126, +0.764] (range 0.0..9.9)"
+  },
+  {
+   "id": "P6a",
+   "verdict": "HELD",
+   "detail": "slope examples-50 = 0.747 (range 0.55..0.8)"
+  },
+  {
+   "id": "P6b",
+   "verdict": "HELD",
+   "detail": "slope examples-25 = 0.745 (range 0.3..0.75)"
+  },
+  {
+   "id": "P6c",
+   "verdict": "FAILED",
+   "detail": "slope examples-10 = 0.663 (range 0.0..0.55)"
+  },
+  {
+   "id": "P6e",
+   "verdict": "HELD",
+   "detail": "slope cheapest-label-25 = 0.062 (range -0.15..0.2)"
+  },
+  {
+   "id": "P6d",
+   "verdict": "HELD",
+   "detail": "rule-arm slopes {'rule-soft-25': 0.27, 'rule-hard-25': 0.28, 'rule-soft-100 (3 seeds)': 0.26, 'rule-hard-100': 0.34} (each < 0.40)"
+  },
+  {
+   "id": "P7",
+   "verdict": "HELD",
+   "detail": "minimum letter mass 0.998"
+  },
+  {
+   "id": "P8a",
+   "verdict": "HELD",
+   "detail": "epoch-0 kept flags for examples N >= 25: [False, False, False, False, False, False, False, False, False]"
+  },
+  {
+   "id": "P8b",
+   "verdict": "FAILED",
+   "detail": "examples-10 epoch-0 kept flags [False, False, False] (stated p = 0.15; Brier term 0.022)"
+  }
+ ]
+}
