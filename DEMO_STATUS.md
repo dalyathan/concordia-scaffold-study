@@ -1166,3 +1166,53 @@ Open review points: second subset draw at N = 10/25; examples-soft arm; rule-har
 
 ### LLAMA_PREDICTIONS.md and GEN2_TEST_PLAN.md (Nov 24)
 LLAMA_PREDICTIONS.md committed before any Llama code (plain pattern, in-prompt gains of our and the teacher paragraph, steering failure, examples learning curve; each with a number and direction). GEN2_TEST_PLAN.md written for the owner's approval (frozen adapters by sha256, test2_same and test2_newkey, primary metric cell-mean soft regret per type and per novelty slice clustered by problem and by (V, grid), pass rule, curve and rules-vs-examples claims, wording). Gate G3 (Sonnet + Opus): both go-with-changes (reviews/2026-11-24_G3_gen2-plan_{sonnet,opus}.md); all points applied in section 7b (earlier look disclosed, mutually exclusive slices by type, per-seed and absolute bars, relative curve margin, estimator, primary claims, overlap strata, look-script requirements). Open: the look script is not written yet (after approval: write, record sha256, G3 on plan + script, one look). Nothing scored on test2_same or test2_newkey. Waiting for the owner's explicit go.
+
+### Hardware parity A10G → A40 (Nov 24; RunPod A40; tune cases only, no test split opened; HARDWARE_PARITY.md)
+
+Owner request: rescore the 42 gen tune cells for plain and every adapter with a run file, compare with the stored A10G numbers, give a verdict. Step 3 of the message was cut off ("set the demo default FLOOR_ADAPTER_TOL from th…").
+
+**Logged choices:**
+- The 18 original-dataset adapters have no stored A10G probabilities on the gen cells. They were rescored on their own 24 stored tune cases with `scoring.score`, as `demo/lora.py` scored them.
+- The `_smoke` folders and the `teacher_*` cache files were skipped.
+- Gate G1 was not run: a projected 55 min with already-reviewed scoring code. The actual run took 57 min of scoring plus loads, slightly over 1 h.
+- The A40 pod has no git identity or GitHub credentials (no GH_TOKEN, no gh). Commits use the repo's existing author "Claude <noreply@anthropic.com>" per commit (git config unchanged). **Push failed: the commits are local only** until a GH_TOKEN is provided.
+
+**Result** (`demo/hw_parity.py`, `demo/hw_parity_report.py`, `demo/hw_parity_checks.py`; `demo_out/hw_parity/`):
+- Original dataset: bit-identical for plain and all 18 adapters.
+- Generated dataset: overall tune soft regret changes ≤ 0.00355 in every arm. Two per-type changes exceed 0.005: 0.0071 and 0.0054. The largest per-cell change is 0.070; 13 of 2,856 top answers change.
+- Reported 3-decimal numbers change: plain 0.657 → 0.661, examples-10 0.092 → 0.091, method_original 0.373 → 0.372, teacher 0.376 → 0.375.
+- Every reported comparison keeps its sign.
+- Both GPUs are deterministic: A40 same-session and fresh-process repeats; A10G plain vs epoch-0 runs, per case.
+- Gen cases match bit for bit iff their prompts are ≤ 601 tokens (6/84) and differ iff ≥ 603. On the A40, an extra CUTLASS GEMM kernel appears at 603 tokens.
+
+**Verdict:** not hardware-only by the stated rule.
+- Cause: consistent with kernel selection by size; code and versions unchanged; the A10G side is not checkable.
+- Effect: < 0.005 overall, not per type, not bit-compatible.
+- Do not mix A10G and A40 gen numbers.
+- FLOOR_ADAPTER_TOL and floor.py are unchanged (1e-6). The demo startup check still fails on the A40.
+
+**Gate G2 (Sonnet + Opus): both "partly justified"** (reviews/2026-11-24_G2_hw-parity_{sonnet,opus}.md).
+- Applied:
+  - "arm gaps 0.01–0.6" was wrong; replaced by a table of every reported comparison on both GPUs, flagging the two gaps the size of the noise;
+  - "Cause: hardware" softened to "consistent with kernel selection; not fully identified";
+  - fresh-process A40 rerun (84/84 identical);
+  - A10G cross-process control made explicit;
+  - the 6 matching cases tabulated by type and variant (not one type);
+  - kernel profile at 601 vs 603 tokens;
+  - per-type exceedance of 0.005 stated;
+  - 0.00355 precision;
+  - mechanism wording softened (bf16 throughout; saturated rows shift less);
+  - scope stated (plain-prompt tune only);
+  - teacher_* exclusion explained;
+  - stored plain regret checked (max error 4e-16).
+- Deferred (both reviewers: keep 1e-6 and check against per-GPU references, A40 refs from A40_probs.json). This decides the demo's tolerance policy, which step 3 of the owner's message was about, and that step was cut off. Left for the owner rather than pre-empting it; under 30 min to implement.
+- Open review points:
+  - rescore one text arm on the 24 original tune cases, since notes push prompts past 603 tokens (about 1 GPU-min);
+  - fp32 lm_head on about 10 long cases, to show both GPUs are within rounding of the truth;
+  - before any test look on the pod, freeze in GEN2_TEST_PLAN.md:
+    - A40-only scoring of every comparator in the same session;
+    - a bit-for-bit tune tripwire against A40_probs.json just before the look;
+    - a recorded pip freeze, driver and SM count;
+    - a check that test prompt lengths fall within the A40-checked range;
+    - a minimum interpretable difference above the hardware shift (about 0.004 overall, 0.007 per type) and the seed spread;
+    - existing A10G-based selections (lr, epoch, examples seed) kept, not reselected.

@@ -6,11 +6,13 @@
 - `demo/hw_parity.py` rescored on the A40, with the stored code (`gen_lora.score_case`, adapters loaded as `demo/floor.py` loads them):
   - the 42 generated tune cells (84 cases: both name variants, five orders) for plain and all 33 gen adapters with a run file;
   - for the 18 original-dataset adapters with a run file, their own 24 stored tune cases (build and tuning cells; `scoring.score`, as `demo/lora.py` scored them). They have no stored A10G probabilities on the gen cells.
-- The three `_smoke` adapter folders have no run file and were skipped.
+- The three `_smoke` adapter folders have no run file and were skipped. `demo_out/lora/teacher_*.json` are teacher-target caches, not adapter runs, and were skipped.
+- **Scope:** plain-prompt first-token probabilities on tune cases only. Not rescored: text/notes rows, steering, selection set B, train cells, distillation targets, and free-text answers. Hard regret is not reported here, but 13 top-answer changes are counted.
 - No test split was opened (the script asserts the split).
 - `demo/hw_parity_report.py` compares with the stored A10G per-case probabilities: `demo_out/gen_plain_scores.jsonl`, `tune_probs_best` in each run file, and `history[0].tune_probs` for original-dataset plain. Per-case A40 probabilities are in `demo_out/hw_parity/A40_probs.json`; the summary is in `demo_out/hw_parity/summary.json`.
 - The regret code was checked: recomputing each run's A10G soft regret from its stored probabilities equals the stored value within 1e-9 for all 51 runs.
-- GPU time: 57 min of scoring, one process.
+- GPU time: 57 min of scoring, one process. Projected at 55 min from the plain pass, so gate G1 was not run (under 1 h, already-reviewed scoring code); the actual run took slightly over 1 h with model loads.
+- Follow-up checks after gate G2 (`demo/hw_parity_checks.py`, `demo_out/hw_parity/checks.json`, a few GPU minutes); results in the Cause bullet below.
 
 ## Hardware and software
 
@@ -28,18 +30,21 @@
 
 - **Original dataset:** every case is bit-identical, for plain and for all 18 adapters (max abs difference 0.0).
 - **Generated dataset:** probabilities differ.
-  - Overall tune soft regret changes by at most 0.0035 coins, in plain, the three `gen_neutral` seeds (whose best epoch 0 means a zero adapter) and `gen_teacher_lr1e-03_s0` (also an epoch-0 run). Every other gen arm changes by less than 0.0035.
+  - Overall tune soft regret changes by at most 0.00355 coins, in plain, the three `gen_neutral` seeds (whose best epoch 0 means a zero adapter) and `gen_teacher_lr1e-03_s0` (also an epoch-0 run). Every other gen arm changes by less than 0.0035.
   - **No arm reaches 0.005.**
-  - By type, the largest change is 0.0071: `gen_claude_examples_n10_lr1e-04_s1`, at_or_above.
+  - By type, two changes exceed 0.005: −0.0071 (`gen_claude_examples_n10_lr1e-04_s1`, at_or_above) and +0.0054 (plain, below).
   - The largest per-cell change is 0.070: `gen_rule_hard_n25_lr1e-04_s0`, cell V9-gC-information-C5-p2_6-w0.
   - The order-averaged top answer changes in 13 of 2,856 case-arm pairs.
-- **Repeatability on the A40:** rescoring the teacher adapter in the same session is bit-identical.
-- **Cause: hardware.**
-  - Every gen tune case whose five prompts are all 590–601 tokens long (6 of 84) matches the A10G bit for bit; every case whose prompts are 603–649 tokens (78 of 84) differs.
+- **Repeatability on each GPU:**
+  - A40: the teacher adapter repeats bit for bit in the same session, and plain repeats bit for bit in a fresh process (84/84 cases).
+  - A10G: the stored plain file (`gen_score.py`) and the four epoch-0 training runs (`gen_lora.py`, separate processes) are equal per case, bit for bit.
+  - So neither set of numbers is run-to-run noise.
+- **Cause: consistent with GPU kernel selection by matrix size; not fully identified.**
+  - Every gen tune case whose five prompts are all 590–601 tokens long (6 of 84: 2 at_or_above and 4 no_cost, variants V2, V4, V5, V8) matches the A10G bit for bit. Every case whose prompts are 603–649 tokens (78 of 84) differs. No case has 602 tokens.
   - The original-dataset prompts are 592–601 tokens: all identical.
-  - The code, model and libraries are the same. No scoring code changed after `demo_out/gen_plain_scores.jsonl` was made (git log).
-  - So the difference depends on sequence length, which fits a GPU-library kernel choice that changes with matrix size on a GPU with a different SM count. The kernel was not identified.
-  - `refimpl/local_gemma2.py` computes `lm_head` in bf16 before the float32 soft-cap and log-softmax. A tiny hidden-state difference therefore either leaves a logit unchanged or moves it a whole bf16 step (0.125 near 20). That is why changes are either exactly 0 or of order 1e-2.
+  - The model, the lock file versions and the scoring code are the same. No scoring code changed after `demo_out/gen_plain_scores.jsonl` was made (git log).
+  - On the A40 the torch profiler shows an extra CUTLASS bf16 GEMM kernel (`cutlass_80_tensorop_bf16_s16816gemm_bf16_128x256_32x3_tn_align8`) at 603 tokens that is not used at 601 tokens. Which kernels the A10G used cannot be checked now, and its driver was not recorded, so a driver difference is not excluded.
+  - Why the shifts can be large: activations are bf16 through every layer, and `refimpl/local_gemma2.py` also computes `lm_head` in bf16 before the float32 soft-cap and log-softmax. A small upstream difference can therefore move a logit by a whole bf16 step (0.125 near 20). Shifts are of order 1e-2 where probabilities are not saturated, and much smaller where they are (`gen_cheapest_label` rows: 1.8e-6 and 2.2e-4).
 
 Columns:
 - **dp:** absolute probability difference per case and price, over all cases.
@@ -115,11 +120,37 @@ Seed-averaged arm means (as quoted in the reports), A10G → A40:
 | teacher lr 1e-4 (3 seeds) | 0.3757 | 0.3751 | **yes: 0.376 → 0.375** |
 | plain (= neutral, epoch 0) | 0.6572 | 0.6608 | **yes: 0.657 → 0.661** |
 
-## Verdict: NOT hardware-only by the stated rule (G2 pending)
+Reported comparisons (seed means where the reports use them; A10G gap → A40 gap; every sign is the same on both GPUs):
+
+| Comparison | A10G | A40 |
+| --- | --- | --- |
+| examples-10 − examples-25 | +0.0504 | +0.0495 |
+| examples-25 − examples-50 | **+0.0020** | **+0.0016** |
+| examples-50 − examples-100 | +0.0076 | +0.0075 |
+| examples-25 − examples-100 (the "within 0.05" claim) | +0.0096 | +0.0091 |
+| rule-soft-25 − examples-25 | +0.3363 | +0.3358 |
+| rule-soft-100 (teacher) − examples-100 | +0.3436 | +0.3427 |
+| rule-hard-25 − rule-soft-25 | −0.0353 | −0.0342 |
+| rule-hard-100 − rule-soft-100 (3-seed mean) | −0.0246 | −0.0242 |
+| rule-soft-100 (teacher) − method_original | **+0.0028** | **+0.0030** |
+| cheapest-25 − examples-25 | +0.3870 | +0.3871 |
+| plain − rule-soft-100 | +0.2815 | +0.2857 |
+| wrong_rule − rule-soft-100 | +0.2137 | +0.2141 |
+
+The two bold gaps are about the size of the hardware shift. They were never resolved beyond hardware noise and seed spread: the examples-10 seeds alone run from 0.054 to 0.151, and the README already calls the curve flat from 25 to 100.
+
+## Verdict (after gate G2: Sonnet and Opus, both "partly justified"; points applied below)
 
 Rule: hardware-only if every arm's tune soft regret changes by < 0.005 coins **and** no reported number changes at its stated precision.
 
-- The first condition **holds**: the largest overall change is 0.0035; per type, up to 0.0071.
+**Literal outcome: not hardware-only.** There are two separate findings.
+
+1. **Cause:** consistent with GPU kernel selection by matrix size, with the code, model and library versions unchanged. Both GPUs are deterministic. The A40 kernel switch was seen between 601 and 603 tokens. The A10G side and its driver cannot be checked, so the cause is not fully identified.
+2. **Effect:** below 0.005 coins overall in every arm (largest 0.00355), but not below 0.005 per type (0.0071 and 0.0054), and not bit-compatible at reported precision.
+
+Details:
+
+- The first condition **holds** for overall soft regret: the largest change is 0.00355. Per type, two values exceed 0.005 (−0.0071 and +0.0054).
 - The second condition **fails**. What changes, at the 3-decimal precision of the reports:
   - plain gen tune soft regret 0.657 → 0.661 (`demo_out/gen_failure_map.md`, `demo_out/gen_curve_report.md`, README);
   - examples-10 0.092 → 0.091 (curve report, README);
@@ -127,9 +158,10 @@ Rule: hardware-only if every arm's tune soft regret changes by < 0.005 coins **a
   - per-run or per-type 3-decimal values for 28 of 34 gen rows (list in `demo_out/hw_parity/summary.json`, `arms_with_3dp_flips`).
 - Nothing on the original dataset changes.
 
-The cause is hardware, not code, but the numbers are not interchangeable at the reported precision. In practice:
+In practice:
 
-- **Do not mix A10G and A40 gen numbers** in one comparison; rescore the reference arm on the A40 when a new A40 number is compared with an old one.
-- **No conclusion changes.** Arm gaps are 0.01–0.6 coins and every change is below 0.004 overall. The startup tolerance of 1e-6 cannot pass for gen adapters on this GPU: the teacher arm's largest difference is 1.7e-2 over all 84 cases.
+- **Do not mix A10G and A40 generated-dataset numbers** in one comparison. Rescore every comparator on the A40 when a new A40 number is compared with an old one.
+- **No reported ordering or sign changes** (table above). Two gaps (examples-25 vs -50, teacher vs method_original) are about the size of the hardware shift and should be read as unresolved, as they already were given seed spread. Noise floor from this rescore: about ±0.004 overall per arm, ±0.007 per type, ±0.07 per cell.
+- **The startup check cannot pass on the A40 at 1e-6 for gen adapters:** the teacher arm's largest difference over all 84 cases is 1.7e-2. Raising the tolerance would also pass arms that really differ. Both reviewers suggest instead keeping 1e-6 against per-GPU references (A40 references from `A40_probs.json`, which repeat across processes).
 
-`FLOOR_ADAPTER_TOL` is **unchanged** (default 1e-6). Step 3 of the request applied only if the verdict was hardware-only, and its text was cut off ("set the demo default FLOOR_ADAPTER_TOL from th…").
+`FLOOR_ADAPTER_TOL` and `demo/floor.py` are **unchanged** (default 1e-6). Step 3 of the request applied only if the verdict was hardware-only, and its text was cut off ("set the demo default FLOOR_ADAPTER_TOL from th…"). The per-GPU reference fix is left for the owner (see DEMO_STATUS.md, open review points).

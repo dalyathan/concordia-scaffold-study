@@ -40,7 +40,8 @@ Root: make Gemma 2 9B a better negotiator by changing it internally, with Claude
 | E3 | | The seller role and side effects | ❌ Open |
 | F | Transfer | New values, price grids and wording | ✅ Passed |
 | F | | Other models (Llama 3.1 8B) | 🟡 Predictions written (LLAMA_PREDICTIONS.md, Nov 24); no Llama code yet |
-| G | Infrastructure | Move from AWS to a RunPod pod without losing artifacts | ✅ Backup in the private HF repo verified (392/392 files, 51/51 adapters, Nov 24); pod setup script ready, not yet run on a pod |
+| G | Infrastructure | Move from AWS to a RunPod pod without losing artifacts | ✅ Backup in the private HF repo verified (392/392 files, 51/51 adapters, Nov 24); pod set up on a RunPod A40 (Nov 24) |
+| G2 | | Do the numbers reproduce on the A40? | 🟡 Not bit for bit on the generated dataset: tune soft regret moves ≤ 0.004 overall (≤ 0.007 per type) and some 3-decimal numbers change (plain 0.657 → 0.661); no reported ordering changes; original dataset identical; likely a size-dependent GPU kernel choice (HARDWARE_PARITY.md, G2 partly justified, Nov 24). Demo startup check still fails on the A40 (tolerance policy left to the owner) |
 
 Pruned: baking the vector into a bias (convenience, not knowledge), steering side effects (moot), reasoning pairs for steering, and the contest winners' reasoning (it belongs to the separate pre-registered study below).
 
@@ -59,6 +60,8 @@ Pruned: baking the vector into a bias (convenience, not knowledge), steering sid
 **Nov 23: worked examples.** A blind Claude solved the 100 training cases (by script, all correct). Trained on those, Gemma reached 0.03 on tuning cells and its offer followed the stated cost (slope 0.76, as good as the best play). One look at both generated test sets: **passed** on both, and on each harder slice.
 
 **Nov 23: the demo and what's next.** The stage tool now switches the trained add-ons on and off live; a precision bug in loading several adapters was found and fixed; free text was checked and ruled out as stage evidence; every beat is recorded for replay. Two new locked test sets of 120 cells each were generated for the next experiments. A learning-curve experiment (rules vs examples at matched data, soft vs hard targets) is running, with its predictions committed before the runs.
+
+**Nov 24: hardware parity, A10G → A40.** The demo's startup check failed on the new RunPod A40, so every stored tune number was rescored there (plain and 51 adapters, 57 GPU-minutes). The original dataset reproduced bit for bit. The generated dataset did not: prompts of 603 tokens or more appear to take a different GPU kernel path (seen on the A40; the A10G side cannot be checked now), and with bf16 logits a tiny difference can move a probability by a few percent. Tune soft regret moved at most 0.004 per arm (0.007 per type), no comparison changed sign, but some three-decimal numbers changed (plain 0.657 → 0.661). Rule: A10G and A40 generated-dataset numbers are not mixed. Review (G2): partly justified; wording tightened and determinism on both GPUs checked.
 
 ## How the work is kept honest
 
