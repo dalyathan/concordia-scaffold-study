@@ -1,0 +1,38 @@
+{
+ "tables": {
+  "cases": {
+   "rows": 684,
+   "sha256": "2ae4a090aa97b646d14959904121464bcda48397716689381e6d977644d6fc96",
+   "sources": [
+    "demo/gen/cases.jsonl",
+    "demo/gen/cells.json",
+    "demo/gen/lora_train_cells.json",
+    "demo/gen/lora_select_cells_B.json"
+   ]
+  },
+  "results": {
+   "rows": 6876,
+   "sha256": "be244a6003be2fc818cf2f657bc4c32245d3641a0034cd18f2650a791fff4dc8",
+   "sources": [
+    "demo_out/gen_plain_scores.jsonl",
+    "demo_out/gen_text_rows.jsonl",
+    "demo_out/gen_lora/*.json (tune_probs_best)"
+   ]
+  },
+  "training_history": {
+   "rows": 190,
+   "sha256": "39af3c44269bc81bfaed807e320cce862c30048758a04f3f692c6942a3129b20",
+   "sources": [
+    "demo_out/gen_lora/*.json (history; its 'tune' key is selection set B)"
+   ]
+  },
+  "base_per_order": {
+   "rows": 17100,
+   "sha256": "ff9c90f96b5a31e7c461c98e679e34bbdb7b9f03b3eaeed56e84f09bb97db933",
+   "sources": [
+    "demo_out/gen_plain_scores.jsonl (per_order)"
+   ]
+  }
+ },
+ "excluded_splits": "test_same, test_hard, test2_same, test2_newkey (never read)"
+}
