@@ -32,6 +32,7 @@ Root: make Gemma 2 9B a better negotiator by changing it internally, with Claude
 | C1 | What to train on | Rules, worked examples or answers? | 🟡 Examples beat rule-trained students by about 0.3 at N = 25 and 100 (tune, Nov 24, G2 partly justified); the gap is oracle labels vs the paragraph's own behaviour, not shown to be about content alone |
 | C2 | | Soft or hard training targets? | 🟡 With the paragraph as content, hard vs soft differ by about 0.03, inside seed noise (single seeds); no examples-soft arm yet |
 | C3 | | How many examples are needed? | 🟡 25 cells reach within 0.05 of 100 (0.042 vs 0.032 on tune, one subset draw); 10 is borderline (0.092, seed spread 0.054–0.151) |
+| C4 | | Where does the trained model still fail, and does targeted data fix it? | 🟡 Lead from exploring tune results (Nov 24, not a claim): the worked-examples adapter loses 0.008–0.011 coins per decision when a cost is stated but 0.077 when it is hidden, rising with resale value (0.21 at resale 8); all 9 of its hidden-cost errors are offers that are too low. Targeted-data experiment designed, not run |
 | D1 | What the teacher adds | With few examples, do a teacher's examples or explanations beat plain answers? | ❌ Open |
 | D2 | | Does a teacher that sees the student's internals fix it better? | ❌ Open: the novel experiment |
 | D3 | | Does teaching work on a task with no calculable answer (multi-round haggle)? | ❌ Open |
@@ -63,6 +64,8 @@ Pruned: baking the vector into a bias (convenience, not knowledge), steering sid
 
 **Nov 24: hardware parity, A10G → A40.** The demo's startup check failed on the new RunPod A40, so every stored tune number was rescored there (plain and 51 adapters, 57 GPU-minutes). The original dataset reproduced bit for bit. The generated dataset did not: prompts of 603 tokens or more appear to take a different GPU kernel path (seen on the A40; the A10G side cannot be checked now), and with bf16 logits a tiny difference can move a probability by a few percent. Tune soft regret moved at most 0.004 per arm (0.007 per type), no comparison changed sign, but some three-decimal numbers changed (plain 0.657 → 0.661). Rule: A10G and A40 generated-dataset numbers are not mixed. Review (G2): partly justified; wording tightened and determinism on both GPUs checked.
 
+**Nov 24: where the trained model still fails (exploration).** Every train and tune result was exported to tidy tables for Tableau (`exports/tableau/`, built by `tools/export_tableau.py`; 6,876 scored decisions across 39 setups; the locked test sets are never read). Browsing them showed the worked-examples adapter (100 examples, 3 seeds) is nearly perfect when the seller states a cost (0.008 below resale, 0.011 at or above) but loses 0.077 coins per decision when the cost is hidden, concentrated at resale values 6–9 (0.05–0.21). All 9 of its 84 hidden-cost errors under-offer, and the training set has few such cases (15 of 33 hidden-cost training cells at resale 6–9, 3 at resale 8). These are tune numbers with 2–3 situations per resale value, so they are a lead, not a finding. Next, written before any run: a fresh locked evaluation set weighted towards hidden-cost cases, then targeted data (+30 hidden-cost, high-resale cases) against the same amount of random data at equal training steps, with predictions and a G1 review first.
+
 ## How the work is kept honest
 
 - **Cells, not cases.** A cell is one combination of resale value, price list, seller line and stated cost. Training, tuning and test never share a cell.
@@ -80,6 +83,9 @@ Pruned: baking the vector into a bias (convenience, not knowledge), steering sid
 | `demo/gen_lora.py` and its chains | LoRA training arms and controls on the generated data |
 | `demo/` (other files) | The fixed-cell ladder: splits, failure checks, text rows, steering vectors and checks, the first LoRA runs |
 | `demo/steercheck.py`, [README_DEMO.md](README_DEMO.md) | A reusable recipe for testing whether a steering vector beats a prompt and a constant |
+| `demo/app.py` | Clickable web demo (standard library only): a Marketplace-style chat beside the exact context Gemma reads, with the prompt fixes, LoRA adapters (10/25/50/100 examples) and controls; `--fake` runs without a GPU |
+| `demo/walkthrough.ipynb` | CPU-only walkthrough of the recorded results |
+| `tools/export_tableau.py`, `exports/tableau/` | Tidy CSVs of train and tune results for Tableau or pandas, with a data dictionary and manifest |
 | `demo_out/` | Saved results and reports |
 | [RESULTS_LEDGER.md](RESULTS_LEDGER.md) | Every method tried, its control, and a one-line verdict |
 | [DEMO_STATUS.md](DEMO_STATUS.md) | Running log of every step and choice |
