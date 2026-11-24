@@ -29,9 +29,9 @@ Root: make Gemma 2 9B a better negotiator by changing it internally, with Claude
 | A | Measure | Can each decision be scored, and is the failure real? | ✅ Solved |
 | A4 | | Do the multiple-choice pick and the written answer agree? | ❌ Open: they mostly don't |
 | B | Where a fix can live | Prompt, activations or weights? | ✅ Answered: prompt yes, activations no (mechanism known), weights yes |
-| C1 | What to train on | Rules, worked examples or answers? | 🟡 Examples won; comparison not yet clean |
-| C2 | | Soft or hard training targets? | 🔄 Running |
-| C3 | | How many examples are needed? | 🔄 Running (learning curve at 10, 25, 50, 100) |
+| C1 | What to train on | Rules, worked examples or answers? | 🟡 Examples beat rule-trained students by about 0.3 at N = 25 and 100 (tune, Nov 24, G2 partly justified); the gap is oracle labels vs the paragraph's own behaviour, not shown to be about content alone |
+| C2 | | Soft or hard training targets? | 🟡 With the paragraph as content, hard vs soft differ by about 0.03, inside seed noise (single seeds); no examples-soft arm yet |
+| C3 | | How many examples are needed? | 🟡 25 cells reach within 0.05 of 100 (0.042 vs 0.032 on tune, one subset draw); 10 is borderline (0.092, seed spread 0.054–0.151) |
 | D1 | What the teacher adds | With few examples, do a teacher's examples or explanations beat plain answers? | ❌ Open |
 | D2 | | Does a teacher that sees the student's internals fix it better? | ❌ Open: the novel experiment |
 | D3 | | Does teaching work on a task with no calculable answer (multi-round haggle)? | ❌ Open |
@@ -94,6 +94,8 @@ Hardware: one 24 GB GPU (an NVIDIA A10G on AWS g5.2xlarge was used). Each case t
 5. Run the tests with `PYTHONPATH=concordia:. python -m pytest -q tests/`, then follow [DEMO_RUNBOOK.md](DEMO_RUNBOOK.md) or [README_DEMO.md](README_DEMO.md).
 
 ## The pre-registered study
+
+**Nov 23–24: learning curve and rules vs examples.** Thirteen runs (7.4 GPU-hours) on nested subsets of the 100 training cells. Worked examples: 0.092 at 10 cells, 0.042 at 25, 0.040 at 50, 0.032 at 100 (tune; plain 0.657). Students distilled from the in-prompt rule paragraph stayed at 0.34–0.38 whether the target was soft or its argmax, about 0.3 worse than examples at the same size; a control trained to answer cheap equalled always-cheap. Review said the claim is oracle labels vs the paragraph's behaviour, and that 25 vs 10 rests on one subset draw and three seeds. 23 of 26 mechanical predictions held; examples needed fewer cells than predicted.
 
 `PROTOCOL.md`, `refimpl/` and `registration/` also hold a separate pre-registered study: do the reasoning texts of the top three NeurIPS 2024 Concordia contest agents lower regret in this decision, and can an activation direction reproduce the effect? The work above never uses that study's cases (name variants 1 to 14), never imports the contest agents' code, and does not edit its protocol. Contest agent code is not redistributed here.
 
