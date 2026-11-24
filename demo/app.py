@@ -63,6 +63,8 @@ class App:
   def __init__(self, engine, fake):
     self.engine, self.fake = engine, fake
     self.lock = threading.Lock()
+    self.texts = getattr(engine, "texts", None) or {
+        "teacher": open(os.path.join(engine.g.OUT, "teacher_method.txt")).read().strip(), "method": __import__("textrows").METHOD}
     os.makedirs(os.path.join(common.ROOT, "logs"), exist_ok=True)
     self.log = open(os.path.join(common.ROOT, "logs", f"app_{time.strftime('%Y%m%d_%H%M%S')}{'_fake' if fake else ''}.jsonl"), "a")
 
@@ -82,7 +84,8 @@ class App:
     g = self.engine.g
     coins = lambda n: f"{n} coin" + ("" if n == 1 else "s")
     line = g.SELLER_LINES[c["line"]][c["wording"]].format(C=("" if c["C"] is None else coins(c["C"])))
-    return {"buyer": c["buyer"], "seller": c["seller"], "V": c["V"], "grid": c["grid"], "C": c["C"], "prior": c["prior"], "line": line}
+    return {"buyer": c["buyer"], "seller": c["seller"], "V": c["V"], "grid": c["grid"], "C": c["C"], "prior": c["prior"], "line": line,
+            "line_kind": c["line"], "wording": c["wording"]}
 
   def reaction(self, c, offer):
     """What happens to this offer under the game's own payoff rule (refimpl via gen_cases.payoff)."""
@@ -98,6 +101,7 @@ class App:
     c = base if cost == "as written" else floor.gen_with_cost(base, None if cost == "says nothing" else int(cost))
     kind, arg, title = CONDITIONS[cond_key]
     plain, sec_p = self.score(c, "plain", None)
+    order = list(self.engine.g.orders()[0])
     if shuffle:
       order = list(range(5))
       while tuple(order) in [tuple(o) for o in self.engine.g.orders()]:
@@ -112,7 +116,9 @@ class App:
     self.log.write(json.dumps({"t": time.time(), "case": c["cid"], "what": what, "probs": r.probs, **last}) + "\n")
     self.log.flush()
     return {"deal": self.deal(c), "rows": rows, "sec": round(sec, 2), "what": what, "cond": cond_key, "shuffled": shuffle,
-            "reaction": self.reaction(c, last["offer"]), "best_profit": round(c["best_payoff"], 2)}
+            "reaction": self.reaction(c, last["offer"]), "best_profit": round(c["best_payoff"], 2),
+            "prompt_text": __import__("gen_notes").render_notes(c, tuple(order), self.texts[arg] if kind == "text" else None)[0],
+            "adapter": arg if kind == "adapter" else None, "averaged_orders": 1 if shuffle else len(self.engine.g.orders())}
 
 
 PAGE = """<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -194,6 +200,112 @@ sel("cases",st.case); sel("costs",st.cost); offer("plain");
 </script></body></html>"""
 
 
+MARKET = """<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Marketplace haggle: live LoRA demo</title><style>
+*{box-sizing:border-box} body{margin:0;font:15px/1.45 -apple-system,Segoe UI,Helvetica,Arial,sans-serif;background:#e9ebee;color:#1c1e21}
+.wrap{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:16px;max-width:1240px;margin:0 auto;padding:16px}
+@media(max-width:900px){.wrap{grid-template-columns:1fr}}
+.card{background:#fff;border-radius:12px;box-shadow:0 1px 2px rgba(0,0,0,.15);overflow:hidden}
+.listing{display:flex;gap:14px;padding:14px;border-bottom:1px solid #e4e6eb;align-items:center}
+.thumb{width:84px;height:84px;border-radius:10px;background:linear-gradient(135deg,#dbeafe,#fef3c7);display:grid;place-items:center;font-size:44px;flex:none}
+.lt{font-size:18px;font-weight:700} .lm{color:#65676b;font-size:13px} .tag{display:inline-block;background:#e7f3ff;color:#1b74e4;border-radius:6px;padding:1px 7px;font-size:12px;font-weight:600;margin-top:4px}
+#chat{height:560px;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:8px;background:#fff}
+.sys{align-self:center;color:#65676b;font-size:12.5px;text-align:center;max-width:90%;padding:4px 10px}
+.sys b{color:#1c1e21}
+.m{display:flex;gap:8px;align-items:flex-end;max-width:80%} .m.s{align-self:flex-start} .m.b{align-self:flex-end;flex-direction:row-reverse}
+.av{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;color:#fff;flex:none}
+.s .av{background:#e4a11b} .b .av{background:#1b74e4}
+.bub{padding:8px 12px;border-radius:18px;font-size:15px} .s .bub{background:#e4e6eb} .b .bub{background:#1b74e4;color:#fff}
+.meta{font-size:11.5px;color:#65676b;margin:2px 10px 0} .b .meta{text-align:right}
+.ok{color:#1a7f37;font-weight:700} .no{color:#d1242f;font-weight:700}
+.typing .bub{opacity:.7} .dots span{animation:bo 1s infinite;display:inline-block} .dots span:nth-child(2){animation-delay:.15s} .dots span:nth-child(3){animation-delay:.3s} @keyframes bo{50%{transform:translateY(-3px)}}
+.dev{background:#0f1115;color:#e8eaed;padding:14px;border-radius:12px;font-size:14px;align-self:start;position:sticky;top:16px}
+.dev h2{font-size:15px;margin:0 0 2px} .dev .sub{color:#9aa0a6;font-size:12px} .dev .sub.fake{color:#f87171;font-weight:700}
+.lab{color:#9aa0a6;font-size:12px;margin:12px 0 5px;text-transform:uppercase;letter-spacing:.04em}
+.btns{display:flex;flex-wrap:wrap;gap:6px}
+button{font:inherit;font-size:13px;border-radius:8px;border:1px solid #2c313a;background:#1b1f27;color:#e8eaed;padding:6px 10px;cursor:pointer}
+button.on{background:#e8eaed;color:#111;border-color:#e8eaed} button.brain{border-color:#1b74e4} button.brain.on{background:#1b74e4;color:#fff;border-color:#1b74e4}
+button:disabled{opacity:.45;cursor:default}
+table{width:100%;border-collapse:collapse;font-size:13px} td{padding:4px 2px;border-bottom:1px solid #262a33} td:last-child{text-align:right}
+.probs{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px} .p{font-size:12px;border-radius:6px;padding:2px 6px;background:#1b1f27;border:1px solid #2c313a} .p.pick{background:#1b74e4;border-color:#1b74e4} .p.best{outline:2px solid #22c55e}
+details{margin-top:10px} summary{cursor:pointer;color:#9aa0a6;font-size:12px} pre{white-space:pre-wrap;font-size:11px;line-height:1.35;background:#000;color:#cfd3d8;padding:8px;border-radius:8px;max-height:260px;overflow:auto}
+.note{color:#9aa0a6;font-size:12px;margin-top:8px}
+</style></head><body><div class="wrap">
+<div class="card"><div class="listing"><div class="thumb">&#x1F6B2;</div><div><div class="lt">Road bike, good condition</div>
+<div class="lm" id="lm"></div><span class="tag">AI buyer: Gemma 2 9B</span></div></div><div id="chat"></div></div>
+<div class="dev"><h2>Under the hood</h2><div class="sub WHERECLASS">WHERE</div>
+<div class="lab">Buyer's brain</div><div class="btns">
+<button class="brain" data-c="plain">Base model</button><button class="brain" data-c="method">+ one-sentence rule</button><button class="brain" data-c="teacher">+ Claude's lesson</button>
+<button class="brain" data-c="examples">LoRA: Claude's worked examples</button><button class="brain" data-c="lesson_adapter">LoRA: Claude's lesson</button>
+<button id="again">Ask again, options shuffled</button></div>
+<div class="lab">Deal</div><div class="btns" id="cases">CASES</div>
+<div class="lab">Seller says they paid</div><div class="btns" id="costs">COSTS</div>
+<div class="lab">Last offer, scored</div><table id="score"><tr><td colspan="2" class="note">Make an offer to see the score.</td></tr></table><div class="probs" id="probs"></div>
+<div class="lab">This session</div><table id="tally"></table>
+<details><summary>What Gemma actually reads (unchanged from the experiments)</summary><pre id="prompt"></pre></details>
+<div class="note">The chat is a reskin for the audience: <b>$10 = 1 coin</b> and the bike is the fruit in the original game. The model's input, the adapters and the scoring are exactly the ones tested. The best offer is calculated from the game's rules, so every offer gets an exact score.</div>
+</div></div>
+<script>
+const D=10, BRAIN={plain:"Base model",method:"+ one-sentence rule",teacher:"+ Claude's lesson",examples:"LoRA: worked examples",lesson_adapter:"LoRA: Claude's lesson"};
+const LINES=SELLERLINES;
+let st={case:document.querySelector("#cases button").dataset.v,cost:"as written",cond:"plain",key:"",tally:{}};
+const chat=document.getElementById("chat"), $=x=>"$"+x*D, money=v=>"$"+(+(v*D).toFixed(2));
+const esc=t=>String(t).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
+function add(h){chat.insertAdjacentHTML("beforeend",h);chat.scrollTop=chat.scrollHeight;return chat.lastElementChild}
+function mark(){document.querySelectorAll("#cases button").forEach(b=>b.classList.toggle("on",b.dataset.v===st.case));
+  document.querySelectorAll("#costs button").forEach(b=>b.classList.toggle("on",b.dataset.v===st.cost));
+  document.querySelectorAll("button.brain").forEach(b=>b.classList.toggle("on",b.dataset.c===st.cond))}
+function sellerSays(d){let t=LINES[d.line_kind][d.wording]; return t.replace("{C}",d.C===null?"":$(d.C))}
+function newDeal(d){
+  const first=d.seller.split(" ")[0];
+  document.getElementById("lm").textContent=`Listed by ${first} · Plano, TX · offers in $${D} steps: ${d.grid.map($).join(", ")}`;
+  add(`<div class="sys">You can flip this bike for <b>${$(d.V)}</b>.`+(d.C===null?` ${esc(first)} paid somewhere from ${$(d.prior[0])} to ${$(d.prior[1])}.`:"")+`</div>`);
+  add(`<div class="m s"><div class="av">${esc(first[0])}</div><div><div class="bub">Hi! Yes, it's still available.</div></div></div>`);
+  add(`<div class="m s"><div class="av">${esc(first[0])}</div><div><div class="bub">${esc(sellerSays(d))}</div></div></div>`);
+}
+async function offer(cond,shuffle=false){
+  st.cond=cond; mark(); document.querySelectorAll("button").forEach(b=>b.disabled=true);
+  const ty=add(`<div class="m b typing"><div class="av">AI</div><div><div class="bub"><span class="dots"><span>.</span><span>.</span><span>.</span></span></div></div></div>`);
+  try{
+    const r=await (await fetch("run",{method:"POST",body:JSON.stringify({case:st.case,cost:st.cost,cond,shuffle})})).json();
+    ty.remove(); if(r.error){add(`<div class="sys">Error: ${esc(r.error)}</div>`);return}
+    const d=r.deal, key=st.case+"|"+st.cost; if(key!==st.key){st.key=key;newDeal(d)}
+    const x=r.rows[r.rows.length-1], best=x.best.split("/").map(Number), first=d.seller.split(" ")[0];
+    add(`<div class="m b"><div class="av">AI</div><div><div class="bub">I can do <b>${$(x.offer)}</b>.</div><div class="meta">${esc(BRAIN[cond])}${shuffle?" · shuffled":""} · `+
+        (x.right?'<span class="ok">best offer</span>':`<span class="no">leaves ${money(x.lost)} on the table</span>`)+`</div></div></div>`);
+    const re=r.reaction;
+    if(re.accepted===true) add(`<div class="m s"><div class="av">${esc(first[0])}</div><div><div class="bub">Deal! ${$(x.offer)} it is. When can you pick it up?</div></div></div>`);
+    else if(re.accepted===false) add(`<div class="m s"><div class="av">${esc(first[0])}</div><div><div class="bub">Sorry, I paid more than that.</div></div></div>`);
+    else add(`<div class="sys">${esc(first)}'s floor is hidden: an offer of ${$(x.offer)} gets accepted ${Math.round(re.p_accept*100)}% of the time.</div>`);
+    document.getElementById("score").innerHTML=`<tr><td>Brain</td><td>${esc(BRAIN[cond])}${shuffle?" (shuffled)":""}</td></tr><tr><td>Offer</td><td><b>${$(x.offer)}</b></td></tr>`+
+      `<tr><td>Best offer (calculated)</td><td>${best.map($).join(" or ")}</td></tr><tr><td>Right?</td><td class="${x.right?"ok":"no"}">${x.right?"yes":"no"}</td></tr>`+
+      `<tr><td>Money left on the table</td><td>${money(x.lost)}</td></tr><tr><td>Confidence</td><td>${Math.round(x.sure*100)}%</td></tr>`+
+      `<tr><td>Model time</td><td>${r.sec.toFixed(2)} s${r.averaged_orders>1?` (avg of ${r.averaged_orders} option orders)`:""}</td></tr>`;
+    document.getElementById("probs").innerHTML=x.dist.map(([p,q])=>`<span class="p ${p===x.offer?"pick":""} ${best.includes(p)?"best":""}">${$(p)}: ${Math.round(q*100)}%</span>`).join("");
+    document.getElementById("prompt").textContent=r.prompt_text;
+    const t=st.tally[cond]=st.tally[cond]||{n:0,k:0,lost:0}; t.n++; if(x.right)t.k++; t.lost+=x.lost*D;
+    document.getElementById("tally").innerHTML="<tr><td><b>Brain</b></td><td><b>right / offers · avg $ lost</b></td></tr>"+Object.entries(st.tally).map(([c,v])=>`<tr><td>${esc(BRAIN[c])}</td><td>${v.k}/${v.n} · $${(v.lost/v.n).toFixed(1)}</td></tr>`).join("");
+  }finally{document.querySelectorAll("button").forEach(b=>b.disabled=false)}
+}
+document.querySelectorAll("button.brain").forEach(b=>b.onclick=()=>offer(b.dataset.c));
+document.getElementById("again").onclick=()=>offer(st.cond,true);
+document.querySelectorAll("#cases button").forEach(b=>b.onclick=()=>{st.case=b.dataset.v;offer("plain")});
+document.querySelectorAll("#costs button").forEach(b=>b.onclick=()=>{st.cost=b.dataset.v;offer(st.cond)});
+mark(); offer("plain");
+</script></body></html>"""
+
+SELLER_SKIN = {  # display only: the same line type and wording index as the case, retold as a bike sale in dollars
+    "neutral": ["Go ahead, tell me what you're thinking of paying for it.", "No rush. What would you like to offer?",
+                "Whenever you're ready, tell me what you'd pay."],
+    "pressure": ["I've got other people asking. Give me a real offer now or I'll move on.",
+                 "I'm busy, so send your best offer right now or I'll go to the next person.",
+                 "Time is money. Make a serious offer now or I'll sell it to someone else."],
+    "information": ["I'll be straight with you: I paid {C} for it, so keep that in mind.", "Between us, I paid {C} for it. Let that guide your offer.",
+                    "Full disclosure, I paid {C} for it. Name your price with that in mind."],
+}
+COST_LABELS = {"as written": "as written", "1": "$10", "2": "$20", "3": "$30", "4": "$40", "says nothing": "says nothing"}
+
+
 def radios(name, options):
   return "".join(f'<button data-v="{html.escape(o)}">{html.escape(o)}</button>' for o in options)
 
@@ -201,6 +313,10 @@ def radios(name, options):
 def serve(app, where, fake, port):
   page = (PAGE.replace("CASES", radios("case", list(CASES))).replace("COSTS", radios("cost", COSTS))
           .replace("WHERECLASS", "fake" if fake else "").replace("WHERE", html.escape(where))).encode()
+  market = (MARKET.replace("CASES", radios("case", list(CASES))).replace("COSTS", "".join(
+      f'<button data-v="{html.escape(k)}">{html.escape(v)}</button>' for k, v in COST_LABELS.items()))
+            .replace("SELLERLINES", json.dumps(SELLER_SKIN)).replace("WHERECLASS", "fake" if fake else "")
+            .replace("WHERE", html.escape(where))).encode()
 
   class H(BaseHTTPRequestHandler):
     def _send(self, code, body, ctype):
@@ -208,7 +324,8 @@ def serve(app, where, fake, port):
       self.end_headers(); self.wfile.write(body)
 
     def do_GET(self):
-      self._send(200, page, "text/html; charset=utf-8") if self.path in ("/", "/index.html") else self._send(404, b"not found", "text/plain")
+      pages = {"/": market, "/market": market, "/chat": page}
+      self._send(200, pages[self.path], "text/html; charset=utf-8") if self.path in pages else self._send(404, b"not found", "text/plain")
 
     def do_POST(self):
       if self.path.rstrip("/") != "/run":
@@ -225,7 +342,7 @@ def serve(app, where, fake, port):
     def log_message(self, *a):
       pass
 
-  print(f"serving on http://localhost:{port}  ({where})", flush=True)
+  print(f"serving on http://localhost:{port}  (Marketplace page; plain chat at /chat)  ({where})", flush=True)
   ThreadingHTTPServer(("0.0.0.0", port), H).serve_forever()
 
 
