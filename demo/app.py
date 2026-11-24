@@ -22,12 +22,7 @@ import common  # noqa: E402
 import floor  # noqa: E402
 
 import gradio as gr  # noqa: E402
-import matplotlib  # noqa: E402
 
-matplotlib.use("Agg")
-import matplotlib.pyplot as plt  # noqa: E402
-
-GREY, RED, GREEN = "#9aa0a6", "#d93025", "#188038"
 LIVE = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "gen", "demo_live_cases.json")))
 CASES = {
     "Seller states a cost below resale": LIVE["main"],
@@ -35,11 +30,11 @@ CASES = {
     "Seller's cost is above resale": LIVE["backup_at_or_above"],
 }
 CONDITIONS = {
-    "plain": ("plain", None, "Plain Gemma"),
-    "method": ("text", "method", "+ method sentence in the prompt"),
-    "teacher": ("text", "teacher", "+ Claude's lesson in the prompt"),
-    "examples": ("adapter", "examples", "Add-on ON: trained on Claude's examples"),
-    "lesson_adapter": ("adapter", "teacher", "Add-on ON: trained on Claude's lesson"),
+    "plain": ("plain", None, "Base model"),
+    "method": ("text", "method", "Prompt fix: one-sentence rule"),
+    "teacher": ("text", "teacher", "Prompt fix: Claude's lesson"),
+    "examples": ("adapter", "examples", "LoRA adapter: Claude's worked examples"),
+    "lesson_adapter": ("adapter", "teacher", "LoRA adapter: Claude's lesson"),
 }
 
 
@@ -80,18 +75,14 @@ class App:
     top = floor.gen_top(r.probs)
     return dict(offer=c["grid"][top], best=c["best_offers"], regret=floor.gen_hard_regret(c, top), soft=floor.gen_soft_regret(c, r.probs))
 
-  def figure(self, panels):
-    fig, axes = plt.subplots(1, len(panels), figsize=(5.2 * len(panels), 3.4), sharey=True, squeeze=False)
-    for ax, (title, c, r) in zip(axes[0], panels):
+  def table_md(self, rows):
+    out = ["| Setup | Offer | Best | Right? | Lost | Sure |", "|---|---|---|---|---|---|"]
+    for title, c, r in rows:
       s = self.summary(c, r)
-      colors = [GREEN if p in s["best"] else (RED if p == s["offer"] else GREY) for p in c["grid"]]
-      ax.bar([str(p) for p in c["grid"]], r.probs, color=colors)
-      ax.set_ylim(0, 1.05); ax.set_xlabel("price offered (coins)")
-      ax.spines[["top", "right"]].set_visible(False)
-      ax.set_title(f"{title}\npicks {s['offer']} (best {'/'.join(map(str, s['best']))}), expected regret {s['soft']:.2f}", fontsize=11)
-    axes[0][0].set_ylabel("probability")
-    fig.tight_layout()
-    return fig
+      ok = "yes" if s["regret"] == 0 else "**no**"
+      out.append(f"| {title} | **{s['offer']}** | {'/'.join(map(str, s['best']))} | {ok} | {s['regret']:.2f} | {max(r.probs):.0%} |")
+    dist = " · ".join(f"{p}: {q:.0%}" for p, q in zip(rows[-1][1]["grid"], rows[-1][2].probs))
+    return "\n".join(out) + f"\n\nHow sure it is about each price ({rows[-1][0]}): {dist}"
 
   def prompt_md(self, c):
     lines = floor.gen_prompt_lines(c)
@@ -101,7 +92,7 @@ class App:
 
   def record(self, what, c, r, sec):
     s = self.summary(c, r)
-    row = [what, s["offer"], "/".join(map(str, s["best"])), round(s["regret"], 2), round(s["soft"], 2), round(sec, 2)]
+    row = [what, s["offer"], "/".join(map(str, s["best"])), "yes" if s["regret"] == 0 else "no", round(s["regret"], 2), f"{max(r.probs):.0%}", round(sec, 2)]
     self.log.write(json.dumps({"t": time.time(), "case": c["cid"], "what": what, "probs": r.probs, **s}) + "\n")
     self.log.flush()
     return row
@@ -116,19 +107,19 @@ class App:
       while tuple(order) in [tuple(o) for o in self.engine.g.orders()]:
         random.shuffle(order)
       r, sec = self.score(c, kind, arg, [tuple(order)])
-      title = f"{title}, options shuffled"
-      what = f"{CONDITIONS[cond_key][2]} | shuffled {[c['grid'][i] for i in order]}"
+      title = f"{title} (options shuffled)"
+      what = f"{CONDITIONS[cond_key][2]} | options shuffled {[c['grid'][i] for i in order]}"
     else:
       r, sec = (plain, sec_p) if cond_key == "plain" else self.score(c, kind, arg)
       what = CONDITIONS[cond_key][2]
     if cost != "as written":
       what += f" | seller cost: {cost}"
-    panels = [(title, c, r)] if cond_key == "plain" and not shuffle else [("Plain Gemma", c, plain), (title, c, r)]
+    rows = [(title, c, r)] if cond_key == "plain" and not shuffle else [("Base model", c, plain), (title, c, r)]
     s = self.summary(c, r)
-    verdict = "best offer" if s["regret"] == 0 else f"leaves {s['regret']:.2f} coins on the table"
-    result = f"### Gemma offers **{s['offer']}** ({verdict}). Scored in {sec:.2f} s."
+    verdict = "the best price" if s["regret"] == 0 else f"loses {s['regret']:.2f} coins vs the best price"
+    result = f"### Gemma offers **{s['offer']}**: {verdict}. ({sec:.2f} s)"
     history = [self.record(what, c, r, sec)] + (history or [])
-    return self.prompt_md(c), self.figure(panels), result, history
+    return self.prompt_md(c), self.table_md(rows), result, history
 
 
 def build(app, header):
@@ -139,18 +130,20 @@ def build(app, header):
     cost = gr.Radio(["as written", "1", "2", "3", "4", "says nothing"], value="as written", label="What the seller says the farm charged")
     prompt = gr.Markdown()
     with gr.Row():
-      b_plain = gr.Button("Plain Gemma", variant="secondary")
+      b_plain = gr.Button("Base model", variant="secondary")
       b_shuffle = gr.Button("Shuffle the options")
-    gr.Markdown("**Fixes**")
+    gr.Markdown("**Prompt fixes**")
     with gr.Row():
-      b_method = gr.Button("Add the method sentence")
+      b_method = gr.Button("Add the one-sentence rule")
       b_teacher = gr.Button("Add Claude's lesson")
-      b_ex = gr.Button("Add-on ON: Claude's examples", variant="primary")
-      b_lesson = gr.Button("Add-on ON: Claude's lesson")
-      b_off = gr.Button("Add-on OFF")
+    gr.Markdown("**LoRA adapters** (no prompt change)")
+    with gr.Row():
+      b_ex = gr.Button("Adapter ON: Claude's worked examples", variant="primary")
+      b_lesson = gr.Button("Adapter ON: Claude's lesson")
+      b_off = gr.Button("Adapter OFF")
     result = gr.Markdown()
-    plot = gr.Plot()
-    table = gr.Dataframe(headers=["what", "offer", "best", "regret", "expected regret", "seconds"], label="Every click, newest first",
+    plot = gr.Markdown()
+    table = gr.Dataframe(headers=["setup", "offer", "best price", "correct?", "coins lost", "confidence", "seconds"], label="Every click, newest first",
                          interactive=False, wrap=True)
     last = gr.State("plain")
 
@@ -190,9 +183,9 @@ def main():
     where = f"Running live: Gemma 2 9B with three LoRA add-ons on {torch.cuda.get_device_name(0)}."
   header = (
       "# Teaching a small open model to haggle\n"
-      "Gemma 2 9B is the buyer. It can resell the item for the amount shown and picks one of five prices. The seller accepts any offer "
-      "at or above their cost. **Regret** is the coins left on the table compared with the best offer; zero is perfect. "
-      "Green bar: best offer. Red bar: Gemma's pick.\n\n" + where)
+      "Gemma 2 9B is the buyer. It can resell the item for the amount shown and must pick one of five prices. The seller accepts any "
+      "offer at or above their cost. The best price can be calculated, so every answer is scored: **correct** or not, and "
+      "**coins lost** compared with the best price.\n\n" + where)
   build(App(engine, args.fake), header).queue(default_concurrency_limit=1).launch(server_name="0.0.0.0", server_port=args.port,
                                                                                 share=args.share)
 
