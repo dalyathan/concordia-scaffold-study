@@ -33,11 +33,56 @@ CASES = {
 COSTS = ["as written", "1", "2", "3", "4", "says nothing"]
 CONDITIONS = {
     "plain": ("plain", None, "Base model"),
+    "ex10": ("adapter", "ex10", "LoRA: 10 worked examples"),
+    "ex25": ("adapter", "ex25", "LoRA: 25 worked examples"),
+    "ex50": ("adapter", "ex50", "LoRA: 50 worked examples"),
+    "scrambled": ("adapter", "scrambled", "LoRA: scrambled answers (control)"),
+    "cheapest": ("adapter", "cheapest", "LoRA: always-cheapest labels (control)"),
     "method": ("text", "method", "Prompt fix: written rule"),
     "teacher": ("text", "teacher", "Prompt fix: Claude's lesson"),
     "examples": ("adapter", "examples", "LoRA adapter: Claude's worked examples"),
     "lesson_adapter": ("adapter", "teacher", "LoRA adapter: Claude's lesson"),
 }
+
+
+def best_seed(prefix):
+  """Of seeds 0-2, the run with the lowest selection-set soft regret (same rule as floor.pick_examples_run; no test data)."""
+  runs = [json.load(open(os.path.join(common.ROOT, "demo_out", "gen_lora", f"{prefix}_s{sd}.json"))) for sd in (0, 1, 2)]
+  return min(runs, key=lambda r: (r["select_best"]["soft_regret"], r["seed"]))["run_id"]
+
+
+EXTRA = {  # adapters added for the learning-curve and control buttons; each is checked against its stored tune scores at startup
+    "ex10": lambda: best_seed("gen_claude_examples_n10_lr1e-04"),
+    "ex25": lambda: best_seed("gen_claude_examples_n25_lr1e-04"),
+    "ex50": lambda: best_seed("gen_claude_examples_n50_lr1e-04"),
+    "scrambled": lambda: "gen_shuffled_claude_lr1e-04_s0",
+    "cheapest": lambda: "gen_cheapest_label_lr1e-04_s0",
+}
+
+
+def load_extra(engine):
+  """Load the EXTRA adapters into the engine's PEFT model with exact fp32 weights, then verify each one reproduces its stored
+  tune probabilities on the same two tune cases GenEngine checks (tolerance FLOOR_ADAPTER_TOL, default 1e-6)."""
+  from peft.utils import set_peft_model_state_dict
+  from safetensors.torch import load_file
+  tol = float(os.environ.get("FLOOR_ADAPTER_TOL", "1e-6"))
+  check = [c for c in engine.cases.values() if c["split"] == "tune"][:2]
+  worst = 0.0
+  for name, pick in EXTRA.items():
+    run = pick()
+    rec = json.load(open(os.path.join(common.ROOT, "demo_out", "gen_lora", run + ".json")))
+    d = os.path.join(common.ROOT, rec["adapter_dir"])
+    engine.peft.load_adapter(d, adapter_name=name)
+    rr = set_peft_model_state_dict(engine.peft, load_file(os.path.join(d, "adapter_model.safetensors")), adapter_name=name)
+    assert not getattr(rr, "unexpected_keys", None), f"adapter {name}: unexpected keys"
+    engine.peft.set_adapter(name)
+    for c in check:
+      diff = max(abs(a - b) for a, b in zip(engine.score_case(engine.lm, c)[0], rec["tune_probs_best"][c["cid"]]))
+      worst = max(worst, diff)
+      assert diff < tol, f"adapter {name} ({run}) does not reproduce its stored tune probabilities (max diff {diff}, tolerance {tol})"
+    engine.runs[name] = run
+  engine.peft.eval()
+  print(f"extra adapters loaded and checked: { {n: engine.runs[n] for n in EXTRA} } (max diff {worst:.2e}, tolerance {tol:g})", flush=True)
 
 
 class FakeEngine:
@@ -130,7 +175,7 @@ class App:
             "reaction": self.reaction(c, last["offer"]), "best_profit": round(c["best_payoff"], 2),
             "prompt_text": (pt := __import__("gen_notes").render_notes(c, tuple(order), self.texts[arg] if kind == "text" else None)[0]),
             "warmup": [m["content"] for m in self.warmup(pt)], "lora": self.lora.get(arg) if kind == "adapter" else None,
-            "adapter": arg if kind == "adapter" else None, "averaged_orders": 1 if shuffle else len(self.engine.g.orders())}
+            "adapter": arg if kind == "adapter" else None, "adapter_run": getattr(self.engine, "runs", {}).get(arg) if kind == "adapter" else None, "averaged_orders": 1 if shuffle else len(self.engine.g.orders())}
 
 
 PAGE = """<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -251,7 +296,10 @@ details summary{cursor:pointer;color:#65676b;font-size:12.5px}
 </style></head><body>
 <div class="top"><h1>What Gemma sees, and what changes</h1><span class="sub WHERECLASS">WHERE</span>
 <div class="bar">
-<div class="grp"><span class="gl">Brain</span><button class="brain" data-c="plain">Base model</button><button class="brain" data-c="method">+ written rule</button><button class="brain" data-c="teacher">+ Claude's lesson</button><button class="brain" data-c="examples">LoRA: worked examples</button><button class="brain" data-c="lesson_adapter">LoRA: Claude's lesson</button><button id="again">Shuffle options</button></div>
+<div class="grp"><span class="gl">Prompt</span><button class="brain" data-c="plain">Base model</button><button class="brain" data-c="method">+ written rule</button><button class="brain" data-c="teacher">+ Claude's lesson</button></div>
+<div class="grp"><span class="gl">LoRA on Claude's worked examples</span><button class="brain" data-c="ex10">10</button><button class="brain" data-c="ex25">25</button><button class="brain" data-c="ex50">50</button><button class="brain" data-c="examples">100</button></div>
+<div class="grp"><span class="gl">LoRA, other training</span><button class="brain" data-c="lesson_adapter">Claude's lesson</button><button class="brain" data-c="scrambled">scrambled answers</button><button class="brain" data-c="cheapest">always-cheapest</button></div>
+<div class="grp"><button id="again">Shuffle options</button></div>
 <div class="grp"><span class="gl">Deal</span><span id="cases">CASES</span></div>
 <div class="grp"><span class="gl">Seller paid</span><span id="costs">COSTS</span></div>
 </div></div>
@@ -266,7 +314,7 @@ details summary{cursor:pointer;color:#65676b;font-size:12.5px}
 <div class="foot"><table id="tally"></table><div>The chat on the left is a reskin for the audience ($10 = 1 coin, bike = fruit). The context on the right is the real input, unchanged from the experiments.</div></div>
 </div></div>
 <script>
-const D=10, BRAIN={plain:"Base model",method:"+ written rule",teacher:"+ Claude's lesson",examples:"LoRA: worked examples",lesson_adapter:"LoRA: Claude's lesson"};
+const D=10, BRAIN={plain:"Base model",method:"+ written rule",teacher:"+ Claude's lesson",ex10:"LoRA: 10 worked examples",ex25:"LoRA: 25 worked examples",ex50:"LoRA: 50 worked examples",examples:"LoRA: 100 worked examples",lesson_adapter:"LoRA: Claude's lesson",scrambled:"LoRA: scrambled answers (control)",cheapest:"LoRA: always-cheapest labels (control)"};
 const LINES=SELLERLINES;
 let st={case:document.querySelector("#cases button").dataset.v,cost:"as written",cond:"plain",key:"",tally:{}};
 const chat=document.getElementById("chat"), $=x=>"$"+x*D, money=v=>"$"+(+(v*D).toFixed(2));
@@ -289,8 +337,9 @@ function showContext(r,x,cond,shuffle){
   document.getElementById("ctitle").textContent="Context sent to Gemma: "+BRAIN[cond]+(shuffle?" (options shuffled)":"");
   const chg=document.getElementById("chg");
   const m=r.prompt_text.match(/Notes:\n([\s\S]*?)\n\nQuestion:/);
-  if(r.lora){chg.className="chg lora";chg.innerHTML=`<b>Context: identical to the base model.</b> The change is inside the model: a LoRA adapter with ${(r.lora.params/1e6).toFixed(1)} million trained numbers, ${(100*r.lora.params/r.lora.base).toFixed(2)}% of Gemma's ${(r.lora.base/1e9).toFixed(1)} billion.`}
-  else if(cond==="examples"||cond==="lesson_adapter"){chg.className="chg lora";chg.innerHTML="<b>Context: identical to the base model.</b> The change is inside the model: a small rank-4 LoRA adapter."}
+  const run=r.adapter_run?` <span style="opacity:.7">(${esc(r.adapter_run)})</span>`:"";
+  if(r.lora){chg.className="chg lora";chg.innerHTML=`<b>Context: identical to the base model.</b> The change is inside the model: ${esc(BRAIN[cond].replace("LoRA: ","a LoRA adapter trained on "))}, ${(r.lora.params/1e6).toFixed(1)} million trained numbers (${(100*r.lora.params/r.lora.base).toFixed(2)}% of Gemma's ${(r.lora.base/1e9).toFixed(1)} billion).`+run}
+  else if(r.adapter){chg.className="chg lora";chg.innerHTML=`<b>Context: identical to the base model.</b> The change is inside the model: ${esc(BRAIN[cond].replace("LoRA: ","a rank-4 LoRA adapter trained on "))}.`+run}
   else if(m){chg.className="chg text";chg.innerHTML=`<b>Context: base + ${m[1].split(/\s+/).length} words added</b> (green below). Same model weights.`}
   else {chg.className="chg none";chg.innerHTML="<b>Context: the base case.</b> No notes, no adapter."}
   let h=esc(r.prompt_text);
@@ -395,6 +444,7 @@ def main():
     engine, where = FakeEngine(), "FAKE SCORES: no model loaded. This only shows the page layout."
   else:
     engine = floor.GenEngine("9b")
+    load_extra(engine)
     import torch
     where = f"Running live: Gemma 2 9B with three LoRA adapters on {torch.cuda.get_device_name(0)}."
   serve(App(engine, args.fake), where, args.fake, args.port)
