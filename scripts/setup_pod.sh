@@ -46,6 +46,8 @@ print("torch", torch.__version__, "transformers", transformers.__version__, "pef
 PYEOF
 
 echo "== 4. adapters and other backed-up files from the private HF repo"
+# Some pod images set HF_HUB_ENABLE_HF_TRANSFER=1; turn it off unless hf_transfer is installed in the venv (download speed only, no effect on results)
+.venv/bin/python -c "import hf_transfer" 2>/dev/null || export HF_HUB_ENABLE_HF_TRANSFER=0
 .venv/bin/python - <<'PYEOF'
 import os
 from huggingface_hub import snapshot_download
