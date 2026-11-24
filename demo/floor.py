@@ -721,12 +721,17 @@ class GenEngine:
     with self.peft.disable_adapter():
       for c in check:
         assert self.score_case(self.lm, c)[0].tolist() == self.plain_before[c["cid"]], "adapter off does not match plain bit for bit"
+    # Tolerance: 1e-6 on the machine that trained the adapters (A10G). On other GPUs, summation order shifts the last digits;
+    # set FLOOR_ADAPTER_TOL (e.g. 1e-4) there. The value used and the largest difference are printed.
+    tol = float(os.environ.get("FLOOR_ADAPTER_TOL", "1e-6"))
+    worst = 0.0
     for n in names:
       self.peft.set_adapter(n)
       for c in check:
         d = max(abs(a - b) for a, b in zip(self.score_case(self.lm, c)[0], stored[runs[n]]["tune_probs_best"][c["cid"]]))
-        assert d < 1e-6, f"adapter {n} does not reproduce its stored tune probabilities (max diff {d})"
-    print(f"startup checks passed: adapter off == plain bit for bit; adapters {runs} reproduce stored tune probabilities", flush=True)
+        worst = max(worst, d)
+        assert d < tol, f"adapter {n} does not reproduce its stored tune probabilities (max diff {d}, tolerance {tol})"
+    print(f"startup checks passed: adapter off == plain bit for bit; adapters {runs} reproduce stored tune probabilities (max diff {worst:.2e}, tolerance {tol:g})", flush=True)
 
   def score(self, c, condition, orders=None):
     import contextlib
