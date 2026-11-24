@@ -7,3 +7,5 @@
 - Dropped (re-creatable): models/ (pinned downloads), .venv (lock), concordia/ (pinned clone), caches. Not backed up: ~/.claude session data (private, not needed to run).
 - Backed up (when the upload runs): adapters, adapters_check, dead_ends, logs, activation caches, tune_partial, agents_zip, banks.
 - setup_pod.sh requires "startup checks passed" from the demo tool and asserts exact torch/transformers/peft versions; Ampere 48 GB (A40/RTX A6000) preferred for parity with the A10G.
+
+- Nov 24 05:34 UTC: the HF artifact repo was found private with 394 files; I re-ran scripts/verify_backup.py (392/392 matched, 51/51 adapters matched, 0 mismatched, 0 missing, copy deleted) and changed the migration verdict to "safe to stop AWS: yes".

@@ -44,7 +44,10 @@ To finish: put a write-enabled token in HF_TOKEN (a fine-grained token with "wri
 4. GEN2 test look (GEN2_TEST_PLAN.md) only after: the owner's explicit go, the look script written with its sha256 in the plan, and gate G3 on plan plus script. The look runs once from demo, using the adapters in demo_out/adapters verified in step 1.
 
 ## 7. Final report
-**Safe to stop AWS: NO.**
-Reason: the adapters (0.96 GB, 51 of them with run-file hashes), logs, activation caches and agents_zip exist only on this machine. The upload to the private HF repo failed with 403 because the HF_TOKEN here is read-only, and no other destination was used. Everything else is safe: all code, results and plans are in git (demo, main and stage1-wip pushed; refactor is on origin), and models, venv and concordia are re-creatable from pins.
-To make it "yes": run the three commands in section 4 with a write-enabled HF_TOKEN; `verify_backup.py` must print "ALL MATCH" (files matched 392 of 392, adapters 51 of 51) and delete its temporary copy. Counts so far: remote check not possible (files 392 in the manifest, matched 0 remotely, mismatched 0, missing 392); local check: matched 392, mismatched 0, missing 0; adapters vs run files: matched 51, mismatched 0, missing 0.
-Branch state at the end of this step: see the commit that contains this file; checks run: `git status` clean and `git log origin/<b>..<b>` empty for demo, main, stage1-wip.
+**Safe to stop AWS: yes** (updated Nov 24, 05:34 UTC).
+Reason: the private HF repo `dalyathan/concordia-scaffold-artifacts` now exists (private: True, 394 files = the 392 manifest files plus artifacts_manifest.json and .gitattributes). The upload was made outside this session (with a write-enabled token, after the 403 described in section 4); I did not see it happen, so I re-ran the verification myself with the read-only token: `scripts/verify_backup.py` downloaded the repo into a temporary directory and printed:
+- manifest check: files 392, matched 392, mismatched 0, missing 0
+- adapters vs run files: matched 51, mismatched 0, missing 0
+- ALL MATCH; the temporary copy was deleted.
+Code, results and plans are in git (demo, main and stage1-wip pushed; refactor is on origin); models, venv and concordia are re-creatable from pins. Caveat: the manifest was built Nov 24 before the final logs/ writes, so any log lines written to logs/ after that moment are not in the backup; the progress loop writes to the tracked demo_out/lora_progress.jsonl, not to logs/.
+Section 4's "Status: the upload did not happen" describes the state when it was written and is superseded by this paragraph.

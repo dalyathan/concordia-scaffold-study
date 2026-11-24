@@ -40,7 +40,7 @@ Root: make Gemma 2 9B a better negotiator by changing it internally, with Claude
 | E3 | | The seller role and side effects | ❌ Open |
 | F | Transfer | New values, price grids and wording | ✅ Passed |
 | F | | Other models (Llama 3.1 8B) | 🟡 Predictions written (LLAMA_PREDICTIONS.md, Nov 24); no Llama code yet |
-| G | Infrastructure | Move from AWS to a RunPod pod without losing artifacts | 🟡 Pod setup script and manifest ready; upload to the private HF repo blocked (token is read-only), so not yet safe to stop AWS |
+| G | Infrastructure | Move from AWS to a RunPod pod without losing artifacts | ✅ Backup in the private HF repo verified (392/392 files, 51/51 adapters, Nov 24); pod setup script ready, not yet run on a pod |
 
 Pruned: baking the vector into a bias (convenience, not knowledge), steering side effects (moot), reasoning pairs for steering, and the contest winners' reasoning (it belongs to the separate pre-registered study below).
 
@@ -98,7 +98,7 @@ Hardware: one 24 GB GPU (an NVIDIA A10G on AWS g5.2xlarge was used). Each case t
 
 **Nov 23–24: learning curve and rules vs examples.** Thirteen runs (7.4 GPU-hours) on nested subsets of the 100 training cells. Worked examples: 0.092 at 10 cells, 0.042 at 25, 0.040 at 50, 0.032 at 100 (tune; plain 0.657). Students distilled from the in-prompt rule paragraph stayed at 0.34–0.38 whether the target was soft or its argmax, about 0.3 worse than examples at the same size; a control trained to answer cheap equalled always-cheap. Review said the claim is oracle labels vs the paragraph's behaviour, and that 25 vs 10 rests on one subset draw and three seeds. 23 of 26 mechanical predictions held; examples needed fewer cells than predicted.
 
-**Nov 24: migration prep.** Inventory of everything outside git (adapters 0.96 GB, logs, activation caches; models, venv and concordia are re-creatable), a manifest with sha256 for 392 files, a pod setup script that pins torch 2.4.1 / transformers 4.44.2 / peft 0.12.0 and reruns the adapter startup check, and a job order for the pod (setup, adapter check, Gemma parity, then the test look). The upload to a private Hugging Face repo failed because the token on the machine is read-only; the 51 adapters verified locally against their run files. See MIGRATION.md.
+**Nov 24: migration prep.** Inventory of everything outside git (adapters 0.96 GB, logs, activation caches; models, venv and concordia are re-creatable), a manifest with sha256 for 392 files, a pod setup script that pins torch 2.4.1 / transformers 4.44.2 / peft 0.12.0 and reruns the adapter startup check, and a job order for the pod (setup, adapter check, Gemma parity, then the test look). The first upload attempt failed because the token on the machine was read-only; the repo was then filled from outside and re-verified here (392 of 392 files, 51 of 51 adapters). See MIGRATION.md.
 
 `PROTOCOL.md`, `refimpl/` and `registration/` also hold a separate pre-registered study: do the reasoning texts of the top three NeurIPS 2024 Concordia contest agents lower regret in this decision, and can an activation direction reproduce the effect? The work above never uses that study's cases (name variants 1 to 14), never imports the contest agents' code, and does not edit its protocol. Contest agent code is not redistributed here.
 
