@@ -162,7 +162,10 @@ def readout_checks(J):
     x = json.load(open(fg)); dg = x.get("diagnostic", {})
     out.append(f"| free answer (greedy, no prefix) vs prefixed first-token argmax, same train cases | {x['n_prompts']} | 'Answer: (' | - | "
                f"parse rate {x['parse_rate']:.2f}; agreement {x['agreement_on_parsed']:.2f} (frozen threshold {x['thresholds']['agree']}) -> "
-               f"{'PASS' if x['pass'] else 'FAIL: stop before step 4'} |")
+               f"{'PASS' if x['pass'] else 'below the pre-registered threshold; reported limitation after the owner restated the check (post-hoc, DECISIONS.md L18)'} |")
+    pm = J.get("readout/probe_train_prefix_answer.json")
+    if pm is not None:
+      out.append(f"| format-only check (owner restatement, post-hoc): prefixed letter mass >= 0.95 on the probe cases | 100 | 'Answer: (' | {pm:.3f} | {'PASS' if pm >= 0.95 else 'FAIL'} |")
     if dg:
       out += ["", f"Diagnostic (after the check; does not change the stop): free answer vs the unprefixed renormalised first-token argmax "
                   f"{dg['agreement_free_vs_noprefix_renormalised']:.2f} (chance {dg['chance_agreement']}); the free answer names the same price in all five option orders "
