@@ -48,7 +48,11 @@ class Backend:
         spec.hf_id, torch_dtype=getattr(torch, spec.dtype), attn_implementation=spec.attn_implementation,
         low_cpu_mem_usage=True, device_map={"": 0} if device == "cuda" else None, **kw).eval()
     self.layers = self._resolve(spec.layer_module.rsplit(".{i}", 1)[0])
-    self.revision = revision or getattr(self.model.config, "_commit_hash", None)
+    loaded = getattr(self.model.config, "_commit_hash", None)
+    if revision is not None and loaded is not None and loaded != revision:
+      raise RuntimeError(f"{spec.name}: loaded weights are at commit {loaded}, the config pins {revision}")
+    self.revision = loaded or revision
+    self.revision_requested = revision
     self.pinned = revision is not None
     self.peft = None
 
@@ -125,6 +129,7 @@ class NotesSolver(_HFSolver):
   name = "notes"
   def __init__(self, backend, lesson_path: str):
     super().__init__(backend); self.path = lesson_path; self.text = open(lesson_path).read()
+    assert self.text == self.text.strip() and self.text, f"{lesson_path}: lesson text must be non-empty with no surrounding whitespace"
     self.name = "notes:" + os.path.splitext(os.path.basename(lesson_path))[0]   # one solver name per text, so records of arms never pool
   def user_text(self, task, case, order):
     text, l2o = task.render(case, order)

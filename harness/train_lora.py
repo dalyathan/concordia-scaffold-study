@@ -226,6 +226,8 @@ def main(argv=None):
   bad = 0
   rng = np.random.Generator(np.random.PCG64(a.seed))
   cids = [c["cid"] for c in train]
+  control = a.arm != "claude_examples"
+  stopped_at = None
   t_train = 0.0
   model.train()
   for epoch in range(1, epochs + 1):
@@ -245,23 +247,42 @@ def main(argv=None):
                     "sec_training_epoch": time.time() - t0})
     print(f"epoch {epoch} (step {epoch * len(cids)}): loss {np.mean(losses):.4f}; select_B soft {s['soft_regret_mean']:.4f} (mass {m:.3f}); "
           f"{time.time() - t0:.0f}s", flush=True)
+    if stopped_at is not None:
+      continue                                    # control arms only: training goes on to the last epoch; selection is closed
     if s["soft_regret_mean"] < best["soft"] - 1e-9:
       best = {"epoch": epoch, "soft": s["soft_regret_mean"], "probs": p}
       peft_model.save_pretrained(save_dir); bad = 0
     else:
       bad += 1
       if bad >= a.patience:
+        stopped_at = epoch
         print(f"early stop after epoch {epoch} (best epoch {best['epoch']})", flush=True)
-        break
+        if not control:
+          break
+  if control:
+    # G1 (2026-11-27): a control whose selection keeps epoch 0 would just be the plain model, so every control is also scored as its
+    # last-epoch adapter with no selection (LLAMA_PLAN.md: R3/R4 use this version when best_is_epoch_zero is true)
+    peft_model.save_pretrained(save_dir + "_last")
+    last_epoch = epoch
   from safetensors.torch import load_file
   from peft.utils import set_peft_model_state_dict
+  last_rec = None
+  if control:
+    info_last = {"training": {**label_info, "version": "last epoch, no selection", "last_epoch": last_epoch, "early_stop_epoch": stopped_at,
+                              "history": history, "train_cases": cids, "trainable_parameters": n_train}}
+    live_last = _LiveAdapter(b, save_dir + "_last", info_last, f"{a.arm}_n{a.n_cells}_lr{a.lr:.0e}_last")
+    model.eval()
+    last_rec = evaluate(task, live_last, "tune", a.seed, spec, config={"run": rid + "_last", "training": info_last["training"]}, directory=a.runs,
+                        write=not a.limit)
+    print("last-epoch record:", last_rec.get("_written_to"), f"tune {last_rec['summary']['soft_regret_mean']:.4f}", flush=True)
   rr = set_peft_model_state_dict(peft_model, load_file(os.path.join(save_dir, "adapter_model.safetensors")))
   assert not getattr(rr, "unexpected_keys", None), "best-adapter reload: unexpected keys"
   s_re, _, p_re = score_select()
   assert abs(s_re["soft_regret_mean"] - best["soft"]) < 1e-3, f"reloaded best adapter scores {s_re['soft_regret_mean']}, expected {best['soft']}"
   info["training"].update({"best_epoch": best["epoch"], "best_step": best["epoch"] * len(cids), "best_is_epoch_zero": best["epoch"] == 0,
                            "select_B_best_soft_regret": best["soft"], "select_B_reload_soft_regret": s_re["soft_regret_mean"],
-                           "epochs_max": epochs, "eval_epochs": sorted(eval_epochs), "patience": a.patience, "optimizer_steps_per_epoch": len(cids),
+                           "epochs_max": epochs, "early_stop_epoch": stopped_at, "control_arm": control,
+                           "version": "selected on select_B (early stopping, epoch 0 a candidate)", "eval_epochs": sorted(eval_epochs), "patience": a.patience, "optimizer_steps_per_epoch": len(cids),
                            "trainable_parameters": n_train, "path_check_max_nats": worst, "history": history, "sec_training_total": t_train,
                            "train_cases": cids, "recipe": "demo/gen_lora.py recipe; see harness/train_lora.py docstring"})
   model.eval()
