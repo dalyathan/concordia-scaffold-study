@@ -1,0 +1,5414 @@
+{
+ "cases": [
+  {
+   "cid": "V2-gA-information-C3-p3_7-w1-n0",
+   "inputs": {
+    "C": 3,
+    "V": 2,
+    "buyer": "Fenna Walnutlea",
+    "cell": "V2-gA-information-C3-p3_7-w1",
+    "cid": "V2-gA-information-C3-p3_7-w1-n0",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "grid_name": "A",
+    "line": "information",
+    "name_variant": 0,
+    "opening": 4,
+    "prior": [
+     3,
+     7
+    ],
+    "seller": "Wystan Walnutlea",
+    "slice": "tune",
+    "split": "tune",
+    "type": "at_or_above",
+    "wording": 1
+   },
+   "letter_mass": [
+    0.7165845032762717
+   ],
+   "payoffs": [
+    0.0,
+    0.0,
+    -1.0,
+    -2.0,
+    -3.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.38938551061411164,
+    0.6037937213245587,
+    0.002007146519735381,
+    0.004427741784765351,
+    0.0003858797568288983
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 0.012020269359752776,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "at_or_above"
+  },
+  {
+   "cid": "V2-gA-information-C3-p3_7-w1-n1",
+   "inputs": {
+    "C": 3,
+    "V": 2,
+    "buyer": "Rhea Hazelmere",
+    "cell": "V2-gA-information-C3-p3_7-w1",
+    "cid": "V2-gA-information-C3-p3_7-w1-n1",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "grid_name": "A",
+    "line": "information",
+    "name_variant": 1,
+    "opening": 0,
+    "prior": [
+     3,
+     7
+    ],
+    "seller": "Lorcan Limeharbor",
+    "slice": "tune",
+    "split": "tune",
+    "type": "at_or_above",
+    "wording": 1
+   },
+   "letter_mass": [
+    0.7341182772861992
+   ],
+   "payoffs": [
+    0.0,
+    0.0,
+    -1.0,
+    -2.0,
+    -3.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.38497090508630366,
+    0.6051918422185171,
+    0.0028700623426269724,
+    0.006433112336606428,
+    0.0005340780159458355
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 0.017338521063677333,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "at_or_above"
+  },
+  {
+   "cid": "V2-gA-information-C4-p2_10-w1-n0",
+   "inputs": {
+    "C": 4,
+    "V": 2,
+    "buyer": "Sorrel Raspberrow",
+    "cell": "V2-gA-information-C4-p2_10-w1",
+    "cid": "V2-gA-information-C4-p2_10-w1-n0",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "grid_name": "A",
+    "line": "information",
+    "name_variant": 0,
+    "opening": 4,
+    "prior": [
+     2,
+     10
+    ],
+    "seller": "Merrick Sloefield",
+    "slice": "tune",
+    "split": "tune",
+    "type": "at_or_above",
+    "wording": 1
+   },
+   "letter_mass": [
+    0.6749179838557391
+   ],
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    -2.0,
+    -3.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.19597115767721734,
+    0.46368727914110963,
+    0.33909528313518367,
+    0.0006977741882166716,
+    0.0005485058582727088
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1,
+     2
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 0.0030410659512514694,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "at_or_above"
+  },
+  {
+   "cid": "V2-gA-information-C4-p2_10-w1-n1",
+   "inputs": {
+    "C": 4,
+    "V": 2,
+    "buyer": "Alma Nectarvale",
+    "cell": "V2-gA-information-C4-p2_10-w1",
+    "cid": "V2-gA-information-C4-p2_10-w1-n1",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "grid_name": "A",
+    "line": "information",
+    "name_variant": 1,
+    "opening": 0,
+    "prior": [
+     2,
+     10
+    ],
+    "seller": "Merrick Medlarwick",
+    "slice": "tune",
+    "split": "tune",
+    "type": "at_or_above",
+    "wording": 1
+   },
+   "letter_mass": [
+    0.6683199605004924
+   ],
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    -2.0,
+    -3.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.22922783543669062,
+    0.5667309319661589,
+    0.20286787709220314,
+    0.0005841146714566553,
+    0.0005892408334907456
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1,
+     2
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 0.002935951843385547,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "at_or_above"
+  },
+  {
+   "cid": "V2-gB-information-C2-p1_10-w1-n0",
+   "inputs": {
+    "C": 2,
+    "V": 2,
+    "buyer": "Marnie Damsonhill",
+    "cell": "V2-gB-information-C2-p1_10-w1",
+    "cid": "V2-gB-information-C2-p1_10-w1-n0",
+    "grid": [
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "grid_name": "B",
+    "line": "information",
+    "name_variant": 0,
+    "opening": 3,
+    "prior": [
+     1,
+     10
+    ],
+    "seller": "Zane Papayafold",
+    "slice": "tune",
+    "split": "tune",
+    "type": "at_or_above",
+    "wording": 1
+   },
+   "letter_mass": [
+    0.7577322092643971
+   ],
+   "payoffs": [
+    0.0,
+    -1.0,
+    -2.0,
+    -3.0,
+    -4.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.19461314381050324,
+    0.7986581448493434,
+    0.004318129150722254,
+    0.0017656853579640578,
+    0.0006448968314670962
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 1.0,
+    "soft_regret": 0.8151710465505485,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "at_or_above"
+  },
+  {
+   "cid": "V2-gB-information-C2-p1_10-w1-n1",
+   "inputs": {
+    "C": 2,
+    "V": 2,
+    "buyer": "Calla Vineyard",
+    "cell": "V2-gB-information-C2-p1_10-w1",
+    "cid": "V2-gB-information-C2-p1_10-w1-n1",
+    "grid": [
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "grid_name": "B",
+    "line": "information",
+    "name_variant": 1,
+    "opening": 4,
+    "prior": [
+     1,
+     10
+    ],
+    "seller": "Lorcan Cherrydale",
+    "slice": "tune",
+    "split": "tune",
+    "type": "at_or_above",
+    "wording": 1
+   },
+   "letter_mass": [
+    0.6672811919724566
+   ],
+   "payoffs": [
+    0.0,
+    -1.0,
+    -2.0,
+    -3.0,
+    -4.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.20000846772560127,
+    0.7868086474827685,
+    0.00941275125927652,
+    0.0029144653793773496,
+    0.0008556681529763256
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 1.0,
+    "soft_regret": 0.8178002187513589,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "at_or_above"
+  },
+  {
+   "cid": "V2-gB-information-C4-p1_5-w1-n0",
+   "inputs": {
+    "C": 4,
+    "V": 2,
+    "buyer": "Briar Hazelmere",
+    "cell": "V2-gB-information-C4-p1_5-w1",
+    "cid": "V2-gB-information-C4-p1_5-w1-n0",
+    "grid": [
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "grid_name": "B",
+    "line": "information",
+    "name_variant": 0,
+    "opening": 0,
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Lorcan Cherrydale",
+    "slice": "tune",
+    "split": "tune",
+    "type": "at_or_above",
+    "wording": 1
+   },
+   "letter_mass": [
+    0.8617294817516251
+   ],
+   "payoffs": [
+    0.0,
+    0.0,
+    -2.0,
+    -3.0,
+    -4.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.1926685916181817,
+    0.8065718162670563,
+    0.00037351791276158574,
+    0.00022429457783847617,
+    0.00016177962416173366
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 0.0020670380556855345,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "at_or_above"
+  },
+  {
+   "cid": "V2-gB-information-C4-p1_5-w1-n1",
+   "inputs": {
+    "C": 4,
+    "V": 2,
+    "buyer": "Fenna Damsonhill",
+    "cell": "V2-gB-information-C4-p1_5-w1",
+    "cid": "V2-gB-information-C4-p1_5-w1-n1",
+    "grid": [
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "grid_name": "B",
+    "line": "information",
+    "name_variant": 1,
+    "opening": 1,
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Merrick Sloefield",
+    "slice": "tune",
+    "split": "tune",
+    "type": "at_or_above",
+    "wording": 1
+   },
+   "letter_mass": [
+    0.8562447033237042
+   ],
+   "payoffs": [
+    0.0,
+    0.0,
+    -2.0,
+    -3.0,
+    -4.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.19814615316579376,
+    0.8010948375302964,
+    0.00026373676193199816,
+    0.0003343700666902398,
+    0.00016090247528750536
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 0.002174193625084737,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "at_or_above"
+  },
+  {
+   "cid": "V2-gC-information-C4-p2_10-w0-n0",
+   "inputs": {
+    "C": 4,
+    "V": 2,
+    "buyer": "Zelda Sloefield",
+    "cell": "V2-gC-information-C4-p2_10-w0",
+    "cid": "V2-gC-information-C4-p2_10-w0-n0",
+    "grid": [
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "grid_name": "C",
+    "line": "information",
+    "name_variant": 0,
+    "opening": 4,
+    "prior": [
+     2,
+     10
+    ],
+    "seller": "Emrys Cherrydale",
+    "slice": "tune",
+    "split": "tune",
+    "type": "at_or_above",
+    "wording": 0
+   },
+   "letter_mass": [
+    0.5488926339098646
+   ],
+   "payoffs": [
+    0.0,
+    -2.0,
+    -3.0,
+    -4.0,
+    -5.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.7151408136593543,
+    0.0021979273992502107,
+    0.10023391656713962,
+    0.18135961181419638,
+    0.0010677305600595031
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 1.0358747045570023,
+    "top_is_best": true,
+    "top_option": 0
+   },
+   "split": "tune",
+   "type": "at_or_above"
+  },
+  {
+   "cid": "V2-gC-information-C4-p2_10-w0-n1",
+   "inputs": {
+    "C": 4,
+    "V": 2,
+    "buyer": "Gwyn Raspberrow",
+    "cell": "V2-gC-information-C4-p2_10-w0",
+    "cid": "V2-gC-information-C4-p2_10-w0-n1",
+    "grid": [
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "grid_name": "C",
+    "line": "information",
+    "name_variant": 1,
+    "opening": 0,
+    "prior": [
+     2,
+     10
+    ],
+    "seller": "Alder Papayafold",
+    "slice": "tune",
+    "split": "tune",
+    "type": "at_or_above",
+    "wording": 0
+   },
+   "letter_mass": [
+    0.6072748098202877
+   ],
+   "payoffs": [
+    0.0,
+    -2.0,
+    -3.0,
+    -4.0,
+    -5.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.800260146566103,
+    0.0019485087090506594,
+    0.034448931440316154,
+    0.1628769645723644,
+    0.0004654487121658616
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 0.7610789135893367,
+    "top_is_best": true,
+    "top_option": 0
+   },
+   "split": "tune",
+   "type": "at_or_above"
+  },
+  {
+   "cid": "V3-gA-information-C1-p1_10-w1-n0",
+   "inputs": {
+    "C": 1,
+    "V": 3,
+    "buyer": "Tamsin Hazelmere",
+    "cell": "V3-gA-information-C1-p1_10-w1",
+    "cid": "V3-gA-information-C1-p1_10-w1-n0",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "grid_name": "A",
+    "line": "information",
+    "name_variant": 0,
+    "opening": 0,
+    "prior": [
+     1,
+     10
+    ],
+    "seller": "Emrys Cherrydale",
+    "slice": "tune",
+    "split": "tune",
+    "type": "below",
+    "wording": 1
+   },
+   "letter_mass": [
+    0.9000736781382395
+   ],
+   "payoffs": [
+    2.0,
+    1.0,
+    0.0,
+    -1.0,
+    -2.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.0008510017481521955,
+    0.9984525096002695,
+    0.0003380970164377123,
+    0.00018851042752440539,
+    0.0001698812076160876
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0
+    ],
+    "best_payoff": 2.0,
+    "hard_regret": 1.0,
+    "soft_regret": 1.0003737597461826,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "below"
+  },
+  {
+   "cid": "V3-gA-information-C1-p1_10-w1-n1",
+   "inputs": {
+    "C": 1,
+    "V": 3,
+    "buyer": "Joss Kumquatridge",
+    "cell": "V3-gA-information-C1-p1_10-w1",
+    "cid": "V3-gA-information-C1-p1_10-w1-n1",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "grid_name": "A",
+    "line": "information",
+    "name_variant": 1,
+    "opening": 1,
+    "prior": [
+     1,
+     10
+    ],
+    "seller": "Alder Papayafold",
+    "slice": "tune",
+    "split": "tune",
+    "type": "below",
+    "wording": 1
+   },
+   "letter_mass": [
+    0.8756636011559342
+   ],
+   "payoffs": [
+    2.0,
+    1.0,
+    0.0,
+    -1.0,
+    -2.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.0007735336837845937,
+    0.998514590776581,
+    0.00041377036746576234,
+    0.0001632844641419358,
+    0.00013482070802669499
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0
+    ],
+    "best_payoff": 2.0,
+    "hard_regret": 1.0,
+    "soft_regret": 1.0003712677360452,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "below"
+  },
+  {
+   "cid": "V3-gA-information-C4-p2_6-w1-n0",
+   "inputs": {
+    "C": 4,
+    "V": 3,
+    "buyer": "Edda Cherrydale",
+    "cell": "V3-gA-information-C4-p2_6-w1",
+    "cid": "V3-gA-information-C4-p2_6-w1-n0",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "grid_name": "A",
+    "line": "information",
+    "name_variant": 0,
+    "opening": 4,
+    "prior": [
+     2,
+     6
+    ],
+    "seller": "Merrick Vineyard",
+    "slice": "tune",
+    "split": "tune",
+    "type": "at_or_above",
+    "wording": 1
+   },
+   "letter_mass": [
+    0.748614332791748
+   ],
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    -1.0,
+    -2.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.003555478965469669,
+    0.9940928316007291,
+    0.0014170641953713536,
+    0.0005856070443265414,
+    0.0003490181941034155
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1,
+     2
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 0.0012836434325333725,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "at_or_above"
+  },
+  {
+   "cid": "V3-gA-information-C4-p2_6-w1-n1",
+   "inputs": {
+    "C": 4,
+    "V": 3,
+    "buyer": "Briar Damsonhill",
+    "cell": "V3-gA-information-C4-p2_6-w1",
+    "cid": "V3-gA-information-C4-p2_6-w1-n1",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "grid_name": "A",
+    "line": "information",
+    "name_variant": 1,
+    "opening": 0,
+    "prior": [
+     2,
+     6
+    ],
+    "seller": "Rowan Hazelmere",
+    "slice": "tune",
+    "split": "tune",
+    "type": "at_or_above",
+    "wording": 1
+   },
+   "letter_mass": [
+    0.7927704243715047
+   ],
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    -1.0,
+    -2.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.004380967117488048,
+    0.9933265429846377,
+    0.0015270773978826567,
+    0.0005168517976320046,
+    0.00024856070235963843
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1,
+     2
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 0.0010139732023512816,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "at_or_above"
+  },
+  {
+   "cid": "V3-gA-neutral-p3_7-w0-n0",
+   "inputs": {
+    "C": null,
+    "V": 3,
+    "buyer": "Xanthe Nectarvale",
+    "cell": "V3-gA-neutral-p3_7-w0",
+    "cid": "V3-gA-neutral-p3_7-w0-n0",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "grid_name": "A",
+    "line": "neutral",
+    "name_variant": 0,
+    "opening": 2,
+    "prior": [
+     3,
+     7
+    ],
+    "seller": "Yorick Zestmoor",
+    "slice": "tune",
+    "split": "tune",
+    "type": "no_cost",
+    "wording": 0
+   },
+   "letter_mass": [
+    0.6363022743835263
+   ],
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    -0.4,
+    -1.2
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.202433446985587,
+    0.7627188937714641,
+    0.02430294525902704,
+    0.00554664196207217,
+    0.004998072021849804
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1,
+     2
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 0.008216343211048633,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "no_cost"
+  },
+  {
+   "cid": "V3-gA-neutral-p3_7-w0-n1",
+   "inputs": {
+    "C": null,
+    "V": 3,
+    "buyer": "Briar Quinceton",
+    "cell": "V3-gA-neutral-p3_7-w0",
+    "cid": "V3-gA-neutral-p3_7-w0-n1",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "grid_name": "A",
+    "line": "neutral",
+    "name_variant": 1,
+    "opening": 3,
+    "prior": [
+     3,
+     7
+    ],
+    "seller": "Emrys Limeharbor",
+    "slice": "tune",
+    "split": "tune",
+    "type": "no_cost",
+    "wording": 0
+   },
+   "letter_mass": [
+    0.7033007490939244
+   ],
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    -0.4,
+    -1.2
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.14843827153338301,
+    0.8078216978141661,
+    0.03097419707454247,
+    0.007920674149710314,
+    0.004845159428197968
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1,
+     2
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 0.008982460973721688,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "no_cost"
+  },
+  {
+   "cid": "V3-gB-information-C3-p2_6-w0-n0",
+   "inputs": {
+    "C": 3,
+    "V": 3,
+    "buyer": "Sorrel Medlarwick",
+    "cell": "V3-gB-information-C3-p2_6-w0",
+    "cid": "V3-gB-information-C3-p2_6-w0-n0",
+    "grid": [
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "grid_name": "B",
+    "line": "information",
+    "name_variant": 0,
+    "opening": 3,
+    "prior": [
+     2,
+     6
+    ],
+    "seller": "Davin Nectarvale",
+    "slice": "tune",
+    "split": "tune",
+    "type": "at_or_above",
+    "wording": 0
+   },
+   "letter_mass": [
+    0.7561880249291996
+   ],
+   "payoffs": [
+    0.0,
+    0.0,
+    -1.0,
+    -2.0,
+    -3.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.7666683132635435,
+    0.0121953338149331,
+    0.2173737050202563,
+    0.003225254372213565,
+    0.0005373935290536379
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 0.22543639435184434,
+    "top_is_best": true,
+    "top_option": 0
+   },
+   "split": "tune",
+   "type": "at_or_above"
+  },
+  {
+   "cid": "V3-gB-information-C3-p2_6-w0-n1",
+   "inputs": {
+    "C": 3,
+    "V": 3,
+    "buyer": "Marnie Limeharbor",
+    "cell": "V3-gB-information-C3-p2_6-w0",
+    "cid": "V3-gB-information-C3-p2_6-w0-n1",
+    "grid": [
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "grid_name": "B",
+    "line": "information",
+    "name_variant": 1,
+    "opening": 4,
+    "prior": [
+     2,
+     6
+    ],
+    "seller": "Varrin Raspberrow",
+    "slice": "tune",
+    "split": "tune",
+    "type": "at_or_above",
+    "wording": 0
+   },
+   "letter_mass": [
+    0.7536005479837471
+   ],
+   "payoffs": [
+    0.0,
+    0.0,
+    -1.0,
+    -2.0,
+    -3.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.7682495012830368,
+    0.019507948799064364,
+    0.20985788894118076,
+    0.001925994319287408,
+    0.0004586666574306813
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 0.2150858775520476,
+    "top_is_best": true,
+    "top_option": 0
+   },
+   "split": "tune",
+   "type": "at_or_above"
+  },
+  {
+   "cid": "V3-gB-information-C4-p1_5-w0-n0",
+   "inputs": {
+    "C": 4,
+    "V": 3,
+    "buyer": "Xanthe Tangelo",
+    "cell": "V3-gB-information-C4-p1_5-w0",
+    "cid": "V3-gB-information-C4-p1_5-w0-n0",
+    "grid": [
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "grid_name": "B",
+    "line": "information",
+    "name_variant": 0,
+    "opening": 0,
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Dunstan Yewbank",
+    "slice": "tune",
+    "split": "tune",
+    "type": "at_or_above",
+    "wording": 0
+   },
+   "letter_mass": [
+    0.7625687494692655
+   ],
+   "payoffs": [
+    0.0,
+    0.0,
+    -1.0,
+    -2.0,
+    -3.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.20207419058601883,
+    0.7952842989965097,
+    0.0005825550986217883,
+    0.001541788484812631,
+    0.0005171668340371827
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 0.005217632570358599,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "at_or_above"
+  },
+  {
+   "cid": "V3-gB-information-C4-p1_5-w0-n1",
+   "inputs": {
+    "C": 4,
+    "V": 3,
+    "buyer": "Xanthe Nectarvale",
+    "cell": "V3-gB-information-C4-p1_5-w0",
+    "cid": "V3-gB-information-C4-p1_5-w0-n1",
+    "grid": [
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "grid_name": "B",
+    "line": "information",
+    "name_variant": 1,
+    "opening": 1,
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Quill Yewbank",
+    "slice": "tune",
+    "split": "tune",
+    "type": "at_or_above",
+    "wording": 0
+   },
+   "letter_mass": [
+    0.7249314939894913
+   ],
+   "payoffs": [
+    0.0,
+    0.0,
+    -1.0,
+    -2.0,
+    -3.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.24749344468538928,
+    0.7488327407509703,
+    0.0006367465949917321,
+    0.0024906989948861144,
+    0.0005463689737625506
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 0.007257251506051612,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "at_or_above"
+  },
+  {
+   "cid": "V3-gC-information-C3-p2_10-w1-n0",
+   "inputs": {
+    "C": 3,
+    "V": 3,
+    "buyer": "Zelda Sloefield",
+    "cell": "V3-gC-information-C3-p2_10-w1",
+    "cid": "V3-gC-information-C3-p2_10-w1-n0",
+    "grid": [
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "grid_name": "C",
+    "line": "information",
+    "name_variant": 0,
+    "opening": 4,
+    "prior": [
+     2,
+     10
+    ],
+    "seller": "Davin Nectarvale",
+    "slice": "tune",
+    "split": "tune",
+    "type": "at_or_above",
+    "wording": 1
+   },
+   "letter_mass": [
+    0.6042702716825157
+   ],
+   "payoffs": [
+    0.0,
+    -1.0,
+    -2.0,
+    -3.0,
+    -4.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.09508838375996337,
+    0.8398203239737997,
+    0.06067749844992941,
+    0.0027877875356261232,
+    0.0016260062806814888
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 1.0,
+    "soft_regret": 0.9760427086032629,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "at_or_above"
+  },
+  {
+   "cid": "V3-gC-information-C3-p2_10-w1-n1",
+   "inputs": {
+    "C": 3,
+    "V": 3,
+    "buyer": "Gwyn Raspberrow",
+    "cell": "V3-gC-information-C3-p2_10-w1",
+    "cid": "V3-gC-information-C3-p2_10-w1-n1",
+    "grid": [
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "grid_name": "C",
+    "line": "information",
+    "name_variant": 1,
+    "opening": 0,
+    "prior": [
+     2,
+     10
+    ],
+    "seller": "Varrin Raspberrow",
+    "slice": "tune",
+    "split": "tune",
+    "type": "at_or_above",
+    "wording": 1
+   },
+   "letter_mass": [
+    0.6172818290938913
+   ],
+   "payoffs": [
+    0.0,
+    -1.0,
+    -2.0,
+    -3.0,
+    -4.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.11028355653357835,
+    0.8071942450155916,
+    0.07907484234058117,
+    0.0024013485736659574,
+    0.001046007536583108
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 1.0,
+    "soft_regret": 0.9767320055640841,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "at_or_above"
+  },
+  {
+   "cid": "V3-gC-information-C5-p1_5-w0-n0",
+   "inputs": {
+    "C": 5,
+    "V": 3,
+    "buyer": "Una Quinceton",
+    "cell": "V3-gC-information-C5-p1_5-w0",
+    "cid": "V3-gC-information-C5-p1_5-w0-n0",
+    "grid": [
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "grid_name": "C",
+    "line": "information",
+    "name_variant": 0,
+    "opening": 1,
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Varrin Vineyard",
+    "slice": "tune",
+    "split": "tune",
+    "type": "at_or_above",
+    "wording": 0
+   },
+   "letter_mass": [
+    0.6732089753970969
+   ],
+   "payoffs": [
+    0.0,
+    0.0,
+    -2.0,
+    -3.0,
+    -4.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.20006409274245404,
+    0.7984406187529877,
+    0.00035034678592554976,
+    0.0008805903791894183,
+    0.00026435133944325445
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 0.004399870067192372,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "at_or_above"
+  },
+  {
+   "cid": "V3-gC-information-C5-p1_5-w0-n1",
+   "inputs": {
+    "C": 5,
+    "V": 3,
+    "buyer": "Quilla Medlarwick",
+    "cell": "V3-gC-information-C5-p1_5-w0",
+    "cid": "V3-gC-information-C5-p1_5-w0-n1",
+    "grid": [
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "grid_name": "C",
+    "line": "information",
+    "name_variant": 1,
+    "opening": 2,
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Dunstan Yewbank",
+    "slice": "tune",
+    "split": "tune",
+    "type": "at_or_above",
+    "wording": 0
+   },
+   "letter_mass": [
+    0.7225763820316347
+   ],
+   "payoffs": [
+    0.0,
+    0.0,
+    -2.0,
+    -3.0,
+    -4.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.20029770882562997,
+    0.79780772135284,
+    0.00042664452943840263,
+    0.0012031783786284245,
+    0.000264746913463357
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 0.005521811848615507,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "at_or_above"
+  },
+  {
+   "cid": "V4-gA-neutral-p2_6-w0-n0",
+   "inputs": {
+    "C": null,
+    "V": 4,
+    "buyer": "Rhea Yewbank",
+    "cell": "V4-gA-neutral-p2_6-w0",
+    "cid": "V4-gA-neutral-p2_6-w0-n0",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "grid_name": "A",
+    "line": "neutral",
+    "name_variant": 0,
+    "opening": 4,
+    "prior": [
+     2,
+     6
+    ],
+    "seller": "Quill Medlarwick",
+    "slice": "tune",
+    "split": "tune",
+    "type": "no_cost",
+    "wording": 0
+   },
+   "letter_mass": [
+    0.5526199879068188
+   ],
+   "payoffs": [
+    0.0,
+    0.4,
+    0.4,
+    0.0,
+    -0.8
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.06466088875648121,
+    0.785170579842257,
+    0.13396896672776543,
+    0.010570521030757566,
+    0.0056290436427387045
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     1,
+     2
+    ],
+    "best_payoff": 0.4,
+    "hard_regret": 0.0,
+    "soft_regret": 0.03684741628618199,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "no_cost"
+  },
+  {
+   "cid": "V4-gA-neutral-p2_6-w0-n1",
+   "inputs": {
+    "C": null,
+    "V": 4,
+    "buyer": "Alma Limeharbor",
+    "cell": "V4-gA-neutral-p2_6-w0",
+    "cid": "V4-gA-neutral-p2_6-w0-n1",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "grid_name": "A",
+    "line": "neutral",
+    "name_variant": 1,
+    "opening": 0,
+    "prior": [
+     2,
+     6
+    ],
+    "seller": "Dunstan Tangelo",
+    "slice": "tune",
+    "split": "tune",
+    "type": "no_cost",
+    "wording": 0
+   },
+   "letter_mass": [
+    0.4998618079536622
+   ],
+   "payoffs": [
+    0.0,
+    0.4,
+    0.4,
+    0.0,
+    -0.8
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.04162444708541986,
+    0.7672592170748309,
+    0.17523181227808646,
+    0.0103692620154049,
+    0.005515261546257835
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     1,
+     2
+    ],
+    "best_payoff": 0.4,
+    "hard_regret": 0.0,
+    "soft_regret": 0.027415797495839278,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "no_cost"
+  },
+  {
+   "cid": "V4-gB-information-C6-p1_5-w1-n0",
+   "inputs": {
+    "C": 6,
+    "V": 4,
+    "buyer": "Rhea Gooseberry",
+    "cell": "V4-gB-information-C6-p1_5-w1",
+    "cid": "V4-gB-information-C6-p1_5-w1-n0",
+    "grid": [
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "grid_name": "B",
+    "line": "information",
+    "name_variant": 0,
+    "opening": 2,
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Varrin Vineyard",
+    "slice": "tune",
+    "split": "tune",
+    "type": "at_or_above",
+    "wording": 1
+   },
+   "letter_mass": [
+    0.6375805185359393
+   ],
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -2.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.07344209636629395,
+    0.8924823311199855,
+    0.0035806649133488166,
+    0.029652230657195792,
+    0.0008426769431758056
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1,
+     2,
+     3
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 0.0016853538863516111,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "at_or_above"
+  },
+  {
+   "cid": "V4-gB-information-C6-p1_5-w1-n1",
+   "inputs": {
+    "C": 6,
+    "V": 4,
+    "buyer": "Zelda Tangelo",
+    "cell": "V4-gB-information-C6-p1_5-w1",
+    "cid": "V4-gB-information-C6-p1_5-w1-n1",
+    "grid": [
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "grid_name": "B",
+    "line": "information",
+    "name_variant": 1,
+    "opening": 3,
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Dunstan Yewbank",
+    "slice": "tune",
+    "split": "tune",
+    "type": "at_or_above",
+    "wording": 1
+   },
+   "letter_mass": [
+    0.6668175626407175
+   ],
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -2.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.0026242070108946276,
+    0.7963804473145935,
+    0.003630225035975537,
+    0.19667892617683125,
+    0.0006861944617052449
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1,
+     2,
+     3
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 0.0013723889234104898,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "at_or_above"
+  },
+  {
+   "cid": "V4-gB-neutral-p2_6-w1-n0",
+   "inputs": {
+    "C": null,
+    "V": 4,
+    "buyer": "Fenna Walnutlea",
+    "cell": "V4-gB-neutral-p2_6-w1",
+    "cid": "V4-gB-neutral-p2_6-w1-n0",
+    "grid": [
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "grid_name": "B",
+    "line": "neutral",
+    "name_variant": 0,
+    "opening": 4,
+    "prior": [
+     2,
+     6
+    ],
+    "seller": "Yorick Quinceton",
+    "slice": "tune",
+    "split": "tune",
+    "type": "no_cost",
+    "wording": 1
+   },
+   "letter_mass": [
+    0.7164174198449528
+   ],
+   "payoffs": [
+    0.4,
+    0.4,
+    0.0,
+    -0.8,
+    -2.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.24861261288395248,
+    0.7465928973917244,
+    0.0017098861958603803,
+    0.0018303019191668797,
+    0.0012543016092957603
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1
+    ],
+    "best_payoff": 0.4,
+    "hard_regret": 0.0,
+    "soft_regret": 0.0058906406436542436,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "no_cost"
+  },
+  {
+   "cid": "V4-gB-neutral-p2_6-w1-n1",
+   "inputs": {
+    "C": null,
+    "V": 4,
+    "buyer": "Rhea Hazelmere",
+    "cell": "V4-gB-neutral-p2_6-w1",
+    "cid": "V4-gB-neutral-p2_6-w1-n1",
+    "grid": [
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "grid_name": "B",
+    "line": "neutral",
+    "name_variant": 1,
+    "opening": 0,
+    "prior": [
+     2,
+     6
+    ],
+    "seller": "Ilar Sloefield",
+    "slice": "tune",
+    "split": "tune",
+    "type": "no_cost",
+    "wording": 1
+   },
+   "letter_mass": [
+    0.7257778472061711
+   ],
+   "payoffs": [
+    0.4,
+    0.4,
+    0.0,
+    -0.8,
+    -2.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.25085590898862486,
+    0.7432655725748576,
+    0.0024367039567800516,
+    0.0020439125799374064,
+    0.0013979018997999821
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1
+    ],
+    "best_payoff": 0.4,
+    "hard_regret": 0.0,
+    "soft_regret": 0.006782341238156964,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "no_cost"
+  },
+  {
+   "cid": "V4-gC-information-C3-p1_10-w1-n0",
+   "inputs": {
+    "C": 3,
+    "V": 4,
+    "buyer": "Kestra Quinceton",
+    "cell": "V4-gC-information-C3-p1_10-w1",
+    "cid": "V4-gC-information-C3-p1_10-w1-n0",
+    "grid": [
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "grid_name": "C",
+    "line": "information",
+    "name_variant": 0,
+    "opening": 3,
+    "prior": [
+     1,
+     10
+    ],
+    "seller": "Ulric Vineyard",
+    "slice": "tune",
+    "split": "tune",
+    "type": "below",
+    "wording": 1
+   },
+   "letter_mass": [
+    0.47104317260656686
+   ],
+   "payoffs": [
+    1.0,
+    0.0,
+    -1.0,
+    -2.0,
+    -3.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.08546154238202074,
+    0.5722020148109838,
+    0.3305981037016273,
+    0.009311479889502807,
+    0.002426859215865241
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0
+    ],
+    "best_payoff": 1.0,
+    "hard_regret": 1.0,
+    "soft_regret": 1.2710400987462078,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "below"
+  },
+  {
+   "cid": "V4-gC-information-C3-p1_10-w1-n1",
+   "inputs": {
+    "C": 3,
+    "V": 4,
+    "buyer": "Xanthe Tangelo",
+    "cell": "V4-gC-information-C3-p1_10-w1",
+    "cid": "V4-gC-information-C3-p1_10-w1-n1",
+    "grid": [
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "grid_name": "C",
+    "line": "information",
+    "name_variant": 1,
+    "opening": 4,
+    "prior": [
+     1,
+     10
+    ],
+    "seller": "Merrick Zestmoor",
+    "slice": "tune",
+    "split": "tune",
+    "type": "below",
+    "wording": 1
+   },
+   "letter_mass": [
+    0.5870400991936391
+   ],
+   "payoffs": [
+    1.0,
+    0.0,
+    -1.0,
+    -2.0,
+    -3.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.04775906747467758,
+    0.6302413743809208,
+    0.313549111588209,
+    0.006159936630081176,
+    0.002290509926111585
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0
+    ],
+    "best_payoff": 1.0,
+    "hard_regret": 1.0,
+    "soft_regret": 1.2849814471520284,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "below"
+  },
+  {
+   "cid": "V4-gC-information-C3-p1_5-w1-n0",
+   "inputs": {
+    "C": 3,
+    "V": 4,
+    "buyer": "Rhea Yewbank",
+    "cell": "V4-gC-information-C3-p1_5-w1",
+    "cid": "V4-gC-information-C3-p1_5-w1-n0",
+    "grid": [
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "grid_name": "C",
+    "line": "information",
+    "name_variant": 0,
+    "opening": 4,
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Yorick Raspberrow",
+    "slice": "tune",
+    "split": "tune",
+    "type": "below",
+    "wording": 1
+   },
+   "letter_mass": [
+    0.5189959759578084
+   ],
+   "payoffs": [
+    1.0,
+    0.0,
+    -1.0,
+    -2.0,
+    -3.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.2140863162209942,
+    0.45393240810646984,
+    0.3228405187223428,
+    0.007186409874447043,
+    0.0019543470757460257
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0
+    ],
+    "best_payoff": 1.0,
+    "hard_regret": 1.0,
+    "soft_regret": 1.1289900634774808,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "below"
+  },
+  {
+   "cid": "V4-gC-information-C3-p1_5-w1-n1",
+   "inputs": {
+    "C": 3,
+    "V": 4,
+    "buyer": "Alma Limeharbor",
+    "cell": "V4-gC-information-C3-p1_5-w1",
+    "cid": "V4-gC-information-C3-p1_5-w1-n1",
+    "grid": [
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "grid_name": "C",
+    "line": "information",
+    "name_variant": 1,
+    "opening": 0,
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Emrys Nectarvale",
+    "slice": "tune",
+    "split": "tune",
+    "type": "below",
+    "wording": 1
+   },
+   "letter_mass": [
+    0.4916203049385661
+   ],
+   "payoffs": [
+    1.0,
+    0.0,
+    -1.0,
+    -2.0,
+    -3.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.26420312311978156,
+    0.398335491593515,
+    0.32855746844668954,
+    0.007269930577829641,
+    0.0016339862621841694
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0
+    ],
+    "best_payoff": 1.0,
+    "hard_regret": 1.0,
+    "soft_regret": 1.0837961652691197,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "below"
+  },
+  {
+   "cid": "V4-gC-information-C5-p2_10-w1-n0",
+   "inputs": {
+    "C": 5,
+    "V": 4,
+    "buyer": "Tamsin Applecroft",
+    "cell": "V4-gC-information-C5-p2_10-w1",
+    "cid": "V4-gC-information-C5-p2_10-w1-n0",
+    "grid": [
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "grid_name": "C",
+    "line": "information",
+    "name_variant": 0,
+    "opening": 1,
+    "prior": [
+     2,
+     10
+    ],
+    "seller": "Lorcan Cherrydale",
+    "slice": "tune",
+    "split": "tune",
+    "type": "at_or_above",
+    "wording": 1
+   },
+   "letter_mass": [
+    0.7733652898304226
+   ],
+   "payoffs": [
+    0.0,
+    0.0,
+    -1.0,
+    -2.0,
+    -3.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.39900344775463326,
+    0.5255018945285438,
+    0.0023161740596763063,
+    0.07276281527130755,
+    0.00041566838583906134
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 0.1490888097598086,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "at_or_above"
+  },
+  {
+   "cid": "V4-gC-information-C5-p2_10-w1-n1",
+   "inputs": {
+    "C": 5,
+    "V": 4,
+    "buyer": "Sorrel Medlarwick",
+    "cell": "V4-gC-information-C5-p2_10-w1",
+    "cid": "V4-gC-information-C5-p2_10-w1-n1",
+    "grid": [
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "grid_name": "C",
+    "line": "information",
+    "name_variant": 1,
+    "opening": 2,
+    "prior": [
+     2,
+     10
+    ],
+    "seller": "Merrick Sloefield",
+    "slice": "tune",
+    "split": "tune",
+    "type": "at_or_above",
+    "wording": 1
+   },
+   "letter_mass": [
+    0.6326296617237728
+   ],
+   "payoffs": [
+    0.0,
+    0.0,
+    -1.0,
+    -2.0,
+    -3.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.5130341095853986,
+    0.37433790816094686,
+    0.004828541717044536,
+    0.10720466015607284,
+    0.0005947803805371051
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 0.22102220317080154,
+    "top_is_best": true,
+    "top_option": 0
+   },
+   "split": "tune",
+   "type": "at_or_above"
+  },
+  {
+   "cid": "V4-gC-information-C5-p3_7-w0-n0",
+   "inputs": {
+    "C": 5,
+    "V": 4,
+    "buyer": "Quilla Medlarwick",
+    "cell": "V4-gC-information-C5-p3_7-w0",
+    "cid": "V4-gC-information-C5-p3_7-w0-n0",
+    "grid": [
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "grid_name": "C",
+    "line": "information",
+    "name_variant": 0,
+    "opening": 3,
+    "prior": [
+     3,
+     7
+    ],
+    "seller": "Quill Yewbank",
+    "slice": "tune",
+    "split": "tune",
+    "type": "at_or_above",
+    "wording": 0
+   },
+   "letter_mass": [
+    0.6007565502001718
+   ],
+   "payoffs": [
+    0.0,
+    0.0,
+    -1.0,
+    -2.0,
+    -3.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.48187050933477693,
+    0.41083743713357795,
+    0.004999046836574159,
+    0.10169065793986809,
+    0.0006023487552028839
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 0.21018740898191898,
+    "top_is_best": true,
+    "top_option": 0
+   },
+   "split": "tune",
+   "type": "at_or_above"
+  },
+  {
+   "cid": "V4-gC-information-C5-p3_7-w0-n1",
+   "inputs": {
+    "C": 5,
+    "V": 4,
+    "buyer": "Tamsin Hazelmere",
+    "cell": "V4-gC-information-C5-p3_7-w0",
+    "cid": "V4-gC-information-C5-p3_7-w0-n1",
+    "grid": [
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "grid_name": "C",
+    "line": "information",
+    "name_variant": 1,
+    "opening": 4,
+    "prior": [
+     3,
+     7
+    ],
+    "seller": "Ilar Kumquatridge",
+    "slice": "tune",
+    "split": "tune",
+    "type": "at_or_above",
+    "wording": 0
+   },
+   "letter_mass": [
+    0.6640735756139076
+   ],
+   "payoffs": [
+    0.0,
+    0.0,
+    -1.0,
+    -2.0,
+    -3.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.4114055955041206,
+    0.4149511981440133,
+    0.002735726385605481,
+    0.17043780559376054,
+    0.00046967437250003044
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 0.34502036069062664,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "at_or_above"
+  },
+  {
+   "cid": "V4-gC-neutral-p2_10-w0-n0",
+   "inputs": {
+    "C": null,
+    "V": 4,
+    "buyer": "Marnie Sloefield",
+    "cell": "V4-gC-neutral-p2_10-w0",
+    "cid": "V4-gC-neutral-p2_10-w0-n0",
+    "grid": [
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "grid_name": "C",
+    "line": "neutral",
+    "name_variant": 0,
+    "opening": 1,
+    "prior": [
+     2,
+     10
+    ],
+    "seller": "Yorick Juniperfold",
+    "slice": "tune",
+    "split": "tune",
+    "type": "no_cost",
+    "wording": 0
+   },
+   "letter_mass": [
+    0.5059041437703493
+   ],
+   "payoffs": [
+    0.2222222222222222,
+    0.0,
+    -0.4444444444444444,
+    -1.1111111111111112,
+    -2.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.4738779259980296,
+    0.2333648087747243,
+    0.2516155302846851,
+    0.03970756599486551,
+    0.0014341689476954577
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0
+    ],
+    "best_payoff": 0.2222222222222222,
+    "hard_regret": 0.0,
+    "soft_regret": 0.2757329966833172,
+    "top_is_best": true,
+    "top_option": 0
+   },
+   "split": "tune",
+   "type": "no_cost"
+  },
+  {
+   "cid": "V4-gC-neutral-p2_10-w0-n1",
+   "inputs": {
+    "C": null,
+    "V": 4,
+    "buyer": "Verity Cherrydale",
+    "cell": "V4-gC-neutral-p2_10-w0",
+    "cid": "V4-gC-neutral-p2_10-w0-n1",
+    "grid": [
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "grid_name": "C",
+    "line": "neutral",
+    "name_variant": 1,
+    "opening": 2,
+    "prior": [
+     2,
+     10
+    ],
+    "seller": "Lorcan Walnutlea",
+    "slice": "tune",
+    "split": "tune",
+    "type": "no_cost",
+    "wording": 0
+   },
+   "letter_mass": [
+    0.530529444371026
+   ],
+   "payoffs": [
+    0.2222222222222222,
+    0.0,
+    -0.4444444444444444,
+    -1.1111111111111112,
+    -2.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.5454035661834529,
+    0.16638829076435638,
+    0.2480829652334461,
+    0.03876264951365708,
+    0.001362528305087506
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0
+    ],
+    "best_payoff": 0.2222222222222222,
+    "hard_regret": 0.0,
+    "soft_regret": 0.25707519257722494,
+    "top_is_best": true,
+    "top_option": 0
+   },
+   "split": "tune",
+   "type": "no_cost"
+  },
+  {
+   "cid": "V5-gB-information-C2-p2_10-w0-n0",
+   "inputs": {
+    "C": 2,
+    "V": 5,
+    "buyer": "Alma Limeharbor",
+    "cell": "V5-gB-information-C2-p2_10-w0",
+    "cid": "V5-gB-information-C2-p2_10-w0-n0",
+    "grid": [
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "grid_name": "B",
+    "line": "information",
+    "name_variant": 0,
+    "opening": 1,
+    "prior": [
+     2,
+     10
+    ],
+    "seller": "Lorcan Walnutlea",
+    "slice": "tune",
+    "split": "tune",
+    "type": "below",
+    "wording": 0
+   },
+   "letter_mass": [
+    0.6489946574986961
+   ],
+   "payoffs": [
+    3.0,
+    2.0,
+    1.0,
+    0.0,
+    -1.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.012897706772458207,
+    0.9350804091485136,
+    0.050341454580935495,
+    0.0011442595237458103,
+    0.0005361699743469486
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0
+    ],
+    "best_payoff": 3.0,
+    "hard_regret": 1.0,
+    "soft_regret": 1.0413407767790095,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "below"
+  },
+  {
+   "cid": "V5-gB-information-C2-p2_10-w0-n1",
+   "inputs": {
+    "C": 2,
+    "V": 5,
+    "buyer": "Yara Vineyard",
+    "cell": "V5-gB-information-C2-p2_10-w0",
+    "cid": "V5-gB-information-C2-p2_10-w0-n1",
+    "grid": [
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "grid_name": "B",
+    "line": "information",
+    "name_variant": 1,
+    "opening": 2,
+    "prior": [
+     2,
+     10
+    ],
+    "seller": "Corin Walnutlea",
+    "slice": "tune",
+    "split": "tune",
+    "type": "below",
+    "wording": 0
+   },
+   "letter_mass": [
+    0.7056517870125564
+   ],
+   "payoffs": [
+    3.0,
+    2.0,
+    1.0,
+    0.0,
+    -1.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.00788333774969436,
+    0.9191691760521055,
+    0.07058805762980011,
+    0.001589111724406787,
+    0.0007703168439932067
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0
+    ],
+    "best_payoff": 3.0,
+    "hard_regret": 1.0,
+    "soft_regret": 1.068193893860899,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "below"
+  },
+  {
+   "cid": "V5-gB-information-C2-p2_6-w0-n0",
+   "inputs": {
+    "C": 2,
+    "V": 5,
+    "buyer": "Tamsin Cherrydale",
+    "cell": "V5-gB-information-C2-p2_6-w0",
+    "cid": "V5-gB-information-C2-p2_6-w0-n0",
+    "grid": [
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "grid_name": "B",
+    "line": "information",
+    "name_variant": 0,
+    "opening": 2,
+    "prior": [
+     2,
+     6
+    ],
+    "seller": "Varrin Raspberrow",
+    "slice": "tune",
+    "split": "tune",
+    "type": "below",
+    "wording": 0
+   },
+   "letter_mass": [
+    0.7899650680711265
+   ],
+   "payoffs": [
+    3.0,
+    2.0,
+    1.0,
+    0.0,
+    -1.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.006310242694220524,
+    0.9821744487878099,
+    0.010390619288372826,
+    0.0007597881599968552,
+    0.0003649010695998802
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0
+    ],
+    "best_payoff": 3.0,
+    "hard_regret": 1.0,
+    "soft_regret": 1.0066946561229455,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "below"
+  },
+  {
+   "cid": "V5-gB-information-C2-p2_6-w0-n1",
+   "inputs": {
+    "C": 2,
+    "V": 5,
+    "buyer": "Dessa Tangelo",
+    "cell": "V5-gB-information-C2-p2_6-w0",
+    "cid": "V5-gB-information-C2-p2_6-w0-n1",
+    "grid": [
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "grid_name": "B",
+    "line": "information",
+    "name_variant": 1,
+    "opening": 3,
+    "prior": [
+     2,
+     6
+    ],
+    "seller": "Wystan Walnutlea",
+    "slice": "tune",
+    "split": "tune",
+    "type": "below",
+    "wording": 0
+   },
+   "letter_mass": [
+    0.7717831895321953
+   ],
+   "payoffs": [
+    3.0,
+    2.0,
+    1.0,
+    0.0,
+    -1.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.0033034719560293144,
+    0.9858889601132755,
+    0.007010111238793149,
+    0.0030426485811555367,
+    0.0007548081107463349
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0
+    ],
+    "best_payoff": 3.0,
+    "hard_regret": 1.0,
+    "soft_regret": 1.0120563607773139,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "below"
+  },
+  {
+   "cid": "V5-gB-information-C6-p2_6-w0-n0",
+   "inputs": {
+    "C": 6,
+    "V": 5,
+    "buyer": "Una Quinceton",
+    "cell": "V5-gB-information-C6-p2_6-w0",
+    "cid": "V5-gB-information-C6-p2_6-w0-n0",
+    "grid": [
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "grid_name": "B",
+    "line": "information",
+    "name_variant": 0,
+    "opening": 1,
+    "prior": [
+     2,
+     6
+    ],
+    "seller": "Silas Raspberrow",
+    "slice": "tune",
+    "split": "tune",
+    "type": "at_or_above",
+    "wording": 0
+   },
+   "letter_mass": [
+    0.6608536984385535
+   ],
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -1.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.03023837852701371,
+    0.8460439202890144,
+    0.11894171446148935,
+    0.0034079790049511304,
+    0.0013680077175312491
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1,
+     2,
+     3
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 0.0013680077175312491,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "at_or_above"
+  },
+  {
+   "cid": "V5-gB-information-C6-p2_6-w0-n1",
+   "inputs": {
+    "C": 6,
+    "V": 5,
+    "buyer": "Quilla Medlarwick",
+    "cell": "V5-gB-information-C6-p2_6-w0",
+    "cid": "V5-gB-information-C6-p2_6-w0-n1",
+    "grid": [
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "grid_name": "B",
+    "line": "information",
+    "name_variant": 1,
+    "opening": 2,
+    "prior": [
+     2,
+     6
+    ],
+    "seller": "Bram Tangelo",
+    "slice": "tune",
+    "split": "tune",
+    "type": "at_or_above",
+    "wording": 0
+   },
+   "letter_mass": [
+    0.6785492587006259
+   ],
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -1.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.09308577957391585,
+    0.8001672160724423,
+    0.10097880268880297,
+    0.004380977216671234,
+    0.0013872244481675801
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0,
+     1,
+     2,
+     3
+    ],
+    "best_payoff": 0.0,
+    "hard_regret": 0.0,
+    "soft_regret": 0.0013872244481675801,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "at_or_above"
+  },
+  {
+   "cid": "V5-gC-information-C1-p1_5-w0-n0",
+   "inputs": {
+    "C": 1,
+    "V": 5,
+    "buyer": "Zelda Hazelmere",
+    "cell": "V5-gC-information-C1-p1_5-w0",
+    "cid": "V5-gC-information-C1-p1_5-w0-n0",
+    "grid": [
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "grid_name": "C",
+    "line": "information",
+    "name_variant": 0,
+    "opening": 0,
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Ulric Vineyard",
+    "slice": "tune",
+    "split": "tune",
+    "type": "below",
+    "wording": 0
+   },
+   "letter_mass": [
+    0.6304833052966752
+   ],
+   "payoffs": [
+    2.0,
+    1.0,
+    0.0,
+    -1.0,
+    -2.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.33978920928375245,
+    0.6573886516515384,
+    0.001330227528676407,
+    0.0010154297131862735,
+    0.00047648182284637676
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0
+    ],
+    "best_payoff": 2.0,
+    "hard_regret": 1.0,
+    "soft_regret": 0.665001323139836,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "below"
+  },
+  {
+   "cid": "V5-gC-information-C1-p1_5-w0-n1",
+   "inputs": {
+    "C": 1,
+    "V": 5,
+    "buyer": "Kestra Walnutlea",
+    "cell": "V5-gC-information-C1-p1_5-w0",
+    "cid": "V5-gC-information-C1-p1_5-w0-n1",
+    "grid": [
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "grid_name": "C",
+    "line": "information",
+    "name_variant": 1,
+    "opening": 1,
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Merrick Zestmoor",
+    "slice": "tune",
+    "split": "tune",
+    "type": "below",
+    "wording": 0
+   },
+   "letter_mass": [
+    0.709276780933563
+   ],
+   "payoffs": [
+    2.0,
+    1.0,
+    0.0,
+    -1.0,
+    -2.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.34676825163261576,
+    0.6504174297806238,
+    0.0011787850644470964,
+    0.0011522939669954652,
+    0.00048323955531807646
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0
+    ],
+    "best_payoff": 2.0,
+    "hard_regret": 1.0,
+    "soft_regret": 0.6581648400317763,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "below"
+  },
+  {
+   "cid": "V5-gC-information-C2-p3_7-w0-n0",
+   "inputs": {
+    "C": 2,
+    "V": 5,
+    "buyer": "Quilla Medlarwick",
+    "cell": "V5-gC-information-C2-p3_7-w0",
+    "cid": "V5-gC-information-C2-p3_7-w0-n0",
+    "grid": [
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "grid_name": "C",
+    "line": "information",
+    "name_variant": 0,
+    "opening": 3,
+    "prior": [
+     3,
+     7
+    ],
+    "seller": "Quill Yewbank",
+    "slice": "tune",
+    "split": "tune",
+    "type": "below",
+    "wording": 0
+   },
+   "letter_mass": [
+    0.7090239019886776
+   ],
+   "payoffs": [
+    2.0,
+    1.0,
+    0.0,
+    -1.0,
+    -2.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.2157614254316405,
+    0.7818627656553812,
+    0.0007878504227040428,
+    0.0011374414467193192,
+    0.00045051704355498134
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0
+    ],
+    "best_payoff": 2.0,
+    "hard_regret": 1.0,
+    "soft_regret": 0.7886528590151674,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "below"
+  },
+  {
+   "cid": "V5-gC-information-C2-p3_7-w0-n1",
+   "inputs": {
+    "C": 2,
+    "V": 5,
+    "buyer": "Tamsin Hazelmere",
+    "cell": "V5-gC-information-C2-p3_7-w0",
+    "cid": "V5-gC-information-C2-p3_7-w0-n1",
+    "grid": [
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "grid_name": "C",
+    "line": "information",
+    "name_variant": 1,
+    "opening": 4,
+    "prior": [
+     3,
+     7
+    ],
+    "seller": "Ilar Kumquatridge",
+    "slice": "tune",
+    "split": "tune",
+    "type": "below",
+    "wording": 0
+   },
+   "letter_mass": [
+    0.7526473436387928
+   ],
+   "payoffs": [
+    2.0,
+    1.0,
+    0.0,
+    -1.0,
+    -2.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.20062331001268205,
+    0.7973834652115741,
+    0.0007629188506115324,
+    0.000856968235890792,
+    0.000373337689241652
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0
+    ],
+    "best_payoff": 2.0,
+    "hard_regret": 1.0,
+    "soft_regret": 0.8029735583774358,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "below"
+  },
+  {
+   "cid": "V5-gC-information-C4-p3_7-w1-n0",
+   "inputs": {
+    "C": 4,
+    "V": 5,
+    "buyer": "Tamsin Hazelmere",
+    "cell": "V5-gC-information-C4-p3_7-w1",
+    "cid": "V5-gC-information-C4-p3_7-w1-n0",
+    "grid": [
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "grid_name": "C",
+    "line": "information",
+    "name_variant": 0,
+    "opening": 0,
+    "prior": [
+     3,
+     7
+    ],
+    "seller": "Davin Nectarvale",
+    "slice": "tune",
+    "split": "tune",
+    "type": "below",
+    "wording": 1
+   },
+   "letter_mass": [
+    0.7344080700825981
+   ],
+   "payoffs": [
+    0.0,
+    1.0,
+    0.0,
+    -1.0,
+    -2.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.5941087387176252,
+    0.2031198977907453,
+    0.1879954128289796,
+    0.014308140615268944,
+    0.0004678100473809739
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     1
+    ],
+    "best_payoff": 1.0,
+    "hard_regret": 1.0,
+    "soft_regret": 0.8121238629192856,
+    "top_is_best": false,
+    "top_option": 0
+   },
+   "split": "tune",
+   "type": "below"
+  },
+  {
+   "cid": "V5-gC-information-C4-p3_7-w1-n1",
+   "inputs": {
+    "C": 4,
+    "V": 5,
+    "buyer": "Joss Kumquatridge",
+    "cell": "V5-gC-information-C4-p3_7-w1",
+    "cid": "V5-gC-information-C4-p3_7-w1-n1",
+    "grid": [
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "grid_name": "C",
+    "line": "information",
+    "name_variant": 1,
+    "opening": 1,
+    "prior": [
+     3,
+     7
+    ],
+    "seller": "Varrin Raspberrow",
+    "slice": "tune",
+    "split": "tune",
+    "type": "below",
+    "wording": 1
+   },
+   "letter_mass": [
+    0.7360557832675163
+   ],
+   "payoffs": [
+    0.0,
+    1.0,
+    0.0,
+    -1.0,
+    -2.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.6828468176035105,
+    0.20176265955053788,
+    0.09704708915963267,
+    0.017985822506396115,
+    0.00035761117992282883
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     1
+    ],
+    "best_payoff": 1.0,
+    "hard_regret": 1.0,
+    "soft_regret": 0.816938385315704,
+    "top_is_best": false,
+    "top_option": 0
+   },
+   "split": "tune",
+   "type": "below"
+  },
+  {
+   "cid": "V5-gC-neutral-p2_10-w1-n0",
+   "inputs": {
+    "C": null,
+    "V": 5,
+    "buyer": "Rhea Gooseberry",
+    "cell": "V5-gC-neutral-p2_10-w1",
+    "cid": "V5-gC-neutral-p2_10-w1-n0",
+    "grid": [
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "grid_name": "C",
+    "line": "neutral",
+    "name_variant": 0,
+    "opening": 2,
+    "prior": [
+     2,
+     10
+    ],
+    "seller": "Silas Raspberrow",
+    "slice": "tune",
+    "split": "tune",
+    "type": "no_cost",
+    "wording": 1
+   },
+   "letter_mass": [
+    0.6432324693341644
+   ],
+   "payoffs": [
+    0.4444444444444444,
+    0.3333333333333333,
+    0.0,
+    -0.5555555555555556,
+    -1.3333333333333333
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.20754800568931872,
+    0.7847863082030947,
+    0.0034049416273492844,
+    0.0033110326793888553,
+    0.0009497118008484308
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0
+    ],
+    "best_payoff": 0.4444444444444444,
+    "hard_regret": 0.1111111111111111,
+    "soft_regret": 0.09371119529339633,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "no_cost"
+  },
+  {
+   "cid": "V5-gC-neutral-p2_10-w1-n1",
+   "inputs": {
+    "C": null,
+    "V": 5,
+    "buyer": "Zelda Tangelo",
+    "cell": "V5-gC-neutral-p2_10-w1",
+    "cid": "V5-gC-neutral-p2_10-w1-n1",
+    "grid": [
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "grid_name": "C",
+    "line": "neutral",
+    "name_variant": 1,
+    "opening": 3,
+    "prior": [
+     2,
+     10
+    ],
+    "seller": "Bram Tangelo",
+    "slice": "tune",
+    "split": "tune",
+    "type": "no_cost",
+    "wording": 1
+   },
+   "letter_mass": [
+    0.6297545256953356
+   ],
+   "payoffs": [
+    0.4444444444444444,
+    0.3333333333333333,
+    0.0,
+    -0.5555555555555556,
+    -1.3333333333333333
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.21172399174166082,
+    0.7731351555412898,
+    0.0082273298274704,
+    0.00558050038536474,
+    0.0013330225042142952
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0
+    ],
+    "best_payoff": 0.4444444444444444,
+    "hard_regret": 0.1111111111111111,
+    "soft_regret": 0.09751081537632028,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "no_cost"
+  },
+  {
+   "cid": "V5-gC-pressure-p2_6-w1-n0",
+   "inputs": {
+    "C": null,
+    "V": 5,
+    "buyer": "Calla Ugliwood",
+    "cell": "V5-gC-pressure-p2_6-w1",
+    "cid": "V5-gC-pressure-p2_6-w1-n0",
+    "grid": [
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "grid_name": "C",
+    "line": "pressure",
+    "name_variant": 0,
+    "opening": 1,
+    "prior": [
+     2,
+     6
+    ],
+    "seller": "Ilar Kumquatridge",
+    "slice": "tune",
+    "split": "tune",
+    "type": "no_cost",
+    "wording": 1
+   },
+   "letter_mass": [
+    0.6572996044101733
+   ],
+   "payoffs": [
+    0.8,
+    0.6,
+    0.0,
+    -1.0,
+    -2.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.21412490197222162,
+    0.7791844957564176,
+    0.0028730805720914654,
+    0.0032310411699835707,
+    0.000586480529285871
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0
+    ],
+    "best_payoff": 0.8,
+    "hard_regret": 0.20000000000000007,
+    "soft_regret": 0.1655933831969275,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "no_cost"
+  },
+  {
+   "cid": "V5-gC-pressure-p2_6-w1-n1",
+   "inputs": {
+    "C": null,
+    "V": 5,
+    "buyer": "Hollis Juniperfold",
+    "cell": "V5-gC-pressure-p2_6-w1",
+    "cid": "V5-gC-pressure-p2_6-w1-n1",
+    "grid": [
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "grid_name": "C",
+    "line": "pressure",
+    "name_variant": 1,
+    "opening": 2,
+    "prior": [
+     2,
+     6
+    ],
+    "seller": "Emrys Cherrydale",
+    "slice": "tune",
+    "split": "tune",
+    "type": "no_cost",
+    "wording": 1
+   },
+   "letter_mass": [
+    0.6667635758171794
+   ],
+   "payoffs": [
+    0.8,
+    0.6,
+    0.0,
+    -1.0,
+    -2.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.20895642913088613,
+    0.7849678017646795,
+    0.0022234524267033093,
+    0.003294130023231016,
+    0.0005581866545000478
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0
+    ],
+    "best_payoff": 0.8,
+    "hard_regret": 0.20000000000000007,
+    "soft_regret": 0.16626467896871444,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "no_cost"
+  },
+  {
+   "cid": "V6-gA-information-C3-p3_7-w0-n0",
+   "inputs": {
+    "C": 3,
+    "V": 6,
+    "buyer": "Dessa Tangelo",
+    "cell": "V6-gA-information-C3-p3_7-w0",
+    "cid": "V6-gA-information-C3-p3_7-w0-n0",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "grid_name": "A",
+    "line": "information",
+    "name_variant": 0,
+    "opening": 4,
+    "prior": [
+     3,
+     7
+    ],
+    "seller": "Davin Elderglen",
+    "slice": "tune",
+    "split": "tune",
+    "type": "below",
+    "wording": 0
+   },
+   "letter_mass": [
+    0.7814244325568588
+   ],
+   "payoffs": [
+    0.0,
+    0.0,
+    3.0,
+    2.0,
+    1.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.007611466404426001,
+    0.9849229482018282,
+    0.0014430963869183967,
+    0.004811455604666949,
+    0.0012110334021604241
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     2
+    ],
+    "best_payoff": 3.0,
+    "hard_regret": 3.0,
+    "soft_regret": 2.9848367662277506,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "below"
+  },
+  {
+   "cid": "V6-gA-information-C3-p3_7-w0-n1",
+   "inputs": {
+    "C": 3,
+    "V": 6,
+    "buyer": "Una Quinceton",
+    "cell": "V6-gA-information-C3-p3_7-w0",
+    "cid": "V6-gA-information-C3-p3_7-w0-n1",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "grid_name": "A",
+    "line": "information",
+    "name_variant": 1,
+    "opening": 0,
+    "prior": [
+     3,
+     7
+    ],
+    "seller": "Lorcan Damsonhill",
+    "slice": "tune",
+    "split": "tune",
+    "type": "below",
+    "wording": 0
+   },
+   "letter_mass": [
+    0.7581661664659572
+   ],
+   "payoffs": [
+    0.0,
+    0.0,
+    3.0,
+    2.0,
+    1.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.01904494448405486,
+    0.9758438774811056,
+    0.0009201787612450803,
+    0.002960777297177136,
+    0.0012302219764172573
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     2
+    ],
+    "best_payoff": 3.0,
+    "hard_regret": 3.0,
+    "soft_regret": 2.9900876871454933,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "below"
+  },
+  {
+   "cid": "V6-gA-information-C5-p3_7-w1-n0",
+   "inputs": {
+    "C": 5,
+    "V": 6,
+    "buyer": "Una Sloefield",
+    "cell": "V6-gA-information-C5-p3_7-w1",
+    "cid": "V6-gA-information-C5-p3_7-w1-n0",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "grid_name": "A",
+    "line": "information",
+    "name_variant": 0,
+    "opening": 0,
+    "prior": [
+     3,
+     7
+    ],
+    "seller": "Alder Elderglen",
+    "slice": "tune",
+    "split": "tune",
+    "type": "below",
+    "wording": 1
+   },
+   "letter_mass": [
+    0.6693186499422994
+   ],
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.005370175865243131,
+    0.8220753403049226,
+    0.025870704946991275,
+    0.1443358481844034,
+    0.0023479306984395937
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     4
+    ],
+    "best_payoff": 1.0,
+    "hard_regret": 1.0,
+    "soft_regret": 0.9976520693015604,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "below"
+  },
+  {
+   "cid": "V6-gA-information-C5-p3_7-w1-n1",
+   "inputs": {
+    "C": 5,
+    "V": 6,
+    "buyer": "Linnea Nectarvale",
+    "cell": "V6-gA-information-C5-p3_7-w1",
+    "cid": "V6-gA-information-C5-p3_7-w1-n1",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "grid_name": "A",
+    "line": "information",
+    "name_variant": 1,
+    "opening": 1,
+    "prior": [
+     3,
+     7
+    ],
+    "seller": "Varrin Medlarwick",
+    "slice": "tune",
+    "split": "tune",
+    "type": "below",
+    "wording": 1
+   },
+   "letter_mass": [
+    0.7522441249804864
+   ],
+   "payoffs": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.0033552501754814507,
+    0.809972520022394,
+    0.007664491925693767,
+    0.1776205464587555,
+    0.0013871914176751896
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     4
+    ],
+    "best_payoff": 1.0,
+    "hard_regret": 1.0,
+    "soft_regret": 0.9986128085823248,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "below"
+  },
+  {
+   "cid": "V6-gB-information-C1-p1_10-w1-n0",
+   "inputs": {
+    "C": 1,
+    "V": 6,
+    "buyer": "Quilla Medlarwick",
+    "cell": "V6-gB-information-C1-p1_10-w1",
+    "cid": "V6-gB-information-C1-p1_10-w1-n0",
+    "grid": [
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "grid_name": "B",
+    "line": "information",
+    "name_variant": 0,
+    "opening": 3,
+    "prior": [
+     1,
+     10
+    ],
+    "seller": "Quill Yewbank",
+    "slice": "tune",
+    "split": "tune",
+    "type": "below",
+    "wording": 1
+   },
+   "letter_mass": [
+    0.7828816960377626
+   ],
+   "payoffs": [
+    4.0,
+    3.0,
+    2.0,
+    1.0,
+    0.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.271549768105424,
+    0.7239314149256126,
+    0.0023397599754694256,
+    0.0013583151297631797,
+    0.0008207418637308034
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0
+    ],
+    "best_payoff": 4.0,
+    "hard_regret": 1.0,
+    "soft_regret": 0.7359688477207635,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "below"
+  },
+  {
+   "cid": "V6-gB-information-C1-p1_10-w1-n1",
+   "inputs": {
+    "C": 1,
+    "V": 6,
+    "buyer": "Tamsin Hazelmere",
+    "cell": "V6-gB-information-C1-p1_10-w1",
+    "cid": "V6-gB-information-C1-p1_10-w1-n1",
+    "grid": [
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "grid_name": "B",
+    "line": "information",
+    "name_variant": 1,
+    "opening": 4,
+    "prior": [
+     1,
+     10
+    ],
+    "seller": "Ilar Kumquatridge",
+    "slice": "tune",
+    "split": "tune",
+    "type": "below",
+    "wording": 1
+   },
+   "letter_mass": [
+    0.7925344783912888
+   ],
+   "payoffs": [
+    4.0,
+    3.0,
+    2.0,
+    1.0,
+    0.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.10023290527592443,
+    0.8957751228862104,
+    0.0016705350985036387,
+    0.001474712806818856,
+    0.0008467239325426369
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0
+    ],
+    "best_payoff": 4.0,
+    "hard_regret": 1.0,
+    "soft_regret": 0.9069272272338451,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "below"
+  },
+  {
+   "cid": "V6-gB-information-C2-p3_7-w0-n0",
+   "inputs": {
+    "C": 2,
+    "V": 6,
+    "buyer": "Gwyn Raspberrow",
+    "cell": "V6-gB-information-C2-p3_7-w0",
+    "cid": "V6-gB-information-C2-p3_7-w0-n0",
+    "grid": [
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "grid_name": "B",
+    "line": "information",
+    "name_variant": 0,
+    "opening": 1,
+    "prior": [
+     3,
+     7
+    ],
+    "seller": "Silas Cherrydale",
+    "slice": "tune",
+    "split": "tune",
+    "type": "below",
+    "wording": 0
+   },
+   "letter_mass": [
+    0.6377630587294916
+   ],
+   "payoffs": [
+    4.0,
+    3.0,
+    2.0,
+    1.0,
+    0.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.004493357291215687,
+    0.9775368529362419,
+    0.0135687338295391,
+    0.0031118172403151725,
+    0.001289238702688033
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0
+    ],
+    "best_payoff": 4.0,
+    "hard_regret": 1.0,
+    "soft_regret": 1.019166727127018,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "below"
+  },
+  {
+   "cid": "V6-gB-information-C2-p3_7-w0-n1",
+   "inputs": {
+    "C": 2,
+    "V": 6,
+    "buyer": "Kestra Quinceton",
+    "cell": "V6-gB-information-C2-p3_7-w0",
+    "cid": "V6-gB-information-C2-p3_7-w0-n1",
+    "grid": [
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "grid_name": "B",
+    "line": "information",
+    "name_variant": 1,
+    "opening": 2,
+    "prior": [
+     3,
+     7
+    ],
+    "seller": "Davin Elderglen",
+    "slice": "tune",
+    "split": "tune",
+    "type": "below",
+    "wording": 0
+   },
+   "letter_mass": [
+    0.7289338043873764
+   ],
+   "payoffs": [
+    4.0,
+    3.0,
+    2.0,
+    1.0,
+    0.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.0036945222444510284,
+    0.9789066935119303,
+    0.013330850218847173,
+    0.002836166554341733,
+    0.0012317674704297682
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0
+    ],
+    "best_payoff": 4.0,
+    "hard_regret": 1.0,
+    "soft_regret": 1.0190039634943693,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "below"
+  },
+  {
+   "cid": "V6-gB-neutral-p2_6-w0-n0",
+   "inputs": {
+    "C": null,
+    "V": 6,
+    "buyer": "Dessa Zestmoor",
+    "cell": "V6-gB-neutral-p2_6-w0",
+    "cid": "V6-gB-neutral-p2_6-w0-n0",
+    "grid": [
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "grid_name": "B",
+    "line": "neutral",
+    "name_variant": 0,
+    "opening": 2,
+    "prior": [
+     2,
+     6
+    ],
+    "seller": "Yorick Juniperfold",
+    "slice": "tune",
+    "split": "tune",
+    "type": "no_cost",
+    "wording": 0
+   },
+   "letter_mass": [
+    0.6048912303175827
+   ],
+   "payoffs": [
+    0.8,
+    1.2000000000000002,
+    1.2,
+    0.8,
+    0.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.21090055183414708,
+    0.5861297171059408,
+    0.19224755372964225,
+    0.008008204068887192,
+    0.002713973261382694
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     1,
+     2
+    ],
+    "best_payoff": 1.2000000000000002,
+    "hard_regret": 0.0,
+    "soft_regret": 0.09082027027487305,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "no_cost"
+  },
+  {
+   "cid": "V6-gB-neutral-p2_6-w0-n1",
+   "inputs": {
+    "C": null,
+    "V": 6,
+    "buyer": "Odile Zestmoor",
+    "cell": "V6-gB-neutral-p2_6-w0",
+    "cid": "V6-gB-neutral-p2_6-w0-n1",
+    "grid": [
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "grid_name": "B",
+    "line": "neutral",
+    "name_variant": 1,
+    "opening": 3,
+    "prior": [
+     2,
+     6
+    ],
+    "seller": "Lorcan Walnutlea",
+    "slice": "tune",
+    "split": "tune",
+    "type": "no_cost",
+    "wording": 0
+   },
+   "letter_mass": [
+    0.6662234374085043
+   ],
+   "payoffs": [
+    0.8,
+    1.2000000000000002,
+    1.2,
+    0.8,
+    0.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.21473981388520022,
+    0.6132202219297638,
+    0.16175235289920986,
+    0.007014061037269837,
+    0.0032735502485562685
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     1,
+     2
+    ],
+    "best_payoff": 1.2000000000000002,
+    "hard_regret": 0.0,
+    "soft_regret": 0.09262981026725559,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "no_cost"
+  },
+  {
+   "cid": "V7-gB-pressure-p2_6-w0-n0",
+   "inputs": {
+    "C": null,
+    "V": 7,
+    "buyer": "Dessa Zestmoor",
+    "cell": "V7-gB-pressure-p2_6-w0",
+    "cid": "V7-gB-pressure-p2_6-w0-n0",
+    "grid": [
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "grid_name": "B",
+    "line": "pressure",
+    "name_variant": 0,
+    "opening": 2,
+    "prior": [
+     2,
+     6
+    ],
+    "seller": "Yorick Juniperfold",
+    "slice": "tune",
+    "split": "tune",
+    "type": "no_cost",
+    "wording": 0
+   },
+   "letter_mass": [
+    0.5558766753525112
+   ],
+   "payoffs": [
+    1.0,
+    1.6,
+    1.7999999999999998,
+    1.6,
+    1.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.2267714368951656,
+    0.5650408276936885,
+    0.1818245745478575,
+    0.01973117094225584,
+    0.006631989921032588
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     2
+    ],
+    "best_payoff": 1.7999999999999998,
+    "hard_regret": 0.19999999999999973,
+    "soft_regret": 0.3036771411801473,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "no_cost"
+  },
+  {
+   "cid": "V7-gB-pressure-p2_6-w0-n1",
+   "inputs": {
+    "C": null,
+    "V": 7,
+    "buyer": "Odile Zestmoor",
+    "cell": "V7-gB-pressure-p2_6-w0",
+    "cid": "V7-gB-pressure-p2_6-w0-n1",
+    "grid": [
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "grid_name": "B",
+    "line": "pressure",
+    "name_variant": 1,
+    "opening": 3,
+    "prior": [
+     2,
+     6
+    ],
+    "seller": "Lorcan Walnutlea",
+    "slice": "tune",
+    "split": "tune",
+    "type": "no_cost",
+    "wording": 0
+   },
+   "letter_mass": [
+    0.6708622591927175
+   ],
+   "payoffs": [
+    1.0,
+    1.6,
+    1.7999999999999998,
+    1.6,
+    1.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.23322229013319187,
+    0.5976057475471759,
+    0.14405190142587956,
+    0.015048046272013027,
+    0.010072014621739692
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     2
+    ],
+    "best_payoff": 1.7999999999999998,
+    "hard_regret": 0.19999999999999973,
+    "soft_regret": 0.31716620256778283,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "no_cost"
+  },
+  {
+   "cid": "V7-gC-information-C3-p1_10-w1-n0",
+   "inputs": {
+    "C": 3,
+    "V": 7,
+    "buyer": "Kestra Quinceton",
+    "cell": "V7-gC-information-C3-p1_10-w1",
+    "cid": "V7-gC-information-C3-p1_10-w1-n0",
+    "grid": [
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "grid_name": "C",
+    "line": "information",
+    "name_variant": 0,
+    "opening": 3,
+    "prior": [
+     1,
+     10
+    ],
+    "seller": "Niall Vineyard",
+    "slice": "tune",
+    "split": "tune",
+    "type": "below",
+    "wording": 1
+   },
+   "letter_mass": [
+    0.7207563392218879
+   ],
+   "payoffs": [
+    4.0,
+    3.0,
+    2.0,
+    1.0,
+    0.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.0023780440431417278,
+    0.9841665518751995,
+    0.01028187616336008,
+    0.0020570656145021287,
+    0.001116462303796535
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0
+    ],
+    "best_payoff": 4.0,
+    "hard_regret": 1.0,
+    "soft_regret": 1.0153673502606124,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "below"
+  },
+  {
+   "cid": "V7-gC-information-C3-p1_10-w1-n1",
+   "inputs": {
+    "C": 3,
+    "V": 7,
+    "buyer": "Xanthe Tangelo",
+    "cell": "V7-gC-information-C3-p1_10-w1",
+    "cid": "V7-gC-information-C3-p1_10-w1-n1",
+    "grid": [
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "grid_name": "C",
+    "line": "information",
+    "name_variant": 1,
+    "opening": 4,
+    "prior": [
+     1,
+     10
+    ],
+    "seller": "Varrin Vineyard",
+    "slice": "tune",
+    "split": "tune",
+    "type": "below",
+    "wording": 1
+   },
+   "letter_mass": [
+    0.7041428362813544
+   ],
+   "payoffs": [
+    4.0,
+    3.0,
+    2.0,
+    1.0,
+    0.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.002226291376795509,
+    0.9836882838333297,
+    0.010809162686528343,
+    0.0018600283994207587,
+    0.0014162337039257252
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     0
+    ],
+    "best_payoff": 4.0,
+    "hard_regret": 1.0,
+    "soft_regret": 1.0165516292203511,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "below"
+  },
+  {
+   "cid": "V7-gC-neutral-p3_7-w1-n0",
+   "inputs": {
+    "C": null,
+    "V": 7,
+    "buyer": "Quilla Medlarwick",
+    "cell": "V7-gC-neutral-p3_7-w1",
+    "cid": "V7-gC-neutral-p3_7-w1-n0",
+    "grid": [
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "grid_name": "C",
+    "line": "neutral",
+    "name_variant": 0,
+    "opening": 3,
+    "prior": [
+     3,
+     7
+    ],
+    "seller": "Fergus Limeharbor",
+    "slice": "tune",
+    "split": "tune",
+    "type": "no_cost",
+    "wording": 1
+   },
+   "letter_mass": [
+    0.5764041146744363
+   ],
+   "payoffs": [
+    0.8,
+    1.2000000000000002,
+    1.2,
+    0.8,
+    0.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.2905557364089758,
+    0.6495991493048006,
+    0.04302557465791466,
+    0.009844526179852202,
+    0.0069750134484567435
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     1,
+     2
+    ],
+    "best_payoff": 1.2000000000000002,
+    "hard_regret": 0.0,
+    "soft_regret": 0.12853012117367957,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "no_cost"
+  },
+  {
+   "cid": "V7-gC-neutral-p3_7-w1-n1",
+   "inputs": {
+    "C": null,
+    "V": 7,
+    "buyer": "Tamsin Hazelmere",
+    "cell": "V7-gC-neutral-p3_7-w1",
+    "cid": "V7-gC-neutral-p3_7-w1-n1",
+    "grid": [
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "grid_name": "C",
+    "line": "neutral",
+    "name_variant": 1,
+    "opening": 4,
+    "prior": [
+     3,
+     7
+    ],
+    "seller": "Yorick Zestmoor",
+    "slice": "tune",
+    "split": "tune",
+    "type": "no_cost",
+    "wording": 1
+   },
+   "letter_mass": [
+    0.6168192946547272
+   ],
+   "payoffs": [
+    0.8,
+    1.2000000000000002,
+    1.2,
+    0.8,
+    0.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.16394135528247208,
+    0.7157077137017953,
+    0.10379647360521252,
+    0.010411102561342096,
+    0.0061433548491778974
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     1,
+     2
+    ],
+    "best_payoff": 1.2000000000000002,
+    "hard_regret": 0.0,
+    "soft_regret": 0.07711300895653928,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "no_cost"
+  },
+  {
+   "cid": "V7-gC-pressure-p3_7-w1-n0",
+   "inputs": {
+    "C": null,
+    "V": 7,
+    "buyer": "Tamsin Applecroft",
+    "cell": "V7-gC-pressure-p3_7-w1",
+    "cid": "V7-gC-pressure-p3_7-w1-n0",
+    "grid": [
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "grid_name": "C",
+    "line": "pressure",
+    "name_variant": 0,
+    "opening": 1,
+    "prior": [
+     3,
+     7
+    ],
+    "seller": "Quill Barleyfield",
+    "slice": "tune",
+    "split": "tune",
+    "type": "no_cost",
+    "wording": 1
+   },
+   "letter_mass": [
+    0.716177492992675
+   ],
+   "payoffs": [
+    0.8,
+    1.2000000000000002,
+    1.2,
+    0.8,
+    0.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.19611049357445662,
+    0.7578409788364066,
+    0.02531147722044045,
+    0.015060147201010354,
+    0.005676903167686033
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     1,
+     2
+    ],
+    "best_payoff": 1.2000000000000002,
+    "hard_regret": 0.0,
+    "soft_regret": 0.09128054011141007,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "no_cost"
+  },
+  {
+   "cid": "V7-gC-pressure-p3_7-w1-n1",
+   "inputs": {
+    "C": null,
+    "V": 7,
+    "buyer": "Sorrel Medlarwick",
+    "cell": "V7-gC-pressure-p3_7-w1",
+    "cid": "V7-gC-pressure-p3_7-w1-n1",
+    "grid": [
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "grid_name": "C",
+    "line": "pressure",
+    "name_variant": 1,
+    "opening": 2,
+    "prior": [
+     3,
+     7
+    ],
+    "seller": "Niall Zestmoor",
+    "slice": "tune",
+    "split": "tune",
+    "type": "no_cost",
+    "wording": 1
+   },
+   "letter_mass": [
+    0.5477230600987695
+   ],
+   "payoffs": [
+    0.8,
+    1.2000000000000002,
+    1.2,
+    0.8,
+    0.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.2572811296119647,
+    0.6427199183231789,
+    0.08051541935754138,
+    0.013239538374951473,
+    0.006243994332363675
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     1,
+     2
+    ],
+    "best_payoff": 1.2000000000000002,
+    "hard_regret": 0.0,
+    "soft_regret": 0.11570106039360284,
+    "top_is_best": true,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "no_cost"
+  },
+  {
+   "cid": "V8-gA-neutral-p1_5-w1-n0",
+   "inputs": {
+    "C": null,
+    "V": 8,
+    "buyer": "Gwyn Raspberrow",
+    "cell": "V8-gA-neutral-p1_5-w1",
+    "cid": "V8-gA-neutral-p1_5-w1-n0",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "grid_name": "A",
+    "line": "neutral",
+    "name_variant": 0,
+    "opening": 1,
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Wystan Walnutlea",
+    "slice": "tune",
+    "split": "tune",
+    "type": "no_cost",
+    "wording": 1
+   },
+   "letter_mass": [
+    0.5308784281318837
+   ],
+   "payoffs": [
+    1.4000000000000001,
+    2.4000000000000004,
+    3.0,
+    3.2,
+    3.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.14438286184078977,
+    0.6110070318194717,
+    0.17121116406810305,
+    0.06172624837827932,
+    0.01167269389335613
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     3
+    ],
+    "best_payoff": 3.2,
+    "hard_regret": 0.7999999999999998,
+    "soft_regret": 0.7852715483612909,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "no_cost"
+  },
+  {
+   "cid": "V8-gA-neutral-p1_5-w1-n1",
+   "inputs": {
+    "C": null,
+    "V": 8,
+    "buyer": "Kestra Quinceton",
+    "cell": "V8-gA-neutral-p1_5-w1",
+    "cid": "V8-gA-neutral-p1_5-w1-n1",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "grid_name": "A",
+    "line": "neutral",
+    "name_variant": 1,
+    "opening": 2,
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Lorcan Limeharbor",
+    "slice": "tune",
+    "split": "tune",
+    "type": "no_cost",
+    "wording": 1
+   },
+   "letter_mass": [
+    0.6245298648521128
+   ],
+   "payoffs": [
+    1.4000000000000001,
+    2.4000000000000004,
+    3.0,
+    3.2,
+    3.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.12482998322862275,
+    0.5933380651773467,
+    0.2099079300691486,
+    0.06547292499737804,
+    0.006451096527503987
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     3
+    ],
+    "best_payoff": 3.2,
+    "hard_regret": 0.7999999999999998,
+    "soft_regret": 0.7426362272727287,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "no_cost"
+  },
+  {
+   "cid": "V8-gA-neutral-p2_6-w1-n0",
+   "inputs": {
+    "C": null,
+    "V": 8,
+    "buyer": "Fenna Walnutlea",
+    "cell": "V8-gA-neutral-p2_6-w1",
+    "cid": "V8-gA-neutral-p2_6-w1-n0",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "grid_name": "A",
+    "line": "neutral",
+    "name_variant": 0,
+    "opening": 4,
+    "prior": [
+     2,
+     6
+    ],
+    "seller": "Wystan Walnutlea",
+    "slice": "tune",
+    "split": "tune",
+    "type": "no_cost",
+    "wording": 1
+   },
+   "letter_mass": [
+    0.4322648688172256
+   ],
+   "payoffs": [
+    0.0,
+    1.2000000000000002,
+    2.0,
+    2.4,
+    2.4000000000000004
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.1413163483234015,
+    0.5266945840513634,
+    0.139611471684054,
+    0.16292471987708174,
+    0.029452876064099444
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     3,
+     4
+    ],
+    "best_payoff": 2.4000000000000004,
+    "hard_regret": 1.2000000000000002,
+    "soft_regret": 1.0270373255114214,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "no_cost"
+  },
+  {
+   "cid": "V8-gA-neutral-p2_6-w1-n1",
+   "inputs": {
+    "C": null,
+    "V": 8,
+    "buyer": "Rhea Hazelmere",
+    "cell": "V8-gA-neutral-p2_6-w1",
+    "cid": "V8-gA-neutral-p2_6-w1-n1",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "grid_name": "A",
+    "line": "neutral",
+    "name_variant": 1,
+    "opening": 0,
+    "prior": [
+     2,
+     6
+    ],
+    "seller": "Lorcan Limeharbor",
+    "slice": "tune",
+    "split": "tune",
+    "type": "no_cost",
+    "wording": 1
+   },
+   "letter_mass": [
+    0.5560294451104963
+   ],
+   "payoffs": [
+    0.0,
+    1.2000000000000002,
+    2.0,
+    2.4,
+    2.4000000000000004
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.20576397522853845,
+    0.5222029497924372,
+    0.07767059030466995,
+    0.16262790317661074,
+    0.03173458149774354
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     3,
+     4
+    ],
+    "best_payoff": 2.4000000000000004,
+    "hard_regret": 1.2000000000000002,
+    "soft_regret": 1.1515453164212857,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "no_cost"
+  },
+  {
+   "cid": "V9-gA-pressure-p1_10-w1-n0",
+   "inputs": {
+    "C": null,
+    "V": 9,
+    "buyer": "Linnea Raspberrow",
+    "cell": "V9-gA-pressure-p1_10-w1",
+    "cid": "V9-gA-pressure-p1_10-w1-n0",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "grid_name": "A",
+    "line": "pressure",
+    "name_variant": 0,
+    "opening": 1,
+    "prior": [
+     1,
+     10
+    ],
+    "seller": "Dunstan Yewbank",
+    "slice": "tune",
+    "split": "tune",
+    "type": "no_cost",
+    "wording": 1
+   },
+   "letter_mass": [
+    0.4339180160467116
+   ],
+   "payoffs": [
+    0.8,
+    1.4000000000000001,
+    1.7999999999999998,
+    2.0,
+    2.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.16611043206883241,
+    0.3545756991416434,
+    0.08067634441733602,
+    0.2594183978025339,
+    0.13921912656965427
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     3,
+     4
+    ],
+    "best_payoff": 2.0,
+    "hard_regret": 0.5999999999999999,
+    "soft_regret": 0.428213206851052,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "no_cost"
+  },
+  {
+   "cid": "V9-gA-pressure-p1_10-w1-n1",
+   "inputs": {
+    "C": null,
+    "V": 9,
+    "buyer": "Quilla Juniperfold",
+    "cell": "V9-gA-pressure-p1_10-w1",
+    "cid": "V9-gA-pressure-p1_10-w1-n1",
+    "grid": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "grid_name": "A",
+    "line": "pressure",
+    "name_variant": 1,
+    "opening": 2,
+    "prior": [
+     1,
+     10
+    ],
+    "seller": "Quill Yewbank",
+    "slice": "tune",
+    "split": "tune",
+    "type": "no_cost",
+    "wording": 1
+   },
+   "letter_mass": [
+    0.4444509473962864
+   ],
+   "payoffs": [
+    0.8,
+    1.4000000000000001,
+    1.7999999999999998,
+    2.0,
+    2.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.19422135257243595,
+    0.36673778829572157,
+    0.0990406869165224,
+    0.18512572010177564,
+    0.15487445211354453
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     3,
+     4
+    ],
+    "best_payoff": 2.0,
+    "hard_regret": 0.5999999999999999,
+    "soft_regret": 0.4729164334476603,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "no_cost"
+  },
+  {
+   "cid": "V9-gB-neutral-p1_5-w1-n0",
+   "inputs": {
+    "C": null,
+    "V": 9,
+    "buyer": "Dessa Zestmoor",
+    "cell": "V9-gB-neutral-p1_5-w1",
+    "cid": "V9-gB-neutral-p1_5-w1-n0",
+    "grid": [
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "grid_name": "B",
+    "line": "neutral",
+    "name_variant": 0,
+    "opening": 2,
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Yorick Juniperfold",
+    "slice": "tune",
+    "split": "tune",
+    "type": "no_cost",
+    "wording": 1
+   },
+   "letter_mass": [
+    0.5228584903695582
+   ],
+   "payoffs": [
+    2.8000000000000003,
+    3.5999999999999996,
+    4.0,
+    4.0,
+    3.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.21638235895053723,
+    0.5941482884853687,
+    0.13982918992778592,
+    0.0405428431787553,
+    0.00909731945755285
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     2,
+     3
+    ],
+    "best_payoff": 4.0,
+    "hard_regret": 0.40000000000000036,
+    "soft_regret": 0.5064154655923447,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "no_cost"
+  },
+  {
+   "cid": "V9-gB-neutral-p1_5-w1-n1",
+   "inputs": {
+    "C": null,
+    "V": 9,
+    "buyer": "Odile Zestmoor",
+    "cell": "V9-gB-neutral-p1_5-w1",
+    "cid": "V9-gB-neutral-p1_5-w1-n1",
+    "grid": [
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "grid_name": "B",
+    "line": "neutral",
+    "name_variant": 1,
+    "opening": 3,
+    "prior": [
+     1,
+     5
+    ],
+    "seller": "Lorcan Walnutlea",
+    "slice": "tune",
+    "split": "tune",
+    "type": "no_cost",
+    "wording": 1
+   },
+   "letter_mass": [
+    0.6386324216382319
+   ],
+   "payoffs": [
+    2.8000000000000003,
+    3.5999999999999996,
+    4.0,
+    4.0,
+    3.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.20751372938816498,
+    0.6077740088639283,
+    0.1540179989771468,
+    0.02389711259172535,
+    0.0067971501790346596
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     2,
+     3
+    ],
+    "best_payoff": 4.0,
+    "hard_regret": 0.40000000000000036,
+    "soft_regret": 0.49892322899040353,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "no_cost"
+  },
+  {
+   "cid": "V9-gC-information-C5-p2_6-w0-n0",
+   "inputs": {
+    "C": 5,
+    "V": 9,
+    "buyer": "Una Hazelmere",
+    "cell": "V9-gC-information-C5-p2_6-w0",
+    "cid": "V9-gC-information-C5-p2_6-w0-n0",
+    "grid": [
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "grid_name": "C",
+    "line": "information",
+    "name_variant": 0,
+    "opening": 0,
+    "prior": [
+     2,
+     6
+    ],
+    "seller": "Fergus Juniperfold",
+    "slice": "tune",
+    "split": "tune",
+    "type": "below",
+    "wording": 0
+   },
+   "letter_mass": [
+    0.6844716654805492
+   ],
+   "payoffs": [
+    0.0,
+    0.0,
+    4.0,
+    3.0,
+    2.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.06567065797919505,
+    0.9315532129219054,
+    0.0007605407669977085,
+    0.0015208048186906467,
+    0.0004947835132111363
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     2
+    ],
+    "best_payoff": 4.0,
+    "hard_regret": 4.0,
+    "soft_regret": 3.991405855449515,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "below"
+  },
+  {
+   "cid": "V9-gC-information-C5-p2_6-w0-n1",
+   "inputs": {
+    "C": 5,
+    "V": 9,
+    "buyer": "Yara Medlarwick",
+    "cell": "V9-gC-information-C5-p2_6-w0",
+    "cid": "V9-gC-information-C5-p2_6-w0-n1",
+    "grid": [
+     3,
+     4,
+     5,
+     6,
+     7
+    ],
+    "grid_name": "C",
+    "line": "information",
+    "name_variant": 1,
+    "opening": 1,
+    "prior": [
+     2,
+     6
+    ],
+    "seller": "Yorick Juniperfold",
+    "slice": "tune",
+    "split": "tune",
+    "type": "below",
+    "wording": 0
+   },
+   "letter_mass": [
+    0.7402486352977644
+   ],
+   "payoffs": [
+    0.0,
+    0.0,
+    4.0,
+    3.0,
+    2.0
+   ],
+   "per_order_probs": null,
+   "per_order_soft_regret": null,
+   "planted": false,
+   "probs": [
+    0.1584207664295152,
+    0.8389205459495885,
+    0.0007347316958263644,
+    0.0015049116263549035,
+    0.00041904429871500025
+   ],
+   "prompt_sha256": null,
+   "score": {
+    "best_options": [
+     2
+    ],
+    "best_payoff": 4.0,
+    "hard_regret": 4.0,
+    "soft_regret": 3.9917082497401997,
+    "top_is_best": false,
+    "top_option": 1
+   },
+   "split": "tune",
+   "type": "below"
+  }
+ ],
+ "config": {
+  "note": "Gemma 2 9B-it per-case tune probabilities from the pre-refactor code on the A10G; imported, not re-run"
+ },
+ "environment": {
+  "provider": "aws (historic)"
+ },
+ "git": {
+  "branch": "llama",
+  "commit": "1f9498603c6b09ce1ced1d63384c6f4ca2b3c394",
+  "dirty": true,
+  "note": "commit of the importer; the run itself predates it"
+ },
+ "input_hashes": {
+  "cases_sha256": "dc5d7dd7001902472c687a5405a5acf09a3f34852984a220690dec18a781606d",
+  "source_files_sha256": {
+   "demo_out/gen_text_rows.jsonl": "cd0cf37fda1dfaf9841740936fead2fe1a51e75c2625a4be58e60397a81cc697"
+  }
+ },
+ "model": "gemma2_9b",
+ "model_config": null,
+ "planted": {
+  "all_ok": null,
+  "failed": [],
+  "n": 0,
+  "n_ok": 0,
+  "note": "legacy imports had no planted cases"
+ },
+ "run_id": "legacy-gemma-notes_wrong_rule-tune-s0-a10g",
+ "schema": 1,
+ "seed": 0,
+ "solver": "legacy:gemma-notes_wrong_rule",
+ "solver_config": {
+  "gpu": "A10G",
+  "legacy_import": true,
+  "row": "wrong_rule",
+  "solver": "gemma-notes_wrong_rule"
+ },
+ "split": "tune",
+ "summary": {
+  "by_type": {
+   "at_or_above": {
+    "n": 28,
+    "soft_regret_mean": 0.24352231605800154
+   },
+   "below": {
+    "n": 28,
+    "soft_regret_mean": 1.3253208035703656
+   },
+   "no_cost": {
+    "n": 28,
+    "soft_regret_mean": 0.2849964346184994
+   }
+  },
+  "hard_regret_mean": 0.5835978835978837,
+  "n_cases": 84,
+  "soft_regret_mean": 0.617946518082289
+ },
+ "task": "haggling",
+ "timing": {
+  "approx_usd": null,
+  "gpu_seconds": null,
+  "note": "not recorded in the legacy files",
+  "wall_seconds": null
+ }
+}

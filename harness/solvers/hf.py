@@ -92,9 +92,10 @@ class _HFSolver:
             "dtype": self.b.spec.dtype, "attn": self.b.spec.attn_implementation, **self._extra()}
 
   uses_adapter = False
+  def user_text(self, task, case, order): return task.render(case, order)
   def letter_probs(self, task, case, order):
     import contextlib, math
-    text, l2o = task.render(case, order)
+    text, l2o = self.user_text(task, case, order)
     peft = getattr(self.b, "peft", None)
     ctx = self.b.peft.disable_adapter() if (peft is not None and not self.uses_adapter) else contextlib.nullcontext()
     with ctx:
@@ -116,6 +117,19 @@ class LessonSolver(_HFSolver):
     super().__init__(backend); self.path = lesson_path; self.text = open(lesson_path).read()
   def lesson(self): return self.text
   def _extra(self): return {"lesson_path": self.path, "lesson_sha256": _sha(self.text.encode())}
+
+
+class NotesSolver(_HFSolver):
+  """A written lesson inserted as a Notes block before the question (task.insert_notes), the placement of the pre-refactor text rows
+  (demo/gen_notes.render_notes). LessonSolver instead puts the text before the whole prompt."""
+  name = "notes"
+  def __init__(self, backend, lesson_path: str):
+    super().__init__(backend); self.path = lesson_path; self.text = open(lesson_path).read()
+    self.name = "notes:" + os.path.splitext(os.path.basename(lesson_path))[0]   # one solver name per text, so records of arms never pool
+  def user_text(self, task, case, order):
+    text, l2o = task.render(case, order)
+    return task.insert_notes(text, self.text), l2o
+  def _extra(self): return {"lesson_path": self.path, "lesson_sha256": _sha(self.text.encode()), "placement": "notes block before the question"}
 
 
 class SteeringSolver(_HFSolver):

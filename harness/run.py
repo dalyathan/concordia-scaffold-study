@@ -16,7 +16,7 @@ def main(argv=None):
   task = get_task(a.task)
   spec = modelspec.load(a.model) if a.model else None
   cls = solver_mod.registry()[a.solver]; kw = json.loads(a.kw)
-  if a.solver in ("plain", "lesson", "steering", "lora"):
+  if a.solver in ("plain", "lesson", "notes", "steering", "lora"):
     from harness.solvers.hf import Backend
     s = cls(Backend(spec), **kw)
   else:

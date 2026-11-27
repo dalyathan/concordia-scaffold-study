@@ -16,5 +16,5 @@ class Solver(Protocol):
 
 def registry():
   from harness.solvers import cpu, hf
-  return {"constant": cpu.ConstantSolver, "uniform": cpu.UniformSolver, "oracle": cpu.OracleSolver, "random": cpu.RandomSolver,
-          "plain": hf.PlainSolver, "lesson": hf.LessonSolver, "steering": hf.SteeringSolver, "lora": hf.LoRASolver}
+  return {"constant": cpu.ConstantSolver, "uniform": cpu.UniformSolver, "oracle": cpu.OracleSolver, "random": cpu.RandomSolver, "baseline": cpu.BaselineSolver,
+          "plain": hf.PlainSolver, "lesson": hf.LessonSolver, "notes": hf.NotesSolver, "steering": hf.SteeringSolver, "lora": hf.LoRASolver}

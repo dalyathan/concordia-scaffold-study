@@ -76,4 +76,4 @@ def load_all(directory: str = RUNS) -> list[dict]:
 
 def new_run_id(task, model, solver, split, seed) -> str:
   stamp = datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
-  return f"{solver}-{split}-s{seed}-{stamp}"
+  return f"{solver.replace(':', '_')}-{split}-s{seed}-{stamp}"

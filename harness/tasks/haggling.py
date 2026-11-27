@@ -256,8 +256,11 @@ def fingerprints_v2(cells):
 # ------------------------------------------------------------------ Task interface
 class HagglingTask:
   name = "haggling"
-  splits = ("train", "tune", "test_same", "test_hard")
+  splits = ("train", "tune", "test_same", "test_hard", "select_B")
   locked_splits = ("test_same", "test_hard")
+  # select_B: the LoRA selection set of the Gemma study (42 train cells outside the 100 training cells, name variant 0;
+  # demo/gen/lora_select_cells_B.json). It is a subset of `train`, used for early stopping and the lr choice only.
+  SELECT_B = os.path.join(GEN_DIR, "lora_select_cells_B.json")
   system_prompt = None     # the haggling prompt carries its own instructions; the model system text is set by the solver
 
   def __init__(self):
@@ -273,7 +276,31 @@ class HagglingTask:
     return {"seed": SEED, "rejected": self._rej, "cells": cells}, cases
 
   def cases(self, split: str) -> list[dict]:
+    if split == "select_B":
+      sel = set(json.load(open(self.SELECT_B)))
+      out = [c for c in self._build()[1] if c["split"] == "train" and c["cell"] in sel and c["name_variant"] == 0]
+      assert len(out) == len(sel) == 42, "selection set B must be 42 train cells"
+      return out
     return [c for c in self._build()[1] if c["split"] == split]
+
+  def insert_notes(self, text: str, notes: str) -> str:
+    """A Notes block before the question, exactly as demo/gen_notes.render_notes (the Gemma text rows and distillation targets)."""
+    head, tail = text.split("Question:", 1)
+    return head + "Notes:\n" + notes + "\n\n" + "Question:" + tail
+
+  BASELINES = ("cheapest", "stated_cost_rule")
+
+  def baseline_option(self, name: str, case: dict) -> int:
+    """Model-free reference policies (grid index). cheapest: the lowest price. stated_cost_rule (demo/gen_curve_report.py): if a
+    cost is stated below the resale value, the cheapest listed price >= the cost (the dearest if none), otherwise the cheapest."""
+    grid = case["grid"]
+    if name == "cheapest":
+      return grid.index(min(grid))
+    if name == "stated_cost_rule":
+      if case["C"] is not None and case["C"] < case["V"]:
+        return next((i for i, x in enumerate(grid) if x >= case["C"]), len(grid) - 1)
+      return grid.index(min(grid))
+    raise KeyError(name)
 
   def n_options(self, case) -> int:
     return len(case["grid"])

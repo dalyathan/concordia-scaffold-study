@@ -47,3 +47,14 @@ class RandomSolver(_Base):
     rng = random.Random(f"{self.seed}|{case['cid']}|{order}")
     w = {l: rng.random() for l in l2o}; z = sum(w.values())
     return {"probs": {l: x / z for l, x in w.items()}, "mass": 1.0, "prompt_sha256": _sha(text)}
+
+
+class BaselineSolver(_Base):
+  """A task's named model-free reference policy (task.baseline_option), e.g. haggling 'cheapest' or 'stated_cost_rule'."""
+  name = "baseline"
+  def __init__(self, policy="cheapest", **kw):
+    super().__init__(policy=policy, **kw); self.policy = policy; self.name = "baseline:" + policy
+  def letter_probs(self, task, case, order):
+    text, l2o = task.render(case, order)
+    opt = task.baseline_option(self.policy, case)
+    return {"probs": {l: float(o == opt) for l, o in l2o.items()}, "mass": 1.0, "prompt_sha256": _sha(text)}
