@@ -1,0 +1,1621 @@
+{
+ "n_prompts": 100,
+ "parse_rate": 1.0,
+ "agreement_on_parsed": 0.53,
+ "thresholds": {
+  "agree": 0.7,
+  "parse": 0.5
+ },
+ "pass": false,
+ "gpu_seconds": 210.51389861106873,
+ "rows": [
+  {
+   "cid": "V2-gC-information-C1-p1_5-w1-n0",
+   "order": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "forced": "b",
+   "free": "b",
+   "parsed_by": "price",
+   "agree": true,
+   "reply": "Kestra Zestmoor proposes 4 coins, knowing that she can sell it for 2 coins back in her hometown and trying to make a profit, but also aware that Emrys Olivebrook has already revealed a low farm cost, so she's aiming for a price that's slightly higher than the minimum she",
+   "noprefix_argmax": "b"
+  },
+  {
+   "cid": "V2-gC-information-C1-p1_5-w1-n0",
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    0
+   ],
+   "forced": "b",
+   "free": "a",
+   "parsed_by": "price",
+   "agree": false,
+   "reply": "Kestra Zestmoor proposes 4 coins, knowing that Emrys Olivebrook's farm cost is 1 coin and that she can sell the fruit for 2 coins back in her hometown, so she's trying to make a profit while still being mindful of the fact that 7 coins is really expensive.",
+   "noprefix_argmax": "b"
+  },
+  {
+   "cid": "V2-gC-information-C1-p1_5-w1-n0",
+   "order": [
+    2,
+    3,
+    4,
+    0,
+    1
+   ],
+   "forced": "e",
+   "free": "e",
+   "parsed_by": "price",
+   "agree": true,
+   "reply": "Kestra Zestmoor proposes 4 coins, knowing that she can sell it for 2 coins back in her hometown and that Emrys Olivebrook paid 1 coin at the farm, leaving her with a potential profit of 2 coins. However, Kestra Zestmoor always drives a hard",
+   "noprefix_argmax": "e"
+  },
+  {
+   "cid": "V2-gC-information-C1-p1_5-w1-n0",
+   "order": [
+    3,
+    4,
+    0,
+    1,
+    2
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "d) 5 coins.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V2-gC-information-C1-p1_5-w1-n0",
+   "order": [
+    4,
+    0,
+    1,
+    2,
+    3
+   ],
+   "forced": "d",
+   "free": "c",
+   "parsed_by": "price",
+   "agree": false,
+   "reply": "Kestra Zestmoor proposes 4 coins, knowing that she can sell it for 2 coins back in her hometown and trying to make a profit, but also aware that Emrys Olivebrook has already revealed their farm cost, so she's aiming to drive a hard bargain.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V9-gC-information-C7-p2_6-w0-n1",
+   "order": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "forced": "d",
+   "free": "c",
+   "parsed_by": "price",
+   "agree": false,
+   "reply": "Hollis Damsonhill proposed a price of 5 coins, knowing that Wystan Olivebrook paid 7 coins at the farm and that she can sell the fruit for 9 coins back in her hometown, so she's trying to drive a hard bargain by offering a price that's lower than what she can",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V9-gC-information-C7-p2_6-w0-n1",
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    0
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "d) 3 coins.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V9-gC-information-C7-p2_6-w0-n1",
+   "order": [
+    2,
+    3,
+    4,
+    0,
+    1
+   ],
+   "forced": "b",
+   "free": "e",
+   "parsed_by": "price",
+   "agree": false,
+   "reply": "Hollis Damsonhill proposed 4 coins, knowing that Wystan Olivebrook paid 7 coins at the farm and that she can sell the fruit for 9 coins back in her hometown, so she's trying to drive a hard bargain.",
+   "noprefix_argmax": "b"
+  },
+  {
+   "cid": "V9-gC-information-C7-p2_6-w0-n1",
+   "order": [
+    3,
+    4,
+    0,
+    1,
+    2
+   ],
+   "forced": "a",
+   "free": "e",
+   "parsed_by": "price",
+   "agree": false,
+   "reply": "Hollis Damsonhill proposed a price of 5 coins, knowing that Wystan Olivebrook paid 7 coins at the farm and that she can sell the fruit for 9 coins back in her hometown, so she's trying to drive a hard bargain.",
+   "noprefix_argmax": "a"
+  },
+  {
+   "cid": "V9-gC-information-C7-p2_6-w0-n1",
+   "order": [
+    4,
+    0,
+    1,
+    2,
+    3
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "price",
+   "agree": true,
+   "reply": "Hollis Damsonhill proposed a price of 5 coins, knowing that she can sell the fruit for 9 coins back in her hometown and that the average price is 5 coins per kilogram, but also considering that she always drives a hard bargain and Wystan Olivebrook paid 7 coins at the",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V7-gC-information-C4-p1_10-w0-n0",
+   "order": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "forced": "d",
+   "free": "c",
+   "parsed_by": "price",
+   "agree": false,
+   "reply": "Briar Elderglen would propose 5 coins, knowing that she can sell the fruit for 7 coins back in her hometown and that Dunstan Cherrydale paid 4 coins at the farm, leaving some room for negotiation.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V7-gC-information-C4-p1_10-w0-n0",
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    0
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "d) 3 coins.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V7-gC-information-C4-p1_10-w0-n0",
+   "order": [
+    2,
+    3,
+    4,
+    0,
+    1
+   ],
+   "forced": "b",
+   "free": "a",
+   "parsed_by": "price",
+   "agree": false,
+   "reply": "Briar Elderglen would propose 5 coins, trying to drive a hard bargain and leave some room for negotiation.",
+   "noprefix_argmax": "b"
+  },
+  {
+   "cid": "V7-gC-information-C4-p1_10-w0-n0",
+   "order": [
+    3,
+    4,
+    0,
+    1,
+    2
+   ],
+   "forced": "a",
+   "free": "e",
+   "parsed_by": "price",
+   "agree": false,
+   "reply": "Briar Elderglen would propose 5 coins, knowing that she can sell the fruit for 7 coins back in her hometown and that Dunstan paid 4 coins at the farm, leaving some room for negotiation.",
+   "noprefix_argmax": "b"
+  },
+  {
+   "cid": "V7-gC-information-C4-p1_10-w0-n0",
+   "order": [
+    4,
+    0,
+    1,
+    2,
+    3
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "price",
+   "agree": true,
+   "reply": "Briar Elderglen would propose 5 coins, knowing that Dunstan Cherrydale paid 4 coins at the farm and that she can sell the fruit for 7 coins back in her hometown, but also considering that 7 coins is really expensive and she wants to drive a hard bargain.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V9-gB-information-C3-p2_10-w1-n1",
+   "order": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "d) 5 coins.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V9-gB-information-C3-p2_10-w1-n1",
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    0
+   ],
+   "forced": "d",
+   "free": "b",
+   "parsed_by": "price",
+   "agree": false,
+   "reply": "Joss Walnutlea would propose 4 coins, knowing that Dunstan Limeharbor's farm cost is 3 coins, and she always drives a hard bargain, so she would try to make a profit.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V9-gB-information-C3-p2_10-w1-n1",
+   "order": [
+    2,
+    3,
+    4,
+    0,
+    1
+   ],
+   "forced": "b",
+   "free": "a",
+   "parsed_by": "price",
+   "agree": false,
+   "reply": "Joss Walnutlea would propose 4 coins, trying to take advantage of the fact that she knows she can sell the fruit for 9 coins back in her hometown, and that Dunstan Limeharbor is already making a profit by selling it for 4 coins.",
+   "noprefix_argmax": "b"
+  },
+  {
+   "cid": "V9-gB-information-C3-p2_10-w1-n1",
+   "order": [
+    3,
+    4,
+    0,
+    1,
+    2
+   ],
+   "forced": "b",
+   "free": "e",
+   "parsed_by": "price",
+   "agree": false,
+   "reply": "Joss Walnutlea would propose 4 coins, knowing that Dunstan Limeharbor's farm cost is 3 coins, and she always drives a hard bargain, so she would try to get a better deal by offering a price that is just above the farm cost.",
+   "noprefix_argmax": "b"
+  },
+  {
+   "cid": "V9-gB-information-C3-p2_10-w1-n1",
+   "order": [
+    4,
+    0,
+    1,
+    2,
+    3
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "price",
+   "agree": true,
+   "reply": "Joss Walnutlea would propose 4 coins, knowing that Dunstan Limeharbor's farm cost is 3 coins, and she always drives a hard bargain, so she would try to get a better deal by offering a price that is just above the farm cost.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V4-gB-information-C1-p1_10-w1-n0",
+   "order": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "d) 6 coins.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V4-gB-information-C1-p1_10-w1-n0",
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    0
+   ],
+   "forced": "c",
+   "free": "a",
+   "parsed_by": "price",
+   "agree": false,
+   "reply": "Kestra Zestmoor proposes 3 coins, knowing that Bram Hazelmere's farm cost is 1 coin and that she can sell the fruit for 4 coins back in her hometown, leaving her a decent profit margin.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V4-gB-information-C1-p1_10-w1-n0",
+   "order": [
+    2,
+    3,
+    4,
+    0,
+    1
+   ],
+   "forced": "e",
+   "free": "e",
+   "parsed_by": "price",
+   "agree": true,
+   "reply": "Kestra Zestmoor proposes 3 coins, knowing that Bram Hazelmere's farm cost is 1 coin and she can sell it for 4 coins back in her hometown, so she's trying to drive a hard bargain by offering a price that's lower than what she can sell it for, but",
+   "noprefix_argmax": "b"
+  },
+  {
+   "cid": "V4-gB-information-C1-p1_10-w1-n0",
+   "order": [
+    3,
+    4,
+    0,
+    1,
+    2
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "d) 4 coins.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V4-gB-information-C1-p1_10-w1-n0",
+   "order": [
+    4,
+    0,
+    1,
+    2,
+    3
+   ],
+   "forced": "d",
+   "free": "c",
+   "parsed_by": "price",
+   "agree": false,
+   "reply": "Kestra Zestmoor proposes 3 coins, knowing that Bram Hazelmere's farm cost is 1 coin and that she can sell the fruit for 4 coins back in her hometown, but also considering her reputation for driving a hard bargain.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V6-gB-information-C5-p2_10-w0-n1",
+   "order": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "d) 6 coins.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V6-gB-information-C5-p2_10-w0-n1",
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    0
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "d) 2 coins.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V6-gB-information-C5-p2_10-w0-n1",
+   "order": [
+    2,
+    3,
+    4,
+    0,
+    1
+   ],
+   "forced": "b",
+   "free": "a",
+   "parsed_by": "price",
+   "agree": false,
+   "reply": "Isla Sloefield would propose 4 coins, trying to take advantage of the fact that Emrys Applecroft paid 5 coins at the farm, and knowing that she can sell the fruit for 6 coins back in her hometown.",
+   "noprefix_argmax": "b"
+  },
+  {
+   "cid": "V6-gB-information-C5-p2_10-w0-n1",
+   "order": [
+    3,
+    4,
+    0,
+    1,
+    2
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "d) 4 coins.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V6-gB-information-C5-p2_10-w0-n1",
+   "order": [
+    4,
+    0,
+    1,
+    2,
+    3
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "d) 4 coins.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V4-gA-information-C1-p2_6-w1-n0",
+   "order": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "forced": "b",
+   "free": "b",
+   "parsed_by": "price",
+   "agree": true,
+   "reply": "Zelda Vineyard would propose 2 coins.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V4-gA-information-C1-p2_6-w1-n0",
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    0
+   ],
+   "forced": "b",
+   "free": "a",
+   "parsed_by": "price",
+   "agree": false,
+   "reply": "Zelda Vineyard would propose 2 coins.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V4-gA-information-C1-p2_6-w1-n0",
+   "order": [
+    2,
+    3,
+    4,
+    0,
+    1
+   ],
+   "forced": "e",
+   "free": "e",
+   "parsed_by": "price",
+   "agree": true,
+   "reply": "Zelda Vineyard would propose 2 coins.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V4-gA-information-C1-p2_6-w1-n0",
+   "order": [
+    3,
+    4,
+    0,
+    1,
+    2
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "d) 3 coins.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V4-gA-information-C1-p2_6-w1-n0",
+   "order": [
+    4,
+    0,
+    1,
+    2,
+    3
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "d) 3 coins.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V3-gC-information-C4-p3_7-w1-n1",
+   "order": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "d) 7 coins.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V3-gC-information-C4-p3_7-w1-n1",
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    0
+   ],
+   "forced": "c",
+   "free": "a",
+   "parsed_by": "price",
+   "agree": false,
+   "reply": "Wren Kumquatridge would propose 4 coins, knowing that Bram Limeharbor's farm cost is 4 coins and that she always drives a hard bargain, so she would try to get the best deal possible.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V3-gC-information-C4-p3_7-w1-n1",
+   "order": [
+    2,
+    3,
+    4,
+    0,
+    1
+   ],
+   "forced": "b",
+   "free": "e",
+   "parsed_by": "price",
+   "agree": false,
+   "reply": "Wren Kumquatridge would propose 4 coins, trying to drive a hard bargain by offering the farm cost, but not exceeding it, in an attempt to get a better deal.",
+   "noprefix_argmax": "b"
+  },
+  {
+   "cid": "V3-gC-information-C4-p3_7-w1-n1",
+   "order": [
+    3,
+    4,
+    0,
+    1,
+    2
+   ],
+   "forced": "a",
+   "free": "d",
+   "parsed_by": "price",
+   "agree": false,
+   "reply": "Wren Kumquatridge would propose 4 coins, trying to drive a hard bargain by offering the farm cost, but not exceeding it, in an attempt to get a better deal.",
+   "noprefix_argmax": "a"
+  },
+  {
+   "cid": "V3-gC-information-C4-p3_7-w1-n1",
+   "order": [
+    4,
+    0,
+    1,
+    2,
+    3
+   ],
+   "forced": "e",
+   "free": "b",
+   "parsed_by": "price",
+   "agree": false,
+   "reply": "Wren Kumquatridge would propose 3 coins, knowing that she can sell the fruit for that price back in her hometown and trying to drive a hard bargain by offering the lowest possible price.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V5-gB-information-C6-p3_7-w1-n0",
+   "order": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "forced": "d",
+   "free": "c",
+   "parsed_by": "price",
+   "agree": false,
+   "reply": "Marnie Walnutlea would propose 4 coins, trying to drive a hard bargain and get a better deal than the farm cost of 6 coins, but not so low that Niall Medlarwick would refuse the offer.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V5-gB-information-C6-p3_7-w1-n0",
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    0
+   ],
+   "forced": "a",
+   "free": "b",
+   "parsed_by": "price",
+   "agree": false,
+   "reply": "Marnie Walnutlea would propose 4 coins, knowing that Niall Medlarwick's farm cost is 6 coins and that she can sell the fruit for 5 coins back in her hometown, but also considering that she always drives a hard bargain and will try to get the best deal possible.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V5-gB-information-C6-p3_7-w1-n0",
+   "order": [
+    2,
+    3,
+    4,
+    0,
+    1
+   ],
+   "forced": "e",
+   "free": "a",
+   "parsed_by": "price",
+   "agree": false,
+   "reply": "Marnie Walnutlea would propose 4 coins, knowing that Niall Medlarwick's farm cost is 6 coins and that she can sell the fruit for 5 coins back in her hometown, so she would try to drive a hard bargain by offering a price that is lower than her own selling price but",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V5-gB-information-C6-p3_7-w1-n0",
+   "order": [
+    3,
+    4,
+    0,
+    1,
+    2
+   ],
+   "forced": "d",
+   "free": "e",
+   "parsed_by": "price",
+   "agree": false,
+   "reply": "Marnie Walnutlea would propose 4 coins, knowing that Niall Medlarwick paid 6 coins at the farm and that she can sell it for 5 coins back in her hometown, but also considering that she always drives a hard bargain and will try to get the best deal possible.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V5-gB-information-C6-p3_7-w1-n0",
+   "order": [
+    4,
+    0,
+    1,
+    2,
+    3
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "price",
+   "agree": true,
+   "reply": "Marnie Walnutlea would propose 4 coins, knowing that Niall Medlarwick's farm cost is 6 coins and that she can sell the fruit for 5 coins back in her hometown, but also considering that she always drives a hard bargain and will try to get the best deal possible.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V2-gC-information-C3-p2_10-w1-n1",
+   "order": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "forced": "d",
+   "free": "b",
+   "parsed_by": "price",
+   "agree": false,
+   "reply": "Odile Gooseberry would propose 4 coins.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V2-gC-information-C3-p2_10-w1-n1",
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    0
+   ],
+   "forced": "e",
+   "free": "a",
+   "parsed_by": "price",
+   "agree": false,
+   "reply": "Odile Gooseberry would propose 4 coins.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V2-gC-information-C3-p2_10-w1-n1",
+   "order": [
+    2,
+    3,
+    4,
+    0,
+    1
+   ],
+   "forced": "e",
+   "free": "e",
+   "parsed_by": "price",
+   "agree": true,
+   "reply": "Odile Gooseberry would propose 4 coins.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V2-gC-information-C3-p2_10-w1-n1",
+   "order": [
+    3,
+    4,
+    0,
+    1,
+    2
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "price",
+   "agree": true,
+   "reply": "Odile Gooseberry would propose 4 coins.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V2-gC-information-C3-p2_10-w1-n1",
+   "order": [
+    4,
+    0,
+    1,
+    2,
+    3
+   ],
+   "forced": "d",
+   "free": "c",
+   "parsed_by": "price",
+   "agree": false,
+   "reply": "Odile Gooseberry would propose 4 coins.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V4-gA-information-C5-p3_7-w1-n0",
+   "order": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "forced": "c",
+   "free": "c",
+   "parsed_by": "price",
+   "agree": true,
+   "reply": "Wren Hazelmere would propose 3 coins.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V4-gA-information-C5-p3_7-w1-n0",
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    0
+   ],
+   "forced": "b",
+   "free": "b",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "b) 3 coins.",
+   "noprefix_argmax": "b"
+  },
+  {
+   "cid": "V4-gA-information-C5-p3_7-w1-n0",
+   "order": [
+    2,
+    3,
+    4,
+    0,
+    1
+   ],
+   "forced": "a",
+   "free": "b",
+   "parsed_by": "price",
+   "agree": false,
+   "reply": "Wren Hazelmere would propose 4 coins.",
+   "noprefix_argmax": "a"
+  },
+  {
+   "cid": "V4-gA-information-C5-p3_7-w1-n0",
+   "order": [
+    3,
+    4,
+    0,
+    1,
+    2
+   ],
+   "forced": "e",
+   "free": "e",
+   "parsed_by": "price",
+   "agree": true,
+   "reply": "Wren Hazelmere would propose 3 coins.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V4-gA-information-C5-p3_7-w1-n0",
+   "order": [
+    4,
+    0,
+    1,
+    2,
+    3
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "d) 3 coins.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V3-gC-information-C5-p2_6-w1-n1",
+   "order": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "forced": "d",
+   "free": "b",
+   "parsed_by": "price",
+   "agree": false,
+   "reply": "Hollis Damsonhill proposed 4 coins, knowing that Lorcan Yewbank's farm cost was 5 coins and that she could sell the fruit for 3 coins back in her hometown, so she was trying to make a profit while still being mindful of the fact that Lorcan might be willing to accept",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V3-gC-information-C5-p2_6-w1-n1",
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    0
+   ],
+   "forced": "a",
+   "free": "a",
+   "parsed_by": "price",
+   "agree": true,
+   "reply": "Hollis Damsonhill proposed 4 coins, knowing that Lorcan Yewbank's farm cost was 5 coins and that she always drives a hard bargain.",
+   "noprefix_argmax": "a"
+  },
+  {
+   "cid": "V3-gC-information-C5-p2_6-w1-n1",
+   "order": [
+    2,
+    3,
+    4,
+    0,
+    1
+   ],
+   "forced": "b",
+   "free": "e",
+   "parsed_by": "price",
+   "agree": false,
+   "reply": "Hollis Damsonhill proposed 4 coins, knowing that Lorcan Yewbank's farm cost was 5 coins, and she always drives a hard bargain.",
+   "noprefix_argmax": "b"
+  },
+  {
+   "cid": "V3-gC-information-C5-p2_6-w1-n1",
+   "order": [
+    3,
+    4,
+    0,
+    1,
+    2
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "d) 5 coins.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V3-gC-information-C5-p2_6-w1-n1",
+   "order": [
+    4,
+    0,
+    1,
+    2,
+    3
+   ],
+   "forced": "d",
+   "free": "c",
+   "parsed_by": "price",
+   "agree": false,
+   "reply": "Hollis Damsonhill proposed a price of 4 coins, knowing that Lorcan Yewbank's farm cost was 5 coins and that she could sell the fruit for 3 coins back in her hometown, so she was trying to make a profit while still being mindful of the fact that Lorcan might be",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V2-gB-information-C3-p2_6-w1-n0",
+   "order": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "d) 6 coins.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V2-gB-information-C3-p2_6-w1-n0",
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    0
+   ],
+   "forced": "c",
+   "free": "b",
+   "parsed_by": "price",
+   "agree": false,
+   "reply": "Calla Gooseberry would propose 4 coins.",
+   "noprefix_argmax": "b"
+  },
+  {
+   "cid": "V2-gB-information-C3-p2_6-w1-n0",
+   "order": [
+    2,
+    3,
+    4,
+    0,
+    1
+   ],
+   "forced": "b",
+   "free": "b",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "b) 5 coins.",
+   "noprefix_argmax": "b"
+  },
+  {
+   "cid": "V2-gB-information-C3-p2_6-w1-n0",
+   "order": [
+    3,
+    4,
+    0,
+    1,
+    2
+   ],
+   "forced": "a",
+   "free": "b",
+   "parsed_by": "letter",
+   "agree": false,
+   "reply": "b) 6 coins.",
+   "noprefix_argmax": "b"
+  },
+  {
+   "cid": "V2-gB-information-C3-p2_6-w1-n0",
+   "order": [
+    4,
+    0,
+    1,
+    2,
+    3
+   ],
+   "forced": "e",
+   "free": "d",
+   "parsed_by": "letter",
+   "agree": false,
+   "reply": "d) 4 coins.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V3-gC-information-C4-p1_10-w0-n1",
+   "order": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "d) 6 coins.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V3-gC-information-C4-p1_10-w0-n1",
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    0
+   ],
+   "forced": "e",
+   "free": "d",
+   "parsed_by": "letter",
+   "agree": false,
+   "reply": "d) 3 coins.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V3-gC-information-C4-p1_10-w0-n1",
+   "order": [
+    2,
+    3,
+    4,
+    0,
+    1
+   ],
+   "forced": "b",
+   "free": "d",
+   "parsed_by": "letter",
+   "agree": false,
+   "reply": "d) 3 coins.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V3-gC-information-C4-p1_10-w0-n1",
+   "order": [
+    3,
+    4,
+    0,
+    1,
+    2
+   ],
+   "forced": "a",
+   "free": "d",
+   "parsed_by": "letter",
+   "agree": false,
+   "reply": "d) 5 coins.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V3-gC-information-C4-p1_10-w0-n1",
+   "order": [
+    4,
+    0,
+    1,
+    2,
+    3
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "d) 5 coins.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V2-gC-neutral-p1_5-w0-n0",
+   "order": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "forced": "b",
+   "free": "b",
+   "parsed_by": "price",
+   "agree": true,
+   "reply": "Rhea Tangelo would propose 4 coins, knowing that she can sell the fruit for 2 coins back in her hometown and that she wants to make a profit, but also being mindful of the fact that 5 coins is the average price and 7 coins is considered expensive.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V2-gC-neutral-p1_5-w0-n0",
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    0
+   ],
+   "forced": "b",
+   "free": "a",
+   "parsed_by": "price",
+   "agree": false,
+   "reply": "Rhea Tangelo would propose 4 coins, knowing that she can sell the fruit for 2 coins back in her hometown, and she wants to make a profit, but also considering that Jory Walnutlea might be willing to accept a price close to the average market price of 5 coins.",
+   "noprefix_argmax": "b"
+  },
+  {
+   "cid": "V2-gC-neutral-p1_5-w0-n0",
+   "order": [
+    2,
+    3,
+    4,
+    0,
+    1
+   ],
+   "forced": "e",
+   "free": "e",
+   "parsed_by": "price",
+   "agree": true,
+   "reply": "Rhea Tangelo would propose 4 coins, knowing that she can sell the fruit for 2 coins back in her hometown and that she wants to make a profit, but also being mindful of the fact that 7 coins is really expensive and she doesn't want to scare Jory off.",
+   "noprefix_argmax": "e"
+  },
+  {
+   "cid": "V2-gC-neutral-p1_5-w0-n0",
+   "order": [
+    3,
+    4,
+    0,
+    1,
+    2
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "d) 5 coins.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V2-gC-neutral-p1_5-w0-n0",
+   "order": [
+    4,
+    0,
+    1,
+    2,
+    3
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "d) 5 coins.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V5-gC-neutral-p3_7-w1-n1",
+   "order": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "d) 7 coins.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V5-gC-neutral-p3_7-w1-n1",
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    0
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "d) 3 coins.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V5-gC-neutral-p3_7-w1-n1",
+   "order": [
+    2,
+    3,
+    4,
+    0,
+    1
+   ],
+   "forced": "e",
+   "free": "e",
+   "parsed_by": "price",
+   "agree": true,
+   "reply": "Isla Tangelo proposes 4 coins, knowing that Lorcan Hazelmere's farm cost is likely to be lower than 5 coins, and she wants to drive a hard bargain.",
+   "noprefix_argmax": "b"
+  },
+  {
+   "cid": "V5-gC-neutral-p3_7-w1-n1",
+   "order": [
+    3,
+    4,
+    0,
+    1,
+    2
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "price",
+   "agree": true,
+   "reply": "Isla Tangelo proposes 4 coins, trying to drive a hard bargain and leave some room for negotiation.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V5-gC-neutral-p3_7-w1-n1",
+   "order": [
+    4,
+    0,
+    1,
+    2,
+    3
+   ],
+   "forced": "d",
+   "free": "c",
+   "parsed_by": "price",
+   "agree": false,
+   "reply": "Isla Tangelo proposes 4 coins, knowing that Lorcan Hazelmere's farm cost is likely to be around 4 coins, and she wants to drive a hard bargain.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V5-gA-neutral-p2_10-w0-n0",
+   "order": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "forced": "d",
+   "free": "b",
+   "parsed_by": "price",
+   "agree": false,
+   "reply": "Perrin Fennelmoor proposes 2 coins per kilogram, knowing that she can sell it for 5 coins back in her hometown and that the seller's farm cost is likely to be lower than her selling price, but also aware that she needs to drive a hard bargain.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V5-gA-neutral-p2_10-w0-n0",
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    0
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "d) 1 coin.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V5-gA-neutral-p2_10-w0-n0",
+   "order": [
+    2,
+    3,
+    4,
+    0,
+    1
+   ],
+   "forced": "b",
+   "free": "e",
+   "parsed_by": "price",
+   "agree": false,
+   "reply": "Perrin Fennelmoor proposes 2 coins, knowing that she can sell the fruit for 5 coins back in her hometown and that the seller's farm cost is likely to be lower than her selling price, so she's trying to drive a hard bargain.",
+   "noprefix_argmax": "b"
+  },
+  {
+   "cid": "V5-gA-neutral-p2_10-w0-n0",
+   "order": [
+    3,
+    4,
+    0,
+    1,
+    2
+   ],
+   "forced": "e",
+   "free": "b",
+   "parsed_by": "letter",
+   "agree": false,
+   "reply": "b) 5 coins.",
+   "noprefix_argmax": "b"
+  },
+  {
+   "cid": "V5-gA-neutral-p2_10-w0-n0",
+   "order": [
+    4,
+    0,
+    1,
+    2,
+    3
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "d) 3 coins.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V7-gA-neutral-p3_7-w0-n1",
+   "order": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "d) 5 coins.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V7-gA-neutral-p3_7-w0-n1",
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    0
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "d) 1 coin.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V7-gA-neutral-p3_7-w0-n1",
+   "order": [
+    2,
+    3,
+    4,
+    0,
+    1
+   ],
+   "forced": "b",
+   "free": "b",
+   "parsed_by": "price",
+   "agree": true,
+   "reply": "Briar Medlarwick proposed 4 coins, knowing that Emrys Barleyfield's farm cost is likely to be around 4 coins, and she wants to drive a hard bargain.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V7-gA-neutral-p3_7-w0-n1",
+   "order": [
+    3,
+    4,
+    0,
+    1,
+    2
+   ],
+   "forced": "b",
+   "free": "b",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "b) 5 coins.",
+   "noprefix_argmax": "b"
+  },
+  {
+   "cid": "V7-gA-neutral-p3_7-w0-n1",
+   "order": [
+    4,
+    0,
+    1,
+    2,
+    3
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "d) 3 coins.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V2-gB-pressure-p1_10-w1-n0",
+   "order": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "forced": "d",
+   "free": "b",
+   "parsed_by": "price",
+   "agree": false,
+   "reply": "Marnie Olivebrook would propose 3 coins, trying to drive a hard bargain and get a better price than what she could sell it for back in her hometown.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V2-gB-pressure-p1_10-w1-n0",
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    0
+   ],
+   "forced": "e",
+   "free": "a",
+   "parsed_by": "price",
+   "agree": false,
+   "reply": "Marnie Olivebrook would propose 3 coins, trying to drive a hard bargain and get the best deal possible, while also considering that she can sell the fruit for 2 coins back in her hometown.",
+   "noprefix_argmax": "e"
+  },
+  {
+   "cid": "V2-gB-pressure-p1_10-w1-n0",
+   "order": [
+    2,
+    3,
+    4,
+    0,
+    1
+   ],
+   "forced": "e",
+   "free": "e",
+   "parsed_by": "price",
+   "agree": true,
+   "reply": "Marnie Olivebrook would propose 3 coins, knowing that Bram Fennelmoor's farm cost is likely to be lower than the average price of 4 coins, and she always drives a hard bargain.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V2-gB-pressure-p1_10-w1-n0",
+   "order": [
+    3,
+    4,
+    0,
+    1,
+    2
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "price",
+   "agree": true,
+   "reply": "Marnie Olivebrook would propose 3 coins, knowing that Bram Fennelmoor's farm cost is likely to be around 3 coins, given that she can sell the fruit for 2 coins back in her hometown, and she always drives a hard bargain.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V2-gB-pressure-p1_10-w1-n0",
+   "order": [
+    4,
+    0,
+    1,
+    2,
+    3
+   ],
+   "forced": "d",
+   "free": "c",
+   "parsed_by": "price",
+   "agree": false,
+   "reply": "Marnie Olivebrook would propose 3 coins, knowing that Bram Fennelmoor's farm cost is likely to be around 3 coins, given that she can sell the fruit for 2 coins back in her hometown, and she always drives a hard bargain.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V5-gC-neutral-p3_7-w0-n1",
+   "order": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "forced": "d",
+   "free": "b",
+   "parsed_by": "price",
+   "agree": false,
+   "reply": "Perrin Olivebrook would propose 4 coins, knowing that Fergus Quinceton's farm cost is likely to be around 3 coins, and she wants to drive a hard bargain.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V5-gC-neutral-p3_7-w0-n1",
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    0
+   ],
+   "forced": "a",
+   "free": "a",
+   "parsed_by": "price",
+   "agree": true,
+   "reply": "Perrin Olivebrook would propose 4 coins, knowing that Fergus Quinceton's farm cost is likely to be around 3 coins, and she wants to drive a hard bargain.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V5-gC-neutral-p3_7-w0-n1",
+   "order": [
+    2,
+    3,
+    4,
+    0,
+    1
+   ],
+   "forced": "d",
+   "free": "e",
+   "parsed_by": "price",
+   "agree": false,
+   "reply": "Perrin Olivebrook would propose 4 coins, knowing that Fergus Quinceton's farm cost is likely to be around 3 coins, and she wants to drive a hard bargain.",
+   "noprefix_argmax": "b"
+  },
+  {
+   "cid": "V5-gC-neutral-p3_7-w0-n1",
+   "order": [
+    3,
+    4,
+    0,
+    1,
+    2
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "price",
+   "agree": true,
+   "reply": "Perrin Olivebrook proposes 4 coins, knowing that Fergus Quinceton's farm cost is likely to be around 3 coins, and she wants to drive a hard bargain.",
+   "noprefix_argmax": "d"
+  },
+  {
+   "cid": "V5-gC-neutral-p3_7-w0-n1",
+   "order": [
+    4,
+    0,
+    1,
+    2,
+    3
+   ],
+   "forced": "d",
+   "free": "c",
+   "parsed_by": "price",
+   "agree": false,
+   "reply": "Perrin Olivebrook would propose 4 coins, knowing that Fergus Quinceton's farm cost is likely to be around 4 coins, and she wants to drive a hard bargain.",
+   "noprefix_argmax": "d"
+  }
+ ],
+ "diagnostic": {
+  "agreement_free_vs_prefixed": 0.53,
+  "agreement_free_vs_noprefix_renormalised": 0.49,
+  "cases_free_answer_same_price_all_orders": "6/20",
+  "cases_prefixed_argmax_same_price_all_orders": "3/20",
+  "chance_agreement": 0.2,
+  "gpu_seconds": 19.247840642929077
+ }
+}

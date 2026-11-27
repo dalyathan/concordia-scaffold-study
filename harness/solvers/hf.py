@@ -70,15 +70,16 @@ class Backend:
                {"role": "assistant", "content": a}]
     return msgs + [{"role": "user", "content": text}]
 
-  def render_prompt(self, user: str, lesson=None) -> str:
-    """The exact prompt text whose next token is read: chat template + generation prompt + the config's assistant prefix (if any)."""
+  def render_prompt(self, user: str, lesson=None, prefix=None) -> str:
+    """The exact prompt text whose next token is read: chat template + generation prompt + the assistant prefix
+    (prefix=None: the config's; "" : none)."""
     prompt = self.tok.apply_chat_template(self.messages(user, lesson), tokenize=False, add_generation_prompt=True,
                                           **(self.spec.chat_template_kwargs or {}))
-    return prompt + (self.spec.assistant_prefix or "")
+    return prompt + ((self.spec.assistant_prefix or "") if prefix is None else prefix)
 
-  def next_letter_logprobs(self, user: str, lesson=None, hooks=()):
+  def next_letter_logprobs(self, user: str, lesson=None, hooks=(), prefix=None):
     torch = self.torch
-    prompt = self.render_prompt(user, lesson)
+    prompt = self.render_prompt(user, lesson, prefix)
     ids = self.tok(prompt, return_tensors="pt", add_special_tokens=False).input_ids.to(self.model.device)
     handles = [h(ids.shape[1] - 1) for h in hooks]
     try:
@@ -109,7 +110,7 @@ class _HFSolver:
     peft = getattr(self.b, "peft", None)
     ctx = self.b.peft.disable_adapter() if (peft is not None and not self.uses_adapter) else contextlib.nullcontext()
     with ctx:
-      lp, prompt = self.b.next_letter_logprobs(text, self.lesson(), self.hooks(case))
+      lp, prompt = self.b.next_letter_logprobs(text, self.lesson(), self.hooks(case), getattr(self, "prefix", None))
     letters = list(l2o)
     mass = sum(math.exp(lp[l]) for l in letters)
     return {"probs": {l: math.exp(lp[l]) / mass for l in letters}, "mass": mass,
@@ -117,7 +118,13 @@ class _HFSolver:
 
 
 class PlainSolver(_HFSolver):
+  """prefix: None = the config's assistant prefix; "" = no prefix (a sensitivity arm, named plain:noprefix)."""
   name = "plain"
+  def __init__(self, backend, prefix=None):
+    super().__init__(backend); self.prefix = prefix
+    if prefix is not None:
+      self.name = "plain:noprefix" if prefix == "" else "plain:prefix=" + prefix
+  def _extra(self): return {} if self.prefix is None else {"assistant_prefix_override": self.prefix}
 
 
 class LessonSolver(_HFSolver):

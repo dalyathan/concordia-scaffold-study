@@ -122,6 +122,8 @@ def main(argv=None):
   ap.add_argument("--device", default="cuda", help="cpu only for the tiny-model smoke test (tests/harness/test_train_lora_smoke.py)")
   ap.add_argument("--spec-path", help="smoke test: a model config file outside harness/models")
   a = ap.parse_args(argv)
+  if not a.limit and not a.plain_train_record:
+    ap.error("--plain-train-record is required (the epoch-0 check is a frozen stop rule); only --limit smoke runs may omit it")
   import numpy as np
   import torch
   t_start = time.time()
@@ -195,7 +197,7 @@ def main(argv=None):
   model.eval()
   worst = 0.0
   with torch.no_grad():
-    for ex in examples[:3]:
+    for ex in [by_case[c][0] for c in list(by_case)[:3]]:        # first order of three different cases
       lp = letter_lp(ex["ids"]).cpu().numpy()
       ref, _ = b.next_letter_logprobs(ex["text"])
       worst = max(worst, float(np.max(np.abs(lp - np.array([ref[l] for l in spec.answer_letters])))))
@@ -226,7 +228,7 @@ def main(argv=None):
   bad = 0
   rng = np.random.Generator(np.random.PCG64(a.seed))
   cids = [c["cid"] for c in train]
-  control = a.arm != "claude_examples"
+  control = True   # every arm trains to the last epoch and is also scored unselected (G1); selection stops at the frozen rule
   stopped_at = None
   t_train = 0.0
   model.train()

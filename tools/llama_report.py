@@ -147,9 +147,34 @@ fci = lambda t: f"{t[0]:.3f} [{t[1]:.3f}, {t[2]:.3f}]"
 
 
 # ------------------------------------------------------------------ report
+def readout_checks(J):
+  d = os.path.join(ROOT, "demo_out", "llama")
+  out = ["## Readout checks (plain Llama; mass and agreement only, no regret)", "",
+         "| check | prompts | assistant prefix | mean mass on the answer letters | band / result |", "| --- | --- | --- | --- | --- |"]
+  for f, lab in (("readout_probe.json", "probe, 20 tune cases x 5 orders"), ("probe_train_noprefix.json", "probe, 20 train cases outside training and select_B"),
+                 ("probe_train_prefix_answer.json", "probe, same train cases")):
+    if os.path.exists(os.path.join(d, f)):
+      x = json.load(open(os.path.join(d, f)))
+      out.append(f"| {lab} | {x['n_prompts']} | {x.get('assistant_prefix')!r} | {x['mean_mass']['bare']:.3f} | {x['band']} |")
+      J[f"readout/{f}"] = x["mean_mass"]["bare"]
+  fg = os.path.join(d, "freegen_check.json")
+  if os.path.exists(fg):
+    x = json.load(open(fg)); dg = x.get("diagnostic", {})
+    out.append(f"| free answer (greedy, no prefix) vs prefixed first-token argmax, same train cases | {x['n_prompts']} | 'Answer: (' | - | "
+               f"parse rate {x['parse_rate']:.2f}; agreement {x['agreement_on_parsed']:.2f} (frozen threshold {x['thresholds']['agree']}) -> "
+               f"{'PASS' if x['pass'] else 'FAIL: stop before step 4'} |")
+    if dg:
+      out += ["", f"Diagnostic (after the check; does not change the stop): free answer vs the unprefixed renormalised first-token argmax "
+                  f"{dg['agreement_free_vs_noprefix_renormalised']:.2f} (chance {dg['chance_agreement']}); the free answer names the same price in all five option orders "
+                  f"in {dg['cases_free_answer_same_price_all_orders']} cases, the prefixed argmax in {dg['cases_prefixed_argmax_same_price_all_orders']}."]
+    J["freegen"] = {k: x[k] for k in ("parse_rate", "agreement_on_parsed", "pass")} | {"diagnostic": dg}
+  return out + [""]
+
+
 def build():
   llama, ref, gem = records()
   out, J = [], {"limitation": LIMITATION}
+  out += readout_checks(J)
   cfg = lambda r: r.get("config") or {}
   # ---------------- references and step 4
   refs = {"oracle": "oracle", "uniform": "uniform", "baseline:cheapest": "always-cheapest", "baseline:stated_cost_rule": "stated-cost rule"}
@@ -158,6 +183,10 @@ def build():
           f"Train and tune cells only. One record per arm and split; soft regret in coins with 95% cluster-bootstrap intervals over (V, grid) groups. "
           f"Limitation: {LIMITATION}.", ""]
   arms = {}
+  tune_ref = one(ref, "oracle", "tune")
+  if tune_ref:
+    ng = len({group(x) for x in rows(tune_ref)}); J["tune_groups"] = ng
+    out += [f"Tune has {len({x['inputs']['cell'] for x in rows(tune_ref)})} cells in {ng} (V, grid) groups (the bootstrap clusters; with this few groups percentile intervals undercover).", ""]
   for split in ("tune", "train"):
     out += [f"### {split}", "", "| arm | n cases | soft regret [95%] | below | at or above | no cost | hard regret | slope on stated cost [95%] | letter mass mean / min | top letter share | planted |",
             "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |"]
@@ -175,17 +204,18 @@ def build():
                                       "ci": ci_mean(a.soft, a.case), "slope": sl, "mass_mean": mm, "mass_min": mn, "top_letter_share": pb[0],
                                       "planted": planted([r]), "record": r["_path"]}
     out.append("")
-  out += ["### Paired differences on tune (arm minus comparator; negative = arm better)", "", "| arm | minus plain [95%] | minus neutral [95%] | minus stated-cost rule [95%] |", "| --- | --- | --- | --- |"]
+  out += ["### Paired differences on tune (arm minus comparator; negative = arm better)", "", "| arm | minus plain [95%] | minus neutral [95%] | minus stated-cost rule [95%] | share of the plain-to-rule gap closed |", "| --- | --- | --- | --- | --- |"]
   P = arms.get(("plain", "tune")); N_ = arms.get(("notes:neutral", "tune")); R_ = arms.get(("baseline:stated_cost_rule", "tune"))
   for n in NOTES:
     a = arms.get((f"notes:{n}", "tune"))
     if a and P:
       d1 = diff(a, P); d2 = diff(a, N_) if N_ and n != "neutral" else None; d3 = diff(a, R_)
-      out.append(f"| {NOTE_LABEL[n]} | {fci(d1)} | {fci(d2) if d2 else '-'} | {fci(d3)} |")
+      gap = (P.mean() - a.mean()) / (P.mean() - R_.mean()) if abs(P.mean() - R_.mean()) > 1e-9 else None
+      out.append(f"| {NOTE_LABEL[n]} | {fci(d1)} | {fci(d2) if d2 else '-'} | {fci(d3)} | {f3(gap)} |")
       J[f"diff/tune/notes:{n}"] = {"minus_plain": d1, "minus_neutral": d2, "minus_rule": d3}
   if P and R_:
     J["diff/tune/plain_minus_rule"] = diff(P, R_)
-    out.append(f"| plain | - | - | {fci(J['diff/tune/plain_minus_rule'])} |")
+    out.append(f"| plain | - | - | {fci(J['diff/tune/plain_minus_rule'])} | - |")
   out.append("")
   # ---------------- step 5
   lora = [r for r in llama if r["solver"].startswith("lora:") and r["split"] == "tune"]
@@ -194,8 +224,9 @@ def build():
           "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |"]
   for r in sorted(lora, key=lambda r: (r["solver"], r["seed"])):
     t = cfg(r)["training"]; a = Arm([r], r["solver"]); mm, mn = mass([r])
-    out.append(f"| {cfg(r)['run']} | {t['arm']} | {t['n_cells']} | {t['lr']:.0e} | {t['seed']} | {t['best_step']} ({'yes' if t['best_is_epoch_zero'] else 'no'}) | "
-               f"{t['select_B_best_soft_regret']:.3f} | {a.mean():.3f} | " + " | ".join(f3(a.mean(ty)) for ty in TYPES) +
+    sel = f"{t['best_step']} ({'yes' if t['best_is_epoch_zero'] else 'no'})" if "best_step" in t else f"last epoch {t.get('last_epoch')}, no selection"
+    out.append(f"| {cfg(r)['run']} | {t['arm']} | {t['n_cells']} | {t['lr']:.0e} | {t['seed']} | {sel} | "
+               f"{f3(t.get('select_B_best_soft_regret'))} | {a.mean():.3f} | " + " | ".join(f3(a.mean(ty)) for ty in TYPES) +
                f" | {slope(a)[0]:.2f} | {mm:.3f} / {mn:.3f} | {planted([r])} | {gpu([r]) / 3600:.2f} | {f3((r.get('timing') or {}).get('approx_usd'))} |")
   out.append("")
   ex100 = {cfg(r)["training"]["lr"]: r for r in lora if r["solver"].startswith("lora:claude_examples_n100_") and r["seed"] == 0}
@@ -206,15 +237,31 @@ def build():
     out += [f"**lr choice (frozen rule: lower select_B, ties within 0.005 go to 1e-4):** select_B best {s1:.4f} at 1e-4 vs {s3:.4f} at 3e-4 -> **{chosen:.0e}**.", ""]
     J["lr_choice"] = {"select_B_1e-4": s1, "select_B_3e-4": s3, "chosen": chosen}
   fam = lambda arm, n: [r for r in lora if chosen is not None and r["solver"] == f"lora:{arm}_n{n}_lr{chosen:.0e}"]
-  E100, E25, C25, S100 = fam("claude_examples", 100), fam("claude_examples", 25), fam("cheapest_label", 25), fam("shuffled_claude", 100)
+  def control(arm, n):
+    """the selected control, unless its selection kept epoch 0: then the last-epoch adapter (LLAMA_PLAN.md, Controls)"""
+    sel = fam(arm, n)
+    if not sel:
+      return [], None
+    if any(cfg(r)["training"]["best_is_epoch_zero"] for r in sel):
+      last = [r for r in lora if chosen is not None and r["solver"] == f"lora:{arm}_n{n}_lr{chosen:.0e}_last"]
+      return last, "last epoch (selection kept epoch 0)"
+    return sel, "selected"
+  E100, E25 = fam("claude_examples", 100), fam("claude_examples", 25)
+  (C25, vC25), (C100, vC100), (S100, vS100) = control("cheapest_label", 25), control("cheapest_label", 100), control("shuffled_claude", 100)
+  J["control_versions"] = {"cheapest_label_n25": vC25, "cheapest_label_n100": vC100, "shuffled_claude_n100": vS100}
+  if any(J["control_versions"].values()):
+    out += ["Control versions used in R3/R4: " + "; ".join(f"{k} {v}" for k, v in J["control_versions"].items() if v) +
+            ". Controls are selected on select_B like the examples arm, which favours them.", ""]
   L = {}
   if E100:
     L["ex100"] = Arm(E100, "examples-100")
     out += ["### Examples-100 (seed mean at the chosen lr) against plain, controls and references", "",
-            f"Seeds: {', '.join(f'{v:.3f}' for v in L['ex100'].seed_soft)}; seed mean {L['ex100'].mean():.3f}; slope {fci(slope(L['ex100']))}.", "",
+            f"Seeds: {', '.join(f'{v:.3f}' for v in L['ex100'].seed_soft)}; seed mean {L['ex100'].mean():.3f}; seeds below plain: "
+            f"{sum(v < P.mean() for v in L['ex100'].seed_soft) if P else '-'} of {len(L['ex100'].seed_soft)}; slope {fci(slope(L['ex100']))}. "
+            "Intervals are conditional on the one fixed training draw (seeds change the LoRA initialisation and the example order only).", "",
             "| comparator | comparator soft | examples-100 minus comparator [95%] |", "| --- | --- | --- |"]
     comps = [("plain", P), ("always-cheapest", arms.get(("baseline:cheapest", "tune"))), ("stated-cost rule", R_)]
-    for nm, recs_ in (("examples-25", E25), ("cheapest-label N=25", C25), ("scrambled N=100", S100)):
+    for nm, recs_ in (("examples-25", E25), ("cheapest-label N=25", C25), ("cheapest-label N=100", C100), ("scrambled N=100", S100)):
       if recs_:
         L[nm] = Arm(recs_, nm); comps.append((nm, L[nm]))
     for nm, c in comps:
@@ -224,7 +271,7 @@ def build():
   # ---------------- Gemma vs Llama
   out += ["## Gemma 2 9B vs Llama 3.1 8B on the same 42 tune cells", "",
           f"Gemma: imported records of the pre-refactor code (A10G originals; A40 = rescore of the same adapters on the A40). Llama: harness on the A40. "
-          f"Limitation: {LIMITATION}; the two columns also differ in chat framing (LLAMA_PLAN.md, changes 1-3).", "",
+          f"Limitation: {LIMITATION}. This comparison is code-path-confounded: the columns also differ in chat framing (Llama has a system message and the assistant prefix \"Answer: (\"), attention and logits, and for the A10G column the GPU (LLAMA_PLAN.md, changes 1-4). The within-Llama contrasts above are the headline.", "",
           "| arm | Gemma A10G | Gemma A40 | Llama A40 | Llama minus Gemma A10G |", "| --- | --- | --- | --- | --- |"]
   gm = lambda *names: (float(np.mean([Arm([gem[n]], n).mean() for n in names])) if all(n in gem for n in names) else None)
   gseeds = lambda arm, seeds, gpu_: [f"legacy-gemma-{arm}-tune-s{s}-{gpu_}" for s in seeds]
@@ -237,6 +284,7 @@ def build():
   table += [("examples-100, 3-seed mean", gm(*gseeds("claude_examples_n100", (0, 1, 2), "a10g")), gm(*gseeds("claude_examples_n100", (0, 1, 2), "a40")), L.get("ex100")),
             ("examples-25, seed 0", gm(*gseeds("claude_examples_n25", (0,), "a10g")), gm(*gseeds("claude_examples_n25", (0,), "a40")), L.get("examples-25")),
             ("cheapest-label N=25", gm(*gseeds("cheapest_label_n25", (0,), "a10g")), gm(*gseeds("cheapest_label_n25", (0,), "a40")), L.get("cheapest-label N=25")),
+            ("cheapest-label N=100", gm(*gseeds("cheapest_label_n100", (0,), "a10g")), gm(*gseeds("cheapest_label_n100", (0,), "a40")), L.get("cheapest-label N=100")),
             ("scrambled N=100", gm(*gseeds("shuffled_claude_n100", (0,), "a10g")), gm(*gseeds("shuffled_claude_n100", (0,), "a40")), L.get("scrambled N=100"))]
   for nm, g10, g40, la in table:
     lv = la.mean() if la is not None else None
@@ -257,14 +305,20 @@ def build():
   if P and R_:
     d = J["diff/tune/plain_minus_rule"]; bt = {t: P.mean(t) for t in TYPES}
     r1 = (P.mean() >= 0.30 and d[1] > 0 and max(bt, key=bt.get) == "below")
-    verdicts["R1"] = ("plain fails like Gemma" if r1 else ("does not fail" if P.mean() < 0.30 else "fails differently")) + \
-        f" (soft {P.mean():.3f}; minus rule {fci(d)}; largest type {max(bt, key=bt.get)})"
+    pm = mass(P.recs)[0]; J["plain_tune_mass"] = pm
+    gate = pm >= 0.9
+    verdicts["R1"] = (("plain fails like Gemma" if r1 else ("does not fail" if P.mean() < 0.30 else "fails differently")) if gate else
+                      "NOT CONCLUDED: plain tune letter mass below 0.9") + \
+        f" (soft {P.mean():.3f}; minus rule {fci(d)}; largest type {max(bt, key=bt.get)}; plain letter mass {pm:.4f})" + \
+        ("; R2-R5 are headroom-limited (plain < 0.30)" if P.mean() < 0.30 else "")
   if P and N_:
     for n in ("method_original", "teacher"):
       a = arms.get((f"notes:{n}", "tune"))
       if a:
         d1, d2 = J[f"diff/tune/notes:{n}"]["minus_plain"], J[f"diff/tune/notes:{n}"]["minus_neutral"]
-        verdicts[f"R2 {n}"] = ("helps" if (d1[2] < 0 and d2[2] < 0) else "not shown to help") + f" (minus plain {fci(d1)}; minus neutral {fci(d2)})"
+        ok_mass = mass(P.recs)[0] >= 0.9
+        verdicts[f"R2 {n}"] = (("helps" if (d1[2] < 0 and d2[2] < 0) else "not shown to help") if ok_mass else "NOT CONCLUDED: plain letter mass below 0.9") + \
+            f" (minus plain {fci(d1)}; minus neutral {fci(d2)}; arm letter mass {mass(a.recs)[0]:.4f})"
     dn = J["diff/tune/notes:neutral"]["minus_plain"]; wr = arms.get(("notes:wrong_rule", "tune"))
     dw = J["diff/tune/notes:wrong_rule"]["minus_plain"] if wr else None
     verdicts["R2 controls"] = ("inert" if (abs(dn[0]) <= 0.10 and (dw is None or dw[2] >= 0)) else "NOT inert") + \
@@ -273,7 +327,7 @@ def build():
     e = L["ex100"]; conds = {}
     conds["mean <= 0.15"] = e.mean() <= 0.15
     conds["every seed below plain"] = bool(P) and all(s < P.mean() for s in e.seed_soft)
-    for nm in ("plain", "cheapest-label N=25", "scrambled N=100"):
+    for nm in ("plain", "cheapest-label N=100", "scrambled N=100"):
       k = f"diff/tune/ex100_minus/{nm}"; conds[f"interval vs {nm} below 0"] = k in J and J[k][2] < 0
     conds["letter mass >= 0.97 (each adapter)"] = all(mass([r])[0] >= 0.97 for r in E100)
     conds["planted 4/4 (each adapter)"] = all(r["planted"]["all_ok"] for r in E100)
@@ -283,8 +337,9 @@ def build():
     J["R3_conditions"] = conds
     ch = arms.get(("baseline:cheapest", "tune"))
     r4 = []
-    if "cheapest-label N=25" in L and ch:
-      r4.append(("cheapest-label within 0.05 of always-cheapest", abs(L["cheapest-label N=25"].mean() - ch.mean()) <= 0.05))
+    for nm in ("cheapest-label N=25", "cheapest-label N=100"):
+      if nm in L and ch:
+        r4.append((f"{nm} within 0.05 of always-cheapest", abs(L[nm].mean() - ch.mean()) <= 0.05))
     if "scrambled N=100" in L:
       r4.append(("scrambled at least 0.15 worse than examples-100", L["scrambled N=100"].mean() - e.mean() >= 0.15))
     verdicts["R4"] = "; ".join(f"{k}: {'yes' if v else 'NO'}" for k, v in r4) or "controls not run"
@@ -319,8 +374,12 @@ def predictions(arms, L, gem, J):
     v1 = rng(0.9, None, bel); v = "HELD" if (v1 == "HELD" and ratio >= 2.5) else ("FAILED" if (v1 == "FAILED" or ratio < 2.5) and v1 != "UNCLEAR" else "UNCLEAR")
     res.append(("L1b", "below regret >= 0.9 and >= 2.5x no-cost regret", f"below {fci(bel)}; ratio {ratio:.2f}", v, "-"))
     s = slope(P); res.append(("L1c", "slope of offer on stated cost (below) <= 0.45", fci(s), rng(None, 0.45, s), "-"))
-    m = mass([P.recs[0]])[0]
-    res.append(("L1d", "letter mass >= 0.90; P(>= 0.98) = 0.7", f"{m:.4f}", "HELD" if m >= 0.90 else "FAILED", brier(0.7, m >= 0.98)))
+    pass
+  m0 = J.get("readout/readout_probe.json")      # frozen (G1 re-gate): L1d is scored on the unprefixed readout, the framing it was written for
+  if m0 is not None:
+    res.append(("L1d", "letter mass >= 0.90; P(>= 0.98) = 0.7 (scored on the unprefixed framing)", f"{m0:.4f} (tune probe, no prefix)",
+                "HELD" if m0 >= 0.90 else "FAILED", brier(0.7, m0 >= 0.98)))
+  if P:
     pb = position_bias(P.recs)[0]
     res.append(("L1e", "P(top letter share > 0.30) = 0.6", f"{pb:.3f}", "probability only", brier(0.6, pb > 0.30)))
     gem_plain = Arm([gem["legacy-plain-tune-s0"]], "g").mean()
@@ -363,7 +422,7 @@ def predictions(arms, L, gem, J):
     res.append(("L4f", "cheapest-label N=25 within 0.05 of always-cheapest", f"difference {fci(d)}", rng(-0.05, 0.05, d), "-"))
   else:
     res.append(("L4f", "cheapest-label N=25 within 0.05 of always-cheapest", "-", "not testable", "-"))
-  ad = [Arm([r], r["solver"]) for r in (e.recs if e else []) + (e25.recs if e25 else []) + (c25.recs if c25 else []) + (L["scrambled N=100"].recs if "scrambled N=100" in L else [])]
+  ad = [Arm([r], r["solver"]) for r in (e.recs if e else []) + (e25.recs if e25 else []) + (c25.recs if c25 else []) + (L["cheapest-label N=100"].recs if "cheapest-label N=100" in L else []) + (L["scrambled N=100"].recs if "scrambled N=100" in L else [])]
   if ad:
     mn = min(mass(a.recs)[0] for a in ad)
     res.append(("L4g", "letter mass of every trained adapter >= 0.97", f"lowest adapter mean {mn:.4f}", "HELD" if mn >= 0.97 else "FAILED", "-"))

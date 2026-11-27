@@ -1,0 +1,161 @@
+{
+ "budget": {
+  "gpu_hours_records": 0.0,
+  "usd_records": 0.0
+ },
+ "control_versions": {
+  "cheapest_label_n100": null,
+  "cheapest_label_n25": null,
+  "shuffled_claude_n100": null
+ },
+ "freegen": {
+  "agreement_on_parsed": 0.53,
+  "diagnostic": {
+   "agreement_free_vs_noprefix_renormalised": 0.49,
+   "agreement_free_vs_prefixed": 0.53,
+   "cases_free_answer_same_price_all_orders": "6/20",
+   "cases_prefixed_argmax_same_price_all_orders": "3/20",
+   "chance_agreement": 0.2,
+   "gpu_seconds": 19.247840642929077
+  },
+  "parse_rate": 1.0,
+  "pass": false
+ },
+ "gemma_vs_llama/Claude's lesson (teacher paragraph)": {
+  "gemma_a10g": 0.39034814782993976,
+  "gemma_a40": null,
+  "llama": null
+ },
+ "gemma_vs_llama/always-cheapest": {
+  "gemma_a10g": null,
+  "gemma_a40": null,
+  "llama": null
+ },
+ "gemma_vs_llama/cheapest-label N=100": {
+  "gemma_a10g": 0.4285981932914673,
+  "gemma_a40": 0.42859852080219757,
+  "llama": null
+ },
+ "gemma_vs_llama/cheapest-label N=25": {
+  "gemma_a10g": 0.4285975658383112,
+  "gemma_a40": 0.42859878660958417,
+  "llama": null
+ },
+ "gemma_vs_llama/examples-100, 3-seed mean": {
+  "gemma_a10g": 0.03206784077141945,
+  "gemma_a40": 0.03239959633424429,
+  "llama": null
+ },
+ "gemma_vs_llama/examples-25, seed 0": {
+  "gemma_a10g": 0.043012236672990006,
+  "gemma_a40": 0.042706657287267705,
+  "llama": null
+ },
+ "gemma_vs_llama/neutral text (control)": {
+  "gemma_a10g": 0.7348036718808173,
+  "gemma_a40": null,
+  "llama": null
+ },
+ "gemma_vs_llama/plain": {
+  "gemma_a10g": 0.6572416108190681,
+  "gemma_a40": 0.66079056021702,
+  "llama": null
+ },
+ "gemma_vs_llama/scrambled N=100": {
+  "gemma_a10g": 0.6945645665043692,
+  "gemma_a40": 0.6954272121089659,
+  "llama": null
+ },
+ "gemma_vs_llama/stated-cost rule": {
+  "gemma_a10g": null,
+  "gemma_a40": null,
+  "llama": null
+ },
+ "gemma_vs_llama/written rule (our method paragraph)": {
+  "gemma_a10g": 0.3688113158315839,
+  "gemma_a40": null,
+  "llama": null
+ },
+ "gemma_vs_llama/wrong rule (control)": {
+  "gemma_a10g": 0.617946518082289,
+  "gemma_a40": null,
+  "llama": null
+ },
+ "limitation": "harness not yet checked against stored Gemma scores",
+ "predictions": [
+  {
+   "brier": "0.490 (p 0.7, outcome no)",
+   "id": "L1d",
+   "observed": "0.4874 (tune probe, no prefix)",
+   "statement": "letter mass >= 0.90; P(>= 0.98) = 0.7 (scored on the unprefixed framing)",
+   "verdict": "FAILED"
+  },
+  {
+   "brier": "-",
+   "id": "L3a",
+   "observed": "-",
+   "statement": "steering fails (P 0.80)",
+   "verdict": "not testable (steering not run)"
+  },
+  {
+   "brier": "-",
+   "id": "L3b",
+   "observed": "-",
+   "statement": "steering pushes one letter (P 0.65)",
+   "verdict": "not testable (steering not run)"
+  },
+  {
+   "brier": "-",
+   "id": "L4a",
+   "observed": "-",
+   "statement": "examples-100 soft regret 0.02-0.15",
+   "verdict": "not testable"
+  },
+  {
+   "brier": "-",
+   "id": "L4b",
+   "observed": "-",
+   "statement": "examples-25 0.04-0.25 (N = 10, 50 not run)",
+   "verdict": "not testable"
+  },
+  {
+   "brier": "-",
+   "id": "L4c",
+   "observed": "-",
+   "statement": "learning-curve shape",
+   "verdict": "not testable"
+  },
+  {
+   "brier": "-",
+   "id": "L4d",
+   "observed": "-",
+   "statement": "examples-100 slope >= 0.5 (N = 10 part not run)",
+   "verdict": "not testable"
+  },
+  {
+   "brier": "-",
+   "id": "L4e",
+   "observed": "-",
+   "statement": "rule-trained students (P 0.8)",
+   "verdict": "not testable (not run)"
+  },
+  {
+   "brier": "-",
+   "id": "L4f",
+   "observed": "-",
+   "statement": "cheapest-label N=25 within 0.05 of always-cheapest",
+   "verdict": "not testable"
+  },
+  {
+   "brier": "-",
+   "id": "L4g",
+   "observed": "-",
+   "statement": "letter mass of every trained adapter >= 0.97",
+   "verdict": "not testable"
+  }
+ ],
+ "readout/probe_train_noprefix.json": 0.47157056495547295,
+ "readout/probe_train_prefix_answer.json": 0.9981016141176223,
+ "readout/readout_probe.json": 0.4873880787193775,
+ "verdicts": {}
+}

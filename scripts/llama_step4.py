@@ -28,6 +28,7 @@ def main():
   only = set(a.only.split(",")) if a.only else None
   want = lambda n: only is None or n in only
   task = get_task("haggling")
+  os.makedirs(os.path.join(ROOT, "logs"), exist_ok=True)
   log = open(os.path.join(ROOT, "logs", "llama_step4.jsonl"), "a")
   def note(**kw):
     kw["t"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()); log.write(json.dumps(kw) + "\n"); log.flush(); print(json.dumps(kw), flush=True)
@@ -37,19 +38,24 @@ def main():
       if want(name):
         r = evaluate(task, s, split, 0, None, {"step": "llama step 4 reference"})
         note(solver=name, split=split, soft=r["summary"]["soft_regret_mean"], planted=f"{r['planted']['n_ok']}/{r['planted']['n']}", path=r["_written_to"])
+        if name == "oracle" and not r["planted"]["all_ok"]:
+          note(event="STOP: oracle fails a planted case (pipeline)"); sys.exit(2)
+        if name == "cheapest" and "planted-high" not in r["planted"]["failed"]:
+          note(event="STOP: always-cheapest passes planted-high (negative control)"); sys.exit(2)
   spec = modelspec.load(a.model)
   from harness.solvers.hf import Backend, NotesSolver, PlainSolver
   t0 = time.time(); b = Backend(spec); note(event="model loaded", seconds=time.time() - t0, revision=b.revision)
   jobs = [("plain", PlainSolver(b), sp) for sp in splits] + \
-         [(f"notes_{n}", NotesSolver(b, os.path.join("harness", "lessons", n + ".txt")), sp) for sp in splits for n in NOTES]
+         [("plain_noprefix", PlainSolver(b, prefix=""), "train")] * ("train" in splits) + \
+         [(f"notes_{n}", NotesSolver(b, os.path.join(ROOT, "harness", "lessons", n + ".txt")), sp) for sp in splits for n in NOTES]
   for name, s, split in jobs:
     if not want(name):
       continue
     r = evaluate(task, s, split, 0, spec, {"step": "llama step 4", "arm": name})
     note(solver=name, split=split, soft=r["summary"]["soft_regret_mean"], by_type={k: v["soft_regret_mean"] for k, v in r["summary"]["by_type"].items()},
          mass=r["letter_mass"]["mean"], planted=f"{r['planted']['n_ok']}/{r['planted']['n']}", gpu_s=r["timing"]["gpu_seconds"], path=r["_written_to"])
-    if name == "plain" and split == "tune" and not r["letter_mass"]["ok"]:
-      note(event="STOP: plain letter mass below the floor", mass=r["letter_mass"]["mean"]); sys.exit(2)
+    if name == "plain" and split == "tune" and r["letter_mass"]["mean"] < 0.9:
+      note(event="STOP: plain tune letter mass below 0.9 (LLAMA_PLAN.md mass bands)", mass=r["letter_mass"]["mean"]); sys.exit(2)
   note(event="step 4 done", seconds=time.time() - t0)
 
 
