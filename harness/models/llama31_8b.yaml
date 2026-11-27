@@ -13,6 +13,7 @@ layer_module: model.layers.{i}    # relative to the HF *ForCausalLM object: lm.m
 final_norm_module: model.norm
 lora_target_modules: [q_proj, k_proj, v_proj, o_proj]
 generation_end_tokens: [<|eot_id|>]
+assistant_prefix: "Answer: ("   # G1 readout probe 2026-11-27: without it the first assistant token is mostly a name initial (letter mass 0.47); with it 0.998 (demo_out/llama/probe_train_*.json)
 chat_template_kwargs: {date_string: "26 Jul 2024"}   # the template's own default, passed explicitly so a later template or transformers version cannot insert today's date
 verified: ['tokenizer', 'chat_template', 'num_layers', 'hidden_size']                      # tools/model_checks.py --write adds the facts it confirmed against the hub files
 notes: "Gated repo (needs HF_TOKEN). Template accepts a system role and always emits a system header with Cutting Knowledge Date and Today Date; date_string is fixed above. Checked by tools/model_checks.py on 2026-11-27 (MODEL_CHECKS.md)."

@@ -70,10 +70,15 @@ class Backend:
                {"role": "assistant", "content": a}]
     return msgs + [{"role": "user", "content": text}]
 
-  def next_letter_logprobs(self, user: str, lesson=None, hooks=()):
-    torch = self.torch
+  def render_prompt(self, user: str, lesson=None) -> str:
+    """The exact prompt text whose next token is read: chat template + generation prompt + the config's assistant prefix (if any)."""
     prompt = self.tok.apply_chat_template(self.messages(user, lesson), tokenize=False, add_generation_prompt=True,
                                           **(self.spec.chat_template_kwargs or {}))
+    return prompt + (self.spec.assistant_prefix or "")
+
+  def next_letter_logprobs(self, user: str, lesson=None, hooks=()):
+    torch = self.torch
+    prompt = self.render_prompt(user, lesson)
     ids = self.tok(prompt, return_tensors="pt", add_special_tokens=False).input_ids.to(self.model.device)
     handles = [h(ids.shape[1] - 1) for h in hooks]
     try:
@@ -93,7 +98,8 @@ class _HFSolver:
   def lesson(self): return None
   def describe(self):
     return {"solver": self.name, "model": self.b.spec.name, "hf_id": self.b.spec.hf_id, "revision": self.b.revision, "revision_pinned": self.b.pinned,
-            "dtype": self.b.spec.dtype, "attn": self.b.spec.attn_implementation, **self._extra()}
+            "dtype": self.b.spec.dtype, "attn": self.b.spec.attn_implementation,
+            **({"assistant_prefix": self.b.spec.assistant_prefix} if self.b.spec.assistant_prefix else {}), **self._extra()}
 
   uses_adapter = False
   def user_text(self, task, case, order): return task.render(case, order)

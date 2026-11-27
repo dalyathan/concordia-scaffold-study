@@ -14,21 +14,32 @@ from harness.task import get_task
 
 
 def main():
-  ap = argparse.ArgumentParser(); ap.add_argument("--model", default="llama31_8b"); ap.add_argument("--n", type=int, default=20); a = ap.parse_args()
+  ap = argparse.ArgumentParser(); ap.add_argument("--model", default="llama31_8b"); ap.add_argument("--n", type=int, default=20)
+  ap.add_argument("--prefix", help="try an assistant prefix (overrides the config)"); ap.add_argument("--split", default="tune", choices=("tune", "train_other"),
+      help="train_other: train cases outside the 100 LoRA training cells and select_B (used to judge a framing change without the tune cells)")
+  ap.add_argument("--out", default="readout_probe.json"); a = ap.parse_args()
   import torch
   t0 = time.time()
-  spec = modelspec.load(a.model); b = Backend(spec); task = get_task("haggling")
+  spec = modelspec.load(a.model)
+  if a.prefix is not None:
+    import dataclasses; spec = dataclasses.replace(spec, assistant_prefix=a.prefix)
+  b = Backend(spec); task = get_task("haggling")
   tok = b.tok
   ids1 = lambda s: (lambda x: x[0] if len(x) == 1 else None)(tok(s, add_special_tokens=False).input_ids)
   groups = {"bare": list(spec.answer_letter_token_ids), "capital": [ids1(l.upper()) for l in spec.answer_letters],
             "space": [ids1(" " + l) for l in spec.answer_letters], "paren": [ids1("(")]}
   groups = {k: [i for i in v if i is not None] for k, v in groups.items()}
-  cases = task.cases("tune")[:: max(1, len(task.cases("tune")) // a.n)][:a.n]
+  if a.split == "tune":
+    pool = task.cases("tune")
+  else:
+    used = set(json.load(open(os.path.join(ROOT, "demo", "gen", "lora_train_cells.json")))) | {c["cell"] for c in task.cases("select_B")}
+    pool = [c for c in task.cases("train") if c["cell"] not in used]
+  cases = pool[:: max(1, len(pool) // a.n)][:a.n]
   rows, sums = [], {k: 0.0 for k in groups}
   for c in cases:
     for order in task.orders(c):
       text, _ = task.render(c, order)
-      prompt = tok.apply_chat_template(b.messages(text), tokenize=False, add_generation_prompt=True, **(spec.chat_template_kwargs or {}))
+      prompt = b.render_prompt(text)
       x = tok(prompt, return_tensors="pt", add_special_tokens=False).input_ids.to(b.model.device)
       with torch.no_grad():
         p = torch.softmax(b.model(input_ids=x).logits[0, -1].float(), -1)
@@ -40,10 +51,10 @@ def main():
   n = len(rows)
   mean = {k: v / n for k, v in sums.items()}
   band = "interpret" if mean["bare"] >= 0.9 else ("caution: stop and re-gate a framing change" if mean["bare"] >= 0.5 else "stop")
-  out = {"model": spec.name, "revision": b.revision, "n_prompts": n, "mean_mass": mean, "band": band, "groups": groups,
+  out = {"model": spec.name, "revision": b.revision, "assistant_prefix": spec.assistant_prefix, "split": a.split, "n_prompts": n, "mean_mass": mean, "band": band, "groups": groups,
          "gpu_seconds": time.time() - t0, "rows": rows}
   os.makedirs(os.path.join(ROOT, "demo_out", "llama"), exist_ok=True)
-  json.dump(out, open(os.path.join(ROOT, "demo_out", "llama", "readout_probe.json"), "w"), indent=1)
+  json.dump(out, open(os.path.join(ROOT, "demo_out", "llama", a.out), "w"), indent=1)
   print(json.dumps({k: out[k] for k in ("n_prompts", "mean_mass", "band", "gpu_seconds", "revision")}, indent=1))
   for r in rows[:3]:
     print(r["cid"], r["top10"][:5])

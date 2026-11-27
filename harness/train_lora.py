@@ -161,7 +161,7 @@ def main(argv=None):
   for c in train:
     for oi in tspec[c["cell"]]["orders"]:
       text, l2o = task.render(c, orders[oi])
-      prompt = tok.apply_chat_template(b.messages(text), tokenize=False, add_generation_prompt=True, **(spec.chat_template_kwargs or {}))
+      prompt = b.render_prompt(text)
       ids = tok(prompt, return_tensors="pt", add_special_tokens=False).input_ids[0]
       tgt = [0.0] * 5
       tgt[spec.answer_letters.index(next(l for l, o in l2o.items() if o == labels[c["cid"]]))] = 1.0

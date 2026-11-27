@@ -54,14 +54,17 @@ def check(spec, local_dir, user):
   # 2. template renders; system-role handling
   try:
     kw = spec.chat_template_kwargs or {}
-    prompt = tok.apply_chat_template(messages(spec, user), tokenize=False, add_generation_prompt=True, **kw)
+    gen = tok.apply_chat_template(messages(spec, user), tokenize=False, add_generation_prompt=True, **kw)
+    prompt = gen + (spec.assistant_prefix or "")
     rec("chat template renders the sample case", user[:60] in prompt and len(prompt) > len(user), f"{len(prompt)} chars; tail={prompt[-60:]!r}")
     # readout position: the prompt with the generation prompt = the conversation + only the assistant header, so the next token is the
     # first assistant token (the letter is read there, nothing of the model's reply is in the prompt)
     nogen = tok.apply_chat_template(messages(spec, user), tokenize=False, add_generation_prompt=False, **kw)
-    suffix = prompt[len(nogen):] if prompt.startswith(nogen) else None
-    rec("readout is the first assistant token (prompt = conversation + assistant header only)",
-        suffix is not None and len(suffix) > 0 and user[-20:] not in suffix and len(suffix) < 80, f"generation suffix {suffix!r}")
+    suffix = gen[len(nogen):] if gen.startswith(nogen) else None
+    pre = spec.assistant_prefix or ""
+    rec("readout is the first assistant token after the configured prefix (prompt = conversation + assistant header + prefix)",
+        suffix is not None and len(suffix) > 0 and user[-20:] not in suffix and len(suffix) < 80 and prompt == gen + pre,
+        f"generation suffix {suffix!r}; assistant prefix {pre!r}")
     if kw.get("date_string") is not None or "date_string" in (tok.chat_template or ""):
       fixed = kw.get("date_string")
       rec("fixed date_string in the chat template (prompt does not change by day)", fixed is not None and fixed in prompt,
