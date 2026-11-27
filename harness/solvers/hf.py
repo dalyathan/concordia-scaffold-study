@@ -68,7 +68,8 @@ class Backend:
 
   def next_letter_logprobs(self, user: str, lesson=None, hooks=()):
     torch = self.torch
-    prompt = self.tok.apply_chat_template(self.messages(user, lesson), tokenize=False, add_generation_prompt=True)
+    prompt = self.tok.apply_chat_template(self.messages(user, lesson), tokenize=False, add_generation_prompt=True,
+                                          **(self.spec.chat_template_kwargs or {}))
     ids = self.tok(prompt, return_tensors="pt", add_special_tokens=False).input_ids.to(self.model.device)
     handles = [h(ids.shape[1] - 1) for h in hooks]
     try:

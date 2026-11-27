@@ -33,6 +33,7 @@ class ModelSpec:
   generation_end_tokens: tuple = ()
   verified: tuple = ()
   revision: str | None = None   # hub commit hash of the weights and tokenizer; Backend refuses to load without one
+  chat_template_kwargs: dict | None = None   # extra variables for apply_chat_template (e.g. a fixed date_string, so prompts never change by day)
   notes: str = ""
 
   def layer_names(self) -> list[str]:

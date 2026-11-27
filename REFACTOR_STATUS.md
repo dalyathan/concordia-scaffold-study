@@ -35,6 +35,15 @@ README "Results at a glance" (15 numbers): **10 reproduce, 5 unbacked, 0 differ.
 
 ## For the GPU machine (written, not run)
 
+**Owner decision 2026-11-27 (branch `llama`): the Gemma parity check below (items 1-2) is SKIPPED for now.** Kept ready; run it with:
+
+```
+HF_HUB_OFFLINE=1 CUBLAS_WORKSPACE_CONFIG=:4096:8 HARNESS_PROVIDER=runpod HARNESS_GPU_USD_PER_HOUR=0.60 \
+  PYTHONPATH=concordia:. .venv/bin/python -m harness.run --task haggling --solver plain --model gemma2_9b --split tune
+PYTHONPATH=concordia:. .venv/bin/python tools/parity_check.py runs/haggling/gemma2_9b/<new plain-tune record>.json
+```
+(Note: the A10G-to-A40 study on `demo` found generated-dataset probabilities move by up to a few percent across GPUs, HARDWARE_PARITY.md there, so a 1e-3 per-case tolerance may need an A40 Gemma reference, `demo_out/hw_parity/A40_probs.json` on `demo`.) Until it passes, every number from a harness HF solver carries the limitation "harness not yet checked against stored Gemma scores".
+
 1. **Parity check for the new Gemma solvers.** Run `plain` on gemma2_9b via `python -m harness.run --task haggling --solver plain --model gemma2_9b --split tune` and compare with `legacy:plain` tune (0.657 mean soft regret; per-case probabilities in `demo_out/gen_plain_scores.jsonl`). They must agree to about 1e-3 per case before any harness solver is used for a number. Known differences: the old code scores the full answer sequence as well as the first token, and trims long prompts; the harness uses first-token probabilities only.
 2. Same parity for `lora` (load an adapter from `demo_out/adapters/`; adapters are only read) and `steering`.
 3. Run planted cases for the stored arms: `python -m harness.run` on `tune` with each solver writes planted results; legacy records have none.

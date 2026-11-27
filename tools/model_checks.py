@@ -6,7 +6,7 @@ Checks per config:
   2. the chat template renders a sample case (with the system-role handling the config declares);
   3. the config's hook module names exist in the model's architecture (from config.json: layer count, hidden size) and the
      layer count / hidden size in our YAML equal the hub config.
-  python tools/model_checks.py [--write] [--local-dir DIR] [--models a,b] [--md MODEL_CHECKS.md]
+  python tools/model_checks.py [--write] [--keep-previous] [--local-dir DIR] [--models a,b] [--md MODEL_CHECKS.md]
 --write stores the verified letter ids and `verified` facts back into harness/models/*.yaml. Models whose files cannot be fetched
 (gated repo without HF_TOKEN, no network) are reported as NOT CHECKED with the reason; nothing is guessed."""
 import argparse, json, os, sys, traceback
@@ -53,13 +53,27 @@ def check(spec, local_dir, user):
     ok &= bool(passed); res["checks"].append({"name": name, "passed": bool(passed), "detail": detail})
   # 2. template renders; system-role handling
   try:
-    prompt = tok.apply_chat_template(messages(spec, user), tokenize=False, add_generation_prompt=True)
+    kw = spec.chat_template_kwargs or {}
+    prompt = tok.apply_chat_template(messages(spec, user), tokenize=False, add_generation_prompt=True, **kw)
     rec("chat template renders the sample case", user[:60] in prompt and len(prompt) > len(user), f"{len(prompt)} chars; tail={prompt[-60:]!r}")
+    # readout position: the prompt with the generation prompt = the conversation + only the assistant header, so the next token is the
+    # first assistant token (the letter is read there, nothing of the model's reply is in the prompt)
+    nogen = tok.apply_chat_template(messages(spec, user), tokenize=False, add_generation_prompt=False, **kw)
+    suffix = prompt[len(nogen):] if prompt.startswith(nogen) else None
+    rec("readout is the first assistant token (prompt = conversation + assistant header only)",
+        suffix is not None and len(suffix) > 0 and user[-20:] not in suffix and len(suffix) < 80, f"generation suffix {suffix!r}")
+    if kw.get("date_string") is not None or "date_string" in (tok.chat_template or ""):
+      fixed = kw.get("date_string")
+      rec("fixed date_string in the chat template (prompt does not change by day)", fixed is not None and fixed in prompt,
+          f"date_string={fixed!r}; template uses date_string: {'date_string' in (tok.chat_template or '')}")
+    if "strftime_now" in (tok.chat_template or ""):
+      rec("template does not read the clock without a fixed date_string", kw.get("date_string") is not None, "template calls strftime_now")
   except Exception as e:
     prompt = None; rec("chat template renders the sample case", False, f"{type(e).__name__}: {e}")
   try:
-    tok.apply_chat_template([{"role": "system", "content": "s"}, {"role": "user", "content": "u"}], tokenize=False)
-    accepts_system = True
+    out = tok.apply_chat_template([{"role": "system", "content": "SYSMARK"}, {"role": "user", "content": "u"}], tokenize=False,
+                                  **(spec.chat_template_kwargs or {}))
+    accepts_system = "SYSMARK" in out
   except Exception:
     accepts_system = False
   rec("config system_role matches the template", accepts_system or not spec.system_role,
@@ -73,6 +87,11 @@ def check(spec, local_dir, user):
       single = len(full) == len(base) + 1 and full[:len(base)] == base
       ids.append(full[-1] if single else None)
       rec(f"letter {l!r} is one token after the prompt", single, f"ids appended: {full[len(base):] if full[:len(base)] == base else 'prefix changed'}")
+    # the natural answer continuation "a) ..." starts with the same single letter token (the letter is not merged with ')' )
+    for l, i in zip(spec.answer_letters, ids):
+      full = tok(prompt + l + ") 3 coins", add_special_tokens=False).input_ids
+      rec(f"answer '{l}) 3 coins' starts with the letter token", full[:len(base)] == base and len(full) > len(base) and full[len(base)] == i,
+          f"first appended id {full[len(base)] if len(full) > len(base) else None} vs letter id {i}")
     distinct = len({i for i in ids if i is not None}) == len(ids)
     rec("letter ids are distinct", distinct, str(ids))
     if spec.answer_letter_token_ids is not None:
@@ -90,12 +109,31 @@ def check(spec, local_dir, user):
   return res
 
 
-def write_md(results, path):
+def previous_blocks(path):
+  """-> {model: (table row, section text)} from an existing MODEL_CHECKS.md (for --keep-previous)."""
+  if not os.path.exists(path):
+    return {}
+  txt = open(path).read(); out = {}
+  for sec in txt.split("\n## ")[1:]:
+    name = sec.split("\n", 1)[0].strip()
+    row = next((l for l in txt.splitlines() if l.startswith(f"| {name} (")), None)
+    out[name] = (row, "## " + sec.rstrip("\n"))
+  return out
+
+
+def write_md(results, path, keep_previous=False):
+  prev = previous_blocks(path) if keep_previous else {}
+  kept = {r["model"] for r in results if r["status"] == "NOT CHECKED" and r["model"] in prev and "| PASS |" in (prev[r["model"]][0] or "")}
   L = ["# MODEL_CHECKS", "", "Generated by `python tools/model_checks.py` (CPU only; tokenizer and config files only, no weights). Do not edit by hand.", "",
        "| model | status | letter ids a..e |", "| --- | --- | --- |"]
   for r in results:
+    if r["model"] in kept:
+      L.append(prev[r["model"]][0].replace("| PASS |", "| PASS (earlier check, kept) |")); continue
     L.append(f"| {r['model']} (`{r['hf_id']}`) | {r['status']} | {r['letter_ids'] or '-'} |")
   for r in results:
+    if r["model"] in kept:
+      L += ["", prev[r["model"]][1], "", f"Kept from the earlier check (--keep-previous): this run could not load the tokenizer ({r['reason'][:120]})."]
+      continue
     L += ["", f"## {r['model']}", ""]
     if r["status"] == "NOT CHECKED":
       L.append(f"NOT CHECKED: {r['reason']}")
@@ -106,11 +144,12 @@ def write_md(results, path):
 
 def main():
   ap = argparse.ArgumentParser(); ap.add_argument("--write", action="store_true"); ap.add_argument("--local-dir")
-  ap.add_argument("--models"); ap.add_argument("--md", default=os.path.join(ROOT, "MODEL_CHECKS.md")); a = ap.parse_args()
+  ap.add_argument("--models"); ap.add_argument("--keep-previous", action="store_true",
+      help="a model that passed before but cannot be loaded now keeps its earlier block, labelled as kept"); ap.add_argument("--md", default=os.path.join(ROOT, "MODEL_CHECKS.md")); a = ap.parse_args()
   names = a.models.split(",") if a.models else modelspec.all_names()
   user = sample_prompt()
   results = [check(modelspec.load(n), a.local_dir, user) for n in names]
-  write_md(results, a.md)
+  write_md(results, a.md, a.keep_previous)
   if a.write:
     for r in results:
       if r["status"] == "PASS":
