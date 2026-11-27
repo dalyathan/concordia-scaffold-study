@@ -108,6 +108,17 @@ def diff(a, b, typ=None):
   return ci_mean({c: a.soft[c] - b.soft[c] for c in a.cids}, a.case, typ)
 
 
+def perm_p(a, b):
+  """two-sided sign-flip permutation p-value of the paired mean difference, flipping (V, grid) groups (10,000 flips, PCG64 seed 0)."""
+  d = {c: a.soft[c] - b.soft[c] for c in a.cids}
+  gs = sorted({group(a.case[c]) for c in a.cids})
+  S = np.array([sum(d[c] for c in a.cids if group(a.case[c]) == g) for g in gs]); n = len(a.cids)
+  obs = abs(S.sum() / n)
+  rng = np.random.Generator(np.random.PCG64(0))
+  flips = rng.choice([-1.0, 1.0], size=(B, len(gs)))
+  return float((np.abs((flips * S).sum(1) / n) >= obs - 1e-12).mean())
+
+
 def slope(arm):
   cids = [c for c in arm.cids if arm.case[c]["type"] == "below"]
   x = np.array([arm.case[c]["inputs"]["C"] for c in cids], float); y = np.array([arm.offer[c] for c in cids])
@@ -207,15 +218,16 @@ def build():
                                       "ci": ci_mean(a.soft, a.case), "slope": sl, "mass_mean": mm, "mass_min": mn, "top_letter_share": pb[0],
                                       "planted": planted([r]), "record": r["_path"]}
     out.append("")
-  out += ["### Paired differences on tune (arm minus comparator; negative = arm better)", "", "| arm | minus plain [95%] | minus neutral [95%] | minus stated-cost rule [95%] | share of the plain-to-rule gap closed |", "| --- | --- | --- | --- | --- |"]
+  out += ["### Paired differences on tune (arm minus comparator; negative = arm better)", "", "| arm | minus plain [95%] (perm. p) | minus neutral [95%] (perm. p) | minus stated-cost rule [95%] | share of the plain-to-rule gap closed |", "| --- | --- | --- | --- | --- |"]
   P = arms.get(("plain", "tune")); N_ = arms.get(("notes:neutral", "tune")); R_ = arms.get(("baseline:stated_cost_rule", "tune"))
   for n in NOTES:
     a = arms.get((f"notes:{n}", "tune"))
     if a and P:
       d1 = diff(a, P); d2 = diff(a, N_) if N_ and n != "neutral" else None; d3 = diff(a, R_)
       gap = (P.mean() - a.mean()) / (P.mean() - R_.mean()) if abs(P.mean() - R_.mean()) > 1e-9 else None
-      out.append(f"| {NOTE_LABEL[n]} | {fci(d1)} | {fci(d2) if d2 else '-'} | {fci(d3)} | {f3(gap)} |")
-      J[f"diff/tune/notes:{n}"] = {"minus_plain": d1, "minus_neutral": d2, "minus_rule": d3}
+      p1 = perm_p(a, P); p2 = perm_p(a, N_) if d2 else None
+      out.append(f"| {NOTE_LABEL[n]} | {fci(d1)} (p {p1:.3f}) | {fci(d2) + f' (p {p2:.3f})' if d2 else '-'} | {fci(d3)} | {f3(gap)} |")
+      J[f"diff/tune/notes:{n}"] = {"minus_plain": d1, "minus_neutral": d2, "minus_rule": d3, "perm_p_plain": p1, "perm_p_neutral": p2, "gap_closed": gap}
   if P and R_:
     J["diff/tune/plain_minus_rule"] = diff(P, R_)
     out.append(f"| plain | - | - | {fci(J['diff/tune/plain_minus_rule'])} | - |")
@@ -320,12 +332,16 @@ def build():
       if a:
         d1, d2 = J[f"diff/tune/notes:{n}"]["minus_plain"], J[f"diff/tune/notes:{n}"]["minus_neutral"]
         ok_mass = mass(P.recs)[0] >= 0.9
-        verdicts[f"R2 {n}"] = (("helps" if (d1[2] < 0 and d2[2] < 0) else "not shown to help") if ok_mass else "NOT CONCLUDED: plain letter mass below 0.9") + \
+        arm_mass_ok = mass(a.recs)[0] >= 0.9
+        helps = d1[2] < 0 and d1[0] <= -0.10 and d2[2] < 0
+        verdicts[f"R2 {n}"] = (("helps" if helps else "not shown to help") if (ok_mass and arm_mass_ok) else "NOT CONCLUDED: plain or arm letter mass below 0.9") + \
             f" (minus plain {fci(d1)}; minus neutral {fci(d2)}; arm letter mass {mass(a.recs)[0]:.4f})"
     dn = J["diff/tune/notes:neutral"]["minus_plain"]; wr = arms.get(("notes:wrong_rule", "tune"))
     dw = J["diff/tune/notes:wrong_rule"]["minus_plain"] if wr else None
     verdicts["R2 controls"] = ("inert" if (abs(dn[0]) <= 0.10 and (dw is None or dw[2] >= 0)) else "NOT inert") + \
-        f" (neutral minus plain {fci(dn)}; wrong rule minus plain {fci(dw) if dw else '-'})"
+        f" (neutral minus plain {fci(dn)}; wrong rule minus plain {fci(dw) if dw else '-'}" + \
+        ("; the wrong rule is one short sentence, so its null is weak evidence)" if (dw is None or dw[2] >= 0) else
+         "; the wrong rule helps: any push toward lower offers lowers Llama's regret, so R2 'helps' does not show the paragraphs' content is what helps)")
   if "ex100" in L:
     e = L["ex100"]; conds = {}
     conds["mean <= 0.15"] = e.mean() <= 0.15

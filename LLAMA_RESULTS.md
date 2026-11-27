@@ -23,38 +23,45 @@ Diagnostic (after the check; does not change the stop): free answer vs the unpre
 
 Train and tune cells only. One record per arm and split; soft regret in coins with 95% cluster-bootstrap intervals over (V, grid) groups. Limitation: harness not yet checked against stored Gemma scores.
 
+Tune has 42 cells in 19 (V, grid) groups (the bootstrap clusters; with this few groups percentile intervals undercover).
+
 ### tune
 
 | arm | n cases | soft regret [95%] | below | at or above | no cost | hard regret | slope on stated cost [95%] | letter mass mean / min | top letter share | planted |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| oracle | not run | | | | | | | | | |
-| uniform | not run | | | | | | | | | |
-| always-cheapest | not run | | | | | | | | | |
-| stated-cost rule | not run | | | | | | | | | |
-| plain | not run | | | | | | | | | |
-| written rule (our method paragraph) | not run | | | | | | | | | |
-| Claude's lesson (teacher paragraph) | not run | | | | | | | | | |
-| neutral text (control) | not run | | | | | | | | | |
-| wrong rule (control) | not run | | | | | | | | | |
+| oracle | 84 | 0.000 [0.000, 0.000] | 0.000 | 0.000 | 0.000 | 0.000 | - | - / - | - | 4/4 |
+| uniform | 84 | 1.260 [1.058, 1.447] | 1.871 | 1.329 | 0.580 | 0.429 | 0.062 [-0.286, 0.617] | - / - | - | 0/4 |
+| always-cheapest | 84 | 0.429 [0.157, 0.822] | 0.643 | 0.000 | 0.643 | 0.429 | 0.062 [-0.286, 0.617] | - / - | - | 1/4 |
+| stated-cost rule | 84 | 0.214 [0.056, 0.481] | 0.000 | 0.000 | 0.643 | 0.214 | 0.760 [0.495, 1.000] | - / - | - | 3/4 |
+| plain | 84 | 1.184 [0.976, 1.360] | 1.828 | 1.278 | 0.446 | 1.124 | 0.260 [-0.110, 0.742] | 0.998 / 0.988 | 0.391 (d) | 0/4 |
+| written rule (our method paragraph) | 84 | 0.773 [0.656, 0.908] | 1.039 | 0.885 | 0.395 | 0.471 | 0.225 [-0.070, 0.631] | 0.997 / 0.988 | 0.283 (d) | 0/4 |
+| Claude's lesson (teacher paragraph) | 84 | 0.930 [0.779, 1.079] | 1.341 | 1.068 | 0.381 | 0.664 | 0.238 [-0.038, 0.692] | 0.997 / 0.985 | 0.302 (d) | 0/4 |
+| neutral text (control) | 84 | 1.158 [0.956, 1.331] | 1.798 | 1.211 | 0.465 | 1.125 | 0.252 [-0.115, 0.761] | 0.997 / 0.985 | 0.393 (d) | 0/4 |
+| wrong rule (control) | 84 | 0.611 [0.444, 0.851] | 1.124 | 0.439 | 0.269 | 0.455 | 0.172 [-0.049, 0.581] | 0.997 / 0.991 | 0.301 (d) | 1/4 |
 
 ### train
 
 | arm | n cases | soft regret [95%] | below | at or above | no cost | hard regret | slope on stated cost [95%] | letter mass mean / min | top letter share | planted |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| oracle | not run | | | | | | | | | |
-| uniform | not run | | | | | | | | | |
-| always-cheapest | not run | | | | | | | | | |
-| stated-cost rule | not run | | | | | | | | | |
-| plain | not run | | | | | | | | | |
-| written rule (our method paragraph) | not run | | | | | | | | | |
-| Claude's lesson (teacher paragraph) | not run | | | | | | | | | |
-| neutral text (control) | not run | | | | | | | | | |
-| wrong rule (control) | not run | | | | | | | | | |
+| oracle | 600 | 0.000 [0.000, 0.000] | 0.000 | 0.000 | 0.000 | 0.000 | - | - / - | - | 4/4 |
+| uniform | 600 | 1.204 [1.041, 1.381] | 1.888 | 1.054 | 0.669 | 0.573 | 0.024 [-0.116, 0.129] | - / - | - | 0/4 |
+| always-cheapest | 600 | 0.573 [0.311, 0.934] | 1.250 | 0.000 | 0.470 | 0.573 | 0.024 [-0.116, 0.129] | - / - | - | 1/4 |
+| stated-cost rule | 600 | 0.157 [0.072, 0.279] | 0.000 | 0.000 | 0.470 | 0.157 | 0.719 [0.616, 0.809] | - / - | - | 3/4 |
+| plain | 600 | 1.111 [0.963, 1.261] | 1.799 | 1.011 | 0.522 | 1.019 | 0.147 [0.036, 0.243] | 0.998 / 0.984 | 0.389 (d) | 0/4 |
+| written rule (our method paragraph) | 600 | 0.767 [0.656, 0.883] | 1.173 | 0.677 | 0.450 | 0.408 | 0.198 [0.073, 0.301] | 0.997 / 0.988 | 0.279 (d) | 0/4 |
+| Claude's lesson (teacher paragraph) | 600 | 0.874 [0.746, 1.003] | 1.330 | 0.827 | 0.465 | 0.646 | 0.179 [0.071, 0.269] | 0.997 / 0.987 | 0.294 (d) | 0/4 |
+| neutral text (control) | 600 | 1.082 [0.941, 1.226] | 1.760 | 0.957 | 0.530 | 0.988 | 0.132 [0.009, 0.230] | 0.997 / 0.973 | 0.394 (d) | 0/4 |
+| wrong rule (control) | 600 | 0.685 [0.516, 0.906] | 1.385 | 0.335 | 0.334 | 0.565 | 0.099 [-0.012, 0.188] | 0.997 / 0.988 | 0.297 (d) | 1/4 |
 
 ### Paired differences on tune (arm minus comparator; negative = arm better)
 
-| arm | minus plain [95%] | minus neutral [95%] | minus stated-cost rule [95%] | share of the plain-to-rule gap closed |
+| arm | minus plain [95%] (perm. p) | minus neutral [95%] (perm. p) | minus stated-cost rule [95%] | share of the plain-to-rule gap closed |
 | --- | --- | --- | --- | --- |
+| written rule (our method paragraph) | -0.411 [-0.530, -0.249] (p 0.001) | -0.385 [-0.510, -0.224] (p 0.001) | 0.559 [0.260, 0.786] | 0.424 |
+| Claude's lesson (teacher paragraph) | -0.254 [-0.330, -0.162] (p 0.000) | -0.228 [-0.307, -0.134] (p 0.001) | 0.716 [0.359, 0.977] | 0.262 |
+| neutral text (control) | -0.027 [-0.061, 0.005] (p 0.138) | - | 0.943 [0.516, 1.246] | 0.027 |
+| wrong rule (control) | -0.574 [-0.780, -0.290] (p 0.005) | -0.547 [-0.749, -0.269] (p 0.005) | 0.396 [0.084, 0.700] | 0.591 |
+| plain | - | - | 0.970 [0.539, 1.274] | - |
 
 ## Step 5: LoRA on Claude's worked examples (tune)
 
@@ -69,13 +76,13 @@ Gemma: imported records of the pre-refactor code (A10G originals; A40 = rescore 
 
 | arm | Gemma A10G | Gemma A40 | Llama A40 | Llama minus Gemma A10G |
 | --- | --- | --- | --- | --- |
-| plain | 0.657 | 0.661 | - | - |
-| always-cheapest | - | - | - | - |
-| stated-cost rule | - | - | - | - |
-| written rule (our method paragraph) | 0.369 | - | - | - |
-| Claude's lesson (teacher paragraph) | 0.390 | - | - | - |
-| neutral text (control) | 0.735 | - | - | - |
-| wrong rule (control) | 0.618 | - | - | - |
+| plain | 0.657 | 0.661 | 1.184 | 0.527 |
+| always-cheapest | 0.429 | - | 0.429 | 0.000 |
+| stated-cost rule | 0.214 | - | 0.214 | 0.000 |
+| written rule (our method paragraph) | 0.369 | - | 0.773 | 0.404 |
+| Claude's lesson (teacher paragraph) | 0.390 | - | 0.930 | 0.540 |
+| neutral text (control) | 0.735 | - | 1.158 | 0.423 |
+| wrong rule (control) | 0.618 | - | 0.611 | -0.007 |
 | examples-100, 3-seed mean | 0.032 | 0.032 | - | - |
 | examples-25, seed 0 | 0.043 | 0.043 | - | - |
 | cheapest-label N=25 | 0.429 | 0.429 | - | - |
@@ -86,10 +93,25 @@ Gemma: imported records of the pre-refactor code (A10G originals; A40 = rescore 
 
 | record | GPU h | approx USD |
 | --- | --- | --- |
-| **total (records; model loads outside records are in DECISIONS.md)** | **0.00** | **0.00** |
+| runs/haggling/llama31_8b/notes_method_original-train-s0-20261127T222122518219Z.json | 0.138 | 0.083 |
+| runs/haggling/llama31_8b/notes_method_original-tune-s0-20261127T220939295677Z.json | 0.020 | 0.012 |
+| runs/haggling/llama31_8b/notes_neutral-train-s0-20261127T223803765286Z.json | 0.139 | 0.083 |
+| runs/haggling/llama31_8b/notes_neutral-tune-s0-20261127T221205378637Z.json | 0.020 | 0.012 |
+| runs/haggling/llama31_8b/notes_teacher-train-s0-20261127T222943793069Z.json | 0.139 | 0.084 |
+| runs/haggling/llama31_8b/notes_teacher-tune-s0-20261127T221052410709Z.json | 0.020 | 0.012 |
+| runs/haggling/llama31_8b/notes_wrong_rule-train-s0-20261127T224503562106Z.json | 0.117 | 0.070 |
+| runs/haggling/llama31_8b/notes_wrong_rule-tune-s0-20261127T221306504290Z.json | 0.017 | 0.010 |
+| runs/haggling/llama31_8b/plain-train-s0-20261127T220140193450Z.json | 0.114 | 0.068 |
+| runs/haggling/llama31_8b/plain-tune-s0-20261127T215449648928Z.json | 0.016 | 0.010 |
+| runs/haggling/llama31_8b/plain_noprefix-train-s0-20261127T220826945412Z.json | 0.113 | 0.068 |
+| **total (records; model loads outside records are in DECISIONS.md)** | **0.85** | **0.51** |
 
 ## Decision rules (LLAMA_PLAN.md), applied mechanically
 
+- **R1**: plain fails like Gemma (soft 1.184; minus rule 0.970 [0.539, 1.274]; largest type below; plain letter mass 0.9978)
+- **R2 method_original**: helps (minus plain -0.411 [-0.530, -0.249]; minus neutral -0.385 [-0.510, -0.224]; arm letter mass 0.9970)
+- **R2 teacher**: helps (minus plain -0.254 [-0.330, -0.162]; minus neutral -0.228 [-0.307, -0.134]; arm letter mass 0.9967)
+- **R2 controls**: NOT inert (neutral minus plain -0.027 [-0.061, 0.005]; wrong rule minus plain -0.574 [-0.780, -0.290]; the wrong rule helps: any push toward lower offers lowers Llama's regret, so R2 'helps' does not show the paragraphs' content is what helps)
 
 ## Predictions (LLAMA_PREDICTIONS.md), scored mechanically
 
@@ -97,7 +119,15 @@ HELD / FAILED by the point value; UNCLEAR when the 95% interval straddles a rang
 
 | id | statement | observed | verdict | Brier |
 | --- | --- | --- | --- | --- |
+| L1a | plain tune soft regret 0.50-0.95 | 1.184 [0.976, 1.360] | FAILED | - |
+| L1b | below regret >= 0.9 and >= 2.5x no-cost regret | below 1.828 [1.594, 2.034]; ratio 4.10 | HELD | - |
+| L1c | slope of offer on stated cost (below) <= 0.45 | 0.260 [-0.110, 0.742] | UNCLEAR | - |
 | L1d | letter mass >= 0.90; P(>= 0.98) = 0.7 (scored on the unprefixed framing) | 0.4874 (tune probe, no prefix) | FAILED | 0.490 (p 0.7, outcome no) |
+| L1e | P(top letter share > 0.30) = 0.6 | 0.391 | probability only | 0.160 (p 0.6, outcome yes) |
+| L2a | method_original minus plain in [-0.4, -0.1] | -0.411 [-0.530, -0.249] | UNCLEAR | 0.360 (p 0.6, outcome no); Gemma gain -0.288 |
+| L2b | teacher minus plain in [-0.38, -0.08] | -0.254 [-0.330, -0.162] | HELD | 0.490 (p 0.7, outcome no); |teacher - rule| 0.157 |
+| L2c | |neutral minus plain| <= 0.10 | -0.027 [-0.061, 0.005] | HELD | - |
+| L2d | P(both paragraphs' regret > 0.30) = 0.8 | lower of the two 0.773 | probability only | 0.040 (p 0.8, outcome yes) |
 | L3a | steering fails (P 0.80) | - | not testable (steering not run) | - |
 | L3b | steering pushes one letter (P 0.65) | - | not testable (steering not run) | - |
 | L4a | examples-100 soft regret 0.02-0.15 | - | not testable | - |
