@@ -2,7 +2,8 @@
 reproduced byte for byte: tests/harness/test_haggling_port.py compares sha256).
 
 One buying decision from the 2024 Concordia haggling game: five price options, regret in coins against the exact best offer.
-Splits: train, tune, test_same, test_hard (the two test splits are LOCKED: harness.evaluate refuses them without a lock token)."""
+Splits: train, tune, select_B, test_same, test_hard, test2_same, test2_newkey (the four test splits are LOCKED: harness.evaluate refuses them
+without a lock token and the owner pin; test2 is read from the committed files after a fingerprint check)."""
 from __future__ import annotations
 
 import hashlib
@@ -78,6 +79,12 @@ SELLER_LINES = {   # three fresh wordings per line (none is the original text); 
                     "Between us, the farm charged me {C} for it. Let that guide your offer.",
                     "Full disclosure, my cost at the farm was {C}. Name your price with that in mind."),
 }
+# test2 only (demo/gen_test2.py NEW_WORDING, index 3; reserved for test2, never in a training cell). Kept out of SELLER_LINES so
+# build() and the train/tune/test port are untouched; tests/harness/test_test2_port.py checks it equals demo/gen_test2.NEW_WORDING.
+TEST2_WORDING_INDEX = 3
+TEST2_WORDING = {"neutral": "I'm listening. What price do you have in mind for the fruit?",
+                 "pressure": "Make it quick: name a serious price now or I turn to the next customer in line.",
+                 "information": "For your information, I paid {C} for this fruit at the farm. Bear that in mind when you make your offer."}
 _BUYER_FIRST = ["Alma", "Briar", "Calla", "Dessa", "Edda", "Fenna", "Gwyn", "Hollis", "Isla", "Joss", "Kestra", "Linnea", "Marnie",
                 "Neve", "Odile", "Perrin", "Quilla", "Rhea", "Sorrel", "Tamsin", "Una", "Verity", "Wren", "Xanthe", "Yara", "Zelda"]
 _SELLER_FIRST = ["Alder", "Bram", "Corin", "Davin", "Emrys", "Fergus", "Galen", "Hollin", "Ilar", "Jory", "Kellan", "Lorcan", "Merrick",
@@ -131,7 +138,8 @@ def render(case: dict, order) -> tuple[str, dict]:
         "No fractional values are allowed.")
   rules = (f"Sellers at this market pay between {lo} and {hi} coins per kilogram at the farm, and each amount is equally likely.",
            core.RULE_MEMORIES[1], core.RULE_MEMORIES[2])
-  last = SELLER_LINES[case["line"]][case["wording"]].format(C=("" if case["C"] is None else coin(case["C"])))
+  wording = TEST2_WORDING[case["line"]] if case["wording"] == TEST2_WORDING_INDEX else SELLER_LINES[case["line"]][case["wording"]]
+  last = wording.format(C=("" if case["C"] is None else coin(case["C"])))
   opening = fv.VISUAL_SCENE_OPENINGS[case["opening"]]
   turns = [(buyer, core.SCRIPT[0]), (seller, core.SCRIPT[1]), (buyer, core.SCRIPT[2]), (seller, last)]
   lines = [instructions_text(buyer), "", "Memories:", SHARED_MEMORY_1, m2, *rules, f"{buyer} always drives a hard bargain.", "",
@@ -256,8 +264,12 @@ def fingerprints_v2(cells):
 # ------------------------------------------------------------------ Task interface
 class HagglingTask:
   name = "haggling"
-  splits = ("train", "tune", "test_same", "test_hard", "select_B")
-  locked_splits = ("test_same", "test_hard")
+  splits = ("train", "tune", "test_same", "test_hard", "select_B", "test2_same", "test2_newkey")
+  locked_splits = ("test_same", "test_hard", "test2_same", "test2_newkey")
+  # test2_same / test2_newkey: the second held-out sets (demo/gen_test2.py, seed 20261201, locked Nov 23 before any model saw them).
+  # They are read from the committed files, never rebuilt, and only after the files match demo/gen/test2_fingerprints.json.
+  TEST2_CASES = os.path.join(GEN_DIR, "test2_cases.jsonl")
+  TEST2_FINGERPRINTS = os.path.join(GEN_DIR, "test2_fingerprints.json")
   # select_B: the LoRA selection set of the Gemma study (42 train cells outside the 100 training cells, name variant 0;
   # demo/gen/lora_select_cells_B.json). It is a subset of `train`, used for early stopping and the lr choice only.
   SELECT_B = os.path.join(GEN_DIR, "lora_select_cells_B.json")
@@ -281,7 +293,22 @@ class HagglingTask:
       out = [c for c in self._build()[1] if c["split"] == "train" and c["cell"] in sel and c["name_variant"] == 0]
       assert len(out) == len(sel) == 42, "selection set B must be 42 train cells"
       return out
+    if split in ("test2_same", "test2_newkey"):
+      return self._test2_cases(split)
     return [c for c in self._build()[1] if c["split"] == split]
+
+  def _test2_cases(self, split: str) -> list[dict]:
+    """The committed test2 cases of one set, after a sha256 check of the cases file against the locked fingerprint file."""
+    fp = json.load(open(self.TEST2_FINGERPRINTS))
+    want = fp["files"]["demo/gen/test2_cases.jsonl"]
+    raw = open(self.TEST2_CASES, "rb").read()
+    got = hashlib.sha256(raw).hexdigest()
+    if got != want:
+      raise RuntimeError(f"demo/gen/test2_cases.jsonl sha256 {got} differs from the locked fingerprint {want}")
+    out = [c for c in (json.loads(l) for l in raw.decode().splitlines() if l.strip()) if c["split"] == split]
+    if len(out) != 240:
+      raise RuntimeError(f"{split}: expected 240 cases, found {len(out)}")
+    return out
 
   def insert_notes(self, text: str, notes: str) -> str:
     """A Notes block before the question, exactly as demo/gen_notes.render_notes (the Gemma text rows and distillation targets)."""

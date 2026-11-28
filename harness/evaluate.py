@@ -29,17 +29,26 @@ MIN_LETTER_MASS = 0.5        # records below this mean first-token letter mass a
 PLANTED_MIN_MASS = 0.9       # a planted case passes only if the model puts at least this much probability on the acceptable options
 
 
-def _prior_look(directory, task_name, split, model, solver_cfg_sha):
+def _prior_look(directory, task_name, split, model, solver_cfg_sha, solver_name=None, seed=None):
+  """Records of an earlier look at this locked split by this model: the same solver config, OR the same solver name and seed
+  (so a changed config, a retrained adapter or a new path cannot buy a second look at the same arm). Scans `directory` and
+  always the default runs folder, so writing to another folder cannot hide an earlier look."""
   hits = []
-  for dp, _, fs in os.walk(directory):
-    for f in fs:
-      if f.endswith(".json"):
-        try:
-          r = json.load(open(os.path.join(dp, f)))
-        except Exception:
-          continue
-        if (r.get("task"), r.get("split"), r.get("model")) == (task_name, split, model) and r.get("solver_config_sha256") == solver_cfg_sha:
-          hits.append(os.path.join(dp, f))
+  roots = {os.path.abspath(directory), os.path.abspath(records.RUNS)}
+  for root in sorted(roots):
+    for dp, _, fs in os.walk(root):
+      for f in fs:
+        if f.endswith(".json"):
+          try:
+            r = json.load(open(os.path.join(dp, f)))
+          except Exception:
+            continue
+          if not isinstance(r, dict) or (r.get("task"), r.get("split"), r.get("model")) != (task_name, split, model):
+            continue
+          same_cfg = r.get("solver_config_sha256") == solver_cfg_sha
+          same_arm = solver_name is not None and (r.get("solver"), r.get("seed")) == (solver_name, seed)
+          if same_cfg or same_arm:
+            hits.append(os.path.join(dp, f))
   return hits
 
 
@@ -67,9 +76,13 @@ def evaluate(task, solver, split: str, seed: int = 0, model_spec=None, config: d
       raise EvaluationRefused(f"pin {ref} unreadable: {e}")
     if drift:
       raise EvaluationRefused(f"protected files differ from the owner's pin {ref}: {[f for f, _ in drift]}")
-    prior = _prior_look(directory, task.name, split, model_spec.name if model_spec else None, solver_cfg_sha)
+    train_seed = (solver.describe().get("training") or {}).get("seed")
+    if train_seed is not None and train_seed != seed:
+      raise EvaluationRefused(f"locked look: evaluation seed {seed} must equal the adapter's training seed {train_seed}")
+    prior = _prior_look(directory, task.name, split, model_spec.name if model_spec else None, solver_cfg_sha, solver.name, seed)
     if prior:
-      raise EvaluationRefused(f"locked split {split} was already scored with this exact solver config: {prior[0]} (each look is once)")
+      raise EvaluationRefused(f"locked split {split} was already scored by this arm (same solver config, or same solver name and seed): "
+                              f"{prior[0]} (each look is once)")
   t0 = time.time()
   cases = list(task.cases(split))
   expected = task.planted_expected() if planted else {}
