@@ -46,7 +46,7 @@ def main():
   from harness.solvers.hf import Backend, NotesSolver, PlainSolver
   t0 = time.time(); b = Backend(spec); note(event="model loaded", seconds=time.time() - t0, revision=b.revision)
   jobs = [("plain", PlainSolver(b), sp) for sp in splits] + \
-         [("plain_noprefix", PlainSolver(b, prefix=""), "train")] * ("train" in splits) + \
+         [("plain_noprefix", PlainSolver(b, prefix=""), "train")] * ("train" in splits and bool(spec.assistant_prefix)) + \
          [(f"notes_{n}", NotesSolver(b, os.path.join(ROOT, "harness", "lessons", n + ".txt")), sp) for sp in splits for n in NOTES]
   for name, s, split in jobs:
     if not want(name):

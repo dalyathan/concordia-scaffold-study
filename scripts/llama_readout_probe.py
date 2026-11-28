@@ -53,8 +53,9 @@ def main():
   band = "interpret" if mean["bare"] >= 0.9 else ("caution: stop and re-gate a framing change" if mean["bare"] >= 0.5 else "stop")
   out = {"model": spec.name, "revision": b.revision, "assistant_prefix": spec.assistant_prefix, "split": a.split, "n_prompts": n, "mean_mass": mean, "band": band, "groups": groups,
          "gpu_seconds": time.time() - t0, "rows": rows}
-  os.makedirs(os.path.join(ROOT, "demo_out", "llama"), exist_ok=True)
-  json.dump(out, open(os.path.join(ROOT, "demo_out", "llama", a.out), "w"), indent=1)
+  odir = os.path.join(ROOT, "demo_out", "llama" if a.model == "llama31_8b" else a.model.split("_")[0][:4])   # demo_out/llama, demo_out/qwen
+  os.makedirs(odir, exist_ok=True)
+  json.dump(out, open(os.path.join(odir, a.out), "w"), indent=1)
   print(json.dumps({k: out[k] for k in ("n_prompts", "mean_mass", "band", "gpu_seconds", "revision")}, indent=1))
   for r in rows[:3]:
     print(r["cid"], r["top10"][:5])

@@ -1,14 +1,17 @@
 """Step 5 driver (GPU, tune only for the verdict): the LoRA runs of LLAMA_PLAN.md in order, the lr rule in code, the 8 GPU-hour stop.
 
   HF_HUB_OFFLINE=1 CUBLAS_WORKSPACE_CONFIG=:4096:8 HARNESS_PROVIDER=runpod HARNESS_GPU_USD_PER_HOUR=0.60 \
-    PYTHONPATH=concordia:. .venv/bin/python scripts/llama_step5.py
+    PYTHONPATH=concordia:. .venv/bin/python scripts/llama_step5.py [--model qwen25_7b]
 Needs the step-4 plain train record (epoch-0 check). Each run is a separate process (one adapter per process). A run whose tune record
 already exists is skipped, so the driver can be restarted. Stops before a new run when the Llama records' GPU time reaches 8 h."""
-import glob, json, os, subprocess, sys
+import argparse, glob, json, os, subprocess, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-RUNS = os.path.join(ROOT, "runs", "haggling", "llama31_8b")
-BUDGET_STOP_H = 8.0
+_ap = argparse.ArgumentParser(); _ap.add_argument("--model", default="llama31_8b"); _ap.add_argument("--budget-stop-h", type=float, default=None)
+_A = _ap.parse_args()
+MODEL = _A.model
+RUNS = os.path.join(ROOT, "runs", "haggling", MODEL)
+BUDGET_STOP_H = _A.budget_stop_h if _A.budget_stop_h is not None else {"llama31_8b": 8.0, "qwen25_7b": 5.0}.get(MODEL, 5.0)   # QWEN_PLAN.md: 5 h
 
 
 def recs():
@@ -35,7 +38,7 @@ def run(arm, n, lr, seed):
     print("skip (record exists):", arm, n, lr, seed, flush=True); return
   if gpu_hours() >= BUDGET_STOP_H:
     sys.exit(f"budget stop: {gpu_hours():.2f} GPU-h in the records (>= {BUDGET_STOP_H})")
-  cmd = [sys.executable, "-m", "harness.train_lora", "--model", "llama31_8b", "--arm", arm, "--n-cells", str(n), "--lr", str(lr),
+  cmd = [sys.executable, "-m", "harness.train_lora", "--model", MODEL, "--arm", arm, "--n-cells", str(n), "--lr", str(lr),
          "--seed", str(seed), "--plain-train-record", plain_train()]
   print("RUN", " ".join(cmd[2:]), flush=True)
   subprocess.run(cmd, cwd=ROOT, check=True)

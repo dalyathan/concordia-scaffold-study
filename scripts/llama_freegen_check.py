@@ -32,9 +32,9 @@ def parse(text, l2price):
 
 def main():
   import argparse, torch
-  ap = argparse.ArgumentParser(); ap.add_argument("--adapter"); a = ap.parse_args()
+  ap = argparse.ArgumentParser(); ap.add_argument("--adapter"); ap.add_argument("--model", default="llama31_8b"); a = ap.parse_args()
   t0 = time.time()
-  spec = modelspec.load("llama31_8b"); b = Backend(spec); task = get_task("haggling"); tok = b.tok
+  spec = modelspec.load(a.model); b = Backend(spec); task = get_task("haggling"); tok = b.tok
   if a.adapter:
     from peft import PeftModel
     b.model = PeftModel.from_pretrained(b.model, a.adapter); b.model.eval()
@@ -62,9 +62,11 @@ def main():
   ok = agree >= THRESH_AGREE and rate >= THRESH_PARSE
   out = {"n_prompts": len(rows), "parse_rate": rate, "agreement_on_parsed": agree, "thresholds": {"agree": THRESH_AGREE, "parse": THRESH_PARSE},
          "pass": ok, "adapter": a.adapter, "gpu_seconds": time.time() - t0, "rows": rows}
-  os.makedirs(os.path.join(ROOT, "demo_out", "llama"), exist_ok=True)
+  odir = os.path.join(ROOT, "demo_out", "llama" if a.model == "llama31_8b" else a.model.split("_")[0][:4])   # demo_out/llama, demo_out/qwen
+  os.makedirs(odir, exist_ok=True)
   name = "freegen_check.json" if not a.adapter else f"freegen_check_{os.path.basename(a.adapter.rstrip('/'))}.json"
-  json.dump(out, open(os.path.join(ROOT, "demo_out", "llama", name), "w"), indent=1)
+  out["model"] = a.model
+  json.dump(out, open(os.path.join(odir, name), "w"), indent=1)
   print(json.dumps({k: out[k] for k in ("n_prompts", "parse_rate", "agreement_on_parsed", "pass", "gpu_seconds")}, indent=1))
   for r in rows[:4]:
     print(r["forced"], r["free"], repr(r["reply"][:120]))
