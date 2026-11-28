@@ -4,7 +4,7 @@
     PYTHONPATH=concordia:. .venv/bin/python scripts/gemma_parity.py [--compare-only]
 Runs (one process each, via python -m harness.run; skipped if a record with the same solver/adapter exists): plain, then lora with each of the
 nine adapters in ADAPTERS. Then compares each new record with its A40 reference (where one exists) and its A10G reference using the frozen
-tools/parity_check.compare. Writes demo_out/gemma_parity.json. Decisions: DECISIONS.md L31-L34."""
+tools/parity_check.compare. Writes demo_out/gemma_parity.json, or with --at-head (only records made at the current commit) demo_out/gemma_parity_after_fix.json. Decisions: DECISIONS.md L31-L34."""
 import glob, json, os, subprocess, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,12 +20,18 @@ ADAPTERS = [(f"gen_{arm}_lr1e-04_s{s}", s, f"legacy-{short}-tune-s{s}-preflight"
             for a40rec in [f"legacy-gemma-claude_examples_n100-tune-s{s}-a40" if arm == "claude_examples" else None]]
 
 
+HEAD = None   # --at-head: only records made at the current git commit (the readout fix, DECISIONS.md L38)
+
+
 def new_records():
   out = []
   for p in sorted(glob.glob(os.path.join(RUNS, "*.json"))):
     if os.path.basename(p).startswith("legacy-"):
       continue
-    r = json.load(open(p)); r["_path"] = os.path.relpath(p, ROOT); out.append(r)
+    r = json.load(open(p)); r["_path"] = os.path.relpath(p, ROOT)
+    if HEAD and (r.get("git") or {}).get("commit") != HEAD:
+      continue
+    out.append(r)
   return out
 
 
@@ -53,6 +59,11 @@ def a40_ref(name, new):
 
 
 def main():
+  global HEAD
+  out_name = "gemma_parity.json"
+  if "--at-head" in sys.argv:
+    HEAD = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True, text=True).stdout.strip()
+    out_name = "gemma_parity_after_fix.json"
   if "--compare-only" not in sys.argv:
     if not find("plain"):
       run("plain")
@@ -84,7 +95,8 @@ def main():
           f"A10G maxdp {row['A10G']['max_abs_prob_diff']:.2e} dreg {row['A10G']['regret_diff']:.4f} | planted {sum(v['ok'] for v in row['planted'].values())}/4",
           flush=True)
   out["readout_parity_all_A40"] = all(r.get("A40", {}).get("readout_parity") for r in out["rows"])
-  json.dump(out, open(os.path.join(ROOT, "demo_out", "gemma_parity.json"), "w"), indent=1)
+  out["git_commit_filter"] = HEAD
+  json.dump(out, open(os.path.join(ROOT, "demo_out", out_name), "w"), indent=1)
   print("READOUT PARITY vs A40:", "PASS" if out["readout_parity_all_A40"] else "FAIL")
 
 

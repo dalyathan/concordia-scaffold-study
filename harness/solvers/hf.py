@@ -82,9 +82,18 @@ class Backend:
     prompt = self.render_prompt(user, lesson, prefix)
     ids = self.tok(prompt, return_tensors="pt", add_special_tokens=False).input_ids.to(self.model.device)
     handles = [h(ids.shape[1] - 1) for h in hooks]
+    cap = getattr(self.model.config, "final_logit_softcapping", None)
     try:
       with torch.no_grad():
-        logits = self.model(input_ids=ids).logits[0, -1].float()
+        if cap:
+          # Models with a final logit soft-cap: read the way the pre-refactor code did (refimpl letter_scores): lm_head on
+          # the last hidden state only, cast to float32, soft-cap in float32. transformers 4.44.2's model(...).logits applies the soft-cap in bf16, which moved per-case probabilities by up to 1.7e-2 (DECISIONS.md L35, L38).
+          hid = self.model.get_decoder()(input_ids=ids, use_cache=False).last_hidden_state[:, -1:]
+          logits = self.model.get_output_embeddings()(hid).float()[0, 0]
+          logits = torch.tanh(logits / cap) * cap
+        else:
+          # No final soft-cap: unchanged path, so earlier records of such models stay bit-identical.
+          logits = self.model(input_ids=ids).logits[0, -1].float()
     finally:
       for h in handles: h.remove()
     lp = torch.log_softmax(logits, dim=-1)
