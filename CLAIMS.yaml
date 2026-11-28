@@ -160,24 +160,59 @@ claims:
       - {shown: "0.044", evidence: {kind: run_mean, task: haggling, model: qwen25_7b, solver: "lora:claude_examples_n25_lr3e-04", split: tune, n_records: 1}}
   - id: qwen-lora-controls
     file: QWEN_RESULTS.md
-    text: "cheapest-label N=100 scores 0.43 and scrambled answers N=100 score 0.87"
+    text: "scrambled answers N=100 score 0.87"
     numbers:
       - {shown: "100", evidence: {kind: definition, reason: "training set size N"}}
-      - {shown: "0.43", evidence: {kind: run_mean, task: haggling, model: qwen25_7b, solver: "lora:cheapest_label_n100_lr3e-04", split: tune, n_records: 1}}
       - {shown: "0.87", evidence: {kind: run_mean, task: haggling, model: qwen25_7b, solver: "lora:shuffled_claude_n100_lr3e-04", split: tune, n_records: 1}}
   - id: qwen-planted-nocost
     file: QWEN_RESULTS.md
-    text: "(mass on the expected option 0.56, 0.44 and 0.71 against a 0.9 bar)"
+    text: "but with mass 0.56, 0.44 and 0.71 against a 0.9 bar"
     numbers:
-      - {shown: "0.56", evidence: {kind: file_value, path: demo_out/qwen_report.json, sha256: 636b26fff2ebc2d86d6355819032b5aee76f9e819c504023a9665874957f9f43, key: "R3_planted_mass.0.planted-nocost"}}
-      - {shown: "0.44", evidence: {kind: file_value, path: demo_out/qwen_report.json, sha256: 636b26fff2ebc2d86d6355819032b5aee76f9e819c504023a9665874957f9f43, key: "R3_planted_mass.1.planted-nocost"}}
-      - {shown: "0.71", evidence: {kind: file_value, path: demo_out/qwen_report.json, sha256: 636b26fff2ebc2d86d6355819032b5aee76f9e819c504023a9665874957f9f43, key: "R3_planted_mass.2.planted-nocost"}}
+      - {shown: "0.56", evidence: {kind: file_value, path: demo_out/qwen_report.json, sha256: 2a03aa7432e92c189f378407f2388de4d0700ab308d014779b71688d62cce7e9, key: "R3_planted_mass.0.planted-nocost"}}
+      - {shown: "0.44", evidence: {kind: file_value, path: demo_out/qwen_report.json, sha256: 2a03aa7432e92c189f378407f2388de4d0700ab308d014779b71688d62cce7e9, key: "R3_planted_mass.1.planted-nocost"}}
+      - {shown: "0.71", evidence: {kind: file_value, path: demo_out/qwen_report.json, sha256: 2a03aa7432e92c189f378407f2388de4d0700ab308d014779b71688d62cce7e9, key: "R3_planted_mass.2.planted-nocost"}}
       - {shown: "0.9", evidence: {kind: definition, reason: "planted pass bar PLANTED_MIN_MASS in harness/evaluate.py"}}
   - id: qwen-freegen
     file: QWEN_RESULTS.md
     text: "agrees with its own free answer on 0.53 of the probe prompts; with the examples-100 adapters, 0.95, 0.89 and 0.89"
     numbers:
-      - {shown: "0.53", evidence: {kind: file_value, path: demo_out/qwen_report.json, sha256: 636b26fff2ebc2d86d6355819032b5aee76f9e819c504023a9665874957f9f43, key: "freegen.agreement_on_parsed"}}
-      - {shown: "0.95", evidence: {kind: file_value, path: demo_out/qwen_report.json, sha256: 636b26fff2ebc2d86d6355819032b5aee76f9e819c504023a9665874957f9f43, key: "freegen_adapter/qwen25_7b_claude_examples_n100_lr3e-04_s0.agreement_on_parsed"}}
-      - {shown: "0.89", evidence: {kind: file_value, path: demo_out/qwen_report.json, sha256: 636b26fff2ebc2d86d6355819032b5aee76f9e819c504023a9665874957f9f43, key: "freegen_adapter/qwen25_7b_claude_examples_n100_lr3e-04_s1.agreement_on_parsed"}}
+      - {shown: "0.53", evidence: {kind: file_value, path: demo_out/qwen_report.json, sha256: 2a03aa7432e92c189f378407f2388de4d0700ab308d014779b71688d62cce7e9, key: "freegen.agreement_on_parsed"}}
+      - {shown: "0.95", evidence: {kind: file_value, path: demo_out/qwen_report.json, sha256: 2a03aa7432e92c189f378407f2388de4d0700ab308d014779b71688d62cce7e9, key: "freegen_adapter/qwen25_7b_claude_examples_n100_lr3e-04_s0.agreement_on_parsed"}}
+      - {shown: "0.89", evidence: {kind: file_value, path: demo_out/qwen_report.json, sha256: 2a03aa7432e92c189f378407f2388de4d0700ab308d014779b71688d62cce7e9, key: "freegen_adapter/qwen25_7b_claude_examples_n100_lr3e-04_s1.agreement_on_parsed"}}
       - {shown: "100", evidence: {kind: definition, reason: "examples-100"}}
+  - id: qwen-cheapest
+    file: QWEN_RESULTS.md
+    text: "cheapest-label N=100 scores 0.43 (it collapses"
+    numbers:
+      - {shown: "100", evidence: {kind: definition, reason: "training set size N"}}
+      - {shown: "0.43", evidence: {kind: run_mean, task: haggling, model: qwen25_7b, solver: "lora:cheapest_label_n100_lr3e-04", split: tune, n_records: 1}}
+  - id: qwen-diverged
+    file: QWEN_RESULTS.md
+    text: "its last-epoch adapter scores 1.259, back at uniform guessing"
+    numbers:
+      - {shown: "1.259", evidence: {kind: file_value, path: demo_out/qwen_report.json, sha256: 2a03aa7432e92c189f378407f2388de4d0700ab308d014779b71688d62cce7e9, key: "qwen_g2/history/s2.last_tune"}}
+  - id: qwen-shift
+    file: QWEN_RESULTS.md
+    text: "plain's own distribution moved two price steps cheaper scores 0.557"
+    numbers:
+      - {shown: "0.557", evidence: {kind: file_value, path: demo_out/qwen_report.json, sha256: 2a03aa7432e92c189f378407f2388de4d0700ab308d014779b71688d62cce7e9, key: "qwen_g2/plain_shifted_cheaper.2"}}
+  - id: qwen-slope-diff
+    file: QWEN_RESULTS.md
+    text: "(slope difference 0.224 [0.077, 0.364])"
+    numbers:
+      - {shown: "0.224", evidence: {kind: file_value, path: demo_out/qwen_report.json, sha256: 2a03aa7432e92c189f378407f2388de4d0700ab308d014779b71688d62cce7e9, key: "qwen_g2/slope_written_minus_wrong.0"}}
+      - {shown: "0.077", evidence: {kind: file_value, path: demo_out/qwen_report.json, sha256: 2a03aa7432e92c189f378407f2388de4d0700ab308d014779b71688d62cce7e9, key: "qwen_g2/slope_written_minus_wrong.1"}}
+      - {shown: "0.364", evidence: {kind: file_value, path: demo_out/qwen_report.json, sha256: 2a03aa7432e92c189f378407f2388de4d0700ab308d014779b71688d62cce7e9, key: "qwen_g2/slope_written_minus_wrong.2"}}
+  - id: qwen-free-plain
+    file: QWEN_RESULTS.md
+    text: "hard regret 1.56; the forced argmax 1.83 on the same prompts"
+    numbers:
+      - {shown: "1.56", evidence: {kind: file_value, path: demo_out/qwen_report.json, sha256: 2a03aa7432e92c189f378407f2388de4d0700ab308d014779b71688d62cce7e9, key: "qwen_g2/freegen_regret/plain.free_hard_regret"}}
+      - {shown: "1.83", evidence: {kind: file_value, path: demo_out/qwen_report.json, sha256: 2a03aa7432e92c189f378407f2388de4d0700ab308d014779b71688d62cce7e9, key: "qwen_g2/freegen_regret/plain.forced_argmax_hard_regret"}}
+  - id: qwen-free-lora
+    file: QWEN_RESULTS.md
+    text: "hard regret 0.092, 0.096 and 0.156 on the probe prompts"
+    numbers:
+      - {shown: "0.092", evidence: {kind: file_value, path: demo_out/qwen_report.json, sha256: 2a03aa7432e92c189f378407f2388de4d0700ab308d014779b71688d62cce7e9, key: "qwen_g2/freegen_regret/qwen25_7b_claude_examples_n100_lr3e-04_s0.free_hard_regret"}}
+      - {shown: "0.096", evidence: {kind: file_value, path: demo_out/qwen_report.json, sha256: 2a03aa7432e92c189f378407f2388de4d0700ab308d014779b71688d62cce7e9, key: "qwen_g2/freegen_regret/qwen25_7b_claude_examples_n100_lr3e-04_s1.free_hard_regret"}}
+      - {shown: "0.156", evidence: {kind: file_value, path: demo_out/qwen_report.json, sha256: 2a03aa7432e92c189f378407f2388de4d0700ab308d014779b71688d62cce7e9, key: "qwen_g2/freegen_regret/qwen25_7b_claude_examples_n100_lr3e-04_s2.free_hard_regret"}}

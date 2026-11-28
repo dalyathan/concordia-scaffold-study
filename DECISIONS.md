@@ -250,3 +250,23 @@ Q8. **Report generator generalised before the Qwen LoRA results** (G1 point 9, d
 Q9. **Step 5 done** (scripts/llama_step5.py --model qwen25_7b; 8 runs, each also scoring its last epoch; about 2.0 GPU-h, 2.76 h in the Qwen records with step 4, about $1.66; budget 6 h). lr rule: select_B 0.0590 at 1e-4 vs 0.0200 at 3e-4 -> **3e-4** (unlike Llama; 3e-4 is the upper edge of the two-point sweep, so the lr effect is unresolved, as frozen). Tune: examples-100 seeds 0.0316 / 0.0548 / 0.1040 (best epochs 5 / 3 / 2), examples-25 0.0439 (planted 4/4), cheapest-label N=25 and N=100 0.4286 each, scrambled N=100 0.8697; no selection kept epoch 0. Disk after: 3.0 GB free.
 Q10. **Adapter free-answer check (descriptive):** 0.95 / 0.89 / 0.89 for examples-100 seeds 0-2 at lr 3e-4 (parse rate 1.00; plain 0.53); about 0.35 GPU-h with loads.
 Q11. **Report changes after the Qwen records existed (logged per Q8; Llama output still byte-identical):** the R5 wording is computed (it had hard-coded the Llama facts "worse than every seed" and "straddles the edge"; for Qwen examples-25 is better than 2 of 3 seeds and its interval lies inside +-0.05); the section labels name QWEN_PLAN.md and "checks from the Llama G2 review"; the three-model caption gives Qwen's lr. No number changed. QWEN_RESULTS.md generated; summary hand-written with CLAIMS.yaml entries (check_claims --strict: 66 verified, 0 problems); recompute, both report checks and the tests (134 passed) pass.
+
+## G2: Qwen results (2026-11-28; Sonnet + Opus; both "partly justified")
+
+Q12. Reviews: reviews/2026-11-28_G2_qwen-results_{sonnet,opus}.md. Packet /tmp/gate_G2_44be9bf1 (the G1 triage excluded; hub-commit keyword spelled commit_pin).
+
+| # | Point (who) | Action |
+|---|---|---|
+| 1 | Seed 2 diverges at lr 3e-4 (`_last` tune 1.259 = uniform); "near zero" rests on early stopping; lr choice not borne out on tune (both; most severe for both) | **Applied** (CPU): verified as a training divergence (train loss 0.50 -> 2.53 at epoch 4, select_B back to 1.268), per-epoch table in QWEN_RESULTS.md, wording "early stopping doing real work", limitation stated. **Not run:** seed 2 at 1e-4 (a run chosen after seeing the result) |
+| 2 | R2 "wrong rule lowers it most" overstated; mechanism (both) | **Applied**: "at least as much as the written rule"; CPU checks: paired slope difference written minus wrong rule 0.224 [0.077, 0.364] (the written rule carries content the wrong rule lacks); plain moved two price steps cheaper 0.557, about the wrong rule's 0.515 (its gain needs no content). **Deferred:** decoy arms (double the cost, highest price, length-matched wrong paragraph): new arms, not in the owner's list |
+| 3 | R1 is about the forced readout (both) | **Applied**: "forced-choice" wording; CPU check on the stored free answers: plain's own free answers have hard regret 1.56 on the probe prompts (forced argmax 1.83), so the failure is not only a readout effect |
+| 4 | Planted: the top pick is correct; only mass falls short (Opus) and the failure is uninformative about Qwen (Sonnet) | **Applied** in the wording |
+| 5 | R5 and the intervals ignore seed variance (Opus) | **Applied**: "inside the examples-100 seed range"; "intervals leave out seed-to-seed variance" stated |
+| 6 | Examples-100 vs the stated-cost rule is marginal; cheapest-label degenerate (both) | **Applied** in the wording |
+| 7 | Drop any adapter ranking across models (Sonnet) | **Applied**: the summary gives no cross-model ranking of adapters |
+| 8 | Failed-prediction list incomplete (Opus) | **Applied**: four failed (Q1a, Q1b below, Q1b at or above, Q2a) |
+| 9 | Three-model table reads Llama controls without the `_last` fallback (Opus) | **Checked, no change**: Llama's control_versions are all "selected" (no selection kept epoch 0), so the fallback does not apply |
+| 10 | No-cost cells at V 6 / grid A other priors; path-check tolerance; repeated "Answer: (" (Sonnet) | **Deferred** (open points); the repeated "Answer: (" is the same for Llama and Qwen and is part of the frozen framing |
+| 11 | Freeze lists for a test look; test2 splits not in the harness (both) | **Deferred** to QWEN_TEST_PLAN.md |
+
+The new checks are a Qwen-only report section ("Checks added after the Qwen G2 review"); tools/llama_report.py --check still reports the Llama output byte-identical. Conclusions written in QWEN_RESULTS.md after this table.

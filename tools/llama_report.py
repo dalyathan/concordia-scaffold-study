@@ -550,6 +550,10 @@ def build():
   J["verdicts"] = verdicts
   out.append("")
   # ---------------- predictions
+  if MODEL != "llama31_8b":
+    L["_ex100_last"] = [r for r in lora if chosen is not None and r["solver"] == f"lora:claude_examples_n100_lr{chosen:.0e}_last"]
+    out += qwen_g2_checks(arms, L, J)
+    L.pop("_ex100_last")
   out += predictions(arms, L, gem, J) if MODEL == "llama31_8b" else qwen_predictions(arms, L, gem, J)
   return "\n".join(out) + "\n", J
 
@@ -634,6 +638,73 @@ def predictions(arms, L, gem, J):
          "| id | statement | observed | verdict | Brier |", "| --- | --- | --- | --- | --- |"]
   out += [f"| {a} | {b} | {c} | {d} | {e_} |" for a, b, c, d, e_ in res]
   return out + [""]
+
+
+def qwen_g2_checks(arms, L, J):
+  """Checks added after the Qwen G2 review (CPU, from the same records and stored files; descriptive; DECISIONS.md Q12)."""
+  out = ["## Checks added after the Qwen G2 review (descriptive; CPU, existing records)", ""]
+  e = L.get("ex100")
+  if e:
+    out += ["**Training stability at the chosen lr.** Per-epoch select_B soft regret (train loss) for each examples-100 seed; the selected epoch is the lowest select_B. "
+            "A seed whose later epochs return to about uniform (1.27 on select_B) diverged; the selected adapter was saved before that.", "",
+            "| seed | epoch 0 | 1 | 2 | 3 | 4 | 5 | selected | last-epoch tune soft |", "| --- | --- | --- | --- | --- | --- | --- | --- | --- |"]
+    lasts = {r["seed"]: r for r in L.get("_ex100_last", [])}
+    for r in sorted(e.recs, key=lambda r: r["seed"]):
+      t = r["config"]["training"]; h = {x["epoch"]: x for x in t["history"]}
+      cell = lambda k: (f"{h[k]['select_B']['soft_regret_mean']:.3f}" + (f" ({h[k]['train_loss']:.2f})" if h[k].get("train_loss") is not None else "")) if k in h else "-"
+      lt = lasts.get(r["seed"]); lv = Arm([lt], "l").mean() if lt else None
+      out.append(f"| {r['seed']} | " + " | ".join(cell(k) for k in range(6)) + f" | epoch {t['best_epoch']} | {f3(lv)} |")
+      J[f"qwen_g2/history/s{r['seed']}"] = {str(k): h[k]["select_B"]["soft_regret_mean"] for k in h} | {"last_tune": lv}
+    out.append("")
+  W, M = arms.get(("notes:wrong_rule", "tune")), arms.get(("notes:method_original", "tune"))
+  if W and M:
+    cids = [c for c in M.cids if M.case[c]["type"] == "below"]
+    x = np.array([M.case[c]["inputs"]["C"] for c in cids], float)
+    gs = sorted({group(M.case[c]) for c in cids}); gi = np.array([gs.index(group(M.case[c])) for c in cids])
+    ym, yw = np.array([M.offer[c] for c in cids]), np.array([W.offer[c] for c in cids])
+    pt = float(np.polyfit(x, ym, 1)[0] - np.polyfit(x, yw, 1)[0])
+    rng_ = np.random.Generator(np.random.PCG64(0)); st = []
+    for _ in range(B):
+      m = np.concatenate([np.where(gi == g)[0] for g in rng_.integers(0, len(gs), len(gs))])
+      if len(set(x[m])) >= 2:
+        st.append(np.polyfit(x[m], ym[m], 1)[0] - np.polyfit(x[m], yw[m], 1)[0])
+    d = (pt, float(np.percentile(st, 2.5)), float(np.percentile(st, 97.5))); J["qwen_g2/slope_written_minus_wrong"] = d
+    out += [f"**Does the written rule carry content the wrong rule lacks?** Slope of the forced-choice expected offer on the stated cost (below cells), written rule minus wrong rule, paired cluster bootstrap: {fci(d)}.", ""]
+  P = arms.get(("plain", "tune"))
+  if P:
+    def shifted(k):
+      v = []
+      for c in P.cids:
+        x_ = P.case[c]; g, pay, pr = x_["inputs"]["grid"], x_["payoffs"], x_["probs"]
+        order = sorted(range(5), key=lambda i: g[i]); q = [0.0] * 5
+        for rank, i in enumerate(order):
+          q[order[max(0, rank - k)]] += pr[i]
+        v.append(max(pay) - float(np.dot(pay, q)))
+      return float(np.mean(v))
+    sh = {k: shifted(k) for k in (1, 2)}; J["qwen_g2/plain_shifted_cheaper"] = sh
+    out += [f"**A content-free \"offer lower\" baseline.** Plain's own order-averaged distribution moved one price step cheaper scores {sh[1]:.3f}, two steps cheaper {sh[2]:.3f} "
+            f"(plain {P.mean():.3f}; wrong rule {f3(W and W.mean())}; written rule {f3(M and M.mean())}). If a pure shift matches an arm, that arm's gain needs no rule content.", ""]
+  from harness.task import get_task
+  task = get_task("haggling"); byc = {c["cid"]: c for c in task.cases("train")}
+  rowsf = []
+  for f in [os.path.join(READOUT_DIR, "freegen_check.json")] + sorted(glob.glob(os.path.join(READOUT_DIR, "freegen_check_*claude_examples_n100*.json"))):
+    if not os.path.exists(f):
+      continue
+    x_ = json.load(open(f)); nm = "plain" if "adapter" not in x_ or not x_["adapter"] else os.path.basename(x_["adapter"].rstrip("/"))
+    fr, fo = [], []
+    for r in x_["rows"]:
+      c = byc[r["cid"]]; pay = task.payoffs(c); _, l2o = task.render(c, tuple(r["order"])); m = max(pay)
+      fo.append(m - pay[l2o[r["forced"]]])
+      if r["free"] is not None and r["free"] in l2o:
+        fr.append(m - pay[l2o[r["free"]]])
+    rowsf.append((nm, len(x_["rows"]), float(np.mean(fr)) if fr else None, float(np.mean(fo)), len(fr)))
+    J[f"qwen_g2/freegen_regret/{nm}"] = {"free_hard_regret": rowsf[-1][2], "forced_argmax_hard_regret": rowsf[-1][3], "n_free": len(fr)}
+  if rowsf:
+    out += ["**Regret of Qwen's own free answers** on the 100 probe prompts (20 train cases outside training and select_B x 5 orders; hard regret of the option named in the greedy free answer, "
+            "against the hard regret of the forced-choice argmax on the same prompts; descriptive):", "",
+            "| model | prompts | free answers parsed | free-answer hard regret | forced-choice argmax hard regret |", "| --- | --- | --- | --- | --- |"]
+    out += [f"| {a} | {b} | {e_} | {f3(c)} | {d_:.3f} |" for a, b, c, d_, e_ in rowsf] + [""]
+  return out
 
 
 def qwen_predictions(arms, L, gem, J):
