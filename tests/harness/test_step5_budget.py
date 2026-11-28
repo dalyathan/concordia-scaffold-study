@@ -9,7 +9,7 @@ def test_gpu_hours_counts_training_once(monkeypatch):
   recs = [json.load(open(p)) for p in glob.glob(os.path.join(ROOT, "runs", "haggling", "llama31_8b", "lora_*.json"))]
   if not recs:
     import pytest; pytest.skip("no Llama LoRA records")
-  main = [r for r in recs if not r["solver"].endswith("_last")]
+  main = [r for r in recs if not r["solver"].endswith("_last") and r.get("split") == "tune"]   # training runs; test2-look records only score
   assert all((r.get("timing") or {}).get("gpu_seconds", 0) > 300 for r in main), "a training record carries no training GPU time"
   monkeypatch.setattr(sys, "argv", ["llama_step5.py", "--model", "llama31_8b"])
   g = runpy.run_path(os.path.join(ROOT, "scripts", "llama_step5.py"), run_name="not_main")
