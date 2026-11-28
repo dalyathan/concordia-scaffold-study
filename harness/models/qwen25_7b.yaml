@@ -13,5 +13,6 @@ layer_module: model.layers.{i}    # relative to the HF *ForCausalLM object: lm.m
 final_norm_module: model.norm
 lora_target_modules: [q_proj, k_proj, v_proj, o_proj]
 generation_end_tokens: [<|im_end|>]
+assistant_prefix: "Answer: ("   # QWEN_PLAN.md readout rule, 2026-11-28: unprefixed bare-letter mass 0.0055 on 20 train cases (first token "(d" etc., one merged token); with the prefix 0.998 (demo_out/qwen/probe_train_*.json; train cases only)
 verified: ['tokenizer', 'chat_template', 'num_layers', 'hidden_size']                      # tools/model_checks.py --write adds the facts it confirmed against the hub files
 notes: "Ungated. The Qwen template inserts a default system prompt when none is given."
