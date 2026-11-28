@@ -2,6 +2,15 @@
 
 Status: **draft for G3.** A test look needs (1) G3 with Sonnet + Opus (REVIEW_GATES.md), (2) the owner's explicit go in a message, and (3) the owner's scorer-pin tag (`HARNESS_PIN_REF`). None exists yet. The parity check of the harness against stored Gemma scores was skipped by the owner, so every Gemma-vs-Llama number stays code-path-confounded, on test as on tune. No test case has been opened or scored for Llama. The test2 cells are described here only from their construction report (demo_out/gen_test2_report.md: CPU only, nothing scored).
 
+
+## Prepared for G3 (2026-11-28)
+
+- **Code items 1-3 written** (CPU tests pass): test2 as locked harness splits with a fingerprint check, and the test2 prompts equal the generator's render for all 480 cases x 5 orders (tests/harness/test_test2_port.py); the one-look guard keyed on (model, split, solver name, seed) as well as the config hash, the evaluation seed tied to the adapter's training seed, and the default runs folder always scanned (harness/evaluate.py, protected; DECISIONS.md X1-X2); the test2 report as its own generator, tools/test2_report.py, rather than a `--split` flag on tools/llama_report.py (it reuses that file's statistics; tested on synthetic records in tests/harness/test_test2_report.py).
+- **Look driver:** scripts/test2_look.py (`--freeze`, `--dry`, `--look`). Added beyond the plan: a **preflight** per arm before any test case is scored, which re-scores the arm's 84 tune cases with the reloaded adapter and stops the look if any averaged probability differs from the committed tune record by 1e-3 or more. The adapters are reloaded with fp32 LoRA weights, as harness/train_lora.py reloads its best epoch.
+- **Freeze list completed:** demo/gen/test2_freeze_<model>.json holds the six GPU arms (solver, seed, adapter directory, `adapter_model.safetensors` sha256, selected epoch), the tune record and its sha256 for each arm, the sha256 of the harness, driver, report, model YAML and test2 files, the bootstrap settings and the preflight tolerance. The look refuses to start if any of these changed or the git tree is not clean. The `solver_config_sha256` of each look solver needs the loaded model, so it is printed at the preflight, before the arm's first test case; the guard does not depend on it.
+- **Test predictions:** TEST2_PREDICTIONS.md, committed alone before G3.
+- **Still needed:** G3, then the owner's go and the scorer-pin tag (HARNESS_PIN_REF) created on or after the commit that registers the new harness/evaluate.py hash. If G3 changes any frozen file, the freeze is rewritten and committed before the look.
+
 ## Why test2, and what it can show
 
 The tune result (LLAMA_RESULTS.md, after G2) is in-family fit: examples-100 reaches 0.048 soft regret on tune cells that share values, grids and wording with the training cells. The open questions are whether this holds on fresh cells from the same ranges (test2_same), and whether it carries to cells outside the training key space (test2_newkey). Both sets were built with a fixed seed (20261201) and locked before any model was scored. test_same and test_hard are not used: Gemma already looked at them.

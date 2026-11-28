@@ -1,0 +1,143 @@
+{
+ "arms": [
+  {
+   "adapter": null,
+   "label": "plain",
+   "seed": 0,
+   "solver": "plain",
+   "tune_record": "runs/haggling/qwen25_7b/plain-tune-s0-20261128T035522245387Z.json",
+   "tune_record_sha256": "98cd4e9aa4902f4afaf103484a6e5fb65c4016dbf07514e511638d5d2e76b47e"
+  },
+  {
+   "adapter": {
+    "best_epoch": 5,
+    "dir": "demo_out/adapters_harness/qwen25_7b_claude_examples_n100_lr3e-04_s0",
+    "version": "selected on select_B (early stopping, epoch 0 a candidate)",
+    "weights_sha256": "69b2bbd88d52dbb0d7be2f2b7b04a93460b324d171f92077f1af8d6dccc85991"
+   },
+   "label": "examples-100",
+   "seed": 0,
+   "solver": "lora:claude_examples_n100_lr3e-04",
+   "training": {
+    "arm": "claude_examples",
+    "best_epoch": 5,
+    "seed": 0,
+    "version": "selected on select_B (early stopping, epoch 0 a candidate)"
+   },
+   "tune_record": "runs/haggling/qwen25_7b/lora_claude_examples_n100_lr3e-04-tune-s0-20261128T051027161828Z.json",
+   "tune_record_sha256": "a502542c2264c67c7637aa2cbcfd4075027539c63d2dea4b2df964e1af3ba3a1"
+  },
+  {
+   "adapter": {
+    "best_epoch": 3,
+    "dir": "demo_out/adapters_harness/qwen25_7b_claude_examples_n100_lr3e-04_s1",
+    "version": "selected on select_B (early stopping, epoch 0 a candidate)",
+    "weights_sha256": "330d7859aa78e772d23617037ef0b880dba5dc2845ab97e04cad81a89f1a8144"
+   },
+   "label": "examples-100",
+   "seed": 1,
+   "solver": "lora:claude_examples_n100_lr3e-04",
+   "training": {
+    "arm": "claude_examples",
+    "best_epoch": 3,
+    "seed": 1,
+    "version": "selected on select_B (early stopping, epoch 0 a candidate)"
+   },
+   "tune_record": "runs/haggling/qwen25_7b/lora_claude_examples_n100_lr3e-04-tune-s1-20261128T052524668821Z.json",
+   "tune_record_sha256": "255b383e58cc48d46f61a7c08c83b831d33d06404af8a2a70b4d9a35844b1438"
+  },
+  {
+   "adapter": {
+    "best_epoch": 2,
+    "dir": "demo_out/adapters_harness/qwen25_7b_claude_examples_n100_lr3e-04_s2",
+    "version": "selected on select_B (early stopping, epoch 0 a candidate)",
+    "weights_sha256": "7f5848fb2b7061ac1d6ccc5ee83addb7a23392836804d588fd20eff907f331cc"
+   },
+   "label": "examples-100",
+   "seed": 2,
+   "solver": "lora:claude_examples_n100_lr3e-04",
+   "training": {
+    "arm": "claude_examples",
+    "best_epoch": 2,
+    "seed": 2,
+    "version": "selected on select_B (early stopping, epoch 0 a candidate)"
+   },
+   "tune_record": "runs/haggling/qwen25_7b/lora_claude_examples_n100_lr3e-04-tune-s2-20261128T054018093079Z.json",
+   "tune_record_sha256": "dd12b9e82befac8ce92f403baa7d87a685d655c296b8d98783230ed8a4c5ee8b"
+  },
+  {
+   "adapter": {
+    "best_epoch": 2,
+    "dir": "demo_out/adapters_harness/qwen25_7b_shuffled_claude_n100_lr3e-04_s0",
+    "version": "selected on select_B (early stopping, epoch 0 a candidate)",
+    "weights_sha256": "431e005fc83224df8a3452b4c6f3e6fecd66dcc250ef1f8deb68a5606c048709"
+   },
+   "label": "scrambled N=100",
+   "seed": 0,
+   "solver": "lora:shuffled_claude_n100_lr3e-04",
+   "training": {
+    "arm": "shuffled_claude",
+    "best_epoch": 2,
+    "seed": 0,
+    "version": "selected on select_B (early stopping, epoch 0 a candidate)"
+   },
+   "tune_record": "runs/haggling/qwen25_7b/lora_shuffled_claude_n100_lr3e-04-tune-s0-20261128T064046762419Z.json",
+   "tune_record_sha256": "f03c27c166c2e12c82f016b9b15ef8f55e04b4f6931901a3d644abb4b8225af3"
+  },
+  {
+   "adapter": {
+    "best_epoch": 5,
+    "dir": "demo_out/adapters_harness/qwen25_7b_cheapest_label_n100_lr3e-04_s0",
+    "version": "selected on select_B (early stopping, epoch 0 a candidate)",
+    "weights_sha256": "befb5bbaabd03ebf519bf449de68c222bacaa8bd608b44ba962164959581b059"
+   },
+   "label": "cheapest-label N=100",
+   "seed": 0,
+   "solver": "lora:cheapest_label_n100_lr3e-04",
+   "training": {
+    "arm": "cheapest_label",
+    "best_epoch": 5,
+    "seed": 0,
+    "version": "selected on select_B (early stopping, epoch 0 a candidate)"
+   },
+   "tune_record": "runs/haggling/qwen25_7b/lora_cheapest_label_n100_lr3e-04-tune-s0-20261128T062553837536Z.json",
+   "tune_record_sha256": "b1743a426573a9ef33ea9a4d95074c805166a08d6adb825a4a5bba3f3c3ba7da"
+  }
+ ],
+ "bootstrap": {
+  "clusters": "(V, grid) groups within each slice",
+  "generator": "PCG64",
+  "resamples": 10000,
+  "seed": 0
+ },
+ "file_sha256": {
+  "demo/gen/test2_cases.jsonl": "7889eb0cfa1f3f63dfb1c99aec2f29cb65252c9ed0c42cb2de9d8c6455f86526",
+  "demo/gen/test2_cells.json": "2c2b8e2e0844a8a18a8494740ff834fb55b1165607deb772967509f34b787e16",
+  "demo/gen/test2_fingerprints.json": "d72ca71d59937673b2920478b3636374b8f17dd52a083e8a4caff6ecdcacbb8a",
+  "harness/evaluate.py": "6253a5e350ff17b9c92758f8344bfc2b761515fb2457a786a8aa0408dc6d44ec",
+  "harness/models/qwen25_7b.yaml": "4c26bea6e613f2cad676e890b19ec60054e9c692f8452175a8bdb364864de997",
+  "harness/modelspec.py": "984c5fd87989b8047a0c6f328259ab3c7917836241efe179e0728ed64c7910df",
+  "harness/solvers/hf.py": "3c728530a1d4c6ae0d536483ffceeaf75a953bfc1a2ad96cbffe6230221ed36d",
+  "harness/tasks/haggling.py": "8ef86657374c613ab20b01a5e2ec47532927ad6e46893c29978712b6e1144c54",
+  "scripts/test2_look.py": "27aff8be18189ce76ceb9469bc6bbceb50beda0ebcc93590ab6e9891edaf3c32",
+  "tools/test2_report.py": "96b3d0ee4c402ad7c0474d9ef646af7be34456fe692b70868be1830168e175d0"
+ },
+ "model": "qwen25_7b",
+ "model_yaml_sha256": "4c26bea6e613f2cad676e890b19ec60054e9c692f8452175a8bdb364864de997",
+ "plan": "QWEN_TEST_PLAN.md",
+ "preflight": {
+  "max_abs_prob_diff": 0.001,
+  "split": "tune"
+ },
+ "readout": "forced-choice letter (the config's assistant prefix), five cyclic orders, the two stored name variants",
+ "references": [
+  "oracle",
+  "uniform",
+  "baseline:cheapest",
+  "baseline:stated_cost_rule"
+ ],
+ "splits": [
+  "test2_same",
+  "test2_newkey"
+ ]
+}

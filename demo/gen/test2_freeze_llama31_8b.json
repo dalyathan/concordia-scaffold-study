@@ -1,0 +1,143 @@
+{
+ "arms": [
+  {
+   "adapter": null,
+   "label": "plain",
+   "seed": 0,
+   "solver": "plain",
+   "tune_record": "runs/haggling/llama31_8b/plain-tune-s0-20261127T215449648928Z.json",
+   "tune_record_sha256": "e808bf5dcd4f43592439f5fdfe5241c31296edee7303c58995e7844b0ccc1e1c"
+  },
+  {
+   "adapter": {
+    "best_epoch": 4,
+    "dir": "demo_out/adapters_harness/llama31_8b_claude_examples_n100_lr1e-04_s0",
+    "version": "selected on select_B (early stopping, epoch 0 a candidate)",
+    "weights_sha256": "6208169e43b36bbacc30d0168417a4dd06006a3774eb92bd078e61de0e95f289"
+   },
+   "label": "examples-100",
+   "seed": 0,
+   "solver": "lora:claude_examples_n100_lr1e-04",
+   "training": {
+    "arm": "claude_examples",
+    "best_epoch": 4,
+    "seed": 0,
+    "version": "selected on select_B (early stopping, epoch 0 a candidate)"
+   },
+   "tune_record": "runs/haggling/llama31_8b/lora_claude_examples_n100_lr1e-04-tune-s0-20261127T230312247052Z.json",
+   "tune_record_sha256": "919aa2ce1e01e720fbcabe7785e5d39b4c716d454baa62359b4116b421a65c57"
+  },
+  {
+   "adapter": {
+    "best_epoch": 5,
+    "dir": "demo_out/adapters_harness/llama31_8b_claude_examples_n100_lr1e-04_s1",
+    "version": "selected on select_B (early stopping, epoch 0 a candidate)",
+    "weights_sha256": "6af56e214d56ce029e0e7fae9ae953be1209bc59cd00a78099a221f8c9ea46aa"
+   },
+   "label": "examples-100",
+   "seed": 1,
+   "solver": "lora:claude_examples_n100_lr1e-04",
+   "training": {
+    "arm": "claude_examples",
+    "best_epoch": 5,
+    "seed": 1,
+    "version": "selected on select_B (early stopping, epoch 0 a candidate)"
+   },
+   "tune_record": "runs/haggling/llama31_8b/lora_claude_examples_n100_lr1e-04-tune-s1-20261127T233834336850Z.json",
+   "tune_record_sha256": "9beb302b569e9e3968aa476f0e945debc5b1c643cbb5e34196899cbe22b13d9c"
+  },
+  {
+   "adapter": {
+    "best_epoch": 5,
+    "dir": "demo_out/adapters_harness/llama31_8b_claude_examples_n100_lr1e-04_s2",
+    "version": "selected on select_B (early stopping, epoch 0 a candidate)",
+    "weights_sha256": "e61025254c4303706a46bef13213c90830bc18d2097fcbe2cdaf63d164fc0091"
+   },
+   "label": "examples-100",
+   "seed": 2,
+   "solver": "lora:claude_examples_n100_lr1e-04",
+   "training": {
+    "arm": "claude_examples",
+    "best_epoch": 5,
+    "seed": 2,
+    "version": "selected on select_B (early stopping, epoch 0 a candidate)"
+   },
+   "tune_record": "runs/haggling/llama31_8b/lora_claude_examples_n100_lr1e-04-tune-s2-20261127T235623449965Z.json",
+   "tune_record_sha256": "adba3fe345abc1216fa44f34b86fd8bc627473cdc5401b9dac469cc1ec1d5733"
+  },
+  {
+   "adapter": {
+    "best_epoch": 4,
+    "dir": "demo_out/adapters_harness/llama31_8b_shuffled_claude_n100_lr1e-04_s0",
+    "version": "selected on select_B (early stopping, epoch 0 a candidate)",
+    "weights_sha256": "118d6a68202cf907165ae944127040182e61e8479a9475c0ee35edafa2b99248"
+   },
+   "label": "scrambled N=100",
+   "seed": 0,
+   "solver": "lora:shuffled_claude_n100_lr1e-04",
+   "training": {
+    "arm": "shuffled_claude",
+    "best_epoch": 4,
+    "seed": 0,
+    "version": "selected on select_B (early stopping, epoch 0 a candidate)"
+   },
+   "tune_record": "runs/haggling/llama31_8b/lora_shuffled_claude_n100_lr1e-04-tune-s0-20261128T010808349613Z.json",
+   "tune_record_sha256": "a99535aa1eaf94522e88572d04362e721bbbcdf86f3e970d631d75aff3d60ae0"
+  },
+  {
+   "adapter": {
+    "best_epoch": 5,
+    "dir": "demo_out/adapters_harness/llama31_8b_cheapest_label_n100_lr1e-04_s0",
+    "version": "selected on select_B (early stopping, epoch 0 a candidate)",
+    "weights_sha256": "852fe781bc856d2e52edee280e4923cf7454066f20c07d333e4d96044f9ede5e"
+   },
+   "label": "cheapest-label N=100",
+   "seed": 0,
+   "solver": "lora:cheapest_label_n100_lr1e-04",
+   "training": {
+    "arm": "cheapest_label",
+    "best_epoch": 5,
+    "seed": 0,
+    "version": "selected on select_B (early stopping, epoch 0 a candidate)"
+   },
+   "tune_record": "runs/haggling/llama31_8b/lora_cheapest_label_n100_lr1e-04-tune-s0-20261128T005032452600Z.json",
+   "tune_record_sha256": "8ab896607ca304d66e0620b42ba8d9a6eae1acdbd672baccdee5c216cffb924a"
+  }
+ ],
+ "bootstrap": {
+  "clusters": "(V, grid) groups within each slice",
+  "generator": "PCG64",
+  "resamples": 10000,
+  "seed": 0
+ },
+ "file_sha256": {
+  "demo/gen/test2_cases.jsonl": "7889eb0cfa1f3f63dfb1c99aec2f29cb65252c9ed0c42cb2de9d8c6455f86526",
+  "demo/gen/test2_cells.json": "2c2b8e2e0844a8a18a8494740ff834fb55b1165607deb772967509f34b787e16",
+  "demo/gen/test2_fingerprints.json": "d72ca71d59937673b2920478b3636374b8f17dd52a083e8a4caff6ecdcacbb8a",
+  "harness/evaluate.py": "6253a5e350ff17b9c92758f8344bfc2b761515fb2457a786a8aa0408dc6d44ec",
+  "harness/models/llama31_8b.yaml": "c833ae0b5a0d9727be87b8d0e73668f1bcdf00551cecbce75e7dc2a2296cd2da",
+  "harness/modelspec.py": "984c5fd87989b8047a0c6f328259ab3c7917836241efe179e0728ed64c7910df",
+  "harness/solvers/hf.py": "3c728530a1d4c6ae0d536483ffceeaf75a953bfc1a2ad96cbffe6230221ed36d",
+  "harness/tasks/haggling.py": "8ef86657374c613ab20b01a5e2ec47532927ad6e46893c29978712b6e1144c54",
+  "scripts/test2_look.py": "27aff8be18189ce76ceb9469bc6bbceb50beda0ebcc93590ab6e9891edaf3c32",
+  "tools/test2_report.py": "96b3d0ee4c402ad7c0474d9ef646af7be34456fe692b70868be1830168e175d0"
+ },
+ "model": "llama31_8b",
+ "model_yaml_sha256": "c833ae0b5a0d9727be87b8d0e73668f1bcdf00551cecbce75e7dc2a2296cd2da",
+ "plan": "LLAMA_TEST_PLAN.md",
+ "preflight": {
+  "max_abs_prob_diff": 0.001,
+  "split": "tune"
+ },
+ "readout": "forced-choice letter (the config's assistant prefix), five cyclic orders, the two stored name variants",
+ "references": [
+  "oracle",
+  "uniform",
+  "baseline:cheapest",
+  "baseline:stated_cost_rule"
+ ],
+ "splits": [
+  "test2_same",
+  "test2_newkey"
+ ]
+}
