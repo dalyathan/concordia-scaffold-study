@@ -1,0 +1,108 @@
+# Where should the next training examples go?
+
+A small language model (Qwen 2.5 7B Instruct) plays a buyer in a one-shot haggling game. It sees the resale value V, five listed prices (a "grid"), the range of farm costs sellers pay at this market (every whole number in the range equally likely), and the seller's last line, which sometimes states the seller's farm cost. The seller accepts any offer at or above the farm cost; the buyer's profit is V minus the offer if accepted, else 0. The buyer should pick the offer with the highest expected profit. "Soft regret" is the expected profit lost against the best offer, in coins (0 is perfect).
+
+The model was fine-tuned on 100 worked examples (resale values 2-9, grids A-C, seller wordings 0-1). Three fine-tuned copies (seeds 0, 1, 2) were then scored on the 90 build cases below, which it never trained on. Case types: "below" = a stated cost below V; "at_or_above" = a stated cost at or above V (any offer below the cost is refused, so offering the cheapest price is best); "no_cost" = no cost is stated, so the buyer must reason from the cost range.
+
+Your task: choose where 50 extra training examples should go to fix the fine-tuned model's remaining failures. A held-out test set exists; you are not told anything about it, and you should aim at the failures you see here. The 50 cells will be drawn from a pool of 519 unused cells (189 no_cost, 315 below, 15 at_or_above; resale values 2-15; grids A-F; wordings 0-3), one cell per decision problem, with probability proportional to the weight your rule gives each cell.
+
+Answer with ONE JSON object and nothing else:
+{"clauses": [{"where": {...}, "weight": <positive number>}, ...], "reasoning": "<two sentences>"}
+Allowed keys in "where": "type" (list of case types), "V_min", "V_max", "grid" (list of grid names), "prior" (list of [low, high] cost ranges), "line" (list of "neutral", "pressure", "information"), "wording" (list of 0-3), "stated_cost_minus_V_min", "stated_cost_minus_V_max". A cell's weight is the sum of the weights of the clauses it matches; cells matching no clause are never drawn. At least 50 pool cells must match.
+
+Grids: A = 1-5, B = 2-6, C = 3-7, D = 2-10 in steps of 2, E = 4-8, F = 8-16 in steps of 2 (coins).
+
+## The 90 build cases (A0 = the fine-tuned model; plain = before fine-tuning)
+
+| type | V | grid | prices | stated cost | cost range | seller line | wording | A0 regret per seed | A0 mean | seeds > 0.1 | plain |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| at_or_above | 2 | D | 2-4-6-8-10 | 4 | 1-5 | information | 3 | 0.002, 0.004, 0.411 | 0.139 | 1 | 5.992 |
+| at_or_above | 2 | E | 4-5-6-7-8 | 4 | 2-6 | information | 3 | 0.000, 0.011, 0.042 | 0.018 | 0 | 2.462 |
+| at_or_above | 4 | D | 2-4-6-8-10 | 5 | 1-5 | information | 0 | 0.001, 0.000, 0.057 | 0.019 | 0 | 3.990 |
+| at_or_above | 4 | D | 2-4-6-8-10 | 6 | 3-7 | information | 1 | 0.001, 0.000, 0.222 | 0.074 | 1 | 4.004 |
+| at_or_above | 4 | F | 8-10-12-14-16 | 5 | 3-7 | information | 3 | 0.015, 0.215, 0.642 | 0.290 | 2 | 3.933 |
+| at_or_above | 4 | F | 8-10-12-14-16 | 6 | 3-7 | information | 3 | 0.013, 0.194, 0.844 | 0.350 | 2 | 3.802 |
+| at_or_above | 5 | D | 2-4-6-8-10 | 6 | 1-10 | information | 0 | 0.001, 0.000, 0.168 | 0.056 | 1 | 2.846 |
+| at_or_above | 5 | E | 4-5-6-7-8 | 6 | 1-5 | information | 0 | 0.000, 0.000, 0.079 | 0.026 | 0 | 1.701 |
+| at_or_above | 5 | E | 4-5-6-7-8 | 5 | 2-10 | information | 0 | 0.000, 0.001, 0.016 | 0.006 | 0 | 2.038 |
+| at_or_above | 5 | F | 8-10-12-14-16 | 7 | 1-10 | information | 1 | 0.062, 0.107, 0.660 | 0.276 | 2 | 3.855 |
+| at_or_above | 6 | D | 2-4-6-8-10 | 7 | 1-10 | information | 3 | 0.000, 0.000, 0.009 | 0.003 | 0 | 2.204 |
+| at_or_above | 6 | D | 2-4-6-8-10 | 8 | 1-10 | information | 0 | 0.001, 0.000, 0.087 | 0.029 | 0 | 1.686 |
+| at_or_above | 6 | D | 2-4-6-8-10 | 6 | 2-10 | information | 0 | 0.000, 0.001, 0.014 | 0.005 | 0 | 1.974 |
+| at_or_above | 6 | F | 8-10-12-14-16 | 6 | 2-6 | information | 1 | 0.021, 0.176, 0.873 | 0.356 | 2 | 4.357 |
+| at_or_above | 7 | D | 2-4-6-8-10 | 9 | 2-10 | information | 2 | 0.000, 0.000, 0.004 | 0.002 | 0 | 0.197 |
+| below | 2 | E | 4-5-6-7-8 | 1 | 1-10 | information | 1 | 0.056, 0.102, 0.167 | 0.108 | 2 | 2.686 |
+| below | 3 | D | 2-4-6-8-10 | 2 | 2-6 | information | 2 | 0.000, 0.002, 0.059 | 0.021 | 0 | 4.524 |
+| below | 3 | E | 4-5-6-7-8 | 1 | 2-10 | information | 3 | 0.495, 0.190, 0.172 | 0.285 | 3 | 2.956 |
+| below | 3 | E | 4-5-6-7-8 | 2 | 2-10 | information | 1 | 0.238, 0.052, 0.146 | 0.145 | 2 | 2.861 |
+| below | 3 | F | 8-10-12-14-16 | 2 | 1-10 | information | 2 | 0.088, 0.445, 0.504 | 0.346 | 2 | 4.074 |
+| below | 4 | D | 2-4-6-8-10 | 3 | 1-10 | information | 2 | 0.001, 0.033, 0.052 | 0.028 | 0 | 3.345 |
+| below | 4 | F | 8-10-12-14-16 | 3 | 3-7 | information | 1 | 0.281, 0.245, 0.498 | 0.342 | 3 | 4.451 |
+| below | 5 | D | 2-4-6-8-10 | 1 | 1-5 | information | 1 | 0.000, 0.006, 0.101 | 0.036 | 1 | 4.718 |
+| below | 6 | D | 2-4-6-8-10 | 4 | 3-7 | information | 2 | 0.016, 0.009, 0.108 | 0.044 | 1 | 4.015 |
+| below | 7 | D | 2-4-6-8-10 | 1 | 1-10 | information | 3 | 0.001, 0.005, 0.174 | 0.060 | 1 | 6.049 |
+| below | 7 | F | 8-10-12-14-16 | 4 | 1-10 | information | 3 | 0.625, 0.387, 0.326 | 0.446 | 3 | 3.005 |
+| below | 8 | C | 3-4-5-6-7 | 6 | 2-10 | information | 1 | 0.002, 0.029, 0.075 | 0.035 | 0 | 1.280 |
+| below | 8 | D | 2-4-6-8-10 | 7 | 1-5 | information | 3 | 0.001, 0.045, 0.003 | 0.017 | 0 | 0.760 |
+| below | 8 | F | 8-10-12-14-16 | 6 | 1-10 | information | 2 | 0.003, 0.309, 0.406 | 0.239 | 2 | 3.646 |
+| below | 9 | D | 2-4-6-8-10 | 4 | 2-6 | information | 3 | 0.012, 0.023, 0.115 | 0.050 | 1 | 4.030 |
+| below | 9 | D | 2-4-6-8-10 | 7 | 2-6 | information | 2 | 0.997, 0.935, 0.922 | 0.952 | 3 | 0.210 |
+| below | 9 | E | 4-5-6-7-8 | 8 | 1-10 | information | 1 | 0.001, 0.030, 0.064 | 0.032 | 0 | 0.904 |
+| below | 9 | E | 4-5-6-7-8 | 3 | 2-6 | information | 2 | 0.015, 0.220, 0.136 | 0.123 | 2 | 2.998 |
+| below | 9 | E | 4-5-6-7-8 | 5 | 2-6 | information | 3 | 0.011, 0.095, 0.107 | 0.071 | 1 | 2.252 |
+| below | 10 | A | 1-2-3-4-5 | 1 | 2-10 | information | 2 | 0.140, 0.019, 0.195 | 0.118 | 2 | 3.360 |
+| below | 10 | D | 2-4-6-8-10 | 8 | 3-7 | information | 0 | 0.002, 0.031, 0.069 | 0.034 | 0 | 1.551 |
+| below | 10 | E | 4-5-6-7-8 | 5 | 1-10 | information | 0 | 0.053, 0.245, 0.188 | 0.162 | 2 | 2.723 |
+| below | 11 | C | 3-4-5-6-7 | 1 | 2-10 | information | 1 | 0.005, 0.017, 0.270 | 0.097 | 1 | 2.775 |
+| below | 11 | E | 4-5-6-7-8 | 1 | 3-7 | information | 3 | 0.004, 0.105, 0.466 | 0.192 | 2 | 3.255 |
+| below | 12 | D | 2-4-6-8-10 | 4 | 3-7 | information | 0 | 0.009, 0.057, 0.235 | 0.101 | 1 | 4.571 |
+| below | 13 | C | 3-4-5-6-7 | 5 | 1-5 | information | 3 | 0.015, 0.162, 0.376 | 0.185 | 2 | 3.304 |
+| below | 13 | C | 3-4-5-6-7 | 7 | 2-6 | information | 0 | 0.007, 0.076, 0.426 | 0.170 | 1 | 3.864 |
+| below | 14 | F | 8-10-12-14-16 | 9 | 1-10 | information | 2 | 3.975, 3.482, 3.040 | 3.499 | 3 | 1.959 |
+| below | 15 | C | 3-4-5-6-7 | 4 | 2-10 | information | 0 | 0.659, 0.549, 0.583 | 0.597 | 3 | 3.358 |
+| below | 15 | D | 2-4-6-8-10 | 5 | 2-10 | information | 3 | 8.934, 5.299, 5.341 | 6.525 | 3 | 3.240 |
+| no_cost | 2 | D | 2-4-6-8-10 | - | 1-10 | neutral | 3 | 0.002, 0.009, 0.155 | 0.055 | 1 | 5.847 |
+| no_cost | 2 | E | 4-5-6-7-8 | - | 1-5 | neutral | 0 | 0.008, 0.016, 0.550 | 0.191 | 1 | 2.681 |
+| no_cost | 3 | A | 1-2-3-4-5 | - | 1-10 | pressure | 0 | 0.000, 0.002, 0.010 | 0.004 | 0 | 0.655 |
+| no_cost | 3 | D | 2-4-6-8-10 | - | 1-5 | pressure | 2 | 0.003, 0.004, 0.550 | 0.186 | 1 | 3.869 |
+| no_cost | 3 | D | 2-4-6-8-10 | - | 2-10 | neutral | 0 | 0.001, 0.002, 0.239 | 0.081 | 1 | 4.324 |
+| no_cost | 3 | E | 4-5-6-7-8 | - | 2-6 | pressure | 1 | 0.803, 0.022, 0.152 | 0.326 | 2 | 2.628 |
+| no_cost | 3 | F | 8-10-12-14-16 | - | 1-5 | neutral | 1 | 0.011, 0.224, 0.748 | 0.328 | 2 | 4.406 |
+| no_cost | 3 | F | 8-10-12-14-16 | - | 2-10 | neutral | 0 | 0.009, 0.154, 1.391 | 0.518 | 2 | 5.654 |
+| no_cost | 3 | F | 8-10-12-14-16 | - | 3-7 | neutral | 3 | 0.008, 0.211, 0.597 | 0.272 | 2 | 4.037 |
+| no_cost | 4 | E | 4-5-6-7-8 | - | 1-10 | neutral | 1 | 0.001, 0.054, 0.092 | 0.049 | 0 | 2.147 |
+| no_cost | 6 | D | 2-4-6-8-10 | - | 1-10 | pressure | 3 | 0.002, 0.007, 0.063 | 0.024 | 0 | 2.462 |
+| no_cost | 6 | E | 4-5-6-7-8 | - | 1-10 | pressure | 3 | 0.001, 0.016, 0.083 | 0.033 | 0 | 1.467 |
+| no_cost | 6 | E | 4-5-6-7-8 | - | 2-6 | neutral | 2 | 0.001, 0.017, 0.086 | 0.035 | 0 | 2.061 |
+| no_cost | 6 | F | 8-10-12-14-16 | - | 1-10 | neutral | 3 | 0.053, 0.145, 0.515 | 0.238 | 2 | 4.662 |
+| no_cost | 6 | F | 8-10-12-14-16 | - | 2-6 | neutral | 3 | 0.019, 0.118, 0.694 | 0.277 | 2 | 5.245 |
+| no_cost | 7 | B | 2-3-4-5-6 | - | 1-5 | neutral | 0 | 0.067, 0.142, 0.069 | 0.093 | 1 | 0.678 |
+| no_cost | 7 | D | 2-4-6-8-10 | - | 1-5 | pressure | 1 | 0.337, 0.271, 0.597 | 0.401 | 3 | 3.486 |
+| no_cost | 7 | D | 2-4-6-8-10 | - | 2-6 | neutral | 3 | 0.604, 0.450, 0.407 | 0.487 | 3 | 2.809 |
+| no_cost | 7 | E | 4-5-6-7-8 | - | 1-10 | neutral | 1 | 0.004, 0.079, 0.256 | 0.113 | 1 | 1.438 |
+| no_cost | 7 | E | 4-5-6-7-8 | - | 2-10 | pressure | 0 | 0.006, 0.058, 0.196 | 0.087 | 1 | 1.459 |
+| no_cost | 7 | E | 4-5-6-7-8 | - | 2-6 | pressure | 0 | 0.013, 0.123, 0.216 | 0.117 | 2 | 1.188 |
+| no_cost | 7 | E | 4-5-6-7-8 | - | 3-7 | neutral | 2 | 0.003, 0.038, 0.137 | 0.059 | 1 | 0.940 |
+| no_cost | 7 | F | 8-10-12-14-16 | - | 2-6 | pressure | 0 | 0.058, 0.084, 0.514 | 0.219 | 1 | 4.112 |
+| no_cost | 8 | C | 3-4-5-6-7 | - | 1-5 | pressure | 3 | 0.204, 0.311, 0.251 | 0.256 | 3 | 1.338 |
+| no_cost | 8 | E | 4-5-6-7-8 | - | 2-6 | neutral | 0 | 0.046, 0.270, 0.223 | 0.179 | 2 | 1.205 |
+| no_cost | 9 | A | 1-2-3-4-5 | - | 2-10 | pressure | 0 | 0.133, 0.411, 0.515 | 0.353 | 3 | 0.111 |
+| no_cost | 9 | E | 4-5-6-7-8 | - | 2-10 | neutral | 3 | 0.141, 0.159, 0.122 | 0.141 | 3 | 0.656 |
+| no_cost | 10 | B | 2-3-4-5-6 | - | 2-6 | neutral | 0 | 0.218, 0.790, 0.614 | 0.541 | 3 | 0.157 |
+| no_cost | 10 | E | 4-5-6-7-8 | - | 1-5 | pressure | 2 | 1.127, 0.790, 0.785 | 0.901 | 3 | 1.532 |
+| no_cost | 10 | E | 4-5-6-7-8 | - | 2-6 | pressure | 1 | 0.387, 0.355, 0.162 | 0.301 | 3 | 1.060 |
+| no_cost | 11 | D | 2-4-6-8-10 | - | 3-7 | pressure | 0 | 0.732, 0.883, 0.596 | 0.737 | 3 | 2.000 |
+| no_cost | 11 | E | 4-5-6-7-8 | - | 1-5 | neutral | 0 | 1.551, 0.911, 0.816 | 1.093 | 3 | 1.903 |
+| no_cost | 12 | A | 1-2-3-4-5 | - | 1-10 | neutral | 0 | 0.325, 0.793, 0.869 | 0.662 | 3 | 0.420 |
+| no_cost | 12 | D | 2-4-6-8-10 | - | 1-5 | pressure | 3 | 1.236, 0.882, 0.912 | 1.010 | 3 | 3.781 |
+| no_cost | 12 | D | 2-4-6-8-10 | - | 3-7 | pressure | 2 | 0.787, 1.107, 0.550 | 0.815 | 3 | 1.875 |
+| no_cost | 13 | A | 1-2-3-4-5 | - | 1-10 | neutral | 3 | 0.354, 0.941, 1.094 | 0.796 | 3 | 0.175 |
+| no_cost | 13 | A | 1-2-3-4-5 | - | 2-10 | neutral | 2 | 0.509, 1.253, 1.463 | 1.075 | 3 | 0.568 |
+| no_cost | 13 | B | 2-3-4-5-6 | - | 1-5 | pressure | 2 | 0.863, 1.276, 1.165 | 1.102 | 3 | 0.838 |
+| no_cost | 13 | C | 3-4-5-6-7 | - | 2-10 | neutral | 2 | 0.404, 0.704, 0.573 | 0.560 | 3 | 0.401 |
+| no_cost | 13 | D | 2-4-6-8-10 | - | 1-5 | pressure | 3 | 1.515, 0.869, 0.890 | 1.091 | 3 | 3.675 |
+| no_cost | 13 | D | 2-4-6-8-10 | - | 2-6 | pressure | 2 | 1.784, 1.500, 1.115 | 1.466 | 3 | 3.174 |
+| no_cost | 13 | E | 4-5-6-7-8 | - | 1-10 | neutral | 3 | 0.113, 0.157, 0.094 | 0.121 | 2 | 0.242 |
+| no_cost | 13 | E | 4-5-6-7-8 | - | 2-10 | neutral | 3 | 0.215, 0.259, 0.222 | 0.232 | 3 | 0.233 |
+| no_cost | 14 | D | 2-4-6-8-10 | - | 1-5 | pressure | 0 | 1.543, 0.925, 0.863 | 1.110 | 3 | 3.167 |
+| no_cost | 15 | E | 4-5-6-7-8 | - | 2-6 | neutral | 0 | 1.300, 1.048, 0.795 | 1.048 | 3 | 1.479 |

@@ -1,0 +1,2122 @@
+{
+ "counts": {
+  "N_s0": {
+   "V_band": {
+    "10-15": 30,
+    "2-9": 20
+   },
+   "grid": {
+    "A": 4,
+    "B": 4,
+    "C": 9,
+    "D": 10,
+    "E": 12,
+    "F": 11
+   },
+   "in_probe": 14,
+   "type": {
+    "no_cost": 50
+   },
+   "wording": {
+    "0": 13,
+    "1": 13,
+    "2": 12,
+    "3": 12
+   }
+  },
+  "N_s1": {
+   "V_band": {
+    "10-15": 25,
+    "2-9": 25
+   },
+   "grid": {
+    "A": 6,
+    "B": 7,
+    "C": 4,
+    "D": 11,
+    "E": 12,
+    "F": 10
+   },
+   "in_probe": 17,
+   "type": {
+    "no_cost": 50
+   },
+   "wording": {
+    "0": 22,
+    "1": 7,
+    "2": 15,
+    "3": 6
+   }
+  },
+  "N_s2": {
+   "V_band": {
+    "10-15": 23,
+    "2-9": 27
+   },
+   "grid": {
+    "A": 6,
+    "B": 4,
+    "C": 3,
+    "D": 11,
+    "E": 14,
+    "F": 12
+   },
+   "in_probe": 8,
+   "type": {
+    "no_cost": 50
+   },
+   "wording": {
+    "0": 15,
+    "1": 9,
+    "2": 19,
+    "3": 7
+   }
+  },
+  "R_s0": {
+   "V_band": {
+    "10-15": 34,
+    "2-9": 16
+   },
+   "grid": {
+    "A": 3,
+    "B": 3,
+    "C": 8,
+    "D": 11,
+    "E": 16,
+    "F": 9
+   },
+   "in_probe": 9,
+   "type": {
+    "at_or_above": 2,
+    "below": 29,
+    "no_cost": 19
+   },
+   "wording": {
+    "0": 19,
+    "1": 8,
+    "2": 8,
+    "3": 15
+   }
+  },
+  "R_s1": {
+   "V_band": {
+    "10-15": 32,
+    "2-9": 18
+   },
+   "grid": {
+    "A": 10,
+    "B": 2,
+    "C": 4,
+    "D": 17,
+    "E": 8,
+    "F": 9
+   },
+   "in_probe": 7,
+   "type": {
+    "at_or_above": 1,
+    "below": 24,
+    "no_cost": 25
+   },
+   "wording": {
+    "0": 16,
+    "1": 8,
+    "2": 13,
+    "3": 13
+   }
+  },
+  "R_s2": {
+   "V_band": {
+    "10-15": 34,
+    "2-9": 16
+   },
+   "grid": {
+    "A": 4,
+    "B": 3,
+    "C": 7,
+    "D": 10,
+    "E": 12,
+    "F": 14
+   },
+   "in_probe": 10,
+   "type": {
+    "at_or_above": 2,
+    "below": 29,
+    "no_cost": 19
+   },
+   "wording": {
+    "0": 14,
+    "1": 9,
+    "2": 13,
+    "3": 14
+   }
+  },
+  "T_s0": {
+   "V_band": {
+    "10-15": 45,
+    "2-9": 5
+   },
+   "grid": {
+    "A": 6,
+    "B": 3,
+    "C": 7,
+    "D": 14,
+    "E": 9,
+    "F": 11
+   },
+   "in_probe": 2,
+   "type": {
+    "below": 25,
+    "no_cost": 25
+   },
+   "wording": {
+    "0": 9,
+    "1": 14,
+    "2": 13,
+    "3": 14
+   }
+  },
+  "T_s1": {
+   "V_band": {
+    "10-15": 42,
+    "2-9": 8
+   },
+   "grid": {
+    "A": 6,
+    "B": 2,
+    "C": 4,
+    "D": 16,
+    "E": 11,
+    "F": 11
+   },
+   "in_probe": 6,
+   "type": {
+    "at_or_above": 2,
+    "below": 23,
+    "no_cost": 25
+   },
+   "wording": {
+    "0": 14,
+    "1": 11,
+    "2": 12,
+    "3": 13
+   }
+  },
+  "T_s2": {
+   "V_band": {
+    "10-15": 42,
+    "2-9": 8
+   },
+   "grid": {
+    "A": 9,
+    "B": 3,
+    "C": 11,
+    "D": 7,
+    "E": 10,
+    "F": 10
+   },
+   "in_probe": 8,
+   "type": {
+    "below": 27,
+    "no_cost": 23
+   },
+   "wording": {
+    "0": 16,
+    "1": 7,
+    "2": 12,
+    "3": 15
+   }
+  }
+ },
+ "draws": {
+  "N_s0": [
+   "V10-gA-neutral-p1_10-w3",
+   "V10-gA-pressure-p2_10-w1",
+   "V10-gB-neutral-p1_5-w2",
+   "V10-gB-neutral-p2_6-w0",
+   "V10-gC-neutral-p3_7-w0",
+   "V10-gC-pressure-p1_10-w0",
+   "V10-gE-pressure-p2_6-w1",
+   "V11-gB-neutral-p2_6-w0",
+   "V11-gC-neutral-p2_6-w1",
+   "V11-gD-pressure-p3_7-w0",
+   "V11-gF-pressure-p1_5-w2",
+   "V12-gA-neutral-p1_10-w0",
+   "V12-gC-neutral-p3_7-w0",
+   "V12-gC-pressure-p1_10-w1",
+   "V12-gC-pressure-p2_10-w2",
+   "V12-gD-pressure-p1_5-w3",
+   "V12-gE-neutral-p2_6-w2",
+   "V12-gE-pressure-p1_10-w1",
+   "V13-gD-neutral-p1_10-w3",
+   "V13-gD-neutral-p2_10-w1",
+   "V13-gE-pressure-p3_7-w1",
+   "V13-gF-neutral-p3_7-w1",
+   "V14-gB-neutral-p3_7-w2",
+   "V14-gC-pressure-p3_7-w3",
+   "V14-gE-neutral-p1_5-w1",
+   "V14-gF-pressure-p1_5-w0",
+   "V15-gC-neutral-p1_5-w1",
+   "V15-gC-pressure-p2_6-w3",
+   "V15-gD-pressure-p1_5-w3",
+   "V15-gF-neutral-p1_5-w0",
+   "V2-gD-neutral-p1_10-w3",
+   "V2-gE-pressure-p3_7-w2",
+   "V3-gA-pressure-p1_10-w0",
+   "V3-gD-neutral-p1_10-w1",
+   "V3-gF-neutral-p1_5-w1",
+   "V3-gF-neutral-p3_7-w3",
+   "V4-gF-pressure-p1_10-w2",
+   "V5-gE-neutral-p1_5-w2",
+   "V6-gE-pressure-p1_10-w3",
+   "V6-gF-neutral-p1_10-w3",
+   "V6-gF-neutral-p1_5-w0",
+   "V7-gD-neutral-p3_7-w2",
+   "V7-gD-pressure-p1_5-w1",
+   "V7-gE-neutral-p3_7-w2",
+   "V8-gD-neutral-p2_6-w0",
+   "V8-gE-pressure-p1_10-w2",
+   "V8-gF-neutral-p2_10-w2",
+   "V8-gF-neutral-p2_6-w0",
+   "V9-gE-neutral-p1_5-w3",
+   "V9-gE-neutral-p2_10-w3"
+  ],
+  "N_s1": [
+   "V10-gB-neutral-p1_5-w2",
+   "V10-gB-neutral-p2_6-w0",
+   "V10-gC-neutral-p3_7-w0",
+   "V10-gD-neutral-p1_5-w0",
+   "V10-gD-pressure-p3_7-w0",
+   "V10-gE-pressure-p2_6-w1",
+   "V11-gA-pressure-p1_10-w0",
+   "V11-gD-pressure-p3_7-w0",
+   "V11-gE-neutral-p1_5-w0",
+   "V11-gF-neutral-p3_7-w0",
+   "V12-gA-neutral-p1_10-w0",
+   "V12-gB-neutral-p1_10-w0",
+   "V13-gB-pressure-p1_5-w2",
+   "V13-gC-neutral-p2_10-w2",
+   "V13-gE-neutral-p2_10-w3",
+   "V14-gA-neutral-p1_10-w2",
+   "V14-gB-pressure-p1_5-w2",
+   "V15-gA-pressure-p1_5-w0",
+   "V15-gA-pressure-p3_7-w1",
+   "V15-gB-neutral-p2_10-w2",
+   "V15-gC-neutral-p1_5-w1",
+   "V15-gC-pressure-p1_10-w3",
+   "V15-gD-pressure-p1_5-w3",
+   "V15-gD-pressure-p2_6-w2",
+   "V15-gF-pressure-p2_10-w0",
+   "V2-gF-neutral-p1_5-w1",
+   "V3-gD-pressure-p1_5-w2",
+   "V3-gE-pressure-p2_6-w1",
+   "V3-gF-neutral-p2_10-w0",
+   "V4-gB-pressure-p1_5-w3",
+   "V4-gD-pressure-p1_10-w2",
+   "V4-gE-pressure-p2_6-w1",
+   "V5-gD-pressure-p2_10-w0",
+   "V5-gE-neutral-p3_7-w0",
+   "V5-gE-pressure-p1_10-w2",
+   "V5-gE-pressure-p2_6-w3",
+   "V6-gD-pressure-p1_10-w3",
+   "V6-gE-neutral-p2_6-w2",
+   "V6-gF-neutral-p2_10-w1",
+   "V7-gE-neutral-p3_7-w2",
+   "V7-gE-pressure-p2_10-w0",
+   "V7-gF-pressure-p2_6-w0",
+   "V8-gD-neutral-p2_6-w0",
+   "V8-gE-neutral-p3_7-w2",
+   "V8-gF-neutral-p2_10-w2",
+   "V8-gF-pressure-p1_5-w2",
+   "V9-gA-pressure-p2_10-w0",
+   "V9-gD-pressure-p2_10-w0",
+   "V9-gF-neutral-p1_10-w0",
+   "V9-gF-neutral-p3_7-w0"
+  ],
+  "N_s2": [
+   "V10-gA-pressure-p2_10-w1",
+   "V10-gC-pressure-p2_6-w0",
+   "V10-gD-pressure-p3_7-w0",
+   "V11-gA-neutral-p2_10-w3",
+   "V11-gF-pressure-p1_5-w2",
+   "V12-gB-pressure-p3_7-w1",
+   "V12-gE-pressure-p1_10-w1",
+   "V13-gA-neutral-p1_10-w3",
+   "V13-gB-pressure-p1_5-w2",
+   "V13-gC-pressure-p1_10-w2",
+   "V13-gC-pressure-p1_5-w2",
+   "V13-gD-neutral-p1_10-w3",
+   "V13-gE-neutral-p1_10-w3",
+   "V13-gE-neutral-p1_5-w3",
+   "V13-gE-neutral-p2_10-w3",
+   "V14-gA-neutral-p1_10-w2",
+   "V14-gA-neutral-p2_6-w2",
+   "V14-gD-neutral-p3_7-w1",
+   "V14-gD-pressure-p1_10-w2",
+   "V14-gD-pressure-p2_6-w1",
+   "V14-gF-pressure-p1_5-w0",
+   "V15-gB-neutral-p1_10-w1",
+   "V15-gF-neutral-p1_5-w0",
+   "V3-gD-neutral-p2_10-w0",
+   "V3-gE-pressure-p1_10-w0",
+   "V4-gB-neutral-p3_7-w2",
+   "V4-gD-pressure-p1_10-w2",
+   "V4-gD-pressure-p1_5-w2",
+   "V4-gE-neutral-p1_5-w2",
+   "V4-gE-neutral-p2_10-w0",
+   "V4-gE-pressure-p2_6-w1",
+   "V4-gF-pressure-p2_10-w1",
+   "V5-gD-pressure-p2_10-w0",
+   "V5-gE-neutral-p1_5-w2",
+   "V5-gE-pressure-p1_10-w2",
+   "V5-gF-neutral-p1_10-w0",
+   "V6-gD-pressure-p1_10-w3",
+   "V6-gF-neutral-p1_5-w0",
+   "V7-gD-neutral-p3_7-w2",
+   "V7-gE-neutral-p3_7-w2",
+   "V7-gE-pressure-p1_5-w0",
+   "V7-gF-neutral-p1_10-w1",
+   "V8-gE-pressure-p1_10-w2",
+   "V8-gE-pressure-p1_5-w2",
+   "V8-gF-neutral-p2_10-w2",
+   "V8-gF-neutral-p2_6-w0",
+   "V8-gF-pressure-p1_5-w2",
+   "V9-gA-pressure-p2_10-w0",
+   "V9-gF-neutral-p2_6-w0",
+   "V9-gF-neutral-p3_7-w0"
+  ],
+  "R_s0": [
+   "V10-gA-information-C2-p2_6-w0",
+   "V10-gB-information-C2-p1_10-w2",
+   "V10-gC-information-C4-p2_10-w3",
+   "V10-gC-pressure-p1_10-w0",
+   "V10-gD-information-C3-p3_7-w1",
+   "V10-gE-information-C1-p3_7-w3",
+   "V10-gE-pressure-p2_10-w1",
+   "V11-gC-information-C1-p2_10-w1",
+   "V11-gD-information-C8-p2_10-w3",
+   "V11-gE-neutral-p1_5-w0",
+   "V12-gC-information-C7-p1_10-w0",
+   "V12-gC-pressure-p1_5-w3",
+   "V12-gD-information-C3-p3_7-w3",
+   "V12-gE-pressure-p1_10-w1",
+   "V13-gB-information-C3-p1_5-w1",
+   "V13-gD-information-C1-p3_7-w1",
+   "V13-gD-information-C6-p1_10-w2",
+   "V13-gD-information-C7-p3_7-w1",
+   "V13-gF-information-C6-p2_6-w3",
+   "V14-gA-neutral-p2_6-w2",
+   "V14-gB-neutral-p3_7-w2",
+   "V14-gC-information-C1-p2_10-w0",
+   "V14-gC-information-C5-p3_7-w0",
+   "V14-gE-information-C4-p1_5-w3",
+   "V14-gE-information-C8-p2_6-w0",
+   "V14-gF-information-C10-p1_5-w2",
+   "V14-gF-information-C3-p3_7-w2",
+   "V15-gA-information-C1-p1_10-w0",
+   "V15-gC-information-C4-p2_10-w0",
+   "V15-gD-information-C5-p2_10-w3",
+   "V15-gD-information-C9-p3_7-w2",
+   "V15-gE-information-C2-p1_5-w3",
+   "V15-gF-information-C14-p1_5-w2",
+   "V15-gF-neutral-p2_6-w0",
+   "V2-gD-neutral-p3_7-w0",
+   "V2-gD-pressure-p2_6-w3",
+   "V2-gE-pressure-p2_10-w1",
+   "V4-gE-neutral-p2_10-w0",
+   "V5-gE-information-C5-p2_10-w0",
+   "V5-gE-information-C6-p1_5-w0",
+   "V5-gF-neutral-p1_10-w0",
+   "V6-gE-pressure-p1_10-w3",
+   "V6-gF-neutral-p1_5-w0",
+   "V6-gF-neutral-p2_6-w3",
+   "V7-gD-information-C1-p1_10-w3",
+   "V7-gE-pressure-p1_5-w0",
+   "V8-gE-information-C4-p1_10-w0",
+   "V9-gE-information-C6-p1_10-w3",
+   "V9-gE-pressure-p1_10-w3",
+   "V9-gF-neutral-p2_6-w0"
+  ],
+  "R_s1": [
+   "V10-gA-information-C2-p2_6-w0",
+   "V10-gD-pressure-p3_7-w0",
+   "V10-gE-information-C1-p3_7-w3",
+   "V11-gA-information-C4-p3_7-w1",
+   "V11-gD-information-C1-p1_5-w0",
+   "V11-gD-neutral-p1_5-w1",
+   "V11-gD-pressure-p3_7-w0",
+   "V12-gA-information-C3-p3_7-w3",
+   "V12-gA-pressure-p2_6-w0",
+   "V12-gC-information-C2-p3_7-w2",
+   "V12-gD-information-C10-p2_10-w2",
+   "V12-gD-information-C2-p3_7-w3",
+   "V12-gD-pressure-p2_10-w2",
+   "V12-gE-pressure-p3_7-w1",
+   "V13-gA-information-C2-p2_6-w3",
+   "V13-gB-information-C1-p1_5-w2",
+   "V13-gC-information-C3-p2_6-w3",
+   "V13-gD-information-C7-p3_7-w1",
+   "V13-gD-information-C8-p1_10-w0",
+   "V14-gA-neutral-p1_5-w3",
+   "V14-gC-information-C5-p3_7-w0",
+   "V14-gD-pressure-p1_10-w2",
+   "V14-gD-pressure-p1_5-w0",
+   "V14-gE-information-C3-p1_5-w0",
+   "V14-gE-neutral-p2_6-w1",
+   "V14-gF-information-C11-p1_10-w3",
+   "V15-gA-information-C2-p2_10-w2",
+   "V15-gA-pressure-p1_5-w0",
+   "V15-gA-pressure-p3_7-w1",
+   "V15-gD-pressure-p1_5-w3",
+   "V15-gE-information-C1-p3_7-w0",
+   "V15-gF-information-C12-p1_10-w3",
+   "V2-gF-neutral-p2_10-w2",
+   "V3-gF-neutral-p3_7-w3",
+   "V4-gB-pressure-p1_5-w3",
+   "V5-gD-information-C2-p2_6-w1",
+   "V5-gD-pressure-p2_10-w0",
+   "V5-gF-neutral-p1_10-w0",
+   "V5-gF-neutral-p2_6-w2",
+   "V5-gF-neutral-p3_7-w2",
+   "V6-gD-neutral-p2_10-w2",
+   "V6-gF-neutral-p2_10-w1",
+   "V7-gD-information-C9-p2_10-w2",
+   "V7-gE-information-C1-p2_6-w0",
+   "V7-gE-pressure-p2_6-w0",
+   "V8-gA-information-C1-p2_10-w3",
+   "V8-gC-pressure-p1_5-w3",
+   "V8-gD-information-C3-p1_5-w2",
+   "V8-gE-neutral-p2_6-w0",
+   "V8-gF-information-C4-p2_6-w2"
+  ],
+  "R_s2": [
+   "V10-gC-information-C3-p1_10-w3",
+   "V10-gC-information-C7-p1_5-w1",
+   "V11-gC-information-C3-p1_10-w0",
+   "V11-gC-pressure-p1_10-w2",
+   "V11-gD-information-C6-p3_7-w3",
+   "V11-gD-pressure-p3_7-w0",
+   "V11-gF-information-C2-p1_10-w3",
+   "V12-gB-information-C6-p2_10-w2",
+   "V12-gC-information-C1-p2_6-w1",
+   "V12-gC-neutral-p3_7-w0",
+   "V12-gD-information-C4-p3_7-w0",
+   "V12-gE-information-C2-p1_10-w0",
+   "V12-gF-information-C2-p1_10-w3",
+   "V13-gA-information-C5-p3_7-w3",
+   "V13-gA-neutral-p1_10-w3",
+   "V13-gB-pressure-p1_5-w2",
+   "V13-gC-pressure-p1_10-w2",
+   "V13-gE-pressure-p3_7-w1",
+   "V13-gF-information-C6-p2_6-w3",
+   "V13-gF-information-C9-p1_5-w0",
+   "V14-gA-information-C4-p1_10-w0",
+   "V14-gB-neutral-p3_7-w2",
+   "V14-gD-information-C1-p1_5-w3",
+   "V14-gD-information-C7-p3_7-w2",
+   "V14-gD-neutral-p3_7-w1",
+   "V14-gD-pressure-p2_6-w1",
+   "V14-gE-information-C5-p2_10-w1",
+   "V14-gE-neutral-p1_10-w2",
+   "V14-gF-pressure-p1_5-w0",
+   "V15-gA-information-C5-p2_6-w2",
+   "V15-gE-pressure-p1_5-w3",
+   "V15-gF-information-C12-p1_10-w3",
+   "V15-gF-information-C7-p2_6-w1",
+   "V15-gF-information-C8-p1_5-w2",
+   "V3-gE-information-C1-p2_10-w3",
+   "V3-gE-information-C2-p2_10-w1",
+   "V3-gF-neutral-p3_7-w3",
+   "V4-gF-information-C5-p3_7-w3",
+   "V4-gF-pressure-p2_10-w1",
+   "V5-gF-information-C2-p2_6-w2",
+   "V6-gD-information-C6-p2_10-w0",
+   "V7-gE-information-C5-p1_5-w0",
+   "V7-gE-neutral-p3_7-w2",
+   "V7-gE-pressure-p1_5-w0",
+   "V7-gF-information-C1-p3_7-w0",
+   "V8-gD-information-C6-p3_7-w0",
+   "V8-gE-pressure-p1_10-w2",
+   "V8-gF-pressure-p1_5-w2",
+   "V9-gD-information-C5-p3_7-w3",
+   "V9-gE-information-C4-p1_10-w0"
+  ],
+  "T_s0": [
+   "V10-gC-information-C7-p1_5-w1",
+   "V10-gE-pressure-p2_10-w1",
+   "V11-gC-neutral-p2_6-w1",
+   "V11-gD-information-C8-p2_10-w3",
+   "V11-gD-pressure-p3_7-w0",
+   "V12-gA-pressure-p1_5-w2",
+   "V12-gB-information-C6-p2_10-w2",
+   "V12-gD-information-C2-p3_7-w3",
+   "V12-gE-information-C3-p1_10-w1",
+   "V12-gF-information-C4-p1_5-w1",
+   "V12-gF-information-C8-p2_10-w2",
+   "V12-gF-information-C9-p2_10-w2",
+   "V13-gB-information-C4-p1_10-w1",
+   "V13-gC-information-C3-p2_6-w3",
+   "V13-gD-information-C8-p1_10-w0",
+   "V13-gD-neutral-p1_10-w3",
+   "V13-gD-neutral-p2_10-w1",
+   "V13-gE-information-C1-p1_10-w3",
+   "V14-gA-information-C5-p1_5-w3",
+   "V14-gA-neutral-p1_5-w3",
+   "V14-gA-neutral-p2_6-w2",
+   "V14-gB-neutral-p3_7-w2",
+   "V14-gC-information-C3-p2_6-w1",
+   "V14-gC-neutral-p2_10-w3",
+   "V14-gC-pressure-p1_10-w1",
+   "V14-gC-pressure-p3_7-w3",
+   "V14-gD-information-C5-p1_5-w2",
+   "V14-gD-information-C9-p3_7-w2",
+   "V14-gD-neutral-p2_10-w0",
+   "V14-gD-pressure-p1_10-w2",
+   "V14-gD-pressure-p1_5-w0",
+   "V14-gD-pressure-p2_6-w1",
+   "V14-gE-information-C1-p1_10-w0",
+   "V14-gE-neutral-p1_5-w1",
+   "V14-gE-neutral-p2_6-w1",
+   "V14-gF-information-C6-p2_10-w0",
+   "V14-gF-information-C7-p1_10-w2",
+   "V15-gA-information-C5-p2_6-w2",
+   "V15-gA-pressure-p1_5-w0",
+   "V15-gD-information-C7-p2_10-w3",
+   "V15-gD-pressure-p2_6-w2",
+   "V15-gE-information-C3-p2_10-w3",
+   "V15-gF-information-C11-p1_10-w2",
+   "V15-gF-information-C5-p3_7-w3",
+   "V15-gF-information-C7-p2_6-w1",
+   "V6-gF-neutral-p2_10-w1",
+   "V8-gF-neutral-p2_6-w0",
+   "V9-gE-neutral-p1_5-w3",
+   "V9-gE-pressure-p1_10-w3",
+   "V9-gF-neutral-p3_7-w0"
+  ],
+  "T_s1": [
+   "V10-gD-neutral-p1_5-w0",
+   "V10-gD-pressure-p3_7-w0",
+   "V11-gA-neutral-p2_10-w3",
+   "V11-gD-pressure-p2_6-w0",
+   "V12-gC-pressure-p1_5-w3",
+   "V12-gD-pressure-p2_10-w2",
+   "V12-gE-information-C2-p1_10-w0",
+   "V12-gE-information-C3-p1_10-w1",
+   "V12-gE-neutral-p2_10-w2",
+   "V12-gE-pressure-p1_10-w1",
+   "V13-gA-information-C2-p2_6-w3",
+   "V13-gC-information-C5-p1_5-w3",
+   "V13-gC-neutral-p2_10-w2",
+   "V13-gC-pressure-p1_10-w2",
+   "V13-gD-information-C1-p3_7-w1",
+   "V13-gD-information-C10-p1_5-w3",
+   "V13-gD-information-C3-p3_7-w0",
+   "V13-gD-neutral-p1_10-w3",
+   "V13-gD-pressure-p1_5-w3",
+   "V13-gF-information-C12-p3_7-w2",
+   "V13-gF-information-C3-p1_5-w1",
+   "V13-gF-information-C5-p2_6-w0",
+   "V13-gF-information-C6-p2_6-w3",
+   "V14-gA-information-C4-p1_10-w0",
+   "V14-gA-neutral-p3_7-w2",
+   "V14-gB-information-C4-p1_5-w0",
+   "V14-gD-information-C4-p2_10-w1",
+   "V14-gD-information-C5-p1_5-w2",
+   "V14-gD-information-C7-p3_7-w2",
+   "V14-gD-pressure-p1_10-w2",
+   "V14-gE-information-C5-p2_10-w1",
+   "V14-gF-information-C5-p1_10-w0",
+   "V14-gF-pressure-p1_5-w0",
+   "V15-gA-information-C2-p2_10-w2",
+   "V15-gA-pressure-p2_6-w1",
+   "V15-gB-neutral-p1_10-w1",
+   "V15-gD-neutral-p3_7-w0",
+   "V15-gD-pressure-p1_5-w3",
+   "V15-gE-information-C6-p3_7-w1",
+   "V15-gE-pressure-p1_10-w3",
+   "V15-gF-information-C13-p3_7-w2",
+   "V15-gF-information-C7-p2_6-w1",
+   "V4-gF-information-C6-p3_7-w3",
+   "V5-gF-information-C7-p1_10-w1",
+   "V7-gE-pressure-p2_6-w0",
+   "V8-gE-pressure-p1_10-w2",
+   "V8-gF-neutral-p2_6-w0",
+   "V9-gD-pressure-p2_10-w0",
+   "V9-gE-information-C6-p1_10-w3",
+   "V9-gE-neutral-p1_5-w3"
+  ],
+  "T_s2": [
+   "V11-gA-neutral-p2_10-w3",
+   "V11-gA-pressure-p1_10-w0",
+   "V11-gC-pressure-p1_10-w2",
+   "V11-gF-information-C8-p2_6-w0",
+   "V11-gF-neutral-p3_7-w0",
+   "V12-gA-neutral-p1_10-w0",
+   "V12-gB-information-C4-p1_5-w2",
+   "V12-gB-information-C6-p2_10-w2",
+   "V12-gC-information-C4-p1_10-w3",
+   "V12-gC-information-C5-p2_6-w3",
+   "V12-gC-pressure-p1_10-w1",
+   "V12-gE-information-C6-p1_5-w0",
+   "V12-gE-information-C8-p1_10-w0",
+   "V12-gF-information-C11-p1_10-w2",
+   "V12-gF-information-C9-p2_10-w2",
+   "V13-gA-information-C1-p2_6-w0",
+   "V13-gA-information-C2-p2_6-w3",
+   "V13-gA-information-C4-p3_7-w2",
+   "V13-gC-information-C5-p1_5-w3",
+   "V13-gC-information-C6-p2_6-w3",
+   "V13-gC-pressure-p1_5-w2",
+   "V13-gF-information-C4-p2_10-w2",
+   "V14-gA-information-C5-p1_5-w3",
+   "V14-gB-neutral-p3_7-w2",
+   "V14-gC-information-C4-p1_5-w1",
+   "V14-gC-information-C5-p3_7-w0",
+   "V14-gD-information-C2-p1_10-w1",
+   "V14-gD-information-C3-p3_7-w1",
+   "V14-gD-information-C6-p1_5-w1",
+   "V14-gD-neutral-p3_7-w1",
+   "V14-gD-pressure-p1_10-w2",
+   "V14-gE-information-C2-p1_10-w0",
+   "V14-gE-information-C6-p1_10-w1",
+   "V14-gF-information-C11-p1_10-w3",
+   "V14-gF-pressure-p1_5-w0",
+   "V15-gA-information-C4-p2_6-w2",
+   "V15-gA-pressure-p1_5-w0",
+   "V15-gC-information-C3-p2_6-w3",
+   "V15-gC-pressure-p1_10-w3",
+   "V15-gD-pressure-p1_10-w3",
+   "V15-gE-neutral-p2_6-w0",
+   "V15-gE-pressure-p1_5-w3",
+   "V3-gF-neutral-p2_10-w0",
+   "V7-gD-neutral-p2_6-w3",
+   "V7-gE-neutral-p3_7-w2",
+   "V7-gE-pressure-p2_10-w0",
+   "V7-gF-information-C1-p3_7-w0",
+   "V9-gE-neutral-p2_10-w3",
+   "V9-gE-pressure-p1_10-w3",
+   "V9-gF-neutral-p2_6-w0"
+  ]
+ },
+ "draws_sha256": "97c122e06ac64beb4bb00fe88e8b1c8f59dcc494028c3cc4b670e6d06e878f93",
+ "model": "qwen25_7b",
+ "n_matching": 379,
+ "orders": {
+  "V10-gA-information-C2-p2_6-w0": [
+   0,
+   1,
+   2
+  ],
+  "V10-gA-neutral-p1_10-w3": [
+   0,
+   1,
+   2
+  ],
+  "V10-gA-pressure-p2_10-w1": [
+   2,
+   3,
+   4
+  ],
+  "V10-gB-information-C2-p1_10-w2": [
+   2,
+   3,
+   4
+  ],
+  "V10-gB-neutral-p1_5-w2": [
+   0,
+   2,
+   3
+  ],
+  "V10-gB-neutral-p2_6-w0": [
+   0,
+   2,
+   4
+  ],
+  "V10-gC-information-C3-p1_10-w3": [
+   0,
+   3,
+   4
+  ],
+  "V10-gC-information-C4-p2_10-w3": [
+   0,
+   2,
+   3
+  ],
+  "V10-gC-information-C7-p1_5-w1": [
+   1,
+   2,
+   3
+  ],
+  "V10-gC-neutral-p3_7-w0": [
+   0,
+   1,
+   2
+  ],
+  "V10-gC-pressure-p1_10-w0": [
+   0,
+   1,
+   4
+  ],
+  "V10-gC-pressure-p2_6-w0": [
+   0,
+   2,
+   4
+  ],
+  "V10-gD-information-C3-p3_7-w1": [
+   1,
+   3,
+   4
+  ],
+  "V10-gD-neutral-p1_5-w0": [
+   0,
+   2,
+   4
+  ],
+  "V10-gD-pressure-p3_7-w0": [
+   1,
+   2,
+   4
+  ],
+  "V10-gE-information-C1-p3_7-w3": [
+   0,
+   3,
+   4
+  ],
+  "V10-gE-pressure-p2_10-w1": [
+   0,
+   1,
+   2
+  ],
+  "V10-gE-pressure-p2_6-w1": [
+   0,
+   2,
+   4
+  ],
+  "V11-gA-information-C4-p3_7-w1": [
+   0,
+   1,
+   3
+  ],
+  "V11-gA-neutral-p2_10-w3": [
+   2,
+   3,
+   4
+  ],
+  "V11-gA-pressure-p1_10-w0": [
+   0,
+   2,
+   3
+  ],
+  "V11-gB-neutral-p2_6-w0": [
+   0,
+   3,
+   4
+  ],
+  "V11-gC-information-C1-p2_10-w1": [
+   0,
+   2,
+   3
+  ],
+  "V11-gC-information-C3-p1_10-w0": [
+   0,
+   1,
+   4
+  ],
+  "V11-gC-neutral-p2_6-w1": [
+   0,
+   3,
+   4
+  ],
+  "V11-gC-pressure-p1_10-w2": [
+   0,
+   1,
+   3
+  ],
+  "V11-gD-information-C1-p1_5-w0": [
+   0,
+   1,
+   3
+  ],
+  "V11-gD-information-C6-p3_7-w3": [
+   1,
+   2,
+   4
+  ],
+  "V11-gD-information-C8-p2_10-w3": [
+   1,
+   3,
+   4
+  ],
+  "V11-gD-neutral-p1_5-w1": [
+   1,
+   2,
+   3
+  ],
+  "V11-gD-pressure-p2_6-w0": [
+   2,
+   3,
+   4
+  ],
+  "V11-gD-pressure-p3_7-w0": [
+   0,
+   1,
+   3
+  ],
+  "V11-gE-neutral-p1_5-w0": [
+   1,
+   3,
+   4
+  ],
+  "V11-gF-information-C2-p1_10-w3": [
+   0,
+   1,
+   4
+  ],
+  "V11-gF-information-C8-p2_6-w0": [
+   1,
+   2,
+   4
+  ],
+  "V11-gF-neutral-p3_7-w0": [
+   1,
+   2,
+   3
+  ],
+  "V11-gF-pressure-p1_5-w2": [
+   1,
+   2,
+   3
+  ],
+  "V12-gA-information-C3-p3_7-w3": [
+   0,
+   2,
+   4
+  ],
+  "V12-gA-neutral-p1_10-w0": [
+   0,
+   3,
+   4
+  ],
+  "V12-gA-pressure-p1_5-w2": [
+   1,
+   2,
+   3
+  ],
+  "V12-gA-pressure-p2_6-w0": [
+   0,
+   3,
+   4
+  ],
+  "V12-gB-information-C4-p1_5-w2": [
+   0,
+   2,
+   4
+  ],
+  "V12-gB-information-C6-p2_10-w2": [
+   0,
+   1,
+   3
+  ],
+  "V12-gB-neutral-p1_10-w0": [
+   1,
+   2,
+   3
+  ],
+  "V12-gB-pressure-p3_7-w1": [
+   0,
+   2,
+   3
+  ],
+  "V12-gC-information-C1-p2_6-w1": [
+   0,
+   2,
+   4
+  ],
+  "V12-gC-information-C2-p3_7-w2": [
+   0,
+   1,
+   3
+  ],
+  "V12-gC-information-C4-p1_10-w3": [
+   0,
+   3,
+   4
+  ],
+  "V12-gC-information-C5-p2_6-w3": [
+   0,
+   1,
+   3
+  ],
+  "V12-gC-information-C7-p1_10-w0": [
+   1,
+   2,
+   4
+  ],
+  "V12-gC-neutral-p3_7-w0": [
+   0,
+   2,
+   3
+  ],
+  "V12-gC-pressure-p1_10-w1": [
+   0,
+   3,
+   4
+  ],
+  "V12-gC-pressure-p1_5-w3": [
+   0,
+   2,
+   3
+  ],
+  "V12-gC-pressure-p2_10-w2": [
+   0,
+   1,
+   2
+  ],
+  "V12-gD-information-C10-p2_10-w2": [
+   1,
+   3,
+   4
+  ],
+  "V12-gD-information-C2-p3_7-w3": [
+   0,
+   1,
+   2
+  ],
+  "V12-gD-information-C3-p3_7-w3": [
+   1,
+   3,
+   4
+  ],
+  "V12-gD-information-C4-p3_7-w0": [
+   0,
+   2,
+   4
+  ],
+  "V12-gD-pressure-p1_5-w3": [
+   0,
+   1,
+   4
+  ],
+  "V12-gD-pressure-p2_10-w2": [
+   0,
+   1,
+   3
+  ],
+  "V12-gE-information-C2-p1_10-w0": [
+   0,
+   1,
+   4
+  ],
+  "V12-gE-information-C3-p1_10-w1": [
+   0,
+   2,
+   3
+  ],
+  "V12-gE-information-C6-p1_5-w0": [
+   1,
+   2,
+   3
+  ],
+  "V12-gE-information-C8-p1_10-w0": [
+   0,
+   1,
+   2
+  ],
+  "V12-gE-neutral-p2_10-w2": [
+   0,
+   1,
+   4
+  ],
+  "V12-gE-neutral-p2_6-w2": [
+   1,
+   2,
+   4
+  ],
+  "V12-gE-pressure-p1_10-w1": [
+   0,
+   1,
+   2
+  ],
+  "V12-gE-pressure-p3_7-w1": [
+   1,
+   2,
+   3
+  ],
+  "V12-gF-information-C11-p1_10-w2": [
+   0,
+   1,
+   4
+  ],
+  "V12-gF-information-C2-p1_10-w3": [
+   0,
+   2,
+   3
+  ],
+  "V12-gF-information-C4-p1_5-w1": [
+   1,
+   3,
+   4
+  ],
+  "V12-gF-information-C8-p2_10-w2": [
+   1,
+   2,
+   4
+  ],
+  "V12-gF-information-C9-p2_10-w2": [
+   1,
+   2,
+   3
+  ],
+  "V13-gA-information-C1-p2_6-w0": [
+   0,
+   3,
+   4
+  ],
+  "V13-gA-information-C2-p2_6-w3": [
+   0,
+   1,
+   3
+  ],
+  "V13-gA-information-C4-p3_7-w2": [
+   1,
+   2,
+   3
+  ],
+  "V13-gA-information-C5-p3_7-w3": [
+   2,
+   3,
+   4
+  ],
+  "V13-gA-neutral-p1_10-w3": [
+   0,
+   2,
+   4
+  ],
+  "V13-gB-information-C1-p1_5-w2": [
+   0,
+   1,
+   3
+  ],
+  "V13-gB-information-C3-p1_5-w1": [
+   0,
+   3,
+   4
+  ],
+  "V13-gB-information-C4-p1_10-w1": [
+   0,
+   2,
+   4
+  ],
+  "V13-gB-pressure-p1_5-w2": [
+   1,
+   2,
+   4
+  ],
+  "V13-gC-information-C3-p2_6-w3": [
+   0,
+   3,
+   4
+  ],
+  "V13-gC-information-C5-p1_5-w3": [
+   1,
+   2,
+   4
+  ],
+  "V13-gC-information-C6-p2_6-w3": [
+   0,
+   2,
+   4
+  ],
+  "V13-gC-neutral-p2_10-w2": [
+   1,
+   2,
+   3
+  ],
+  "V13-gC-pressure-p1_10-w2": [
+   2,
+   3,
+   4
+  ],
+  "V13-gC-pressure-p1_5-w2": [
+   0,
+   1,
+   4
+  ],
+  "V13-gD-information-C1-p3_7-w1": [
+   0,
+   2,
+   3
+  ],
+  "V13-gD-information-C10-p1_5-w3": [
+   0,
+   1,
+   3
+  ],
+  "V13-gD-information-C3-p3_7-w0": [
+   0,
+   3,
+   4
+  ],
+  "V13-gD-information-C6-p1_10-w2": [
+   0,
+   3,
+   4
+  ],
+  "V13-gD-information-C7-p3_7-w1": [
+   0,
+   2,
+   4
+  ],
+  "V13-gD-information-C8-p1_10-w0": [
+   1,
+   2,
+   4
+  ],
+  "V13-gD-neutral-p1_10-w3": [
+   0,
+   2,
+   3
+  ],
+  "V13-gD-neutral-p2_10-w1": [
+   0,
+   2,
+   4
+  ],
+  "V13-gD-pressure-p1_5-w3": [
+   0,
+   2,
+   4
+  ],
+  "V13-gE-information-C1-p1_10-w3": [
+   2,
+   3,
+   4
+  ],
+  "V13-gE-neutral-p1_10-w3": [
+   1,
+   3,
+   4
+  ],
+  "V13-gE-neutral-p1_5-w3": [
+   0,
+   2,
+   3
+  ],
+  "V13-gE-neutral-p2_10-w3": [
+   0,
+   3,
+   4
+  ],
+  "V13-gE-pressure-p3_7-w1": [
+   1,
+   2,
+   3
+  ],
+  "V13-gF-information-C12-p3_7-w2": [
+   0,
+   1,
+   4
+  ],
+  "V13-gF-information-C3-p1_5-w1": [
+   0,
+   3,
+   4
+  ],
+  "V13-gF-information-C4-p2_10-w2": [
+   0,
+   3,
+   4
+  ],
+  "V13-gF-information-C5-p2_6-w0": [
+   0,
+   1,
+   4
+  ],
+  "V13-gF-information-C6-p2_6-w3": [
+   1,
+   2,
+   4
+  ],
+  "V13-gF-information-C9-p1_5-w0": [
+   1,
+   3,
+   4
+  ],
+  "V13-gF-neutral-p3_7-w1": [
+   1,
+   2,
+   4
+  ],
+  "V14-gA-information-C4-p1_10-w0": [
+   1,
+   3,
+   4
+  ],
+  "V14-gA-information-C5-p1_5-w3": [
+   2,
+   3,
+   4
+  ],
+  "V14-gA-neutral-p1_10-w2": [
+   0,
+   3,
+   4
+  ],
+  "V14-gA-neutral-p1_5-w3": [
+   0,
+   2,
+   3
+  ],
+  "V14-gA-neutral-p2_6-w2": [
+   0,
+   1,
+   2
+  ],
+  "V14-gA-neutral-p3_7-w2": [
+   0,
+   2,
+   4
+  ],
+  "V14-gB-information-C4-p1_5-w0": [
+   1,
+   2,
+   3
+  ],
+  "V14-gB-neutral-p3_7-w2": [
+   0,
+   3,
+   4
+  ],
+  "V14-gB-pressure-p1_5-w2": [
+   0,
+   3,
+   4
+  ],
+  "V14-gC-information-C1-p2_10-w0": [
+   2,
+   3,
+   4
+  ],
+  "V14-gC-information-C3-p2_6-w1": [
+   2,
+   3,
+   4
+  ],
+  "V14-gC-information-C4-p1_5-w1": [
+   0,
+   2,
+   3
+  ],
+  "V14-gC-information-C5-p3_7-w0": [
+   2,
+   3,
+   4
+  ],
+  "V14-gC-neutral-p2_10-w3": [
+   0,
+   1,
+   4
+  ],
+  "V14-gC-pressure-p1_10-w1": [
+   2,
+   3,
+   4
+  ],
+  "V14-gC-pressure-p3_7-w3": [
+   1,
+   2,
+   4
+  ],
+  "V14-gD-information-C1-p1_5-w3": [
+   0,
+   1,
+   3
+  ],
+  "V14-gD-information-C2-p1_10-w1": [
+   0,
+   1,
+   4
+  ],
+  "V14-gD-information-C3-p3_7-w1": [
+   0,
+   1,
+   3
+  ],
+  "V14-gD-information-C4-p2_10-w1": [
+   1,
+   2,
+   3
+  ],
+  "V14-gD-information-C5-p1_5-w2": [
+   0,
+   1,
+   4
+  ],
+  "V14-gD-information-C6-p1_5-w1": [
+   1,
+   3,
+   4
+  ],
+  "V14-gD-information-C7-p3_7-w2": [
+   0,
+   1,
+   2
+  ],
+  "V14-gD-information-C9-p3_7-w2": [
+   0,
+   1,
+   4
+  ],
+  "V14-gD-neutral-p2_10-w0": [
+   1,
+   2,
+   4
+  ],
+  "V14-gD-neutral-p3_7-w1": [
+   0,
+   3,
+   4
+  ],
+  "V14-gD-pressure-p1_10-w2": [
+   2,
+   3,
+   4
+  ],
+  "V14-gD-pressure-p1_5-w0": [
+   1,
+   3,
+   4
+  ],
+  "V14-gD-pressure-p2_6-w1": [
+   1,
+   2,
+   4
+  ],
+  "V14-gE-information-C1-p1_10-w0": [
+   2,
+   3,
+   4
+  ],
+  "V14-gE-information-C2-p1_10-w0": [
+   2,
+   3,
+   4
+  ],
+  "V14-gE-information-C3-p1_5-w0": [
+   0,
+   3,
+   4
+  ],
+  "V14-gE-information-C4-p1_5-w3": [
+   2,
+   3,
+   4
+  ],
+  "V14-gE-information-C5-p2_10-w1": [
+   0,
+   1,
+   4
+  ],
+  "V14-gE-information-C6-p1_10-w1": [
+   0,
+   2,
+   4
+  ],
+  "V14-gE-information-C8-p2_6-w0": [
+   0,
+   1,
+   3
+  ],
+  "V14-gE-neutral-p1_10-w2": [
+   2,
+   3,
+   4
+  ],
+  "V14-gE-neutral-p1_5-w1": [
+   0,
+   1,
+   3
+  ],
+  "V14-gE-neutral-p2_6-w1": [
+   1,
+   3,
+   4
+  ],
+  "V14-gF-information-C10-p1_5-w2": [
+   0,
+   1,
+   2
+  ],
+  "V14-gF-information-C11-p1_10-w3": [
+   1,
+   2,
+   3
+  ],
+  "V14-gF-information-C3-p3_7-w2": [
+   0,
+   1,
+   3
+  ],
+  "V14-gF-information-C5-p1_10-w0": [
+   1,
+   2,
+   3
+  ],
+  "V14-gF-information-C6-p2_10-w0": [
+   1,
+   3,
+   4
+  ],
+  "V14-gF-information-C7-p1_10-w2": [
+   2,
+   3,
+   4
+  ],
+  "V14-gF-pressure-p1_5-w0": [
+   0,
+   3,
+   4
+  ],
+  "V15-gA-information-C1-p1_10-w0": [
+   0,
+   2,
+   3
+  ],
+  "V15-gA-information-C2-p2_10-w2": [
+   1,
+   2,
+   3
+  ],
+  "V15-gA-information-C4-p2_6-w2": [
+   2,
+   3,
+   4
+  ],
+  "V15-gA-information-C5-p2_6-w2": [
+   1,
+   3,
+   4
+  ],
+  "V15-gA-pressure-p1_5-w0": [
+   0,
+   1,
+   4
+  ],
+  "V15-gA-pressure-p2_6-w1": [
+   2,
+   3,
+   4
+  ],
+  "V15-gA-pressure-p3_7-w1": [
+   2,
+   3,
+   4
+  ],
+  "V15-gB-neutral-p1_10-w1": [
+   0,
+   2,
+   3
+  ],
+  "V15-gB-neutral-p2_10-w2": [
+   1,
+   2,
+   3
+  ],
+  "V15-gC-information-C3-p2_6-w3": [
+   0,
+   2,
+   4
+  ],
+  "V15-gC-information-C4-p2_10-w0": [
+   1,
+   3,
+   4
+  ],
+  "V15-gC-neutral-p1_5-w1": [
+   0,
+   3,
+   4
+  ],
+  "V15-gC-pressure-p1_10-w3": [
+   1,
+   2,
+   3
+  ],
+  "V15-gC-pressure-p2_6-w3": [
+   1,
+   2,
+   3
+  ],
+  "V15-gD-information-C5-p2_10-w3": [
+   0,
+   1,
+   2
+  ],
+  "V15-gD-information-C7-p2_10-w3": [
+   0,
+   1,
+   2
+  ],
+  "V15-gD-information-C9-p3_7-w2": [
+   1,
+   2,
+   3
+  ],
+  "V15-gD-neutral-p3_7-w0": [
+   2,
+   3,
+   4
+  ],
+  "V15-gD-pressure-p1_10-w3": [
+   0,
+   2,
+   3
+  ],
+  "V15-gD-pressure-p1_5-w3": [
+   0,
+   3,
+   4
+  ],
+  "V15-gD-pressure-p2_6-w2": [
+   0,
+   3,
+   4
+  ],
+  "V15-gE-information-C1-p3_7-w0": [
+   0,
+   3,
+   4
+  ],
+  "V15-gE-information-C2-p1_5-w3": [
+   0,
+   2,
+   3
+  ],
+  "V15-gE-information-C3-p2_10-w3": [
+   1,
+   3,
+   4
+  ],
+  "V15-gE-information-C6-p3_7-w1": [
+   0,
+   1,
+   4
+  ],
+  "V15-gE-neutral-p2_6-w0": [
+   2,
+   3,
+   4
+  ],
+  "V15-gE-pressure-p1_10-w3": [
+   0,
+   1,
+   4
+  ],
+  "V15-gE-pressure-p1_5-w3": [
+   1,
+   2,
+   4
+  ],
+  "V15-gF-information-C11-p1_10-w2": [
+   1,
+   3,
+   4
+  ],
+  "V15-gF-information-C12-p1_10-w3": [
+   0,
+   1,
+   3
+  ],
+  "V15-gF-information-C13-p3_7-w2": [
+   0,
+   3,
+   4
+  ],
+  "V15-gF-information-C14-p1_5-w2": [
+   0,
+   2,
+   4
+  ],
+  "V15-gF-information-C5-p3_7-w3": [
+   2,
+   3,
+   4
+  ],
+  "V15-gF-information-C7-p2_6-w1": [
+   1,
+   2,
+   4
+  ],
+  "V15-gF-information-C8-p1_5-w2": [
+   1,
+   2,
+   4
+  ],
+  "V15-gF-neutral-p1_5-w0": [
+   0,
+   1,
+   3
+  ],
+  "V15-gF-neutral-p2_6-w0": [
+   1,
+   2,
+   3
+  ],
+  "V15-gF-pressure-p2_10-w0": [
+   2,
+   3,
+   4
+  ],
+  "V2-gD-neutral-p1_10-w3": [
+   0,
+   1,
+   3
+  ],
+  "V2-gD-neutral-p3_7-w0": [
+   0,
+   1,
+   3
+  ],
+  "V2-gD-pressure-p2_6-w3": [
+   0,
+   1,
+   4
+  ],
+  "V2-gE-pressure-p2_10-w1": [
+   2,
+   3,
+   4
+  ],
+  "V2-gE-pressure-p3_7-w2": [
+   1,
+   2,
+   4
+  ],
+  "V2-gF-neutral-p1_5-w1": [
+   0,
+   1,
+   4
+  ],
+  "V2-gF-neutral-p2_10-w2": [
+   1,
+   2,
+   4
+  ],
+  "V3-gA-pressure-p1_10-w0": [
+   0,
+   1,
+   4
+  ],
+  "V3-gD-neutral-p1_10-w1": [
+   0,
+   2,
+   3
+  ],
+  "V3-gD-neutral-p2_10-w0": [
+   0,
+   1,
+   4
+  ],
+  "V3-gD-pressure-p1_5-w2": [
+   2,
+   3,
+   4
+  ],
+  "V3-gE-information-C1-p2_10-w3": [
+   1,
+   2,
+   3
+  ],
+  "V3-gE-information-C2-p2_10-w1": [
+   0,
+   2,
+   3
+  ],
+  "V3-gE-pressure-p1_10-w0": [
+   0,
+   3,
+   4
+  ],
+  "V3-gE-pressure-p2_6-w1": [
+   0,
+   2,
+   3
+  ],
+  "V3-gF-neutral-p1_5-w1": [
+   0,
+   3,
+   4
+  ],
+  "V3-gF-neutral-p2_10-w0": [
+   0,
+   2,
+   4
+  ],
+  "V3-gF-neutral-p3_7-w3": [
+   0,
+   2,
+   4
+  ],
+  "V4-gB-neutral-p3_7-w2": [
+   0,
+   2,
+   3
+  ],
+  "V4-gB-pressure-p1_5-w3": [
+   0,
+   1,
+   2
+  ],
+  "V4-gD-pressure-p1_10-w2": [
+   0,
+   1,
+   2
+  ],
+  "V4-gD-pressure-p1_5-w2": [
+   2,
+   3,
+   4
+  ],
+  "V4-gE-neutral-p1_5-w2": [
+   0,
+   2,
+   3
+  ],
+  "V4-gE-neutral-p2_10-w0": [
+   0,
+   2,
+   4
+  ],
+  "V4-gE-pressure-p2_6-w1": [
+   1,
+   3,
+   4
+  ],
+  "V4-gF-information-C5-p3_7-w3": [
+   0,
+   1,
+   4
+  ],
+  "V4-gF-information-C6-p3_7-w3": [
+   0,
+   1,
+   3
+  ],
+  "V4-gF-pressure-p1_10-w2": [
+   2,
+   3,
+   4
+  ],
+  "V4-gF-pressure-p2_10-w1": [
+   0,
+   1,
+   4
+  ],
+  "V5-gD-information-C2-p2_6-w1": [
+   2,
+   3,
+   4
+  ],
+  "V5-gD-pressure-p2_10-w0": [
+   0,
+   1,
+   2
+  ],
+  "V5-gE-information-C5-p2_10-w0": [
+   1,
+   2,
+   3
+  ],
+  "V5-gE-information-C6-p1_5-w0": [
+   2,
+   3,
+   4
+  ],
+  "V5-gE-neutral-p1_5-w2": [
+   0,
+   1,
+   2
+  ],
+  "V5-gE-neutral-p3_7-w0": [
+   0,
+   1,
+   3
+  ],
+  "V5-gE-pressure-p1_10-w2": [
+   1,
+   3,
+   4
+  ],
+  "V5-gE-pressure-p2_6-w3": [
+   2,
+   3,
+   4
+  ],
+  "V5-gF-information-C2-p2_6-w2": [
+   1,
+   2,
+   3
+  ],
+  "V5-gF-information-C7-p1_10-w1": [
+   0,
+   1,
+   4
+  ],
+  "V5-gF-neutral-p1_10-w0": [
+   0,
+   2,
+   4
+  ],
+  "V5-gF-neutral-p2_6-w2": [
+   2,
+   3,
+   4
+  ],
+  "V5-gF-neutral-p3_7-w2": [
+   1,
+   2,
+   3
+  ],
+  "V6-gD-information-C6-p2_10-w0": [
+   1,
+   3,
+   4
+  ],
+  "V6-gD-neutral-p2_10-w2": [
+   0,
+   1,
+   4
+  ],
+  "V6-gD-pressure-p1_10-w3": [
+   0,
+   1,
+   2
+  ],
+  "V6-gE-neutral-p2_6-w2": [
+   0,
+   2,
+   3
+  ],
+  "V6-gE-pressure-p1_10-w3": [
+   2,
+   3,
+   4
+  ],
+  "V6-gF-neutral-p1_10-w3": [
+   1,
+   3,
+   4
+  ],
+  "V6-gF-neutral-p1_5-w0": [
+   0,
+   1,
+   2
+  ],
+  "V6-gF-neutral-p2_10-w1": [
+   0,
+   3,
+   4
+  ],
+  "V6-gF-neutral-p2_6-w3": [
+   2,
+   3,
+   4
+  ],
+  "V7-gD-information-C1-p1_10-w3": [
+   0,
+   3,
+   4
+  ],
+  "V7-gD-information-C9-p2_10-w2": [
+   0,
+   2,
+   4
+  ],
+  "V7-gD-neutral-p2_6-w3": [
+   0,
+   2,
+   3
+  ],
+  "V7-gD-neutral-p3_7-w2": [
+   0,
+   1,
+   4
+  ],
+  "V7-gD-pressure-p1_5-w1": [
+   1,
+   3,
+   4
+  ],
+  "V7-gE-information-C1-p2_6-w0": [
+   0,
+   2,
+   3
+  ],
+  "V7-gE-information-C5-p1_5-w0": [
+   0,
+   2,
+   4
+  ],
+  "V7-gE-neutral-p3_7-w2": [
+   1,
+   3,
+   4
+  ],
+  "V7-gE-pressure-p1_5-w0": [
+   0,
+   1,
+   2
+  ],
+  "V7-gE-pressure-p2_10-w0": [
+   2,
+   3,
+   4
+  ],
+  "V7-gE-pressure-p2_6-w0": [
+   1,
+   2,
+   4
+  ],
+  "V7-gF-information-C1-p3_7-w0": [
+   0,
+   1,
+   2
+  ],
+  "V7-gF-neutral-p1_10-w1": [
+   0,
+   1,
+   3
+  ],
+  "V7-gF-pressure-p2_6-w0": [
+   1,
+   2,
+   3
+  ],
+  "V8-gA-information-C1-p2_10-w3": [
+   0,
+   1,
+   4
+  ],
+  "V8-gC-pressure-p1_5-w3": [
+   0,
+   1,
+   3
+  ],
+  "V8-gD-information-C3-p1_5-w2": [
+   0,
+   1,
+   2
+  ],
+  "V8-gD-information-C6-p3_7-w0": [
+   0,
+   1,
+   4
+  ],
+  "V8-gD-neutral-p2_6-w0": [
+   1,
+   2,
+   3
+  ],
+  "V8-gE-information-C4-p1_10-w0": [
+   1,
+   2,
+   3
+  ],
+  "V8-gE-neutral-p2_6-w0": [
+   0,
+   2,
+   3
+  ],
+  "V8-gE-neutral-p3_7-w2": [
+   1,
+   3,
+   4
+  ],
+  "V8-gE-pressure-p1_10-w2": [
+   0,
+   3,
+   4
+  ],
+  "V8-gE-pressure-p1_5-w2": [
+   1,
+   3,
+   4
+  ],
+  "V8-gF-information-C4-p2_6-w2": [
+   1,
+   2,
+   3
+  ],
+  "V8-gF-neutral-p2_10-w2": [
+   1,
+   3,
+   4
+  ],
+  "V8-gF-neutral-p2_6-w0": [
+   0,
+   3,
+   4
+  ],
+  "V8-gF-pressure-p1_5-w2": [
+   1,
+   2,
+   4
+  ],
+  "V9-gA-pressure-p2_10-w0": [
+   1,
+   3,
+   4
+  ],
+  "V9-gD-information-C5-p3_7-w3": [
+   1,
+   2,
+   4
+  ],
+  "V9-gD-pressure-p2_10-w0": [
+   0,
+   1,
+   3
+  ],
+  "V9-gE-information-C4-p1_10-w0": [
+   0,
+   1,
+   2
+  ],
+  "V9-gE-information-C6-p1_10-w3": [
+   0,
+   1,
+   2
+  ],
+  "V9-gE-neutral-p1_5-w3": [
+   1,
+   3,
+   4
+  ],
+  "V9-gE-neutral-p2_10-w3": [
+   1,
+   3,
+   4
+  ],
+  "V9-gE-pressure-p1_10-w3": [
+   1,
+   2,
+   3
+  ],
+  "V9-gF-neutral-p1_10-w0": [
+   1,
+   2,
+   4
+  ],
+  "V9-gF-neutral-p2_6-w0": [
+   0,
+   3,
+   4
+  ],
+  "V9-gF-neutral-p3_7-w0": [
+   0,
+   2,
+   4
+  ]
+ },
+ "orders_sha256": "5b8061dab9060ac6a8ffd86170b5b342d166843f8cf76f254b0c5ae3e3dee70d",
+ "rule_sha256": "41eb171c77efc4baec64df411918db63a1377e15198f47a77f432be0fbad9a77"
+}

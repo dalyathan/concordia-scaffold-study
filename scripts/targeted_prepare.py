@@ -54,7 +54,7 @@ A small language model (Qwen 2.5 7B Instruct) plays a buyer in a one-shot haggli
 
 The model was fine-tuned on 100 worked examples (resale values 2-9, grids A-C, seller wordings 0-1). Three fine-tuned copies (seeds 0, 1, 2) were then scored on the 90 build cases below, which it never trained on. Case types: "below" = a stated cost below V; "at_or_above" = a stated cost at or above V (any offer below the cost is refused, so offering the cheapest price is best); "no_cost" = no cost is stated, so the buyer must reason from the cost range.
 
-Your task: choose where 50 extra training examples should go to fix the fine-tuned model's remaining failures. A held-out test set exists; you are not told anything about it, and you should aim at the failures you see here. The 50 cells will be drawn from a pool of about 520 unused cells (about 190 no_cost, 310 below, 20 at_or_above; resale values 2-15; grids A-F; wordings 0-3), one cell per decision problem, with probability proportional to the weight your rule gives each cell.
+Your task: choose where 50 extra training examples should go to fix the fine-tuned model's remaining failures. A held-out test set exists; you are not told anything about it, and you should aim at the failures you see here. The 50 cells will be drawn from a pool of 519 unused cells (189 no_cost, 315 below, 15 at_or_above; resale values 2-15; grids A-F; wordings 0-3), one cell per decision problem, with probability proportional to the weight your rule gives each cell.
 
 Answer with ONE JSON object and nothing else:
 {"clauses": [{"where": {...}, "weight": <positive number>}, ...], "reasoning": "<two sentences>"}
