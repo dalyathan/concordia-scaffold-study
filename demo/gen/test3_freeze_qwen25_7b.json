@@ -1,0 +1,313 @@
+{
+ "arms": [
+  {
+   "adapter": null,
+   "label": "plain",
+   "seed": 0,
+   "solver": "plain",
+   "training": null,
+   "tune_record": "runs/haggling/qwen25_7b/plain-tune-s0-20261128T035522245387Z.json",
+   "tune_record_sha256": "98cd4e9aa4902f4afaf103484a6e5fb65c4016dbf07514e511638d5d2e76b47e"
+  },
+  {
+   "adapter": {
+    "best_epoch": 5,
+    "dir": "demo_out/adapters_harness/qwen25_7b_claude_examples_n100_lr3e-04_s0",
+    "dir_sha256": "0a0834e0d3994bad9d0ed8448e5874f9590c251de269c9df1c88609c53442670",
+    "version": "selected on select_B (early stopping, epoch 0 a candidate)",
+    "weights_sha256": "69b2bbd88d52dbb0d7be2f2b7b04a93460b324d171f92077f1af8d6dccc85991"
+   },
+   "label": "A0",
+   "seed": 0,
+   "solver": "lora:claude_examples_n100_lr3e-04",
+   "training": {
+    "arm": "claude_examples",
+    "best_epoch": 5,
+    "seed": 0,
+    "version": "selected on select_B (early stopping, epoch 0 a candidate)"
+   },
+   "tune_record": "runs/haggling/qwen25_7b/lora_claude_examples_n100_lr3e-04-tune-s0-20261128T051027161828Z.json",
+   "tune_record_sha256": "a502542c2264c67c7637aa2cbcfd4075027539c63d2dea4b2df964e1af3ba3a1"
+  },
+  {
+   "adapter": {
+    "best_epoch": 3,
+    "dir": "demo_out/adapters_harness/qwen25_7b_claude_examples_n100_lr3e-04_s1",
+    "dir_sha256": "2f62b71e234d5a89ca3c1fa7d9e342a708d1daa4f5bff0650ac556fd01176303",
+    "version": "selected on select_B (early stopping, epoch 0 a candidate)",
+    "weights_sha256": "330d7859aa78e772d23617037ef0b880dba5dc2845ab97e04cad81a89f1a8144"
+   },
+   "label": "A0",
+   "seed": 1,
+   "solver": "lora:claude_examples_n100_lr3e-04",
+   "training": {
+    "arm": "claude_examples",
+    "best_epoch": 3,
+    "seed": 1,
+    "version": "selected on select_B (early stopping, epoch 0 a candidate)"
+   },
+   "tune_record": "runs/haggling/qwen25_7b/lora_claude_examples_n100_lr3e-04-tune-s1-20261128T052524668821Z.json",
+   "tune_record_sha256": "255b383e58cc48d46f61a7c08c83b831d33d06404af8a2a70b4d9a35844b1438"
+  },
+  {
+   "adapter": {
+    "best_epoch": 2,
+    "dir": "demo_out/adapters_harness/qwen25_7b_claude_examples_n100_lr3e-04_s2",
+    "dir_sha256": "70f8f6e5a49817cf53393454def9dfbeb02a3f9334d5b469b6fa61409b3cabb9",
+    "version": "selected on select_B (early stopping, epoch 0 a candidate)",
+    "weights_sha256": "7f5848fb2b7061ac1d6ccc5ee83addb7a23392836804d588fd20eff907f331cc"
+   },
+   "label": "A0",
+   "seed": 2,
+   "solver": "lora:claude_examples_n100_lr3e-04",
+   "training": {
+    "arm": "claude_examples",
+    "best_epoch": 2,
+    "seed": 2,
+    "version": "selected on select_B (early stopping, epoch 0 a candidate)"
+   },
+   "tune_record": "runs/haggling/qwen25_7b/lora_claude_examples_n100_lr3e-04-tune-s2-20261128T054018093079Z.json",
+   "tune_record_sha256": "dd12b9e82befac8ce92f403baa7d87a685d655c296b8d98783230ed8a4c5ee8b"
+  },
+  {
+   "adapter": {
+    "best_epoch": 5,
+    "dir": "demo_out/adapters_harness/qwen25_7b_claude_examples_n150_T_lr3e-04_s0",
+    "dir_sha256": "2e551049b1edaf4cc8a1f5c7aec0da19f3bd0690f6e68b6ec2d4812d20d6ad63",
+    "version": "selected on select_B (early stopping, epoch 0 a candidate)",
+    "weights_sha256": "7a95b4f9018a5d45791b11d4dc516d261dbdb6651a96bd9f377e3052a94b5b77"
+   },
+   "label": "T",
+   "seed": 0,
+   "solver": "lora:claude_examples_n150_T_lr3e-04",
+   "training": {
+    "arm": "claude_examples",
+    "best_epoch": 5,
+    "extra_key": "T_s0",
+    "seed": 0,
+    "version": "selected on select_B (early stopping, epoch 0 a candidate)"
+   },
+   "tune_record": "runs/haggling/qwen25_7b/lora_claude_examples_n150_T_lr3e-04-tune-s0-20261128T184424279916Z.json",
+   "tune_record_sha256": "a550f95af3874d7533f6236134bc53495f61f14c6ef4e9d9bc425c227503eaa6"
+  },
+  {
+   "adapter": {
+    "best_epoch": 3,
+    "dir": "demo_out/adapters_harness/qwen25_7b_claude_examples_n150_T_lr3e-04_s1",
+    "dir_sha256": "a6166142733ebc62561a3e85694366c2331805166b23a9ec4d91559dafae2085",
+    "version": "selected on select_B (early stopping, epoch 0 a candidate)",
+    "weights_sha256": "d8e2c24df9c8f4b1c8bcdceeb7bc7bc207089b6ead2ed0c48cdaaf50f6879fb3"
+   },
+   "label": "T",
+   "seed": 1,
+   "solver": "lora:claude_examples_n150_T_lr3e-04",
+   "training": {
+    "arm": "claude_examples",
+    "best_epoch": 3,
+    "extra_key": "T_s1",
+    "seed": 1,
+    "version": "selected on select_B (early stopping, epoch 0 a candidate)"
+   },
+   "tune_record": "runs/haggling/qwen25_7b/lora_claude_examples_n150_T_lr3e-04-tune-s1-20261128T193947040923Z.json",
+   "tune_record_sha256": "7f66635ac637aea3545591665bf838864edee4e3299354aea836e77f3725c6c5"
+  },
+  {
+   "adapter": {
+    "best_epoch": 4,
+    "dir": "demo_out/adapters_harness/qwen25_7b_claude_examples_n150_T_lr3e-04_s2",
+    "dir_sha256": "952968dbac4018686df5f8d3e7284fbb2b71b9d662d7ff918ad11199677791a0",
+    "version": "selected on select_B (early stopping, epoch 0 a candidate)",
+    "weights_sha256": "3e237240bb106d5dea0cbd31b27ded9a07db6f9d3ebd27b4ff8eee7c0e0c3f96"
+   },
+   "label": "T",
+   "seed": 2,
+   "solver": "lora:claude_examples_n150_T_lr3e-04",
+   "training": {
+    "arm": "claude_examples",
+    "best_epoch": 4,
+    "extra_key": "T_s2",
+    "seed": 2,
+    "version": "selected on select_B (early stopping, epoch 0 a candidate)"
+   },
+   "tune_record": "runs/haggling/qwen25_7b/lora_claude_examples_n150_T_lr3e-04-tune-s2-20261128T203506597394Z.json",
+   "tune_record_sha256": "1f316f71c4d205a4e6f1d2bd671ac3c433b49f5881103de94c8b2fd9fb16f2ef"
+  },
+  {
+   "adapter": {
+    "best_epoch": 5,
+    "dir": "demo_out/adapters_harness/qwen25_7b_claude_examples_n150_R_lr3e-04_s0",
+    "dir_sha256": "4c2a651f6fbd4aa51afd2e3d80331ce1f1980498cd510e14443492c3f978a4a7",
+    "version": "selected on select_B (early stopping, epoch 0 a candidate)",
+    "weights_sha256": "a25ac455b26daf1981ad1543777f26a9b29a91627185845209ca90933168188d"
+   },
+   "label": "R",
+   "seed": 0,
+   "solver": "lora:claude_examples_n150_R_lr3e-04",
+   "training": {
+    "arm": "claude_examples",
+    "best_epoch": 5,
+    "extra_key": "R_s0",
+    "seed": 0,
+    "version": "selected on select_B (early stopping, epoch 0 a candidate)"
+   },
+   "tune_record": "runs/haggling/qwen25_7b/lora_claude_examples_n150_R_lr3e-04-tune-s0-20261128T190248923905Z.json",
+   "tune_record_sha256": "340d493e28caa566d6d064e6cb6fc3231ab6d99380bd42c2b102513524cfc52a"
+  },
+  {
+   "adapter": {
+    "best_epoch": 3,
+    "dir": "demo_out/adapters_harness/qwen25_7b_claude_examples_n150_R_lr3e-04_s1",
+    "dir_sha256": "864e12252330f0c111cc3367205188ea27826591f1c7e6e95287ba82b0ff1c16",
+    "version": "selected on select_B (early stopping, epoch 0 a candidate)",
+    "weights_sha256": "eeb45a9258a219c1523277bf8c697e4160ac2072956e98f9dafb9323f543cc64"
+   },
+   "label": "R",
+   "seed": 1,
+   "solver": "lora:claude_examples_n150_R_lr3e-04",
+   "training": {
+    "arm": "claude_examples",
+    "best_epoch": 3,
+    "extra_key": "R_s1",
+    "seed": 1,
+    "version": "selected on select_B (early stopping, epoch 0 a candidate)"
+   },
+   "tune_record": "runs/haggling/qwen25_7b/lora_claude_examples_n150_R_lr3e-04-tune-s1-20261128T195813069311Z.json",
+   "tune_record_sha256": "ada6f326613c113c6879cb1fbb9acc551ef0f4b56c616d29c50aa7d42c2f7cf2"
+  },
+  {
+   "adapter": {
+    "best_epoch": 5,
+    "dir": "demo_out/adapters_harness/qwen25_7b_claude_examples_n150_R_lr3e-04_s2",
+    "dir_sha256": "6ac020143823859472c6bfa1d012a1edcea60e095a2f332796a7ebf5987e0e81",
+    "version": "selected on select_B (early stopping, epoch 0 a candidate)",
+    "weights_sha256": "947019252db7479154754c178f1ef6afd7e3c08f889cf97864c0d7d81662598c"
+   },
+   "label": "R",
+   "seed": 2,
+   "solver": "lora:claude_examples_n150_R_lr3e-04",
+   "training": {
+    "arm": "claude_examples",
+    "best_epoch": 5,
+    "extra_key": "R_s2",
+    "seed": 2,
+    "version": "selected on select_B (early stopping, epoch 0 a candidate)"
+   },
+   "tune_record": "runs/haggling/qwen25_7b/lora_claude_examples_n150_R_lr3e-04-tune-s2-20261128T205335640390Z.json",
+   "tune_record_sha256": "173326fc22307eac1ed63e72bfca6658b8dc630a815b379c69961ce9dfafc6f7"
+  },
+  {
+   "adapter": {
+    "best_epoch": 3,
+    "dir": "demo_out/adapters_harness/qwen25_7b_claude_examples_n150_N_lr3e-04_s0",
+    "dir_sha256": "df0e8240228e5bb9b02826ad495de3681c320aae7aa336ad9e869313f50ef158",
+    "version": "selected on select_B (early stopping, epoch 0 a candidate)",
+    "weights_sha256": "b6f31af6c2b1ed45135db99bd676dfaa1c162b6ce3f5e4eb1b3b11aa2a896851"
+   },
+   "label": "N",
+   "seed": 0,
+   "solver": "lora:claude_examples_n150_N_lr3e-04",
+   "training": {
+    "arm": "claude_examples",
+    "best_epoch": 3,
+    "extra_key": "N_s0",
+    "seed": 0,
+    "version": "selected on select_B (early stopping, epoch 0 a candidate)"
+   },
+   "tune_record": "runs/haggling/qwen25_7b/lora_claude_examples_n150_N_lr3e-04-tune-s0-20261128T192118576341Z.json",
+   "tune_record_sha256": "d3a19e6087347afd372afc3071a50885bc4a78e0fa8c5d91d4e658e68f53364c"
+  },
+  {
+   "adapter": {
+    "best_epoch": 5,
+    "dir": "demo_out/adapters_harness/qwen25_7b_claude_examples_n150_N_lr3e-04_s1",
+    "dir_sha256": "2765859fa193a345801ae9c83114af7e39ab17e2fc062e639e03ee70994b41d0",
+    "version": "selected on select_B (early stopping, epoch 0 a candidate)",
+    "weights_sha256": "f24af580f9eb32c75ecbbdd57c0f80d58f3d380d9fffe8ef3f9fe14e69e8773a"
+   },
+   "label": "N",
+   "seed": 1,
+   "solver": "lora:claude_examples_n150_N_lr3e-04",
+   "training": {
+    "arm": "claude_examples",
+    "best_epoch": 5,
+    "extra_key": "N_s1",
+    "seed": 1,
+    "version": "selected on select_B (early stopping, epoch 0 a candidate)"
+   },
+   "tune_record": "runs/haggling/qwen25_7b/lora_claude_examples_n150_N_lr3e-04-tune-s1-20261128T201638508104Z.json",
+   "tune_record_sha256": "72dcc3c10bac93671d2fefca4877ae767330ce45349c2c0dc4c49ebf6a0f3fb0"
+  },
+  {
+   "adapter": {
+    "best_epoch": 5,
+    "dir": "demo_out/adapters_harness/qwen25_7b_claude_examples_n150_N_lr3e-04_s2",
+    "dir_sha256": "9d239a6c59ac92789252a297f88c080f5b0b0194e1c47e40e4a08772bdbba5df",
+    "version": "selected on select_B (early stopping, epoch 0 a candidate)",
+    "weights_sha256": "3eb3ce7cd5ee8bca043b317d646d5f7fe7905eac9cdd33094a8bf58b76f63e56"
+   },
+   "label": "N",
+   "seed": 2,
+   "solver": "lora:claude_examples_n150_N_lr3e-04",
+   "training": {
+    "arm": "claude_examples",
+    "best_epoch": 5,
+    "extra_key": "N_s2",
+    "seed": 2,
+    "version": "selected on select_B (early stopping, epoch 0 a candidate)"
+   },
+   "tune_record": "runs/haggling/qwen25_7b/lora_claude_examples_n150_N_lr3e-04-tune-s2-20261128T211157402986Z.json",
+   "tune_record_sha256": "67bb28a3c506bb11eec4b868ef65ecad6bfc4b598f01d29e0a0aa6aa99e978ab"
+  }
+ ],
+ "environment": {
+  "gpu_model": "A40",
+  "packages": {
+   "peft": "0.12.0",
+   "torch": "2.4.1+cu121",
+   "transformers": "4.44.2"
+  }
+ },
+ "file_sha256": {
+  "TARGETED_PLAN.md": "ace642b93fb67c60a2d7c93c827fe082daa43f6096a39cb8dca8babc869fc02a",
+  "TARGETED_PREDICTIONS.md": "26ab4adacdc77892d6efde9b1528a624afad40d4e46971965ea02974c4475b88",
+  "demo/gen/targeted_draws_qwen25_7b.json": "af62514fab6650bb85a786697916a69cb13ff792136339cb543be264f8454246",
+  "demo/gen/targeted_labels_qwen25_7b.json": "751cd5d2a0905ba27c59a2f0f3e04098c2aad84105e52d87e0b56e3c829d4053",
+  "demo/gen/targeting_rule_qwen25_7b.json": "11a7d748e4a3216b9a9f1dec5f7c7ad113ae94c6ac7594a826280d7271ee02aa",
+  "demo/gen/test3_cases.jsonl": "792559999a6af68e62e4b27d49373208da98d445695b9420354b9e946028237e",
+  "demo/gen/test3_cells.json": "80cd7341dc35773b473596c9574a632539f6ae69dc716f9d663145f37661b33a",
+  "demo/gen/test3_fingerprints.json": "11849b5ac700b4e908f6c97b85590cf787d9440aa544fe3d1f4cdd31aa3a8e54",
+  "harness/evaluate.py": "6253a5e350ff17b9c92758f8344bfc2b761515fb2457a786a8aa0408dc6d44ec",
+  "harness/models/qwen25_7b.yaml": "4c26bea6e613f2cad676e890b19ec60054e9c692f8452175a8bdb364864de997",
+  "harness/protected/payoffs/haggling.py": "a0423b3a0a2908c6494e8e2e1f2c55e35c6c17eb934122f06cf7455bc95a13e2",
+  "harness/protected/scorer.py": "3b6141e7cd16ed0c4cab1c058653427f673ecdfbc9fb9436716e4ebb16084265",
+  "harness/records.py": "1a5d5f03bef6e4fd88642e43d9f5a933d120f2d3e425a64c393706f5c0bf74a6",
+  "harness/solvers/cpu.py": "18b20c21954f6ed94d901565c631544cb8db92aecdbc58dcaef6ab03306b05c9",
+  "harness/solvers/hf.py": "3c728530a1d4c6ae0d536483ffceeaf75a953bfc1a2ad96cbffe6230221ed36d",
+  "harness/task.py": "83f681161d65b082c1bec72644c8b227ad8bd971ff79f336bbe05a4586f1132d",
+  "harness/tasks/haggling.py": "8ef86657374c613ab20b01a5e2ec47532927ad6e46893c29978712b6e1144c54",
+  "harness/tasks/haggling3.py": "31de772769677a712278c1486194d3c96bb7559ed403297500ad0b850a66e041",
+  "harness/train_lora.py": "2ec78c6739b967fe67d93dbd7c77a792473a104f7b4dec14bf65e597ba90656a",
+  "scripts/test2_look.py": "82e5a7a830cdc8212c513616ae4510b59fb2eb389a82fc3659130df4670bfc4e",
+  "scripts/test3_look.py": "338482fa187f92122b04cb759c291927d442ccd45de8d2e423c28bd0afaa7c1f",
+  "tools/llama_report.py": "5c6673a8f0bd67e37e42bfcd51aefad95dae7c674b582f304c4ac90f8a022551",
+  "tools/lock_protected.py": "a6b867be22c6131a873fb44bc1410580659825c0b0d1772293edd6d39f5bbf3e",
+  "tools/test3_report.py": "bcbe0a647d19c3da3bbefe37c66da4e2b9218a329c34cf361d193d16194dd58c"
+ },
+ "model": "qwen25_7b",
+ "model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
+ "plan": "TARGETED_PLAN.md",
+ "preflight": {
+  "max_abs_prob_diff": 0.001,
+  "split": "tune"
+ },
+ "readout": "forced-choice letter (the config's assistant prefix), five cyclic orders, the two stored name variants",
+ "references": [
+  "oracle",
+  "uniform",
+  "baseline:cheapest",
+  "baseline:stated_cost_rule"
+ ],
+ "splits": [
+  "test3"
+ ]
+}
