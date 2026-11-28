@@ -1,4 +1,751 @@
 {
+ "T1": {
+  "conditions": {
+   "every seed below plain": true,
+   "examples-100 minus plain interval below 0": true,
+   "examples-100 minus scrambled interval below 0": true,
+   "mean <= 0.15": true
+  },
+  "readout_ok": true,
+  "result": "holds"
+ },
+ "T2": {
+  "T2a": true,
+  "T2b": false,
+  "composition": {
+   "by_type": {
+    "at_or_above": 7,
+    "below": 10,
+    "no_cost": 16
+   },
+   "cells": 33,
+   "grid_F": 16,
+   "wording_3": 19
+  },
+  "per_seed": [
+   {
+    "mean": 0.4803141514193991,
+    "minus_plain": [
+     -1.777918637086827,
+     -2.3869858462019398,
+     -0.9429400758720741
+    ],
+    "minus_rule": [
+     -0.8947700236647759,
+     -2.0399403131796428,
+     -0.13016542488878796
+    ],
+    "seed": 0
+   },
+   {
+    "mean": 0.8385342370043912,
+    "minus_plain": [
+     -1.4196985515018348,
+     -2.0763753194391854,
+     -0.5185438170338373
+    ],
+    "minus_rule": [
+     -0.5365499380797838,
+     -1.4361353700629216,
+     0.06397821417556193
+    ],
+    "seed": 1
+   },
+   {
+    "mean": 1.1115278691030008,
+    "minus_plain": [
+     -1.1467049194032255,
+     -1.6212317618963037,
+     -0.3816666157160369
+    ],
+    "minus_rule": [
+     -0.26355630598117435,
+     -1.3223429813302852,
+     0.4561991032633209
+    ],
+    "seed": 2
+   }
+  ],
+  "readout_ok": true,
+  "result": {
+   "T2a": "holds",
+   "T2b": "fails"
+  }
+ },
+ "conclusion": {
+  "T1": "holds",
+  "T2": {
+   "T2a": "holds",
+   "T2b": "fails"
+  },
+  "wording": "in-family fit replicates on fresh cells; on the V 13-15 cells they improve on plain but are not shown to beat the model-free stated-cost rule"
+ },
+ "missing": [],
  "model": "qwen25_7b",
- "status": "no look"
+ "planted_nocost_ex100": [
+  false,
+  false,
+  false,
+  false,
+  false,
+  false
+ ],
+ "predictions": {
+  "brier": 0.10444444444444445,
+  "items": [
+   {
+    "id": "P2",
+    "outcome": true,
+    "p": 0.75,
+    "prediction": "test2_same examples-100 mean in 0.04-0.18"
+   },
+   {
+    "id": "P4",
+    "outcome": true,
+    "p": 0.7,
+    "prediction": "T1 holds"
+   },
+   {
+    "id": "P5",
+    "outcome": true,
+    "p": 0.75,
+    "prediction": "examples-100: key-unseen stratum worse than key-seen"
+   },
+   {
+    "id": "P7",
+    "outcome": true,
+    "p": 0.7,
+    "prediction": "V 13-15 examples-100 mean in 0.10-0.90"
+   },
+   {
+    "id": "P8",
+    "outcome": true,
+    "p": 0.85,
+    "prediction": "V 13-15: examples-100 below plain with the paired interval below 0"
+   },
+   {
+    "id": "P10",
+    "outcome": false,
+    "p": 0.3,
+    "prediction": "examples-100 below the stated-cost rule on V 13-15 with the interval below 0 (the 'T2' of the predictions)"
+   },
+   {
+    "id": "P11",
+    "outcome": false,
+    "p": 0.7,
+    "prediction": "new wording 3 slice within 0.10 of the training-ranges slice (examples-100)"
+   },
+   {
+    "id": "P12",
+    "outcome": true,
+    "p": 0.85,
+    "prediction": "every examples-100 adapter fails the planted no-cost case on both splits"
+   },
+   {
+    "id": "P13",
+    "outcome": true,
+    "p": 0.9,
+    "prediction": "scrambled N=100 at least 0.3 worse than examples-100 on test2_same"
+   }
+  ]
+ },
+ "test2_newkey": {
+  "V 13-15 (T2 slice)": {
+   "ex100": 0.8101254191755971,
+   "ex100_mass": [
+    0.9990590401104835,
+    0.9957571444866925
+   ],
+   "ex100_minus_plain": [
+    -1.448107369330629,
+    -2.014769532856918,
+    -0.6228245710145448
+   ],
+   "ex100_minus_rule": [
+    -0.564958755908578,
+    -1.6010515771512734,
+    0.12250239852458562
+   ],
+   "ex100_per_seed": [
+    0.4803141514193991,
+    0.8385342370043912,
+    1.1115278691030008
+   ],
+   "groups": 12,
+   "n": 66,
+   "perm_p_plain": 0.0216978302169783,
+   "perm_p_rule": 0.15808419158084192,
+   "plain": 2.2582327885062266,
+   "rule": 1.3750841750841751,
+   "scrambled": 2.838050756768522
+  },
+  "always-cheapest": {
+   "by_type": {
+    "at_or_above": 0.0,
+    "below": 2.475,
+    "no_cost": 1.6961111111111111
+   },
+   "ci": [
+    1.3903703703703703,
+    0.7056886015168877,
+    2.4005673868312756
+   ],
+   "hard": 1.3903703703703703,
+   "mass": [
+    1.0,
+    1.0
+   ],
+   "per_seed": [
+    1.3903703703703703
+   ],
+   "records": [
+    "runs/haggling/none/baseline_cheapest-test2_newkey-s0-20261128T155204446467Z.json"
+   ],
+   "soft": 1.3903703703703703
+  },
+  "cheapest-label N=100": {
+   "by_type": {
+    "at_or_above": 0.00021482088782065145,
+    "below": 2.475110857911778,
+    "no_cost": 1.6961106933629158
+   },
+   "ci": [
+    1.3904787907208382,
+    0.7057340720052769,
+    2.400579188444492
+   ],
+   "hard": 1.3903703703703703,
+   "mass": [
+    0.999998994213636,
+    0.9999763505160931
+   ],
+   "per_seed": [
+    1.3904787907208382
+   ],
+   "records": [
+    "runs/haggling/qwen25_7b/lora_cheapest_label_n100_lr3e-04-test2_newkey-s0-20261128T163019303149Z.json"
+   ],
+   "soft": 1.3904787907208382
+  },
+  "examples-100": {
+   "by_type": {
+    "at_or_above": 0.10590817393360163,
+    "below": 0.25044075751625655,
+    "no_cost": 0.7488086282349344
+   },
+   "ci": [
+    0.3683858532282642,
+    0.23249376925027682,
+    0.5572939328485242
+   ],
+   "hard": 0.25101851851851853,
+   "mass": [
+    0.9990326863702279,
+    0.9587794922569202
+   ],
+   "per_seed": [
+    0.18480034169042708,
+    0.35480745591126617,
+    0.5655497620830994
+   ],
+   "records": [
+    "runs/haggling/qwen25_7b/lora_claude_examples_n100_lr3e-04-test2_newkey-s0-20261128T160434707860Z.json",
+    "runs/haggling/qwen25_7b/lora_claude_examples_n100_lr3e-04-test2_newkey-s1-20261128T161101300319Z.json",
+    "runs/haggling/qwen25_7b/lora_claude_examples_n100_lr3e-04-test2_newkey-s2-20261128T161726717704Z.json"
+   ],
+   "soft": 0.3683858532282642
+  },
+  "new V only (>=10, grids A-C, wordings 0-1)": {
+   "ex100": 0.9619773968994134,
+   "ex100_mass": [
+    0.998798080222565,
+    0.9961622661583706
+   ],
+   "ex100_minus_plain": [
+    -1.2318739685710376,
+    -2.481325273044814,
+    -0.1338729177783744
+   ],
+   "ex100_minus_rule": [
+    -1.8054300105079941,
+    -2.5790063530840333,
+    -0.7535283685947598
+   ],
+   "ex100_per_seed": [
+    0.48306508555507577,
+    1.116093031167055,
+    1.2867740739761093
+   ],
+   "groups": 10,
+   "n": 30,
+   "perm_p_plain": 0.07589241075892411,
+   "perm_p_rule": 0.0314968503149685,
+   "plain": 2.193851365470451,
+   "rule": 2.7674074074074073,
+   "scrambled": 4.257720597446502
+  },
+  "new grid F (any V, wordings 0-1)": {
+   "ex100": 0.1547105649606785,
+   "ex100_mass": [
+    0.999192104355087,
+    0.9835903429179702
+   ],
+   "ex100_minus_plain": [
+    -3.3590125801020574,
+    -3.9985306075883433,
+    -2.6652913496149813
+   ],
+   "ex100_minus_rule": [
+    0.1547105649606785,
+    0.10235942833623726,
+    0.23983614823223523
+   ],
+   "ex100_per_seed": [
+    0.02149153078670955,
+    0.0924612315010542,
+    0.3501789325942717
+   ],
+   "groups": 10,
+   "n": 74,
+   "perm_p_plain": 0.001999800019998,
+   "perm_p_rule": 0.001999800019998,
+   "plain": 3.513723145062736,
+   "rule": 0.0,
+   "scrambled": 1.4106160639398713
+  },
+  "new grid F and new wording 3": {
+   "ex100": 0.3649205772107397,
+   "ex100_mass": [
+    0.9988241449994562,
+    0.9587794922569202
+   ],
+   "ex100_minus_plain": [
+    -3.151048163750875,
+    -3.91551721481127,
+    -2.3071496831783116
+   ],
+   "ex100_minus_rule": [
+    0.3649205772107397,
+    0.1495049301374372,
+    0.7394297821367675
+   ],
+   "ex100_per_seed": [
+    0.21559168888646932,
+    0.2737399285873622,
+    0.6054301141583878
+   ],
+   "groups": 10,
+   "n": 72,
+   "perm_p_plain": 0.001999800019998,
+   "perm_p_rule": 0.001999800019998,
+   "plain": 3.5159687409616147,
+   "rule": 0.0,
+   "scrambled": 1.3868587605619993
+  },
+  "new wording 3 (any V, grids A-C)": {
+   "ex100": 0.7264120697608499,
+   "ex100_mass": [
+    0.9986561049266592,
+    0.9957571444866925
+   ],
+   "ex100_minus_plain": [
+    -0.9716668949230275,
+    -1.9379049099511596,
+    -0.08808431197880963
+   ],
+   "ex100_minus_rule": [
+    -1.1545403111915316,
+    -1.7925970137217346,
+    -0.5595136807781889
+   ],
+   "ex100_per_seed": [
+    0.44499185762605337,
+    0.865581160473582,
+    0.8686631911829144
+   ],
+   "groups": 13,
+   "n": 28,
+   "perm_p_plain": 0.07439256074392561,
+   "perm_p_rule": 0.0064993500649935,
+   "plain": 1.6980789646838772,
+   "rule": 1.8809523809523812,
+   "scrambled": 3.7225513982544007
+  },
+  "oracle": {
+   "by_type": {
+    "at_or_above": 0.0,
+    "below": 0.0,
+    "no_cost": 0.0
+   },
+   "ci": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "hard": 0.0,
+   "mass": [
+    1.0,
+    1.0
+   ],
+   "per_seed": [
+    0.0
+   ],
+   "records": [
+    "runs/haggling/none/oracle-test2_newkey-s0-20261128T155202353664Z.json"
+   ],
+   "soft": 0.0
+  },
+  "plain": {
+   "by_type": {
+    "at_or_above": 2.6990546490489495,
+    "below": 3.2522235347687385,
+    "no_cost": 2.6838810329156555
+   },
+   "ci": [
+    2.878386405577781,
+    2.294238063500205,
+    3.36875820498314
+   ],
+   "hard": 2.512592592592592,
+   "mass": [
+    0.9967520650734205,
+    0.9306446881275481
+   ],
+   "per_seed": [
+    2.8783864055777806
+   ],
+   "records": [
+    "runs/haggling/qwen25_7b/plain-test2_newkey-s0-20261128T155808574829Z.json"
+   ],
+   "soft": 2.878386405577781
+  },
+  "scrambled N=100": {
+   "by_type": {
+    "at_or_above": 0.8220536003073686,
+    "below": 3.2575539839800065,
+    "no_cost": 2.239405724402622
+   },
+   "ci": [
+    2.1063377695633325,
+    1.6181941482142825,
+    2.8009127605550495
+   ],
+   "hard": 1.5237037037037036,
+   "mass": [
+    0.9995337645068781,
+    0.9988550631318305
+   ],
+   "per_seed": [
+    2.106337769563333
+   ],
+   "records": [
+    "runs/haggling/qwen25_7b/lora_shuffled_claude_n100_lr3e-04-test2_newkey-s0-20261128T162353050296Z.json"
+   ],
+   "soft": 2.1063377695633325
+  },
+  "stated-cost rule": {
+   "by_type": {
+    "at_or_above": 0.0,
+    "below": 0.0,
+    "no_cost": 1.6961111111111111
+   },
+   "ci": [
+    0.5653703703703704,
+    0.2451746340431792,
+    1.0455497314437325
+   ],
+   "hard": 0.5653703703703704,
+   "mass": [
+    1.0,
+    1.0
+   ],
+   "per_seed": [
+    0.5653703703703704
+   ],
+   "records": [
+    "runs/haggling/none/baseline_stated_cost_rule-test2_newkey-s0-20261128T155205504988Z.json"
+   ],
+   "soft": 0.5653703703703704
+  },
+  "training ranges (no novelty)": {
+   "ex100": 0.041413376339826266,
+   "ex100_mass": [
+    0.9996104783887233,
+    0.9966887879313224
+   ],
+   "ex100_minus_plain": [
+    -1.7443011592025792,
+    -2.196323810114992,
+    -1.2909176908066413
+   ],
+   "ex100_minus_rule": [
+    0.041413376339826266,
+    0.026713040359796755,
+    0.05746430027950967
+   ],
+   "ex100_per_seed": [
+    0.007982848541067773,
+    0.024536666696218144,
+    0.0917206137821929
+   ],
+   "groups": 14,
+   "n": 36,
+   "perm_p_plain": 0.00019998000199980003,
+   "perm_p_rule": 0.00019998000199980003,
+   "plain": 1.7857145355424053,
+   "rule": 0.0,
+   "scrambled": 1.9255163369074195
+  },
+  "uniform": {
+   "by_type": {
+    "at_or_above": 2.5700000000000003,
+    "below": 3.2299999999999995,
+    "no_cost": 2.671888888888889
+   },
+   "ci": [
+    2.8239629629629635,
+    2.402889005296548,
+    3.146678787878788
+   ],
+   "hard": 1.3903703703703703,
+   "mass": [
+    1.0,
+    1.0
+   ],
+   "per_seed": [
+    2.8239629629629635
+   ],
+   "records": [
+    "runs/haggling/none/uniform-test2_newkey-s0-20261128T155203427216Z.json"
+   ],
+   "soft": 2.8239629629629635
+  }
+ },
+ "test2_same": {
+  "always-cheapest": {
+   "by_type": {
+    "at_or_above": 0.0,
+    "below": 1.225,
+    "no_cost": 0.5225
+   },
+   "ci": [
+    0.5824999999999999,
+    0.32183631822612085,
+    0.9032669490817331
+   ],
+   "hard": 0.5824999999999999,
+   "mass": [
+    1.0,
+    1.0
+   ],
+   "per_seed": [
+    0.5825
+   ],
+   "records": [
+    "runs/haggling/none/baseline_cheapest-test2_same-s0-20261128T155200415120Z.json"
+   ],
+   "soft": 0.5824999999999999
+  },
+  "cheapest-label N=100": {
+   "by_type": {
+    "at_or_above": 4.772285061497621e-06,
+    "below": 1.2250312128037317,
+    "no_cost": 0.5224998000510782
+   },
+   "ci": [
+    0.5825119283799572,
+    0.3218454659454771,
+    0.903277830130579
+   ],
+   "hard": 0.5824999999999999,
+   "mass": [
+    0.999999869790252,
+    0.9999961851615099
+   ],
+   "per_seed": [
+    0.582511928379957
+   ],
+   "records": [
+    "runs/haggling/qwen25_7b/lora_cheapest_label_n100_lr3e-04-test2_same-s0-20261128T162738005773Z.json"
+   ],
+   "soft": 0.5825119283799572
+  },
+  "examples-100": {
+   "by_type": {
+    "at_or_above": 0.023247430642283205,
+    "below": 0.04454536316257486,
+    "no_cost": 0.1402238770941612
+   },
+   "ci": [
+    0.06933889029967308,
+    0.046330111626906346,
+    0.10452829035948488
+   ],
+   "hard": 0.029243827160493827,
+   "mass": [
+    0.9995068722634057,
+    0.9956903958087449
+   ],
+   "per_seed": [
+    0.035628334577046686,
+    0.06574733321142905,
+    0.10664100311054353
+   ],
+   "records": [
+    "runs/haggling/qwen25_7b/lora_claude_examples_n100_lr3e-04-test2_same-s0-20261128T160152939922Z.json",
+    "runs/haggling/qwen25_7b/lora_claude_examples_n100_lr3e-04-test2_same-s1-20261128T160819831161Z.json",
+    "runs/haggling/qwen25_7b/lora_claude_examples_n100_lr3e-04-test2_same-s2-20261128T161445619041Z.json"
+   ],
+   "soft": 0.06933889029967308
+  },
+  "oracle": {
+   "by_type": {
+    "at_or_above": 0.0,
+    "below": 0.0,
+    "no_cost": 0.0
+   },
+   "ci": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "hard": 9.25185853854297e-18,
+   "mass": [
+    1.0,
+    1.0
+   ],
+   "per_seed": [
+    0.0
+   ],
+   "records": [
+    "runs/haggling/none/oracle-test2_same-s0-20261128T155156208682Z.json"
+   ],
+   "soft": 0.0
+  },
+  "paired": {
+   "ex100_minus_plain": [
+    -1.359658068400229,
+    -1.6269336257288145,
+    -1.1226658617747673
+   ],
+   "ex100_minus_rule": [
+    -0.10482777636699359,
+    -0.2096880082944618,
+    -0.030583776830637857
+   ],
+   "ex100_minus_scrambled": [
+    -0.782206767383844,
+    -1.0295306711819578,
+    -0.5717465391510883
+   ]
+  },
+  "plain": {
+   "by_type": {
+    "at_or_above": 1.191012497802673,
+    "below": 2.257321478119265,
+    "no_cost": 0.838656900177768
+   },
+   "ci": [
+    1.4289969586999018,
+    1.1911308038639663,
+    1.6975886810957799
+   ],
+   "hard": 1.5625925925925925,
+   "mass": [
+    0.9981985949607624,
+    0.9682066077157521
+   ],
+   "per_seed": [
+    1.428996958699902
+   ],
+   "records": [
+    "runs/haggling/qwen25_7b/plain-test2_same-s0-20261128T155543595676Z.json"
+   ],
+   "soft": 1.4289969586999018
+  },
+  "scrambled N=100": {
+   "by_type": {
+    "at_or_above": 0.19379443304025068,
+    "below": 1.7794664915469245,
+    "no_cost": 0.5813760484633759
+   },
+   "ci": [
+    0.851545657683517,
+    0.623179353567585,
+    1.1214168229002572
+   ],
+   "hard": 0.6575,
+   "mass": [
+    0.9995964887575398,
+    0.9991192507320219
+   ],
+   "per_seed": [
+    0.8515456576835169
+   ],
+   "records": [
+    "runs/haggling/qwen25_7b/lora_shuffled_claude_n100_lr3e-04-test2_same-s0-20261128T162111508855Z.json"
+   ],
+   "soft": 0.851545657683517
+  },
+  "stated-cost rule": {
+   "by_type": {
+    "at_or_above": 0.0,
+    "below": 0.0,
+    "no_cost": 0.5225
+   },
+   "ci": [
+    0.17416666666666666,
+    0.07958089668615986,
+    0.3097087621602185
+   ],
+   "hard": 0.17416666666666666,
+   "mass": [
+    1.0,
+    1.0
+   ],
+   "per_seed": [
+    0.17416666666666666
+   ],
+   "records": [
+    "runs/haggling/none/baseline_stated_cost_rule-test2_same-s0-20261128T155201378552Z.json"
+   ],
+   "soft": 0.17416666666666666
+  },
+  "strata": {
+   "seen": {
+    "examples-100": 0.02840468041523381,
+    "n": 96,
+    "plain": 1.2612413249997536
+   },
+   "unseen": {
+    "examples-100": 0.09662836355596595,
+    "n": 144,
+    "plain": 1.5408340478333344
+   }
+  },
+  "uniform": {
+   "by_type": {
+    "at_or_above": 0.85,
+    "below": 1.83,
+    "no_cost": 0.7178333333333334
+   },
+   "ci": [
+    1.132611111111111,
+    0.9487313993498634,
+    1.341301114534596
+   ],
+   "hard": 0.5824999999999999,
+   "mass": [
+    1.0,
+    1.0
+   ],
+   "per_seed": [
+    1.132611111111111
+   ],
+   "records": [
+    "runs/haggling/none/uniform-test2_same-s0-20261128T155159422118Z.json"
+   ],
+   "soft": 1.132611111111111
+  }
+ }
 }
