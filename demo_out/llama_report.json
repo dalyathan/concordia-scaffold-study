@@ -222,9 +222,9 @@
   "parse_rate": 0.98
  },
  "gemma_planted_nocost_mass": [
-  0.20270514984340632,
-  0.2952791404246432,
-  0.5630074560719047
+  0.19799964042716098,
+  0.28929224198679704,
+  0.5680788852396186
  ],
  "gemma_vs_llama/Claude's lesson (teacher paragraph)": {
   "gemma_a10g": 0.39034814782993976,
@@ -286,7 +286,7 @@
   "gemma_a40": null,
   "llama": 0.6107217115221337
  },
- "limitation": "harness parity with stored Gemma scores failed its frozen per-case tolerance (max 1.7e-2 vs 1e-3; mean regret within 0.001): a Gemma-only readout difference, the final soft-cap computed in bf16; prompts and forward pass match the stored code; DECISIONS.md L35",
+ "limitation": "harness readout parity with the stored Gemma scores passed on the A40 after the soft-cap readout fix (per case at most 3.3e-16, plain and nine stored adapters; DECISIONS.md L38-L39); the fix leaves every Llama record bit-identical",
  "lr_choice": {
   "chosen": 0.0001,
   "select_B_1e-4": 0.05286842134387782,
@@ -916,7 +916,7 @@
   "R2 method_original": "helps (minus plain -0.411 [-0.530, -0.249]; minus neutral -0.385 [-0.510, -0.224]; arm letter mass 0.9970)",
   "R2 teacher": "helps (minus plain -0.254 [-0.330, -0.162]; minus neutral -0.228 [-0.307, -0.134]; arm letter mass 0.9967)",
   "R3": "not replicated; failed: planted 4/4 (each adapter) (seed mean 0.048; planted: seed 0 planted-nocost failed at mass 0.401 (top option 3); seed 1 planted-nocost failed at mass 0.130 (top option 1); seed 2 planted-nocost failed at mass 0.361 (top option 2))",
-  "R3 note": "Gemma comparison (JOB A, harness on the A40, the stored Gemma examples-100 adapters): Gemma's adapters fail the same planted no-cost case (mass 0.20, 0.30, 0.56; the other planted cases pass), so the planted failure is shared with Gemma, not new in Llama; Gemma's numbers carry the readout-parity caveat (DECISIONS.md L35). All numbers are forced-choice letters after 'Answer: (', conditional on one training draw and label set; seeds range 0.024-0.082.",
+  "R3 note": "Gemma comparison (harness on the A40 after the readout fix, the stored Gemma examples-100 adapters): Gemma's adapters fail the same planted no-cost case (mass 0.20, 0.29, 0.57; the other planted cases pass), so the planted failure is shared with Gemma, not new in Llama (DECISIONS.md L39). All numbers are forced-choice letters after 'Answer: (', conditional on one training draw and label set; seeds range 0.024-0.082.",
   "R3 secondary (without the planted condition; labelled secondary per LLAMA_PLAN.md)": "all other R3 conditions hold",
   "R4": "cheapest-label N=25 within 0.05 of always-cheapest: yes; cheapest-label N=100 within 0.05 of always-cheapest: yes; scrambled at least 0.15 worse than examples-100: yes",
   "R5": "examples-25 within 0.05 of the examples-100 mean (0.086 vs 0.048, 1.8x; one seed, worse than every examples-100 seed; difference interval -0.039 [-0.097, 0.002] straddles the 0.05 edge, so 'within' is not resolved)"

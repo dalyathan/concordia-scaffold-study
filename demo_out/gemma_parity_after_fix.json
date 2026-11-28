@@ -1,0 +1,640 @@
+{
+ "tolerances": {
+  "max_abs_prob": 0.001,
+  "max_abs_regret": 0.005
+ },
+ "rows": [
+  {
+   "arm": "plain",
+   "record": "runs/haggling/gemma2_9b/plain-tune-s0-20261128T032017901095Z.json",
+   "gpu_seconds": 81.84831261634827,
+   "planted": {
+    "planted-below": {
+     "ok": false,
+     "mass_on_expected": 0.014422057320552503,
+     "top_option": 3
+    },
+    "planted-nocost": {
+     "ok": false,
+     "mass_on_expected": 0.10493966640066825,
+     "top_option": 1
+    },
+    "planted-atabove": {
+     "ok": true,
+     "mass_on_expected": 0.9971663392161498,
+     "top_option": 1
+    },
+    "planted-high": {
+     "ok": false,
+     "mass_on_expected": 0.00613696514945237,
+     "top_option": 3
+    }
+   },
+   "A40": {
+    "ref": "legacy-gemma-plain-tune-s0-a40",
+    "tool_verdict": false,
+    "missing_in_new": [],
+    "extra_in_new": [],
+    "max_abs_prob_diff": 2.220446049250313e-16,
+    "worst_case": "V4-gC-information-C5-p2_10-w1-n0",
+    "regret_new": 0.6607905602170201,
+    "regret_old": 0.6607905602170203,
+    "regret_diff": 2.220446049250313e-16,
+    "planted_all_ok": false,
+    "letter_mass_ok": true,
+    "tolerances": {
+     "max_abs_prob": 0.001,
+     "max_abs_regret": 0.005
+    },
+    "readout_parity": true
+   },
+   "A10G": {
+    "ref": "legacy-plain-tune-s0",
+    "tool_verdict": false,
+    "missing_in_new": [],
+    "extra_in_new": [],
+    "max_abs_prob_diff": 0.05808748728184887,
+    "worst_case": "V8-gA-neutral-p1_5-w1-n1",
+    "regret_new": 0.6607905602170201,
+    "regret_old": 0.6572416108190678,
+    "regret_diff": 0.00354894939795225,
+    "planted_all_ok": false,
+    "letter_mass_ok": true,
+    "tolerances": {
+     "max_abs_prob": 0.001,
+     "max_abs_regret": 0.005
+    },
+    "readout_parity": false
+   }
+  },
+  {
+   "arm": "gen_claude_examples_lr1e-04_s0",
+   "record": "runs/haggling/gemma2_9b/lora-tune-s0-20261128T032159212279Z.json",
+   "gpu_seconds": 93.55341958999634,
+   "planted": {
+    "planted-below": {
+     "ok": true,
+     "mass_on_expected": 0.9996571515229467,
+     "top_option": 1
+    },
+    "planted-nocost": {
+     "ok": false,
+     "mass_on_expected": 0.19799964042716098,
+     "top_option": 3
+    },
+    "planted-atabove": {
+     "ok": true,
+     "mass_on_expected": 0.9999204094996874,
+     "top_option": 0
+    },
+    "planted-high": {
+     "ok": true,
+     "mass_on_expected": 0.9941234808662931,
+     "top_option": 4
+    }
+   },
+   "A40": {
+    "ref": "legacy-gemma-claude_examples_n100-tune-s0-a40",
+    "tool_verdict": false,
+    "missing_in_new": [],
+    "extra_in_new": [],
+    "max_abs_prob_diff": 3.3306690738754696e-16,
+    "worst_case": "V2-gB-information-C4-p1_5-w1-n0",
+    "regret_new": 0.013138704635531498,
+    "regret_old": 0.013138704635531514,
+    "regret_diff": 1.5612511283791264e-17,
+    "planted_all_ok": false,
+    "letter_mass_ok": true,
+    "tolerances": {
+     "max_abs_prob": 0.001,
+     "max_abs_regret": 0.005
+    },
+    "readout_parity": true
+   },
+   "A10G": {
+    "ref": "legacy-claude_examples-tune-s0-preflight",
+    "tool_verdict": false,
+    "missing_in_new": [],
+    "extra_in_new": [],
+    "max_abs_prob_diff": 0.04874267480706329,
+    "worst_case": "V3-gA-information-C4-p2_6-w1-n1",
+    "regret_new": 0.013138704635531498,
+    "regret_old": 0.013121484983762078,
+    "regret_diff": 1.7219651769420294e-05,
+    "planted_all_ok": false,
+    "letter_mass_ok": true,
+    "tolerances": {
+     "max_abs_prob": 0.001,
+     "max_abs_regret": 0.005
+    },
+    "readout_parity": false
+   }
+  },
+  {
+   "arm": "gen_claude_examples_lr1e-04_s1",
+   "record": "runs/haggling/gemma2_9b/lora-tune-s1-20261128T032340242183Z.json",
+   "gpu_seconds": 93.67996835708618,
+   "planted": {
+    "planted-below": {
+     "ok": true,
+     "mass_on_expected": 0.9997434607989943,
+     "top_option": 1
+    },
+    "planted-nocost": {
+     "ok": false,
+     "mass_on_expected": 0.28929224198679704,
+     "top_option": 1
+    },
+    "planted-atabove": {
+     "ok": true,
+     "mass_on_expected": 0.9999260384834995,
+     "top_option": 0
+    },
+    "planted-high": {
+     "ok": true,
+     "mass_on_expected": 0.9993606500586053,
+     "top_option": 4
+    }
+   },
+   "A40": {
+    "ref": "legacy-gemma-claude_examples_n100-tune-s1-a40",
+    "tool_verdict": false,
+    "missing_in_new": [],
+    "extra_in_new": [],
+    "max_abs_prob_diff": 3.3306690738754696e-16,
+    "worst_case": "V4-gB-neutral-p2_6-w1-n0",
+    "regret_new": 0.02646316395817807,
+    "regret_old": 0.02646316395817808,
+    "regret_diff": 1.0408340855860843e-17,
+    "planted_all_ok": false,
+    "letter_mass_ok": true,
+    "tolerances": {
+     "max_abs_prob": 0.001,
+     "max_abs_regret": 0.005
+    },
+    "readout_parity": true
+   },
+   "A10G": {
+    "ref": "legacy-claude_examples-tune-s1-preflight",
+    "tool_verdict": false,
+    "missing_in_new": [],
+    "extra_in_new": [],
+    "max_abs_prob_diff": 0.018987747120129517,
+    "worst_case": "V6-gB-neutral-p2_6-w0-n1",
+    "regret_new": 0.02646316395817807,
+    "regret_old": 0.026354933333644248,
+    "regret_diff": 0.00010823062453382132,
+    "planted_all_ok": false,
+    "letter_mass_ok": true,
+    "tolerances": {
+     "max_abs_prob": 0.001,
+     "max_abs_regret": 0.005
+    },
+    "readout_parity": false
+   }
+  },
+  {
+   "arm": "gen_claude_examples_lr1e-04_s2",
+   "record": "runs/haggling/gemma2_9b/lora-tune-s2-20261128T032521070895Z.json",
+   "gpu_seconds": 93.91263794898987,
+   "planted": {
+    "planted-below": {
+     "ok": true,
+     "mass_on_expected": 0.9967101377457195,
+     "top_option": 1
+    },
+    "planted-nocost": {
+     "ok": false,
+     "mass_on_expected": 0.5680788852396186,
+     "top_option": 2
+    },
+    "planted-atabove": {
+     "ok": true,
+     "mass_on_expected": 0.9955449508058692,
+     "top_option": 1
+    },
+    "planted-high": {
+     "ok": true,
+     "mass_on_expected": 0.9821655411919481,
+     "top_option": 4
+    }
+   },
+   "A40": {
+    "ref": "legacy-gemma-claude_examples_n100-tune-s2-a40",
+    "tool_verdict": false,
+    "missing_in_new": [],
+    "extra_in_new": [],
+    "max_abs_prob_diff": 2.220446049250313e-16,
+    "worst_case": "V2-gC-information-C4-p2_10-w0-n0",
+    "regret_new": 0.057596920409023235,
+    "regret_old": 0.057596920409023256,
+    "regret_diff": 2.0816681711721685e-17,
+    "planted_all_ok": false,
+    "letter_mass_ok": true,
+    "tolerances": {
+     "max_abs_prob": 0.001,
+     "max_abs_regret": 0.005
+    },
+    "readout_parity": true
+   },
+   "A10G": {
+    "ref": "legacy-claude_examples-tune-s2-preflight",
+    "tool_verdict": false,
+    "missing_in_new": [],
+    "extra_in_new": [],
+    "max_abs_prob_diff": 0.02058856839129586,
+    "worst_case": "V2-gC-information-C4-p2_10-w0-n0",
+    "regret_new": 0.057596920409023235,
+    "regret_old": 0.05672710399685209,
+    "regret_diff": 0.0008698164121711469,
+    "planted_all_ok": false,
+    "letter_mass_ok": true,
+    "tolerances": {
+     "max_abs_prob": 0.001,
+     "max_abs_regret": 0.005
+    },
+    "readout_parity": false
+   }
+  },
+  {
+   "arm": "gen_teacher_lr1e-04_s0",
+   "record": "runs/haggling/gemma2_9b/lora-tune-s0-20261128T032702791939Z.json",
+   "gpu_seconds": 94.03832626342773,
+   "planted": {
+    "planted-below": {
+     "ok": true,
+     "mass_on_expected": 0.9674979083381987,
+     "top_option": 1
+    },
+    "planted-nocost": {
+     "ok": false,
+     "mass_on_expected": 0.14049066189372045,
+     "top_option": 1
+    },
+    "planted-atabove": {
+     "ok": true,
+     "mass_on_expected": 0.9872941128122441,
+     "top_option": 1
+    },
+    "planted-high": {
+     "ok": false,
+     "mass_on_expected": 0.03129439211302858,
+     "top_option": 1
+    }
+   },
+   "A40": {
+    "ref": "A40_probs.json:gen_teacher_lr1e-04_s0",
+    "tool_verdict": false,
+    "missing_in_new": [],
+    "extra_in_new": [],
+    "max_abs_prob_diff": 2.220446049250313e-16,
+    "worst_case": "V5-gB-information-C2-p2_10-w0-n1",
+    "regret_new": 0.3792088028495028,
+    "regret_old": 0.37920880284950287,
+    "regret_diff": 5.551115123125783e-17,
+    "planted_all_ok": false,
+    "letter_mass_ok": true,
+    "tolerances": {
+     "max_abs_prob": 0.001,
+     "max_abs_regret": 0.005
+    },
+    "readout_parity": true
+   },
+   "A10G": {
+    "ref": "legacy-teacher-tune-s0-preflight",
+    "tool_verdict": false,
+    "missing_in_new": [],
+    "extra_in_new": [],
+    "max_abs_prob_diff": 0.01744374894729872,
+    "worst_case": "V5-gB-information-C2-p2_10-w0-n1",
+    "regret_new": 0.3792088028495028,
+    "regret_old": 0.3804447192675015,
+    "regret_diff": 0.0012359164179986948,
+    "planted_all_ok": false,
+    "letter_mass_ok": true,
+    "tolerances": {
+     "max_abs_prob": 0.001,
+     "max_abs_regret": 0.005
+    },
+    "readout_parity": false
+   }
+  },
+  {
+   "arm": "gen_teacher_lr1e-04_s1",
+   "record": "runs/haggling/gemma2_9b/lora-tune-s1-20261128T032844735571Z.json",
+   "gpu_seconds": 94.0749843120575,
+   "planted": {
+    "planted-below": {
+     "ok": true,
+     "mass_on_expected": 0.9867248093004506,
+     "top_option": 1
+    },
+    "planted-nocost": {
+     "ok": false,
+     "mass_on_expected": 0.12191673984551561,
+     "top_option": 1
+    },
+    "planted-atabove": {
+     "ok": true,
+     "mass_on_expected": 0.9917099478899968,
+     "top_option": 1
+    },
+    "planted-high": {
+     "ok": false,
+     "mass_on_expected": 0.020672871635992247,
+     "top_option": 1
+    }
+   },
+   "A40": {
+    "ref": "A40_probs.json:gen_teacher_lr1e-04_s1",
+    "tool_verdict": false,
+    "missing_in_new": [],
+    "extra_in_new": [],
+    "max_abs_prob_diff": 2.220446049250313e-16,
+    "worst_case": "V5-gC-information-C4-p3_7-w1-n1",
+    "regret_new": 0.3516753638504278,
+    "regret_old": 0.3516753638504278,
+    "regret_diff": 0.0,
+    "planted_all_ok": false,
+    "letter_mass_ok": true,
+    "tolerances": {
+     "max_abs_prob": 0.001,
+     "max_abs_regret": 0.005
+    },
+    "readout_parity": true
+   },
+   "A10G": {
+    "ref": "legacy-teacher-tune-s1-preflight",
+    "tool_verdict": false,
+    "missing_in_new": [],
+    "extra_in_new": [],
+    "max_abs_prob_diff": 0.019291948247697643,
+    "worst_case": "V3-gB-information-C4-p1_5-w0-n1",
+    "regret_new": 0.3516753638504278,
+    "regret_old": 0.35163119917833086,
+    "regret_diff": 4.4164672096946855e-05,
+    "planted_all_ok": false,
+    "letter_mass_ok": true,
+    "tolerances": {
+     "max_abs_prob": 0.001,
+     "max_abs_regret": 0.005
+    },
+    "readout_parity": false
+   }
+  },
+  {
+   "arm": "gen_teacher_lr1e-04_s2",
+   "record": "runs/haggling/gemma2_9b/lora-tune-s2-20261128T033026757370Z.json",
+   "gpu_seconds": 94.12041521072388,
+   "planted": {
+    "planted-below": {
+     "ok": true,
+     "mass_on_expected": 0.9298424455485428,
+     "top_option": 1
+    },
+    "planted-nocost": {
+     "ok": false,
+     "mass_on_expected": 0.22116255618691885,
+     "top_option": 1
+    },
+    "planted-atabove": {
+     "ok": true,
+     "mass_on_expected": 0.9609606296259429,
+     "top_option": 1
+    },
+    "planted-high": {
+     "ok": false,
+     "mass_on_expected": 0.0906617914191882,
+     "top_option": 1
+    }
+   },
+   "A40": {
+    "ref": "A40_probs.json:gen_teacher_lr1e-04_s2",
+    "tool_verdict": false,
+    "missing_in_new": [],
+    "extra_in_new": [],
+    "max_abs_prob_diff": 2.220446049250313e-16,
+    "worst_case": "V4-gB-neutral-p2_6-w1-n0",
+    "regret_new": 0.39429609462256276,
+    "regret_old": 0.39429609462256276,
+    "regret_diff": 0.0,
+    "planted_all_ok": false,
+    "letter_mass_ok": true,
+    "tolerances": {
+     "max_abs_prob": 0.001,
+     "max_abs_regret": 0.005
+    },
+    "readout_parity": true
+   },
+   "A10G": {
+    "ref": "legacy-teacher-tune-s2-preflight",
+    "tool_verdict": false,
+    "missing_in_new": [],
+    "extra_in_new": [],
+    "max_abs_prob_diff": 0.028146508500235257,
+    "worst_case": "V3-gC-information-C5-p1_5-w0-n0",
+    "regret_new": 0.39429609462256276,
+    "regret_old": 0.39503767060314604,
+    "regret_diff": 0.0007415759805832756,
+    "planted_all_ok": false,
+    "letter_mass_ok": true,
+    "tolerances": {
+     "max_abs_prob": 0.001,
+     "max_abs_regret": 0.005
+    },
+    "readout_parity": false
+   }
+  },
+  {
+   "arm": "gen_method_original_lr1e-04_s0",
+   "record": "runs/haggling/gemma2_9b/lora-tune-s0-20261128T033207887561Z.json",
+   "gpu_seconds": 94.19845819473267,
+   "planted": {
+    "planted-below": {
+     "ok": true,
+     "mass_on_expected": 0.907667580356093,
+     "top_option": 1
+    },
+    "planted-nocost": {
+     "ok": false,
+     "mass_on_expected": 0.03573352137757788,
+     "top_option": 1
+    },
+    "planted-atabove": {
+     "ok": true,
+     "mass_on_expected": 0.9850743496280056,
+     "top_option": 1
+    },
+    "planted-high": {
+     "ok": false,
+     "mass_on_expected": 0.09331246787243382,
+     "top_option": 1
+    }
+   },
+   "A40": {
+    "ref": "A40_probs.json:gen_method_original_lr1e-04_s0",
+    "tool_verdict": false,
+    "missing_in_new": [],
+    "extra_in_new": [],
+    "max_abs_prob_diff": 2.220446049250313e-16,
+    "worst_case": "V5-gC-information-C1-p1_5-w0-n1",
+    "regret_new": 0.4015011895074916,
+    "regret_old": 0.4015011895074916,
+    "regret_diff": 0.0,
+    "planted_all_ok": false,
+    "letter_mass_ok": true,
+    "tolerances": {
+     "max_abs_prob": 0.001,
+     "max_abs_regret": 0.005
+    },
+    "readout_parity": true
+   },
+   "A10G": {
+    "ref": "legacy-method-tune-s0-preflight",
+    "tool_verdict": false,
+    "missing_in_new": [],
+    "extra_in_new": [],
+    "max_abs_prob_diff": 0.011772285574935593,
+    "worst_case": "V2-gA-information-C3-p3_7-w1-n1",
+    "regret_new": 0.4015011895074916,
+    "regret_old": 0.4024247915509058,
+    "regret_diff": 0.00092360204341424,
+    "planted_all_ok": false,
+    "letter_mass_ok": true,
+    "tolerances": {
+     "max_abs_prob": 0.001,
+     "max_abs_regret": 0.005
+    },
+    "readout_parity": false
+   }
+  },
+  {
+   "arm": "gen_method_original_lr1e-04_s1",
+   "record": "runs/haggling/gemma2_9b/lora-tune-s1-20261128T033349266228Z.json",
+   "gpu_seconds": 94.33934998512268,
+   "planted": {
+    "planted-below": {
+     "ok": true,
+     "mass_on_expected": 0.9970186846305717,
+     "top_option": 1
+    },
+    "planted-nocost": {
+     "ok": false,
+     "mass_on_expected": 0.026257993956843393,
+     "top_option": 1
+    },
+    "planted-atabove": {
+     "ok": true,
+     "mass_on_expected": 0.9925947905751917,
+     "top_option": 1
+    },
+    "planted-high": {
+     "ok": false,
+     "mass_on_expected": 0.1467652339023395,
+     "top_option": 1
+    }
+   },
+   "A40": {
+    "ref": "A40_probs.json:gen_method_original_lr1e-04_s1",
+    "tool_verdict": false,
+    "missing_in_new": [],
+    "extra_in_new": [],
+    "max_abs_prob_diff": 3.3306690738754696e-16,
+    "worst_case": "V4-gA-neutral-p2_6-w0-n1",
+    "regret_new": 0.36600397139606183,
+    "regret_old": 0.36600397139606183,
+    "regret_diff": 0.0,
+    "planted_all_ok": false,
+    "letter_mass_ok": true,
+    "tolerances": {
+     "max_abs_prob": 0.001,
+     "max_abs_regret": 0.005
+    },
+    "readout_parity": true
+   },
+   "A10G": {
+    "ref": "legacy-method-tune-s1-preflight",
+    "tool_verdict": false,
+    "missing_in_new": [],
+    "extra_in_new": [],
+    "max_abs_prob_diff": 0.02351294502369125,
+    "worst_case": "V2-gA-information-C3-p3_7-w1-n0",
+    "regret_new": 0.36600397139606183,
+    "regret_old": 0.3665399070092194,
+    "regret_diff": 0.0005359356131575677,
+    "planted_all_ok": false,
+    "letter_mass_ok": true,
+    "tolerances": {
+     "max_abs_prob": 0.001,
+     "max_abs_regret": 0.005
+    },
+    "readout_parity": false
+   }
+  },
+  {
+   "arm": "gen_method_original_lr1e-04_s2",
+   "record": "runs/haggling/gemma2_9b/lora-tune-s2-20261128T033531742156Z.json",
+   "gpu_seconds": 94.22002243995667,
+   "planted": {
+    "planted-below": {
+     "ok": true,
+     "mass_on_expected": 0.9831571510451498,
+     "top_option": 1
+    },
+    "planted-nocost": {
+     "ok": false,
+     "mass_on_expected": 0.1480350927324319,
+     "top_option": 1
+    },
+    "planted-atabove": {
+     "ok": true,
+     "mass_on_expected": 0.9755526759507243,
+     "top_option": 1
+    },
+    "planted-high": {
+     "ok": false,
+     "mass_on_expected": 0.16174000369713135,
+     "top_option": 1
+    }
+   },
+   "A40": {
+    "ref": "A40_probs.json:gen_method_original_lr1e-04_s2",
+    "tool_verdict": false,
+    "missing_in_new": [],
+    "extra_in_new": [],
+    "max_abs_prob_diff": 2.220446049250313e-16,
+    "worst_case": "V3-gC-information-C3-p2_10-w1-n0",
+    "regret_new": 0.3486738993072163,
+    "regret_old": 0.34867389930721643,
+    "regret_diff": 1.1102230246251565e-16,
+    "planted_all_ok": false,
+    "letter_mass_ok": true,
+    "tolerances": {
+     "max_abs_prob": 0.001,
+     "max_abs_regret": 0.005
+    },
+    "readout_parity": true
+   },
+   "A10G": {
+    "ref": "legacy-method-tune-s2-preflight",
+    "tool_verdict": false,
+    "missing_in_new": [],
+    "extra_in_new": [],
+    "max_abs_prob_diff": 0.022629120206224873,
+    "worst_case": "V6-gA-information-C5-p3_7-w1-n1",
+    "regret_new": 0.3486738993072163,
+    "regret_old": 0.3496559915180672,
+    "regret_diff": 0.0009820922108508823,
+    "planted_all_ok": false,
+    "letter_mass_ok": true,
+    "tolerances": {
+     "max_abs_prob": 0.001,
+     "max_abs_regret": 0.005
+    },
+    "readout_parity": false
+   }
+  }
+ ],
+ "readout_parity_all_A40": true,
+ "git_commit_filter": "2ddefb8b8ff2d6a814bd3777c926dce52c40edf5"
+}

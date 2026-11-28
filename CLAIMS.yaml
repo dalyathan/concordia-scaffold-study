@@ -105,9 +105,9 @@ claims:
     file: LLAMA_RESULTS.md
     text: "(mass on the expected option 0.40, 0.13 and 0.36 for seeds 0-2, against a 0.9 bar)"
     numbers:
-      - {shown: "0.40", evidence: {kind: file_value, path: demo_out/llama_report.json, sha256: a9143fa8090ba2b98dacb02245d57cc0316c66f9d29d8e7b8ca9a4a02195eb17, key: "R3_planted_mass.0.planted-nocost"}}
-      - {shown: "0.13", evidence: {kind: file_value, path: demo_out/llama_report.json, sha256: a9143fa8090ba2b98dacb02245d57cc0316c66f9d29d8e7b8ca9a4a02195eb17, key: "R3_planted_mass.1.planted-nocost"}}
-      - {shown: "0.36", evidence: {kind: file_value, path: demo_out/llama_report.json, sha256: a9143fa8090ba2b98dacb02245d57cc0316c66f9d29d8e7b8ca9a4a02195eb17, key: "R3_planted_mass.2.planted-nocost"}}
+      - {shown: "0.40", evidence: {kind: file_value, path: demo_out/llama_report.json, sha256: b7dc1607333a1a07b95ded9dd83e2e2eed63a159e9027c18427c46a11929ab68, key: "R3_planted_mass.0.planted-nocost"}}
+      - {shown: "0.13", evidence: {kind: file_value, path: demo_out/llama_report.json, sha256: b7dc1607333a1a07b95ded9dd83e2e2eed63a159e9027c18427c46a11929ab68, key: "R3_planted_mass.1.planted-nocost"}}
+      - {shown: "0.36", evidence: {kind: file_value, path: demo_out/llama_report.json, sha256: b7dc1607333a1a07b95ded9dd83e2e2eed63a159e9027c18427c46a11929ab68, key: "R3_planted_mass.2.planted-nocost"}}
       - {shown: "0", evidence: {kind: definition, reason: "seed label"}}
       - {shown: "2", evidence: {kind: definition, reason: "seed label"}}
       - {shown: "0.9", evidence: {kind: definition, reason: "planted pass bar PLANTED_MIN_MASS in harness/evaluate.py"}}
@@ -115,8 +115,8 @@ claims:
     file: LLAMA_RESULTS.md
     text: "agreement is 0.95, 0.90 and 0.95 on the same prompts"
     numbers:
-      - {shown: "0.95", evidence: {kind: file_value, path: demo_out/llama_report.json, sha256: a9143fa8090ba2b98dacb02245d57cc0316c66f9d29d8e7b8ca9a4a02195eb17, key: "freegen_adapter/llama31_8b_claude_examples_n100_lr1e-04_s0.agreement_on_parsed"}}
-      - {shown: "0.90", evidence: {kind: file_value, path: demo_out/llama_report.json, sha256: a9143fa8090ba2b98dacb02245d57cc0316c66f9d29d8e7b8ca9a4a02195eb17, key: "freegen_adapter/llama31_8b_claude_examples_n100_lr1e-04_s1.agreement_on_parsed"}}
+      - {shown: "0.95", evidence: {kind: file_value, path: demo_out/llama_report.json, sha256: b7dc1607333a1a07b95ded9dd83e2e2eed63a159e9027c18427c46a11929ab68, key: "freegen_adapter/llama31_8b_claude_examples_n100_lr1e-04_s0.agreement_on_parsed"}}
+      - {shown: "0.90", evidence: {kind: file_value, path: demo_out/llama_report.json, sha256: b7dc1607333a1a07b95ded9dd83e2e2eed63a159e9027c18427c46a11929ab68, key: "freegen_adapter/llama31_8b_claude_examples_n100_lr1e-04_s1.agreement_on_parsed"}}
   - id: llama-readout-limitation
     file: LLAMA_RESULTS.md
     text: "agrees with its own free answer on about half the probe prompts"
@@ -124,8 +124,8 @@ claims:
     numbers: []
   - id: llama-gemma-planted-nocost
     file: LLAMA_RESULTS.md
-    text: "fail the same no-cost case (mass 0.20, 0.30 and 0.56)"
+    text: "fail the same no-cost case (mass 0.20, 0.29 and 0.57)"
     numbers:
-      - {shown: "0.20", evidence: {kind: file_value, path: demo_out/llama_report.json, sha256: a9143fa8090ba2b98dacb02245d57cc0316c66f9d29d8e7b8ca9a4a02195eb17, key: "gemma_planted_nocost_mass.0"}}
-      - {shown: "0.30", evidence: {kind: file_value, path: demo_out/llama_report.json, sha256: a9143fa8090ba2b98dacb02245d57cc0316c66f9d29d8e7b8ca9a4a02195eb17, key: "gemma_planted_nocost_mass.1"}}
-      - {shown: "0.56", evidence: {kind: file_value, path: demo_out/llama_report.json, sha256: a9143fa8090ba2b98dacb02245d57cc0316c66f9d29d8e7b8ca9a4a02195eb17, key: "gemma_planted_nocost_mass.2"}}
+      - {shown: "0.20", evidence: {kind: file_value, path: demo_out/llama_report.json, sha256: b7dc1607333a1a07b95ded9dd83e2e2eed63a159e9027c18427c46a11929ab68, key: "gemma_planted_nocost_mass.0"}}
+      - {shown: "0.29", evidence: {kind: file_value, path: demo_out/llama_report.json, sha256: b7dc1607333a1a07b95ded9dd83e2e2eed63a159e9027c18427c46a11929ab68, key: "gemma_planted_nocost_mass.1"}}
+      - {shown: "0.57", evidence: {kind: file_value, path: demo_out/llama_report.json, sha256: b7dc1607333a1a07b95ded9dd83e2e2eed63a159e9027c18427c46a11929ab68, key: "gemma_planted_nocost_mass.2"}}
