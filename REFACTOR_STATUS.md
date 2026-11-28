@@ -35,7 +35,19 @@ README "Results at a glance" (15 numbers): **10 reproduce, 5 unbacked, 0 differ.
 
 ## For the GPU machine (written, not run)
 
-**Owner decision 2026-11-27 (branch `llama`): the Gemma parity check below (items 1-2) is SKIPPED for now.** Kept ready; run it with:
+**Parity run 2026-11-28 (branch `llama`, owner request; A40; scripts/gemma_parity.py, demo_out/gemma_parity.json, diagnostic scripts/gemma_parity_diag.py, demo_out/gemma_parity_diag.json; 0.27 GPU-h in the records + 4 min diagnostic): FAILED the frozen per-case tolerance; cause located.**
+
+| arm (tune, 84 cases) | max abs dp vs A40 reference | mean soft-regret diff vs A40 | max abs dp vs A10G original | mean soft-regret diff vs A10G | planted (harness) |
+| --- | --- | --- | --- | --- | --- |
+| plain | 1.44e-2 | 0.0007 | 5.96e-2 | 0.0028 | 1/4 |
+| examples (gen_claude_examples_lr1e-04) s0 / s1 / s2 | 1.16e-2 / 1.06e-2 / 1.34e-2 | 0.0001 / 0.0004 / 0.0003 | 5.86e-2 / 1.91e-2 / 2.32e-2 | 0.0001 / 0.0005 / 0.0006 | 3/4 each (no-cost fails: mass 0.20 / 0.30 / 0.56) |
+| teacher (gen_teacher_lr1e-04) s0 / s1 / s2 | 1.70e-2 / 1.44e-2 / 1.49e-2 | 0.0005 / 0.0008 / 0.0004 | 2.11e-2 / 2.35e-2 / 2.99e-2 | 0.0017 / 0.0009 / 0.0004 | 2/4 each |
+| method (gen_method_original_lr1e-04) s0 / s1 / s2 | 8.42e-3 / 8.14e-3 / 1.14e-2 | 0.0001 / 0.0008 / 0.0007 | 1.57e-2 / 2.84e-2 / 2.19e-2 | 0.0010 / 0.0003 / 0.0003 | 2/4 each |
+| steering | not testable: no stored per-case steering reference on the generated tune cells (the stored steering results are on 12 original-dataset cases) | | | | |
+
+Tolerances (frozen in tools/parity_check.py): per case 1e-3, mean regret 0.005. Every arm passes the mean-regret tolerance against both references and fails the per-case one against both. A40 references: the imported legacy-gemma-*-a40 records (plain, examples) and demo_out/hw_parity/A40_probs.json (teacher, method). **Where it fails:** the last readout step of `harness/solvers/hf.py` (`Backend.next_letter_logprobs`). Prompts are byte-identical to the stored code's (420/420, no trimming). On the same loaded model, reading the letter distribution the stored code's way (lm_head on the last hidden state, then `.float()`, then the soft-cap tanh(x/30)*30 in float32) reproduces the stored A40 plain probabilities to 9.9e-9 on all 84 cases; the harness's `model(input_ids).logits` (transformers 4.44.2 Gemma2ForCausalLM: lm_head over all positions and the final soft-cap in bf16, cast to float afterwards) gives the 1.4e-2. The fix would be a Gemma-aware readout (last-position lm_head, float32 soft-cap) in `next_letter_logprobs`, then a parity rerun; it was not made, by the owner's instruction to stop on failure. Llama 3.1 and Qwen 2.5 have no final soft-cap, so the bf16 soft-cap step does not exist for them; the lm_head-over-all-positions part could still change their last bits (not checked). Until a rerun passes, harness HF numbers carry the limitation stated in LLAMA_RESULTS.md.
+
+The commands (kept):
 
 ```
 HF_HUB_OFFLINE=1 CUBLAS_WORKSPACE_CONFIG=:4096:8 HARNESS_PROVIDER=runpod HARNESS_GPU_USD_PER_HOUR=0.60 \
@@ -67,7 +79,7 @@ Reviews: `reviews/2026-11-23_G2_refactor_{sonnet,opus}.md`. Triage table: end of
 | # | Item | State |
 | --- | --- | --- |
 | 2 | Scorer protection outside the agent's write access | **Mechanism built, owner step open.** Protected set widened (evaluate.py, task.py, recompute.py, check_claims.py, lock_protected.py); the newest registration per path wins; a locked-split look needs `HARNESS_PIN_REF` and every protected file must equal its content at that git tag; CI workflow `.github/workflows/protected.yml` written, not run. **Owner:** `git tag scorer-pin-1 <reviewed commit> && git push origin scorer-pin-1`, protect `scorer-pin-*` tags in the repo settings, and set `HARNESS_PIN_REF=scorer-pin-1` on the GPU box. Until the tag exists, locked looks are refused |
-| 3 | GPU readout parity | **Script and frozen tolerances done; not run (GPU busy).** `tools/parity_check.py`; commands in its docstring |
+| 3 | GPU readout parity | **Run 2026-11-28 on the A40: FAILED the per-case tolerance (max 1.7e-2 vs 1e-3) for plain and 9 adapters; mean regret within 0.001.** Cause: the harness reads Gemma 2 logits after a bf16 final soft-cap; the stored code soft-caps in float32 (reproduced to 1e-8). See "For the GPU machine" above |
 | 4 | Five unbacked README numbers | **Done**: `check_claims.py --strict` passes (15 numbers, 0 unbacked) |
 | 5 | Old fixed-cell test look per case | **Done**: 14 records reproduce the stored arm regrets exactly |
 | 6 | Revision pins, gated checks | **Mostly done**: pins in all 5 configs; Gemma 9B, Gemma 2B, Mistral, Qwen checked. **Llama 3.1 8B not checked** (access to the gated repo not granted to the token's account) |
