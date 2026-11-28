@@ -2,6 +2,7 @@
 
 - Follow REVIEW_GATES.md: blind reviews at gates G1 (before a big run or new method), G2 (before a conclusion) and G3 (before the test set): at G1 Sonnet alone, unless the step uses more than 3 GPU hours, then Sonnet + Opus; at G2 and G3 always Sonnet + Opus. Fable is no longer used. This holds even when a message says "be economical" or "no review rounds".
 - Never use name variants 1-14 for the demo, never import agent_py_files, and do not edit PROTOCOL.md unless a message explicitly asks.
+- Before adding a model or starting a new experiment, read and follow NEW_MODEL_RULES.md (tokens and storage first, one GPU type, readout rule and predictions before data, full control set, coverage check, pinned inputs, never edit files frozen by an earlier look, tests write only to scratch folders). Direct weight edits also follow WEIGHT_EDITING_RULES.md.
 - Interventions run on build and tuning cases only. Test cases need G3 and an explicit go from the owner.
 - Do not ask questions in unattended runs: log choices in DEMO_STATUS.md, commit and push after each step.
 - Keep the problem tree in README.md ("The problem tree and what is solved") current. When a step finishes, update the status of every node it touches: ✅ solved or answered, 🟡 partly, 🔄 running, ❌ open. A node is marked ✅ only after its G2 verdict (or a locked test look, where one applies) is written; give the evidence in a few words and the date. Add a dated one-paragraph entry to the README's "History" section for each finished experiment, dead ends included. Commit the README with the step.
