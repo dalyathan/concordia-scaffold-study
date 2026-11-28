@@ -12,8 +12,12 @@ import glob, hashlib, json, os, subprocess, sys, tempfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
-REPO, PREFIX = "dalyathan/concordia-scaffold-artifacts", "llama/"
-MANIFEST = os.path.join(ROOT, "llama_artifacts_manifest.json")
+REPO = "dalyathan/concordia-scaffold-artifacts"
+# --model qwen25_7b: the same backup for Qwen (prefix qwen/, qwen_artifacts_manifest.json, its adapters, logs and records). Default: Llama.
+MODEL = sys.argv[sys.argv.index("--model") + 1] if "--model" in sys.argv else "llama31_8b"
+TAG = {"llama31_8b": "llama", "qwen25_7b": "qwen"}[MODEL]
+PREFIX = TAG + "/"
+MANIFEST = os.path.join(ROOT, f"{TAG}_artifacts_manifest.json")
 
 
 def sha(p):
@@ -31,10 +35,11 @@ def untracked(paths):
 
 
 def collect():
-  files = sorted(os.path.relpath(p, ROOT) for p in glob.glob(os.path.join(ROOT, "demo_out", "adapters_harness", "**", "*"), recursive=True) if os.path.isfile(p))
-  files += untracked(sorted(os.path.relpath(p, ROOT) for p in glob.glob(os.path.join(ROOT, "logs", "llama_*")) if os.path.isfile(p)))
-  files += untracked(sorted(os.path.relpath(p, ROOT) for p in glob.glob(os.path.join(ROOT, "runs", "haggling", "llama31_8b", "*.json"))))
-  files += untracked(sorted(os.path.relpath(p, ROOT) for p in glob.glob(os.path.join(ROOT, "demo_out", "llama", "*")) if os.path.isfile(p)))
+  files = sorted(os.path.relpath(p, ROOT) for p in glob.glob(os.path.join(ROOT, "demo_out", "adapters_harness", MODEL + "_*", "**", "*"), recursive=True) if os.path.isfile(p))
+  logs = glob.glob(os.path.join(ROOT, "logs", TAG + "_*")) + glob.glob(os.path.join(ROOT, "logs", MODEL + "_*"))
+  files += untracked(sorted(os.path.relpath(p, ROOT) for p in logs if os.path.isfile(p)))
+  files += untracked(sorted(os.path.relpath(p, ROOT) for p in glob.glob(os.path.join(ROOT, "runs", "haggling", MODEL, "*.json"))))
+  files += untracked(sorted(os.path.relpath(p, ROOT) for p in glob.glob(os.path.join(ROOT, "demo_out", TAG, "*")) if os.path.isfile(p)))
   return sorted(set(files))
 
 
@@ -44,14 +49,14 @@ def main():
   api = HfApi()
   files = collect()
   entries = [{"repo_path": PREFIX + f, "local_path": f, "bytes": os.path.getsize(os.path.join(ROOT, f)), "sha256": sha(os.path.join(ROOT, f))} for f in files]
-  man = {"repo": REPO, "prefix": PREFIX, "branch": "llama", "n_files": len(entries), "total_bytes": sum(e["bytes"] for e in entries), "files": entries}
+  man = {"repo": REPO, "prefix": PREFIX, "branch": TAG, "model": MODEL, "n_files": len(entries), "total_bytes": sum(e["bytes"] for e in entries), "files": entries}
   json.dump(man, open(MANIFEST, "w"), indent=1)
   ops = [CommitOperationAdd(path_in_repo=e["repo_path"], path_or_fileobj=os.path.join(ROOT, e["local_path"])) for e in entries]
   ops.append(CommitOperationAdd(path_in_repo=PREFIX + "llama_artifacts_manifest.json", path_or_fileobj=MANIFEST))
-  c = api.create_commit(repo_id=REPO, repo_type="model", operations=ops, commit_message=f"llama: {len(entries)} artifacts (adapters_harness, logs) from branch llama")
+  c = api.create_commit(repo_id=REPO, repo_type="model", operations=ops, commit_message=f"{TAG}: {len(entries)} artifacts (adapters_harness, logs) from branch {TAG}")
   print(f"uploaded {len(entries)} files + manifest, {man['total_bytes']} bytes; hub commit {c.oid}", flush=True)
 
-  tmp = tempfile.mkdtemp(prefix="llama_verify_")
+  tmp = tempfile.mkdtemp(prefix=TAG + "_verify_")
   snapshot_download(REPO, repo_type="model", revision=c.oid, allow_patterns=[PREFIX + "*"], local_dir=tmp)
   matched, mismatched, missing = [], [], []
   for e in entries:
@@ -64,7 +69,7 @@ def main():
       mismatched.append(e["repo_path"])
   # run-record adapter hashes against the downloaded copies
   rec_ok, rec_bad, rec_missing = 0, [], []
-  for rp in sorted(glob.glob(os.path.join(ROOT, "runs", "haggling", "llama31_8b", "lora_*.json"))):
+  for rp in sorted(glob.glob(os.path.join(ROOT, "runs", "haggling", MODEL, "lora_*.json"))):
     sc = json.load(open(rp)).get("solver_config") or {}
     d = os.path.join(tmp, PREFIX + sc["adapter_dir"])
     w = os.path.join(d, "adapter_model.safetensors")

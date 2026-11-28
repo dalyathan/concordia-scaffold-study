@@ -270,3 +270,4 @@ Q12. Reviews: reviews/2026-11-28_G2_qwen-results_{sonnet,opus}.md. Packet /tmp/g
 | 11 | Freeze lists for a test look; test2 splits not in the harness (both) | **Deferred** to QWEN_TEST_PLAN.md |
 
 The new checks are a Qwen-only report section ("Checks added after the Qwen G2 review"); tools/llama_report.py --check still reports the Llama output byte-identical. Conclusions written in QWEN_RESULTS.md after this table.
+Q13. **Step 7 analogue: QWEN_TEST_PLAN.md drafted** (one look at test2_same and test2_newkey; selected adapters with weight hashes, no retraining, `_last` never scored; harness port of test2 as locked splits and a one-look-per-(model, split, arm) guard to be written; T1/T2 judged without the planted condition; conclusion wording fixed in advance; a joint G3 with any Llama look). Nothing on test was opened or run.
