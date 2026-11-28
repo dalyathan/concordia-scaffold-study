@@ -50,7 +50,8 @@ PINNED = {  # sha256 of the input files and of the label sets, as used and recor
 }
 ARMS = ("claude_examples", "cheapest_label", "shuffled_claude")
 TYPES = ("below", "at_or_above", "no_cost")
-SCHEDULE = {10: (2, 5, 10, 20, 30, 40, 50), 25: (2, 4, 8, 12, 16, 20), 50: (1, 2, 4, 6, 8, 10), 100: (1, 2, 3, 4, 5)}
+SCHEDULE = {10: (2, 5, 10, 20, 30, 40, 50), 25: (2, 4, 8, 12, 16, 20), 50: (1, 2, 4, 6, 8, 10), 100: (1, 2, 3, 4, 5),
+            150: (1, 2, 3, 4, 5)}   # 150: the targeted experiment (100 + 50 extra cells, 750 steps; TARGETED_PLAN.md)
 ADAPTERS = os.path.join(ROOT, "demo_out", "adapters_harness")
 
 
@@ -112,6 +113,29 @@ class _LiveAdapter(_HFSolver):
             "adapter_weights_sha256": _sha_file(sd) if os.path.exists(sd) else None, "trained_in_process": True, **self.info}
 
 
+def add_extra_cells(a, task, tspec, train, by_id, labels, claude, orders_of):
+  """Targeted experiment: append the 50 pool3 cells of draw a.extra_key (its labels and fixed orders) to the 100 training cells, in place.
+  Checks: draws and labels files unedited (their inner sha256), 50 distinct pool3 cells outside select3 and the 100, 150 cells in all."""
+  dr, lb = json.load(open(a.extra_draws)), json.load(open(a.extra_labels))
+  assert _sha_obj(dr["draws"]) == dr["draws_sha256"] and _sha_obj(lb["labels"]) == lb["labels_sha256"], "draws or labels file edited"
+  ecells = dr["draws"][a.extra_key]
+  pool = {c["cell"]: c for c in task.cases("pool3")}
+  sel3 = {c["cell"] for c in task.cases("select3")}
+  assert len(ecells) == 50 == len(set(ecells)) and set(ecells) <= set(pool) and not set(ecells) & sel3, "extra cells must be 50 pool3 cells outside select3"
+  assert not set(ecells) & set(tspec)
+  for cell in ecells:
+    case = pool[cell]
+    by_id[case["cid"]] = case
+    labels[case["cid"]] = lb["labels"][cell]
+    claude[case["cid"]] = lb["labels"][cell]
+    orders_of[cell] = dr["orders"][cell]
+    train.append(case)
+  assert len(train) == 150
+  return {"extra_key": a.extra_key, "extra_cells": ecells, "draws_file_sha256": _sha_file(a.extra_draws), "draws_sha256": dr["draws_sha256"],
+          "rule_sha256": dr["rule_sha256"], "orders_sha256": dr["orders_sha256"], "extra_labels_file_sha256": _sha_file(a.extra_labels),
+          "extra_labels_sha256": lb["labels_sha256"], "selection_split": a.select}
+
+
 def main(argv=None):
   ap = argparse.ArgumentParser()
   ap.add_argument("--model", required=True); ap.add_argument("--arm", required=True, choices=ARMS)
@@ -121,19 +145,39 @@ def main(argv=None):
   ap.add_argument("--plain-train-record"); ap.add_argument("--runs", default=records.RUNS)
   ap.add_argument("--device", default="cuda", help="cpu only for the tiny-model smoke test (tests/harness/test_train_lora_smoke.py)")
   ap.add_argument("--spec-path", help="smoke test: a model config file outside harness/models")
+  # targeted experiment (TARGETED_PLAN.md): the 100 cells plus 50 extra pool3 cells of one arm and seed, early stopping on select3
+  ap.add_argument("--extra-draws", help="demo/gen/targeted_draws_<model>.json"); ap.add_argument("--extra-key", help="T_s0 ... N_s2")
+  ap.add_argument("--extra-labels", help="demo/gen/targeted_labels_<model>.json"); ap.add_argument("--select", default="select_B", choices=("select_B", "select3"))
+  ap.add_argument("--plain-select-record", help="plain model's record on select3 (the epoch-0 check when --select select3)")
   a = ap.parse_args(argv)
-  if not a.limit and not a.plain_train_record:
+  extra = bool(a.extra_draws)
+  if extra and not (a.extra_key and a.extra_labels and a.select == "select3" and a.n_cells == 150 and a.max_steps == 750):
+    ap.error("extra cells need --extra-key, --extra-labels, --select select3, --n-cells 150 and --max-steps 750 (TARGETED_PLAN.md)")
+  if extra and a.arm != "claude_examples":
+    ap.error("the targeted arms train on Claude's labels only (--arm claude_examples)")
+  if extra and int(a.extra_key.rsplit("_s", 1)[1]) != a.seed:
+    ap.error(f"--extra-key {a.extra_key} is the draw of another seed than --seed {a.seed}")
+  if not extra and (a.n_cells == 150 or a.select != "select_B"):
+    ap.error("--n-cells 150 and --select select3 are only for the targeted arms (--extra-draws)")
+  if not a.limit and a.select == "select_B" and not a.plain_train_record:
     ap.error("--plain-train-record is required (the epoch-0 check is a frozen stop rule); only --limit smoke runs may omit it")
+  if not a.limit and a.select == "select3" and not a.plain_select_record:
+    ap.error("--plain-select-record is required with --select select3 (the epoch-0 check)")
   import numpy as np
   import torch
   t_start = time.time()
   spec = modelspec.load(a.spec_path or a.model)
-  task = get_task("haggling")
+  if extra:
+    from harness.tasks.haggling3 import Haggling3Task
+    task = Haggling3Task()            # same task, prompts and payoffs; adds pool3 / select3 (test2-frozen files untouched)
+  else:
+    task = get_task("haggling")
   _, allcases = task.build_all()
   by_id = {c["cid"]: c for c in allcases}
   tspec = json.load(open(TRAIN_CELLS))
-  subset = set(json.load(open(CURVE))["subsets"][str(a.n_cells)]) if a.n_cells < 100 else set(tspec)
-  assert subset <= set(tspec) and len(subset) == a.n_cells
+  base_n = 100 if extra else a.n_cells
+  subset = set(json.load(open(CURVE))["subsets"][str(base_n)]) if base_n < 100 else set(tspec)
+  assert subset <= set(tspec) and len(subset) == base_n
   full_ids = [f"{k}-n{v['name_variant']}" for k, v in tspec.items()]
   labels, claude = build_labels(a.arm, by_id, full_ids)
   train = [by_id[f"{k}-n{v['name_variant']}"] for k, v in tspec.items() if k in subset]
@@ -142,10 +186,15 @@ def main(argv=None):
   assert all(c["split"] == "train" for c in train)
   sel_cells = {c["cell"] for c in task.cases("select_B")}
   assert not sel_cells & set(tspec), "selection set overlaps the training cells"
+  orders_of = {c["cell"]: tspec[c["cell"]]["orders"] for c in train}
+  extra_info = {}
+  if extra:
+    extra_info = add_extra_cells(a, task, tspec, train, by_id, labels, claude, orders_of)
   epochs = 5 if a.n_cells == 100 else math.ceil(a.max_steps / a.n_cells)
   eval_epochs = set(SCHEDULE[a.n_cells])
   assert max(eval_epochs) == epochs
-  rid = f"{spec.name}_{a.arm}_n{a.n_cells}_lr{a.lr:.0e}_s{a.seed}" + ("_smoke" if a.limit else "")
+  tag = ("_" + a.extra_key.split("_s")[0]) if extra else ""          # T / R / N: arms never share a run id or solver name
+  rid = f"{spec.name}_{a.arm}_n{a.n_cells}{tag}_lr{a.lr:.0e}_s{a.seed}" + ("_smoke" if a.limit else "")
   save_dir = os.path.join(ADAPTERS, rid)
   if os.path.exists(save_dir) and not a.limit:
     raise SystemExit(f"{save_dir} exists; adapters are never overwritten")
@@ -153,7 +202,7 @@ def main(argv=None):
   sub_ids = [c["cid"] for c in train]
   label_info = {"arm": a.arm, "labels_sha256": _sha_obj(labels), "n_cells": a.n_cells, "lr": a.lr, "seed": a.seed, "rank": a.rank,
                 "label_share_cheapest_subset": float(np.mean([labels[c] == 0 for c in sub_ids])),
-                "label_agreement_with_claude_subset": float(np.mean([labels[c] == claude[c] for c in sub_ids]))}
+                "label_agreement_with_claude_subset": float(np.mean([labels[c] == claude[c] for c in sub_ids])), **extra_info}
 
   b = Backend(spec, device=a.device)
   model, tok = b.model, b.tok
@@ -161,7 +210,7 @@ def main(argv=None):
   orders = list(task.orders(train[0]))
   examples = []
   for c in train:
-    for oi in tspec[c["cell"]]["orders"]:
+    for oi in orders_of[c["cell"]]:
       text, l2o = task.render(c, orders[oi])
       prompt = b.render_prompt(text)
       ids = tok(prompt, return_tensors="pt", add_special_tokens=False).input_ids[0]
@@ -205,19 +254,20 @@ def main(argv=None):
   print(f"{rid}: {len(train)} cases, {len(examples)} examples, {n_train} trainable parameters; path check {worst:.1e} nats", flush=True)
 
   info = {"training": label_info}
-  live = _LiveAdapter(b, save_dir, info, f"{a.arm}_n{a.n_cells}_lr{a.lr:.0e}")
+  live = _LiveAdapter(b, save_dir, info, f"{a.arm}_n{a.n_cells}{tag}_lr{a.lr:.0e}")
 
   def score_select():
     model.eval()
-    r = evaluate(task, live, "select_B", a.seed, spec, write=False, planted=False)
+    r = evaluate(task, live, a.select, a.seed, spec, write=False, planted=False)
     model.train()
     probs = {x["cid"]: x["probs"] for x in r["cases"]}
     return r["summary"], r["letter_mass"]["mean"], probs
 
   history = []
   s0, m0, p0 = score_select()
-  if a.plain_train_record:
-    pr = {x["cid"]: x["probs"] for x in json.load(open(a.plain_train_record))["cases"]}
+  check_rec = a.plain_select_record if a.select == "select3" else a.plain_train_record
+  if check_rec:
+    pr = {x["cid"]: x["probs"] for x in json.load(open(check_rec))["cases"]}
     dev = max(abs(u - v) for cid, p in p0.items() for u, v in zip(p, pr[cid]))
     assert dev < 1e-3, f"epoch-0 select_B scoring differs from the plain train record by {dev}"
     info["training"]["epoch0_vs_plain_train_record_max_abs_prob"] = dev
@@ -272,7 +322,7 @@ def main(argv=None):
   if control:
     info_last = {"training": {**label_info, "version": "last epoch, no selection", "last_epoch": last_epoch, "early_stop_epoch": stopped_at,
                               "history": history, "train_cases": cids, "trainable_parameters": n_train}}
-    live_last = _LiveAdapter(b, save_dir + "_last", info_last, f"{a.arm}_n{a.n_cells}_lr{a.lr:.0e}_last")
+    live_last = _LiveAdapter(b, save_dir + "_last", info_last, f"{a.arm}_n{a.n_cells}{tag}_lr{a.lr:.0e}_last")
     model.eval()
     last_rec = evaluate(task, live_last, "tune", a.seed, spec, config={"run": rid + "_last", "training": info_last["training"]}, directory=a.runs,
                         write=not a.limit)
