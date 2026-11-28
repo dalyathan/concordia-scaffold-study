@@ -3,6 +3,8 @@
 
   python tools/llama_report.py            rewrites the generated part of LLAMA_RESULTS.md (between the markers) and demo_out/llama_report.json
   python tools/llama_report.py --check    exit 1 if either differs from what the records give
+  python tools/llama_report.py --model qwen25_7b [--check]   the same for Qwen: QWEN_RESULTS.md, demo_out/qwen_report.json, QWEN_PREDICTIONS.md
+    scoring, a three-model table (Gemma, Llama, Qwen). The Llama output is byte-identical to the pre-generalisation code (checked by --check).
 
 Every number in the generated part is computed here from the per-case rows of the records in runs/ (probabilities and payoffs; stored
 summaries are not used). Intervals: cluster bootstrap over (V, grid) groups, 10,000 resamples, numpy PCG64 seed 0, 95% percentile;
@@ -20,11 +22,23 @@ LIMITATION = ("harness readout parity with the stored Gemma scores passed on the
               "plain and nine stored adapters; DECISIONS.md L38-L39); the fix leaves every Llama record bit-identical")
 TYPES = ("below", "at_or_above", "no_cost")
 MODEL = "llama31_8b"
+NAME = "Llama"
+READOUT_DIR = os.path.join(ROOT, "demo_out", "llama")
 B = 10000
 ORDERS = [tuple((s + i) % 5 for i in range(5)) for s in range(5)]     # harness.tasks.haggling.orders()
 NOTES = ("method_original", "teacher", "neutral", "wrong_rule")
 NOTE_LABEL = {"method_original": "written rule (our method paragraph)", "teacher": "Claude's lesson (teacher paragraph)",
               "neutral": "neutral text (control)", "wrong_rule": "wrong rule (control)"}
+
+
+def configure(model):
+  """Point the report at another model (QWEN_PLAN.md); llama31_8b keeps every default."""
+  global MODEL, NAME, RESULTS, JSON_OUT, READOUT_DIR
+  if model == "llama31_8b":
+    return
+  MODEL, NAME = model, {"qwen25_7b": "Qwen"}[model]
+  RESULTS = os.path.join(ROOT, f"{NAME.upper()}_RESULTS.md"); JSON_OUT = os.path.join(ROOT, "demo_out", f"{NAME.lower()}_report.json")
+  READOUT_DIR = os.path.join(ROOT, "demo_out", NAME.lower())
 
 
 # ------------------------------------------------------------------ records
@@ -169,19 +183,30 @@ fci = lambda t: f"{t[0]:.3f} [{t[1]:.3f}, {t[2]:.3f}]"
 
 # ------------------------------------------------------------------ report
 def readout_checks(J):
-  d = os.path.join(ROOT, "demo_out", "llama")
-  out = ["## Readout checks (plain Llama; mass and agreement only, no regret)", "",
+  d = READOUT_DIR
+  out = [f"## Readout checks (plain {NAME}; mass and agreement only, no regret)", "",
          "| check | prompts | assistant prefix | mean mass on the answer letters | band / result |", "| --- | --- | --- | --- | --- |"]
   for f, lab in (("readout_probe.json", "probe, 20 tune cases x 5 orders"), ("probe_train_noprefix.json", "probe, 20 train cases outside training and select_B"),
                  ("probe_train_prefix_answer.json", "probe, same train cases")):
     if os.path.exists(os.path.join(d, f)):
       x = json.load(open(os.path.join(d, f)))
-      out.append(f"| {lab} | {x['n_prompts']} | {x.get('assistant_prefix')!r} | {x['mean_mass']['bare']:.3f} | {x['band']} |")
+      band = x["band"] if (MODEL == "llama31_8b" or "rule_pass" not in x) else ("rule PASS" if x["rule_pass"] else "rule FAIL")
+      out.append(f"| {lab} | {x['n_prompts']} | {x.get('assistant_prefix')!r} | {x['mean_mass']['bare']:.3f} | {band} |")
       J[f"readout/{f}"] = x["mean_mass"]["bare"]
   diag = []
   fg = os.path.join(d, "freegen_check.json")
   if os.path.exists(fg):
     x = json.load(open(fg)); dg = x.get("diagnostic", {})
+  if os.path.exists(fg) and "thresholds" not in x:     # descriptive check (QWEN_PLAN.md): no threshold
+    out.append(f"| free answer (greedy, no prefix, repetition penalty 1.0) vs prefixed first-token argmax, same train cases (descriptive) | {x['n_prompts']} | 'Answer: (' | - | "
+               f"parse rate {x['parse_rate']:.2f}; agreement {x['agreement_on_parsed']:.2f} (letter-parsed {x['agreement_on_letter_parsed']:.2f}, n {x['n_letter_parsed']}) |")
+    pr = os.path.join(d, "probe_train_prefix_answer.json")
+    if os.path.exists(pr):
+      y = json.load(open(pr))
+      out.append(f"| format-only rule fixed in advance: {y.get('rule')} | {y['n_prompts']} | 'Answer: (' | {y['mean_mass']['bare']:.3f} | "
+                 f"{'PASS' if y.get('rule_pass') else 'FAIL'} (per type {', '.join(f'{k} {v:.3f}' for k, v in y['bare_mass_by_type'].items())}; lowest prompt {y['bare_mass_min_prompt']:.3f}) |")
+    J["freegen"] = {k: x[k] for k in ("parse_rate", "agreement_on_parsed", "agreement_on_letter_parsed")}
+  elif os.path.exists(fg):
     out.append(f"| free answer (greedy, no prefix) vs prefixed first-token argmax, same train cases | {x['n_prompts']} | 'Answer: (' | - | "
                f"parse rate {x['parse_rate']:.2f}; agreement {x['agreement_on_parsed']:.2f} (frozen threshold {x['thresholds']['agree']}) -> "
                f"{'PASS' if x['pass'] else 'below the pre-registered threshold; reported limitation after the owner restated the check (post-hoc, DECISIONS.md L18)'} |")
@@ -195,11 +220,58 @@ def readout_checks(J):
     J["freegen"] = {k: x[k] for k in ("parse_rate", "agreement_on_parsed", "pass")} | {"diagnostic": dg}
   for f in sorted(glob.glob(os.path.join(d, "freegen_check_*.json"))):      # G2: the same check on trained adapters (descriptive, no threshold)
     x = json.load(open(f)); nm = os.path.basename(x["adapter"].rstrip("/"))
-    out.append(f"| same free-answer check with adapter {nm} (added after G2; descriptive) | {x['n_prompts']} | 'Answer: (' | - | "
+    out.append(f"| same free-answer check with adapter {nm} ({'added after G2; ' if MODEL == 'llama31_8b' else ''}descriptive) | {x['n_prompts']} | 'Answer: (' | - | "
                f"parse rate {x['parse_rate']:.2f}; agreement {x['agreement_on_parsed']:.2f} |")
     J[f"freegen_adapter/{nm}"] = {k: x[k] for k in ("parse_rate", "agreement_on_parsed")}
+    if "agreement_on_letter_parsed" in x and MODEL != "llama31_8b":
+      J[f"freegen_adapter/{nm}"]["agreement_on_letter_parsed"] = x["agreement_on_letter_parsed"]
   out += diag
   return out + [""]
+
+
+def three_model_table(arms, L, gem, J):
+  """Gemma (imported stored records; the harness reproduces the A40 column), Llama and this model (harness, A40) on the same tune cells."""
+  lr_l = json.load(open(os.path.join(ROOT, "demo_out", "llama_report.json")))["lr_choice"]["chosen"]
+  gm = lambda *names: (float(np.mean([Arm([gem[n]], n).mean() for n in names])) if all(n in gem for n in names) else None)
+  gs = lambda arm, seeds, gpu_: [f"legacy-gemma-{arm}-tune-s{s_}-{gpu_}" for s_ in seeds]
+  la = lambda solver, seed=None: (lambda a: a.mean() if a else None)(other_model_arm("llama31_8b", solver, seed))
+  me = lambda key: L[key].mean() if key in L else None
+  P, R_, C = arms.get(("plain", "tune")), arms.get(("baseline:stated_cost_rule", "tune")), arms.get(("baseline:cheapest", "tune"))
+  ll = lambda arm, n: f"lora:{arm}_n{n}_lr{lr_l:.0e}"
+  rows_ = [("plain", gm("legacy-plain-tune-s0"), gm("legacy-gemma-plain-tune-s0-a40"), la("plain"), P and P.mean()),
+           ("always-cheapest (no model)", C and C.mean(), None, C and C.mean(), C and C.mean()),
+           ("stated-cost rule (no model)", R_ and R_.mean(), None, R_ and R_.mean(), R_ and R_.mean())]
+  for n in NOTES:
+    a = arms.get((f"notes:{n}", "tune"))
+    rows_.append((NOTE_LABEL[n], gm(f"legacy-gemma-notes_{n}-tune-s0-a10g"), None, la(f"notes:{n}"), a and a.mean()))
+  rows_ += [("examples-100, 3-seed mean", gm(*gs("claude_examples_n100", (0, 1, 2), "a10g")), gm(*gs("claude_examples_n100", (0, 1, 2), "a40")), la(ll("claude_examples", 100)), me("ex100")),
+            ("examples-25, seed 0", gm(*gs("claude_examples_n25", (0,), "a10g")), gm(*gs("claude_examples_n25", (0,), "a40")), la(ll("claude_examples", 25), 0), me("examples-25")),
+            ("cheapest-label N=25", gm(*gs("cheapest_label_n25", (0,), "a10g")), gm(*gs("cheapest_label_n25", (0,), "a40")), la(ll("cheapest_label", 25)), me("cheapest-label N=25")),
+            ("cheapest-label N=100", gm(*gs("cheapest_label_n100", (0,), "a10g")), gm(*gs("cheapest_label_n100", (0,), "a40")), la(ll("cheapest_label", 100)), me("cheapest-label N=100")),
+            ("scrambled N=100", gm(*gs("shuffled_claude_n100", (0,), "a10g")), gm(*gs("shuffled_claude_n100", (0,), "a40")), la(ll("shuffled_claude", 100)), me("scrambled N=100"))]
+  U = arms.get(("uniform", "tune"))
+  out = [f"## Three models on the same 42 tune cells: Gemma 2 9B, Llama 3.1 8B, {NAME}", "",
+         f"Gemma: imported records of the pre-refactor code (A10G originals; A40 = rescore on the A40, which the harness reproduces to 3.3e-16 per case after the readout fix). "
+         f"Llama and {NAME}: harness, A40, at each model's chosen lr (Llama {lr_l:.0e}). Uniform guessing: {f3(U and U.mean())}. Code check: {LIMITATION}. "
+         f"The columns differ in model-specific framing: Gemma has no assistant prefix and folds the system sentence into the first user turn; Llama and {NAME} both read the letter after "
+         f"an \"Answer: (\" assistant prefix and get a real system message, and Llama's template adds a date header. All values are forced-choice letters.", "",
+         f"| arm | Gemma A10G | Gemma A40 | Llama A40 | {NAME} A40 |", "| --- | --- | --- | --- | --- |"]
+  for nm, g10, g40, lv, qv in rows_:
+    out.append(f"| {nm} | {f3(g10)} | {f3(g40)} | {f3(lv)} | {f3(qv)} |")
+    J[f"three_models/{nm}"] = {"gemma_a10g": g10, "gemma_a40": g40, "llama": lv, NAME.lower(): qv}
+  return out + [""]
+
+
+def other_model_arm(model, solver, seed=None):
+  """Mean tune soft regret of another model's harness records (three-model table); seed None = mean over all seeds."""
+  rs = [load(p) for p in sorted(glob.glob(os.path.join(ROOT, "runs", "haggling", model, "*-tune-*.json")))]
+  rs = [r for r in rs if r["solver"] == solver and r["split"] == "tune" and (seed is None or r["seed"] == seed)]
+  return Arm(rs, f"{model}:{solver}") if rs else None
+
+
+def llama_planted_nocost():
+  rs = [load(p) for p in sorted(glob.glob(os.path.join(ROOT, "runs", "haggling", "llama31_8b", "lora_claude_examples_n100_lr1e-04-tune-*.json")))]
+  return [x["planted_mass_on_expected"] for r in sorted(rs, key=lambda r: r["seed"]) for x in r["cases"] if x["cid"] == "planted-nocost"]
 
 
 def g2_checks(arms, gem, J):
@@ -224,7 +296,7 @@ def g2_checks(arms, gem, J):
   out += ["**Signed offer error** per type: the expected offer (probability-weighted price) minus the nearest payoff-optimal price, "
           "0 inside the optimal range; positive = offers too much. Mean over the tune cells.", "",
           "| arm | all | below | at or above | no cost | top letter share |", "| --- | --- | --- | --- | --- | --- |"]
-  rowsg = [("uniform", U)] + [(lab, arms.get((sv, "tune"))) for sv, lab in [("plain", "plain Llama")] + [(f"notes:{n}", NOTE_LABEL[n]) for n in NOTES]]
+  rowsg = [("uniform", U)] + [(lab, arms.get((sv, "tune"))) for sv, lab in [("plain", f"plain {NAME}")] + [(f"notes:{n}", NOTE_LABEL[n]) for n in NOTES]]
   if "legacy-plain-tune-s0" in gem:
     rowsg.append(("plain Gemma (imported record; confounded)", Arm([gem["legacy-plain-tune-s0"]], "gemma plain")))
   for lab, a in rowsg:
@@ -245,7 +317,7 @@ def build():
   # ---------------- references and step 4
   refs = {"oracle": "oracle", "uniform": "uniform", "baseline:cheapest": "always-cheapest", "baseline:stated_cost_rule": "stated-cost rule"}
   step4 = [("plain", "plain")] + [(f"notes:{n}", NOTE_LABEL[n]) for n in NOTES]
-  out += ["## Step 4: plain Llama, references and prompt arms", "",
+  out += [f"## Step 4: plain {NAME}, references and prompt arms", "",
           f"Train and tune cells only. One record per arm and split; soft regret in coins with 95% cluster-bootstrap intervals over (V, grid) groups. "
           f"Code check: {LIMITATION}.", ""]
   arms = {}
@@ -354,28 +426,31 @@ def build():
             f"(examples-100 soft {f3(st['soft_seen'])}); unseen tuples: {st['n_unseen']} (soft {f3(st['soft_unseen'])}). "
             "Tune differs from training mainly in prior, wording and names, so these numbers measure in-family fit, not generalisation.", ""]
   # ---------------- Gemma vs Llama
-  out += ["## Gemma 2 9B vs Llama 3.1 8B on the same 42 tune cells", "",
-          f"Gemma: imported records of the pre-refactor code (A10G originals; A40 = rescore of the same adapters on the A40). Llama: harness on the A40. "
-          f"Code check: {LIMITATION}; the harness reproduces the Gemma A40 column. The comparison is still confounded by model-specific framing (Llama has a system message and the assistant prefix \"Answer: (\"), attention and logits, and for the A10G column the GPU (LLAMA_PLAN.md, changes 1-4). The within-Llama contrasts above are the headline.", "",
-          "| arm | Gemma A10G | Gemma A40 | Llama A40 |", "| --- | --- | --- | --- |"]
-  gm = lambda *names: (float(np.mean([Arm([gem[n]], n).mean() for n in names])) if all(n in gem for n in names) else None)
-  gseeds = lambda arm, seeds, gpu_: [f"legacy-gemma-{arm}-tune-s{s}-{gpu_}" for s in seeds]
-  table = [("plain", gm("legacy-plain-tune-s0"), gm("legacy-gemma-plain-tune-s0-a40"), P),
-           ("always-cheapest", arms.get(("baseline:cheapest", "tune")) and arms[("baseline:cheapest", "tune")].mean(), None, arms.get(("baseline:cheapest", "tune"))),
-           ("stated-cost rule", R_ and R_.mean(), None, R_)]
-  table[1] = (table[1][0], table[1][1], None, table[1][3]); table[2] = (table[2][0], table[2][1], None, table[2][3])
-  for n in NOTES:
-    table.append((NOTE_LABEL[n], gm(f"legacy-gemma-notes_{n}-tune-s0-a10g"), None, arms.get((f"notes:{n}", "tune"))))
-  table += [("examples-100, 3-seed mean", gm(*gseeds("claude_examples_n100", (0, 1, 2), "a10g")), gm(*gseeds("claude_examples_n100", (0, 1, 2), "a40")), L.get("ex100")),
-            ("examples-25, seed 0", gm(*gseeds("claude_examples_n25", (0,), "a10g")), gm(*gseeds("claude_examples_n25", (0,), "a40")), L.get("examples-25")),
-            ("cheapest-label N=25", gm(*gseeds("cheapest_label_n25", (0,), "a10g")), gm(*gseeds("cheapest_label_n25", (0,), "a40")), L.get("cheapest-label N=25")),
-            ("cheapest-label N=100", gm(*gseeds("cheapest_label_n100", (0,), "a10g")), gm(*gseeds("cheapest_label_n100", (0,), "a40")), L.get("cheapest-label N=100")),
-            ("scrambled N=100", gm(*gseeds("shuffled_claude_n100", (0,), "a10g")), gm(*gseeds("shuffled_claude_n100", (0,), "a40")), L.get("scrambled N=100"))]
-  for nm, g10, g40, la in table:
-    lv = la.mean() if la is not None else None
-    out.append(f"| {nm} | {f3(g10)} | {f3(g40)} | {f3(lv)} |")
-    J[f"gemma_vs_llama/{nm}"] = {"gemma_a10g": g10, "gemma_a40": g40, "llama": lv}
-  out.append("")
+  if MODEL != "llama31_8b":
+    out += three_model_table(arms, L, gem, J)
+  else:
+    out += ["## Gemma 2 9B vs Llama 3.1 8B on the same 42 tune cells", "",
+            f"Gemma: imported records of the pre-refactor code (A10G originals; A40 = rescore of the same adapters on the A40). Llama: harness on the A40. "
+            f"Code check: {LIMITATION}; the harness reproduces the Gemma A40 column. The comparison is still confounded by model-specific framing (Llama has a system message and the assistant prefix \"Answer: (\"), attention and logits, and for the A10G column the GPU (LLAMA_PLAN.md, changes 1-4). The within-Llama contrasts above are the headline.", "",
+            "| arm | Gemma A10G | Gemma A40 | Llama A40 |", "| --- | --- | --- | --- |"]
+    gm = lambda *names: (float(np.mean([Arm([gem[n]], n).mean() for n in names])) if all(n in gem for n in names) else None)
+    gseeds = lambda arm, seeds, gpu_: [f"legacy-gemma-{arm}-tune-s{s}-{gpu_}" for s in seeds]
+    table = [("plain", gm("legacy-plain-tune-s0"), gm("legacy-gemma-plain-tune-s0-a40"), P),
+             ("always-cheapest", arms.get(("baseline:cheapest", "tune")) and arms[("baseline:cheapest", "tune")].mean(), None, arms.get(("baseline:cheapest", "tune"))),
+             ("stated-cost rule", R_ and R_.mean(), None, R_)]
+    table[1] = (table[1][0], table[1][1], None, table[1][3]); table[2] = (table[2][0], table[2][1], None, table[2][3])
+    for n in NOTES:
+      table.append((NOTE_LABEL[n], gm(f"legacy-gemma-notes_{n}-tune-s0-a10g"), None, arms.get((f"notes:{n}", "tune"))))
+    table += [("examples-100, 3-seed mean", gm(*gseeds("claude_examples_n100", (0, 1, 2), "a10g")), gm(*gseeds("claude_examples_n100", (0, 1, 2), "a40")), L.get("ex100")),
+              ("examples-25, seed 0", gm(*gseeds("claude_examples_n25", (0,), "a10g")), gm(*gseeds("claude_examples_n25", (0,), "a40")), L.get("examples-25")),
+              ("cheapest-label N=25", gm(*gseeds("cheapest_label_n25", (0,), "a10g")), gm(*gseeds("cheapest_label_n25", (0,), "a40")), L.get("cheapest-label N=25")),
+              ("cheapest-label N=100", gm(*gseeds("cheapest_label_n100", (0,), "a10g")), gm(*gseeds("cheapest_label_n100", (0,), "a40")), L.get("cheapest-label N=100")),
+              ("scrambled N=100", gm(*gseeds("shuffled_claude_n100", (0,), "a10g")), gm(*gseeds("shuffled_claude_n100", (0,), "a40")), L.get("scrambled N=100"))]
+    for nm, g10, g40, la in table:
+      lv = la.mean() if la is not None else None
+      out.append(f"| {nm} | {f3(g10)} | {f3(g40)} | {f3(lv)} |")
+      J[f"gemma_vs_llama/{nm}"] = {"gemma_a10g": g10, "gemma_a40": g40, "llama": lv}
+    out.append("")
   # ---------------- budget
   out += ["## GPU time and approximate cost (from the records)", "", "| record | GPU h | approx USD |", "| --- | --- | --- |"]
   tot_s = tot_u = 0.0
@@ -396,8 +471,10 @@ def build():
     pm = mass(P.recs)[0]; J["plain_tune_mass"] = pm
     gate = pm >= 0.9
     U_ = arms.get(("uniform", "tune")); du = diff(P, U_) if U_ else None
-    verdicts["R1"] = (("R1 criteria met; plain Llama is close to uniform guessing (plain minus uniform " + (fci(du) if du else "-") +
-                       "), so 'fails like Gemma' is not claimed: uniform guessing would meet R1 too" if r1 else ("does not fail" if P.mean() < 0.30 else "fails differently")) if gate else
+    worse = bool(du) and du[1] > 0
+    verdicts["R1"] = ((f"R1 criteria met; plain {NAME} is " + ("worse than" if worse else "close to") + " uniform guessing (plain minus uniform " + (fci(du) if du else "-") +
+                       ("), so 'fails like Gemma' is not claimed: its picks are systematically wrong, not only uninformed" if worse else
+                        "), so 'fails like Gemma' is not claimed: uniform guessing would meet R1 too") if r1 else ("does not fail" if P.mean() < 0.30 else "fails differently")) if gate else
                       "NOT CONCLUDED: plain tune letter mass below 0.9") + \
         f" (soft {P.mean():.3f}; minus rule {fci(d)}; largest type {max(bt, key=bt.get)}; plain letter mass {pm:.4f})" + \
         ("; R2-R5 are headroom-limited (plain < 0.30)" if P.mean() < 0.30 else "")
@@ -429,7 +506,7 @@ def build():
     conds["3 seeds"] = len(E100) == 3
     pf = [f"seed {r['seed']} {c['cid']} failed at mass {c['planted_mass_on_expected']:.3f} (top option {c['score']['top_option']})"
           for r in sorted(E100, key=lambda r: r["seed"]) for c in r["cases"] if c["planted"] and not c["planted_ok"]]
-    verdicts["R3"] = ("worked examples train in on Llama, on in-family cells" if all(conds.values()) else
+    verdicts["R3"] = (f"worked examples train in on {NAME}, on in-family cells" if all(conds.values()) else
                       "not replicated; failed: " + ", ".join(k for k, v in conds.items() if not v)) + \
         f" (seed mean {e.mean():.3f}" + (f"; planted: {'; '.join(pf)}" if pf else "") + ")"
     sec = {k: v for k, v in conds.items() if not k.startswith("planted")}
@@ -444,8 +521,9 @@ def build():
       if all(gm_):
         J["gemma_planted_nocost_mass"] = [g["mass_on_expected"] for g in gm_]
         gnote = ("Gemma comparison (harness on the A40 after the readout fix, the stored Gemma examples-100 adapters): Gemma's adapters fail the same planted no-cost case "
-                 "(mass " + ", ".join("%.2f" % g["mass_on_expected"] for g in gm_) + "; the other planted cases pass), so the planted failure is shared with Gemma, "
-                 "not new in Llama (DECISIONS.md L39). ")
+                 "(mass " + ", ".join("%.2f" % g["mass_on_expected"] for g in gm_) + "; the other planted cases pass), so the planted failure is shared with Gemma, " +
+                 (f"not new in {NAME} (DECISIONS.md L39). " if MODEL == "llama31_8b" else
+                  "and Llama's examples-100 adapters fail it too (mass " + ", ".join("%.2f" % v for v in llama_planted_nocost()) + f"), so it is not new in {NAME}. "))
     verdicts["R3 note"] = (gnote + "All numbers are forced-choice letters after 'Answer: (', "
                            "conditional on one training draw and label set; seeds range " + f"{min(e.seed_soft):.3f}-{max(e.seed_soft):.3f}.")
     J["R3_conditions"] = conds; J["R3_planted_failures"] = pf; J["R3_planted_mass"] = {str(r["seed"]): {c["cid"]: c["planted_mass_on_expected"] for c in r["cases"] if c["planted"]} for r in E100}; J["R3_secondary_holds"] = all(sec.values())
@@ -465,7 +543,7 @@ def build():
   J["verdicts"] = verdicts
   out.append("")
   # ---------------- predictions
-  out += predictions(arms, L, gem, J)
+  out += predictions(arms, L, gem, J) if MODEL == "llama31_8b" else qwen_predictions(arms, L, gem, J)
   return "\n".join(out) + "\n", J
 
 
@@ -551,16 +629,108 @@ def predictions(arms, L, gem, J):
   return out + [""]
 
 
+def qwen_predictions(arms, L, gem, J):
+  """QWEN_PREDICTIONS.md, scored mechanically with the precedence fixed at G1 (QWEN_PLAN.md): UNCLEAR whenever the 95% interval contains a
+  range edge, else HELD if the point is inside, else FAILED; a probability part gets a Brier term only; direction items are HELD/FAILED."""
+  P = arms.get(("plain", "tune")); U = arms.get(("uniform", "tune")); res = []
+  def rng(lo, hi, t):
+    if t is None:
+      return "not testable"
+    if any(t[1] <= e <= t[2] for e in (lo, hi) if e is not None):
+      return "UNCLEAR"
+    return "HELD" if (lo is None or t[0] >= lo) and (hi is None or t[0] <= hi) else "FAILED"
+  br = lambda p, o: f"{(p - (1.0 if o else 0.0)) ** 2:.3f} (p {p}, outcome {'yes' if o else 'no'})"
+  hf = lambda ok: "HELD" if ok else "FAILED"
+  if P:
+    t = ci_mean(P.soft, P.case); res.append(("Q1a", "plain soft regret 0.45-1.10", fci(t), rng(0.45, 1.10, t), "-"))
+    for typ, lo, hi in (("below", 0.80, 1.80), ("at_or_above", 0.20, 1.20), ("no_cost", 0.08, 0.50)):
+      tt = ci_mean(P.soft, P.case, typ); res.append((f"Q1b {typ}", f"plain {typ} {lo}-{hi}", fci(tt), rng(lo, hi, tt), "-"))
+    bt = {ty: P.mean(ty) for ty in TYPES}
+    res.append(("Q1b shape", "below is the worst type and >= 2x no-cost", f"worst {max(bt, key=bt.get)}; below/no-cost {bt['below'] / bt['no_cost']:.2f}",
+                hf(max(bt, key=bt.get) == "below" and bt["below"] >= 2 * bt["no_cost"]), "-"))
+    sl = slope(P); res.append(("Q1c", "slope of the offer on stated cost (below) <= 0.50", fci(sl), rng(None, 0.50, sl), "-"))
+  m0 = J.get("readout/probe_train_noprefix.json"); m1 = J.get("readout/probe_train_prefix_answer.json")
+  if m0 is not None:
+    res.append(("Q1d", "unprefixed letter mass: P(>= 0.95) = 0.5; with the prefix if needed: >= 0.95 (P 0.9) (train probe)",
+                f"unprefixed {m0:.4f}; prefixed {f3(m1)}", "probability only", "unprefixed: " + br(0.5, m0 >= 0.95) + ("; prefixed: " + br(0.9, m1 >= 0.95) if m1 is not None else "")))
+  if P:
+    pb = position_bias(P.recs)[0]; res.append(("Q1e", "P(top-letter share > 0.30) = 0.5", f"{pb:.3f}", "probability only", br(0.5, pb > 0.30)))
+    res.append(("Q1f", "P(plain beats uniform by >= 0.10, i.e. <= 1.16) = 0.65", f"plain {P.mean():.3f}; uniform {f3(U and U.mean())}", "probability only", br(0.65, P.mean() <= 1.16)))
+    dm = J.get("diff/tune/notes:method_original", {}).get("minus_plain"); dt = J.get("diff/tune/notes:teacher", {}).get("minus_plain")
+    res.append(("Q2a", "written rule minus plain in [-0.50, -0.10]", fci(dm) if dm else "-", rng(-0.50, -0.10, dm), "-"))
+    res.append(("Q2b", "lesson minus plain in [-0.45, -0.05]; P(lesson helps less than the written rule) = 0.65", fci(dt) if dt else "-", rng(-0.45, -0.05, dt),
+                br(0.65, dt[0] > dm[0]) if (dt and dm) else "-"))
+    dn = J.get("diff/tune/notes:neutral", {}).get("minus_plain")
+    res.append(("Q2c", "|neutral minus plain| <= 0.10", fci(dn) if dn else "-", rng(-0.10, 0.10, dn), "-"))
+    dw = J.get("diff/tune/notes:wrong_rule", {}).get("minus_plain")
+    res.append(("Q2d", "P(the wrong rule helps: interval of wrong minus plain below 0) = 0.6", fci(dw) if dw else "-", "probability only", br(0.6, dw[2] < 0) if dw else "-"))
+    W, M = arms.get(("notes:wrong_rule", "tune")), arms.get(("notes:method_original", "tune"))
+    if W and M:
+      dwm = diff(W, M)
+      res.append(("Q2e", "wrong minus written rule in [-0.25, +0.35]; P(wrong <= written) = 0.35", fci(dwm), rng(-0.25, 0.35, dwm), br(0.35, dwm[0] <= 0)))
+    T = arms.get(("notes:teacher", "tune"))
+    if M and T:
+      lo_ = min(M.mean(), T.mean()); res.append(("Q2f", "P(neither paragraph below 0.30) = 0.7", f"lower of the two {lo_:.3f}", "probability only", br(0.7, lo_ > 0.30)))
+  e = L.get("ex100"); e25 = L.get("examples-25")
+  if e:
+    t = ci_mean(e.soft, e.case)
+    res.append(("Q3a", "examples-100 0.01-0.10; P(every seed below plain) = 0.95", fci(t), rng(0.01, 0.10, t), br(0.95, bool(P) and all(v < P.mean() for v in e.seed_soft))))
+  if e25:
+    t = ci_mean(e25.soft, e25.case)
+    res.append(("Q3b", "examples-25 0.02-0.15; P(within 0.05 of examples-100) = 0.75", fci(t), rng(0.02, 0.15, t), br(0.75, bool(e) and abs(e25.mean() - e.mean()) <= 0.05)))
+  ch = arms.get(("baseline:cheapest", "tune"))
+  if ch and "cheapest-label N=25" in L and "cheapest-label N=100" in L:
+    ok = all(abs(L[k].mean() - ch.mean()) <= 0.05 for k in ("cheapest-label N=25", "cheapest-label N=100"))
+    res.append(("Q3c", "P(cheapest-label N=25 and N=100 each within 0.05 of always-cheapest) = 0.9",
+                f"{L['cheapest-label N=25'].mean():.3f}, {L['cheapest-label N=100'].mean():.3f} vs {ch.mean():.3f}", "probability only", br(0.9, ok)))
+  if "scrambled N=100" in L:
+    S = L["scrambled N=100"]; t = ci_mean(S.soft, S.case)
+    res.append(("Q3d", "scrambled 0.45-1.00; P(at least 0.15 worse than examples-100) = 0.9", fci(t), rng(0.45, 1.00, t), br(0.9, bool(e) and S.mean() - e.mean() >= 0.15)))
+  if e:
+    sl = slope(e); res.append(("Q3e", "examples-100 slope >= 0.50", fci(sl), rng(0.50, None, sl), "-"))
+  ad = [k for k in ("ex100", "examples-25", "cheapest-label N=25", "cheapest-label N=100", "scrambled N=100") if k in L]
+  if ad:
+    mn = min(mass([r])[0] for k in ad for r in L[k].recs)
+    res.append(("Q3f", "letter mass of every trained adapter >= 0.97", f"lowest adapter mean {mn:.4f}", hf(mn >= 0.97), "-"))
+  if J.get("lr_choice"):
+    res.append(("Q3g", "P(the lr rule picks 1e-4) = 0.6", f"{J['lr_choice']['chosen']:.0e}", "probability only", br(0.6, abs(J["lr_choice"]["chosen"] - 1e-4) < 1e-12)))
+  if P:
+    n_ok = sum(r["planted"]["n_ok"] for r in P.recs)
+    res.append(("Q4a", "P(plain passes at most 2 of 4 planted) = 0.85", f"{n_ok}/4", "probability only", br(0.85, n_ok <= 2)))
+  if e:
+    fails = sum(1 for r in e.recs for x in r["cases"] if x["cid"] == "planted-nocost" and not x["planted_ok"])
+    others = all(x["planted_ok"] for r in e.recs for x in r["cases"] if x["planted"] and x["cid"] != "planted-nocost")
+    res.append(("Q4b", "P(examples-100 fail planted no-cost in >= 2 of 3 seeds) = 0.8", f"{fails} of {len(e.recs)} seeds fail", "probability only", br(0.8, fails >= 2)))
+    res.append(("Q4c", "P(examples-100 pass the other three planted cases in every seed) = 0.7", "yes" if others else "no", "probability only", br(0.7, others)))
+  fg = J.get("freegen")
+  if fg:
+    a0 = fg["agreement_on_parsed"]; res.append(("Q5a", "plain free-answer agreement 0.35-0.80", f"{a0:.2f}", hf(0.35 <= a0 <= 0.80), "-"))
+  ag = [v["agreement_on_parsed"] for k, v in J.items() if k.startswith("freegen_adapter/") and "claude_examples_n100" in k]
+  res.append(("Q5b", "P(after examples-100 every seed's agreement >= 0.85) = 0.75", ", ".join(f"{v:.2f}" for v in ag) if ag else "-",
+              "probability only" if ag else "not testable (not run yet)", br(0.75, all(v >= 0.85 for v in ag)) if ag else "-"))
+  J["predictions"] = [dict(zip(("id", "statement", "observed", "verdict", "brier"), r)) for r in res]
+  out = [f"## Predictions ({NAME.upper()}_PREDICTIONS.md), scored mechanically", "",
+         "Precedence fixed at G1 (QWEN_PLAN.md): UNCLEAR whenever the 95% interval contains a range edge, else HELD if the point is inside the range, else FAILED; "
+         "a probability part gets a Brier term only (lower is better; 0.25 = a coin flip at p 0.5); direction items are HELD or FAILED. "
+         "Q1d is scored on the train probe (unprefixed and prefixed).", "",
+         "| id | statement | observed | verdict | Brier |", "| --- | --- | --- | --- | --- |"]
+  out += [f"| {a} | {b} | {c} | {d} | {e_} |" for a, b, c, d, e_ in res]
+  return out + [""]
+
+
 def main(argv):
+  if "--model" in argv:
+    configure(argv[argv.index("--model") + 1])
   body, J = build()
-  txt = open(RESULTS).read() if os.path.exists(RESULTS) else f"# LLAMA_RESULTS\n\n{START}\n{END}\n"
+  txt = open(RESULTS).read() if os.path.exists(RESULTS) else f"# {NAME.upper()}_RESULTS\n\n{START}\n{END}\n"
   i, j = txt.find(START), txt.find(END)
-  assert i >= 0 and j > i, "markers missing in LLAMA_RESULTS.md"
+  assert i >= 0 and j > i, f"markers missing in {os.path.basename(RESULTS)}"
   new = txt[:i + len(START)] + "\n" + body + txt[j:]
   js = json.dumps(J, indent=1, sort_keys=True, default=str) + "\n"
   if "--check" in argv:
     ok = new == txt and os.path.exists(JSON_OUT) and open(JSON_OUT).read() == js
-    print("llama report up to date" if ok else "llama report STALE: rerun tools/llama_report.py"); return 0 if ok else 1
+    tag = NAME.lower()
+    print(f"{tag} report up to date" if ok else f"{tag} report STALE: rerun tools/llama_report.py" + ("" if MODEL == "llama31_8b" else f" --model {MODEL}")); return 0 if ok else 1
   open(RESULTS, "w").write(new); open(JSON_OUT, "w").write(js)
   print("wrote", RESULTS, "and", JSON_OUT); return 0
 
