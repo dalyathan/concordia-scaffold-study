@@ -1,13 +1,64 @@
 {
+ "R3_conditions": {
+  "3 seeds": true,
+  "every seed below plain": true,
+  "interval vs cheapest-label N=100 below 0": true,
+  "interval vs plain below 0": true,
+  "interval vs scrambled N=100 below 0": true,
+  "letter mass >= 0.97 (each adapter)": true,
+  "mean <= 0.15": true,
+  "planted 4/4 (each adapter)": false
+ },
+ "R3_planted_failures": [
+  "seed 0 planted-nocost failed at mass 0.401 (top option 3)",
+  "seed 1 planted-nocost failed at mass 0.130 (top option 1)",
+  "seed 2 planted-nocost failed at mass 0.361 (top option 2)"
+ ],
+ "R3_secondary_holds": true,
  "budget": {
-  "gpu_hours_records": 0.8533322562774023,
-  "usd_records": 0.5119
+  "gpu_hours_records": 3.3754057007365756,
+  "usd_records": 2.0253
  },
  "control_versions": {
-  "cheapest_label_n100": null,
-  "cheapest_label_n25": null,
-  "shuffled_claude_n100": null
+  "cheapest_label_n100": "selected",
+  "cheapest_label_n25": "selected",
+  "shuffled_claude_n100": "selected"
  },
+ "diff/tune/ex100_minus/always-cheapest": [
+  -0.38104625743870735,
+  -0.7494537996955167,
+  -0.12667180804574155
+ ],
+ "diff/tune/ex100_minus/cheapest-label N=100": [
+  -0.38107400428015076,
+  -0.7494741092996688,
+  -0.12671241609155479
+ ],
+ "diff/tune/ex100_minus/cheapest-label N=25": [
+  -0.3810466909324586,
+  -0.7494534791330534,
+  -0.12667324255603155
+ ],
+ "diff/tune/ex100_minus/examples-25": [
+  -0.03895009470898457,
+  -0.09749645429099423,
+  0.0019189934401156984
+ ],
+ "diff/tune/ex100_minus/plain": [
+  -1.136734222308593,
+  -1.3200372031197674,
+  -0.9067885905711818
+ ],
+ "diff/tune/ex100_minus/scrambled N=100": [
+  -0.6114550212374968,
+  -0.8879999827973744,
+  -0.385200644935645
+ ],
+ "diff/tune/ex100_minus/stated-cost rule": [
+  -0.1667605431529931,
+  -0.39983530647403637,
+  -0.028532733456747728
+ ],
  "diff/tune/notes:method_original": {
   "gap_closed": 0.4240179754954363,
   "minus_neutral": [
@@ -115,22 +166,22 @@
  "gemma_vs_llama/cheapest-label N=100": {
   "gemma_a10g": 0.4285981932914673,
   "gemma_a40": 0.42859852080219757,
-  "llama": null
+  "llama": 0.42859917541287196
  },
  "gemma_vs_llama/cheapest-label N=25": {
   "gemma_a10g": 0.4285975658383112,
   "gemma_a40": 0.42859878660958417,
-  "llama": null
+  "llama": 0.4285718620651798
  },
  "gemma_vs_llama/examples-100, 3-seed mean": {
   "gemma_a10g": 0.03206784077141945,
   "gemma_a40": 0.03239959633424429,
-  "llama": null
+  "llama": 0.047525171132721214
  },
  "gemma_vs_llama/examples-25, seed 0": {
   "gemma_a10g": 0.043012236672990006,
   "gemma_a40": 0.042706657287267705,
-  "llama": null
+  "llama": 0.08647526584170581
  },
  "gemma_vs_llama/neutral text (control)": {
   "gemma_a10g": 0.7348036718808173,
@@ -145,7 +196,7 @@
  "gemma_vs_llama/scrambled N=100": {
   "gemma_a10g": 0.6945645665043692,
   "gemma_a40": 0.6954272121089659,
-  "llama": null
+  "llama": 0.658980192370218
  },
  "gemma_vs_llama/stated-cost rule": {
   "gemma_a10g": 0.21428571428571427,
@@ -163,6 +214,11 @@
   "llama": 0.6107217115221337
  },
  "limitation": "harness not yet checked against stored Gemma scores",
+ "lr_choice": {
+  "chosen": 0.0001,
+  "select_B_1e-4": 0.05286842134387782,
+  "select_B_3e-4": 0.07187432621522057
+ },
  "plain_tune_mass": 0.9978337791123391,
  "predictions": [
   {
@@ -245,30 +301,30 @@
   {
    "brier": "-",
    "id": "L4a",
-   "observed": "-",
+   "observed": "0.048 [0.022, 0.085]",
    "statement": "examples-100 soft regret 0.02-0.15",
-   "verdict": "not testable"
+   "verdict": "HELD"
   },
   {
    "brier": "-",
    "id": "L4b",
-   "observed": "-",
+   "observed": "0.086 [0.038, 0.152]",
    "statement": "examples-25 0.04-0.25 (N = 10, 50 not run)",
-   "verdict": "not testable"
+   "verdict": "UNCLEAR; N = 10 and 50 not testable"
   },
   {
-   "brier": "-",
+   "brier": "'<= 50': 0.160 (p 0.6, outcome yes); '>= 25' not testable (N = 10 not run)",
    "id": "L4c",
-   "observed": "-",
-   "statement": "learning-curve shape",
-   "verdict": "not testable"
+   "observed": "examples-25 within 0.05",
+   "statement": "smallest N within 0.05 of examples-100: >= 25 (P 0.85), <= 50 (P 0.6); monotone 50-100",
+   "verdict": "monotone part not testable (N = 50 not run)"
   },
   {
    "brier": "-",
    "id": "L4d",
-   "observed": "-",
+   "observed": "0.742 [0.462, 0.994]",
    "statement": "examples-100 slope >= 0.5 (N = 10 part not run)",
-   "verdict": "not testable"
+   "verdict": "UNCLEAR; N = 10 part not testable"
   },
   {
    "brier": "-",
@@ -280,16 +336,16 @@
   {
    "brier": "-",
    "id": "L4f",
-   "observed": "-",
+   "observed": "difference 0.000 [-0.000, 0.000]",
    "statement": "cheapest-label N=25 within 0.05 of always-cheapest",
-   "verdict": "not testable"
+   "verdict": "HELD"
   },
   {
    "brier": "-",
    "id": "L4g",
-   "observed": "-",
+   "observed": "lowest adapter mean 0.9989",
    "statement": "letter mass of every trained adapter >= 0.97",
-   "verdict": "not testable"
+   "verdict": "HELD"
   }
  ],
  "readout/probe_train_noprefix.json": 0.47157056495547295,
@@ -724,6 +780,10 @@
   "R1": "plain fails like Gemma (soft 1.184; minus rule 0.970 [0.539, 1.274]; largest type below; plain letter mass 0.9978)",
   "R2 controls": "NOT inert (neutral minus plain -0.027 [-0.061, 0.005]; wrong rule minus plain -0.574 [-0.780, -0.290]; the wrong rule helps: any push toward lower offers lowers Llama's regret, so R2 'helps' does not show the paragraphs' content is what helps)",
   "R2 method_original": "helps (minus plain -0.411 [-0.530, -0.249]; minus neutral -0.385 [-0.510, -0.224]; arm letter mass 0.9970)",
-  "R2 teacher": "helps (minus plain -0.254 [-0.330, -0.162]; minus neutral -0.228 [-0.307, -0.134]; arm letter mass 0.9967)"
+  "R2 teacher": "helps (minus plain -0.254 [-0.330, -0.162]; minus neutral -0.228 [-0.307, -0.134]; arm letter mass 0.9967)",
+  "R3": "not replicated; failed: planted 4/4 (each adapter) (seed mean 0.048; planted: seed 0 planted-nocost failed at mass 0.401 (top option 3); seed 1 planted-nocost failed at mass 0.130 (top option 1); seed 2 planted-nocost failed at mass 0.361 (top option 2))",
+  "R3 secondary (without the planted condition; labelled secondary per LLAMA_PLAN.md)": "all other R3 conditions hold",
+  "R4": "cheapest-label N=25 within 0.05 of always-cheapest: yes; cheapest-label N=100 within 0.05 of always-cheapest: yes; scrambled at least 0.15 worse than examples-100: yes",
+  "R5": "examples-25 within 0.05 of the examples-100 mean (0.086 vs 0.048; one seed)"
  }
 }

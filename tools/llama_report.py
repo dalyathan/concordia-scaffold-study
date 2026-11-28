@@ -244,7 +244,7 @@ def build():
                f"{f3(t.get('select_B_best_soft_regret'))} | {a.mean():.3f} | " + " | ".join(f3(a.mean(ty)) for ty in TYPES) +
                f" | {slope(a)[0]:.2f} | {mm:.3f} / {mn:.3f} | {planted([r])} | {gpu([r]) / 3600:.2f} | {f3((r.get('timing') or {}).get('approx_usd'))} |")
   out.append("")
-  ex100 = {cfg(r)["training"]["lr"]: r for r in lora if r["solver"].startswith("lora:claude_examples_n100_") and r["seed"] == 0}
+  ex100 = {cfg(r)["training"]["lr"]: r for r in lora if r["solver"].startswith("lora:claude_examples_n100_") and not r["solver"].endswith("_last") and r["seed"] == 0}
   chosen = None
   if 1e-4 in ex100 and 3e-4 in ex100:
     s1, s3 = (cfg(ex100[x])["training"]["select_B_best_soft_regret"] for x in (1e-4, 3e-4))
@@ -351,9 +351,15 @@ def build():
     conds["letter mass >= 0.97 (each adapter)"] = all(mass([r])[0] >= 0.97 for r in E100)
     conds["planted 4/4 (each adapter)"] = all(r["planted"]["all_ok"] for r in E100)
     conds["3 seeds"] = len(E100) == 3
-    verdicts["R3"] = ("worked examples train in on Llama" if all(conds.values()) else "not replicated: " + ", ".join(k for k, v in conds.items() if not v)) + \
-        f" (seed mean {e.mean():.3f})"
-    J["R3_conditions"] = conds
+    pf = [f"seed {r['seed']} {c['cid']} failed at mass {c['planted_mass_on_expected']:.3f} (top option {c['score']['top_option']})"
+          for r in sorted(E100, key=lambda r: r["seed"]) for c in r["cases"] if c["planted"] and not c["planted_ok"]]
+    verdicts["R3"] = ("worked examples train in on Llama, on in-family cells" if all(conds.values()) else
+                      "not replicated; failed: " + ", ".join(k for k, v in conds.items() if not v)) + \
+        f" (seed mean {e.mean():.3f}" + (f"; planted: {'; '.join(pf)}" if pf else "") + ")"
+    sec = {k: v for k, v in conds.items() if not k.startswith("planted")}
+    verdicts["R3 secondary (without the planted condition; labelled secondary per LLAMA_PLAN.md)"] = \
+        "all other R3 conditions hold" if all(sec.values()) else "fails also without planted: " + ", ".join(k for k, v in sec.items() if not v)
+    J["R3_conditions"] = conds; J["R3_planted_failures"] = pf; J["R3_secondary_holds"] = all(sec.values())
     ch = arms.get(("baseline:cheapest", "tune"))
     r4 = []
     for nm in ("cheapest-label N=25", "cheapest-label N=100"):

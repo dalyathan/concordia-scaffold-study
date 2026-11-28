@@ -69,6 +69,40 @@ Limitation: harness not yet checked against stored Gemma scores.
 
 | run | arm | N | lr | seed | best step (epoch 0 kept?) | select_B best | tune soft | below | at or above | no cost | slope | letter mass mean / min | planted | GPU h | approx USD |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| llama31_8b_cheapest_label_n100_lr1e-04_s0 | cheapest_label | 100 | 1e-04 | 0 | 500 (no) | 0.314 | 0.429 | 0.643 | 0.000 | 0.643 | 0.06 | 1.000 / 1.000 | 1/4 | 0.29 | 0.176 |
+| llama31_8b_cheapest_label_n100_lr1e-04_s0_last | cheapest_label | 100 | 1e-04 | 0 | last epoch 5, no selection | - | 0.429 | 0.643 | 0.000 | 0.643 | 0.06 | 1.000 / 1.000 | 1/4 | 0.02 | 0.011 |
+| llama31_8b_cheapest_label_n25_lr1e-04_s0 | cheapest_label | 25 | 1e-04 | 0 | 500 (no) | 0.314 | 0.429 | 0.643 | 0.000 | 0.643 | 0.06 | 1.000 / 1.000 | 1/4 | 0.30 | 0.181 |
+| llama31_8b_cheapest_label_n25_lr1e-04_s0_last | cheapest_label | 25 | 1e-04 | 0 | last epoch 20, no selection | - | 0.429 | 0.643 | 0.000 | 0.643 | 0.06 | 1.000 / 1.000 | 1/4 | 0.02 | 0.011 |
+| llama31_8b_claude_examples_n100_lr1e-04_s0 | claude_examples | 100 | 1e-04 | 0 | 400 (no) | 0.053 | 0.024 | 0.003 | 0.014 | 0.056 | 0.76 | 1.000 / 0.997 | 3/4 | 0.29 | 0.176 |
+| llama31_8b_claude_examples_n100_lr1e-04_s1 | claude_examples | 100 | 1e-04 | 1 | 500 (no) | 0.079 | 0.082 | 0.056 | 0.022 | 0.169 | 0.72 | 1.000 / 0.997 | 3/4 | 0.29 | 0.177 |
+| llama31_8b_claude_examples_n100_lr1e-04_s2 | claude_examples | 100 | 1e-04 | 2 | 500 (no) | 0.043 | 0.036 | 0.013 | 0.016 | 0.079 | 0.75 | 1.000 / 0.993 | 3/4 | 0.30 | 0.178 |
+| llama31_8b_claude_examples_n100_lr1e-04_s0_last | claude_examples | 100 | 1e-04 | 0 | last epoch 5, no selection | - | 0.061 | 0.058 | 0.043 | 0.081 | 0.46 | 1.000 / 0.995 | 3/4 | 0.02 | 0.011 |
+| llama31_8b_claude_examples_n100_lr1e-04_s1_last | claude_examples | 100 | 1e-04 | 1 | last epoch 5, no selection | - | 0.082 | 0.056 | 0.022 | 0.169 | 0.72 | 1.000 / 0.997 | 3/4 | 0.02 | 0.011 |
+| llama31_8b_claude_examples_n100_lr1e-04_s2_last | claude_examples | 100 | 1e-04 | 2 | last epoch 5, no selection | - | 0.036 | 0.013 | 0.016 | 0.079 | 0.75 | 1.000 / 0.993 | 3/4 | 0.02 | 0.011 |
+| llama31_8b_claude_examples_n100_lr3e-04_s0 | claude_examples | 100 | 3e-04 | 0 | 500 (no) | 0.072 | 0.069 | 0.042 | 0.033 | 0.130 | 0.73 | 1.000 / 1.000 | 3/4 | 0.29 | 0.176 |
+| llama31_8b_claude_examples_n100_lr3e-04_s0_last | claude_examples | 100 | 3e-04 | 0 | last epoch 5, no selection | - | 0.069 | 0.042 | 0.033 | 0.130 | 0.73 | 1.000 / 1.000 | 3/4 | 0.02 | 0.011 |
+| llama31_8b_claude_examples_n25_lr1e-04_s0 | claude_examples | 25 | 1e-04 | 0 | 100 (no) | 0.119 | 0.086 | 0.122 | 0.048 | 0.089 | 0.60 | 1.000 / 0.999 | 3/4 | 0.31 | 0.183 |
+| llama31_8b_claude_examples_n25_lr1e-04_s0_last | claude_examples | 25 | 1e-04 | 0 | last epoch 20, no selection | - | 0.057 | 0.053 | 0.059 | 0.060 | 0.70 | 1.000 / 1.000 | 4/4 | 0.02 | 0.011 |
+| llama31_8b_shuffled_claude_n100_lr1e-04_s0 | shuffled_claude | 100 | 1e-04 | 0 | 400 (no) | 0.624 | 0.659 | 1.318 | 0.089 | 0.570 | -0.18 | 0.999 / 0.997 | 1/4 | 0.29 | 0.176 |
+| llama31_8b_shuffled_claude_n100_lr1e-04_s0_last | shuffled_claude | 100 | 1e-04 | 0 | last epoch 5, no selection | - | 0.925 | 2.086 | 0.195 | 0.495 | -0.36 | 0.999 / 0.996 | 1/4 | 0.02 | 0.011 |
+
+**lr choice (frozen rule: lower select_B, ties within 0.005 go to 1e-4):** select_B best 0.0529 at 1e-4 vs 0.0719 at 3e-4 -> **1e-04**.
+
+Control versions used in R3/R4: cheapest_label_n25 selected; cheapest_label_n100 selected; shuffled_claude_n100 selected. Controls are selected on select_B like the examples arm, which favours them.
+
+### Examples-100 (seed mean at the chosen lr) against plain, controls and references
+
+Seeds: 0.024, 0.082, 0.036; seed mean 0.048; seeds below plain: 3 of 3; slope 0.742 [0.462, 0.994]. Intervals are conditional on the one fixed training draw (seeds change the LoRA initialisation and the example order only).
+
+| comparator | comparator soft | examples-100 minus comparator [95%] |
+| --- | --- | --- |
+| plain | 1.184 | -1.137 [-1.320, -0.907] |
+| always-cheapest | 0.429 | -0.381 [-0.749, -0.127] |
+| stated-cost rule | 0.214 | -0.167 [-0.400, -0.029] |
+| examples-25 | 0.086 | -0.039 [-0.097, 0.002] |
+| cheapest-label N=25 | 0.429 | -0.381 [-0.749, -0.127] |
+| cheapest-label N=100 | 0.429 | -0.381 [-0.749, -0.127] |
+| scrambled N=100 | 0.659 | -0.611 [-0.888, -0.385] |
 
 ## Gemma 2 9B vs Llama 3.1 8B on the same 42 tune cells
 
@@ -83,16 +117,32 @@ Gemma: imported records of the pre-refactor code (A10G originals; A40 = rescore 
 | Claude's lesson (teacher paragraph) | 0.390 | - | 0.930 | 0.540 |
 | neutral text (control) | 0.735 | - | 1.158 | 0.423 |
 | wrong rule (control) | 0.618 | - | 0.611 | -0.007 |
-| examples-100, 3-seed mean | 0.032 | 0.032 | - | - |
-| examples-25, seed 0 | 0.043 | 0.043 | - | - |
-| cheapest-label N=25 | 0.429 | 0.429 | - | - |
-| cheapest-label N=100 | 0.429 | 0.429 | - | - |
-| scrambled N=100 | 0.695 | 0.695 | - | - |
+| examples-100, 3-seed mean | 0.032 | 0.032 | 0.048 | 0.015 |
+| examples-25, seed 0 | 0.043 | 0.043 | 0.086 | 0.043 |
+| cheapest-label N=25 | 0.429 | 0.429 | 0.429 | -0.000 |
+| cheapest-label N=100 | 0.429 | 0.429 | 0.429 | 0.000 |
+| scrambled N=100 | 0.695 | 0.695 | 0.659 | -0.036 |
 
 ## GPU time and approximate cost (from the records)
 
 | record | GPU h | approx USD |
 | --- | --- | --- |
+| runs/haggling/llama31_8b/lora_cheapest_label_n100_lr1e-04-tune-s0-20261128T005032452600Z.json | 0.293 | 0.176 |
+| runs/haggling/llama31_8b/lora_cheapest_label_n100_lr1e-04_last-tune-s0-20261128T004852157205Z.json | 0.019 | 0.011 |
+| runs/haggling/llama31_8b/lora_cheapest_label_n25_lr1e-04-tune-s0-20261128T003256290233Z.json | 0.302 | 0.181 |
+| runs/haggling/llama31_8b/lora_cheapest_label_n25_lr1e-04_last-tune-s0-20261128T003115921278Z.json | 0.019 | 0.011 |
+| runs/haggling/llama31_8b/lora_claude_examples_n100_lr1e-04-tune-s0-20261127T230312247052Z.json | 0.294 | 0.176 |
+| runs/haggling/llama31_8b/lora_claude_examples_n100_lr1e-04-tune-s1-20261127T233834336850Z.json | 0.294 | 0.177 |
+| runs/haggling/llama31_8b/lora_claude_examples_n100_lr1e-04-tune-s2-20261127T235623449965Z.json | 0.296 | 0.178 |
+| runs/haggling/llama31_8b/lora_claude_examples_n100_lr1e-04_last-tune-s0-20261127T230131701675Z.json | 0.019 | 0.011 |
+| runs/haggling/llama31_8b/lora_claude_examples_n100_lr1e-04_last-tune-s1-20261127T233653433506Z.json | 0.019 | 0.011 |
+| runs/haggling/llama31_8b/lora_claude_examples_n100_lr1e-04_last-tune-s2-20261127T235442580444Z.json | 0.019 | 0.011 |
+| runs/haggling/llama31_8b/lora_claude_examples_n100_lr3e-04-tune-s0-20261127T232051257050Z.json | 0.293 | 0.176 |
+| runs/haggling/llama31_8b/lora_claude_examples_n100_lr3e-04_last-tune-s0-20261127T231910517174Z.json | 0.019 | 0.011 |
+| runs/haggling/llama31_8b/lora_claude_examples_n25_lr1e-04-tune-s0-20261128T001447169708Z.json | 0.306 | 0.183 |
+| runs/haggling/llama31_8b/lora_claude_examples_n25_lr1e-04_last-tune-s0-20261128T001306526559Z.json | 0.019 | 0.011 |
+| runs/haggling/llama31_8b/lora_shuffled_claude_n100_lr1e-04-tune-s0-20261128T010808349613Z.json | 0.293 | 0.176 |
+| runs/haggling/llama31_8b/lora_shuffled_claude_n100_lr1e-04_last-tune-s0-20261128T010628238778Z.json | 0.019 | 0.011 |
 | runs/haggling/llama31_8b/notes_method_original-train-s0-20261127T222122518219Z.json | 0.138 | 0.083 |
 | runs/haggling/llama31_8b/notes_method_original-tune-s0-20261127T220939295677Z.json | 0.020 | 0.012 |
 | runs/haggling/llama31_8b/notes_neutral-train-s0-20261127T223803765286Z.json | 0.139 | 0.083 |
@@ -104,7 +154,7 @@ Gemma: imported records of the pre-refactor code (A10G originals; A40 = rescore 
 | runs/haggling/llama31_8b/plain-train-s0-20261127T220140193450Z.json | 0.114 | 0.068 |
 | runs/haggling/llama31_8b/plain-tune-s0-20261127T215449648928Z.json | 0.016 | 0.010 |
 | runs/haggling/llama31_8b/plain_noprefix-train-s0-20261127T220826945412Z.json | 0.113 | 0.068 |
-| **total (records; model loads outside records are in DECISIONS.md)** | **0.85** | **0.51** |
+| **total (records; model loads outside records are in DECISIONS.md)** | **3.38** | **2.03** |
 
 ## Decision rules (LLAMA_PLAN.md), applied mechanically
 
@@ -112,6 +162,10 @@ Gemma: imported records of the pre-refactor code (A10G originals; A40 = rescore 
 - **R2 method_original**: helps (minus plain -0.411 [-0.530, -0.249]; minus neutral -0.385 [-0.510, -0.224]; arm letter mass 0.9970)
 - **R2 teacher**: helps (minus plain -0.254 [-0.330, -0.162]; minus neutral -0.228 [-0.307, -0.134]; arm letter mass 0.9967)
 - **R2 controls**: NOT inert (neutral minus plain -0.027 [-0.061, 0.005]; wrong rule minus plain -0.574 [-0.780, -0.290]; the wrong rule helps: any push toward lower offers lowers Llama's regret, so R2 'helps' does not show the paragraphs' content is what helps)
+- **R3**: not replicated; failed: planted 4/4 (each adapter) (seed mean 0.048; planted: seed 0 planted-nocost failed at mass 0.401 (top option 3); seed 1 planted-nocost failed at mass 0.130 (top option 1); seed 2 planted-nocost failed at mass 0.361 (top option 2))
+- **R3 secondary (without the planted condition; labelled secondary per LLAMA_PLAN.md)**: all other R3 conditions hold
+- **R4**: cheapest-label N=25 within 0.05 of always-cheapest: yes; cheapest-label N=100 within 0.05 of always-cheapest: yes; scrambled at least 0.15 worse than examples-100: yes
+- **R5**: examples-25 within 0.05 of the examples-100 mean (0.086 vs 0.048; one seed)
 
 ## Predictions (LLAMA_PREDICTIONS.md), scored mechanically
 
@@ -130,12 +184,12 @@ HELD / FAILED by the point value; UNCLEAR when the 95% interval straddles a rang
 | L2d | P(both paragraphs' regret > 0.30) = 0.8 | lower of the two 0.773 | probability only | 0.040 (p 0.8, outcome yes) |
 | L3a | steering fails (P 0.80) | - | not testable (steering not run) | - |
 | L3b | steering pushes one letter (P 0.65) | - | not testable (steering not run) | - |
-| L4a | examples-100 soft regret 0.02-0.15 | - | not testable | - |
-| L4b | examples-25 0.04-0.25 (N = 10, 50 not run) | - | not testable | - |
-| L4c | learning-curve shape | - | not testable | - |
-| L4d | examples-100 slope >= 0.5 (N = 10 part not run) | - | not testable | - |
+| L4a | examples-100 soft regret 0.02-0.15 | 0.048 [0.022, 0.085] | HELD | - |
+| L4b | examples-25 0.04-0.25 (N = 10, 50 not run) | 0.086 [0.038, 0.152] | UNCLEAR; N = 10 and 50 not testable | - |
+| L4c | smallest N within 0.05 of examples-100: >= 25 (P 0.85), <= 50 (P 0.6); monotone 50-100 | examples-25 within 0.05 | monotone part not testable (N = 50 not run) | '<= 50': 0.160 (p 0.6, outcome yes); '>= 25' not testable (N = 10 not run) |
+| L4d | examples-100 slope >= 0.5 (N = 10 part not run) | 0.742 [0.462, 0.994] | UNCLEAR; N = 10 part not testable | - |
 | L4e | rule-trained students (P 0.8) | - | not testable (not run) | - |
-| L4f | cheapest-label N=25 within 0.05 of always-cheapest | - | not testable | - |
-| L4g | letter mass of every trained adapter >= 0.97 | - | not testable | - |
+| L4f | cheapest-label N=25 within 0.05 of always-cheapest | difference 0.000 [-0.000, 0.000] | HELD | - |
+| L4g | letter mass of every trained adapter >= 0.97 | lowest adapter mean 0.9989 | HELD | - |
 
 <!-- generated by tools/llama_report.py: end -->
