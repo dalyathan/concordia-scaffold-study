@@ -5,7 +5,9 @@ Same 20 train cases outside the LoRA training cells and select_B as the probe (s
 Per prompt: greedy generation (64 new tokens) WITHOUT the prefix; the option it names is parsed (the first "(x)" / "x)" letter of a shown
 option, else the first shown price "N coin(s)"); compared with the argmax letter of the prefixed first-token readout.
 Frozen threshold (LLAMA_PLAN.md): agreement on parsed prompts >= 0.7 and parse rate >= 0.5 -> proceed; otherwise stop before step 4.
-No regret is computed. Writes demo_out/llama/freegen_check.json."""
+No regret is computed. Writes demo_out/llama/freegen_check.json.
+--adapter DIR (added at G2, descriptive only, no threshold): the same check with a trained LoRA adapter loaded on top of the model;
+writes demo_out/llama/freegen_check_<adapter name>.json."""
 import json, os, re, sys, time
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -29,9 +31,13 @@ def parse(text, l2price):
 
 
 def main():
-  import torch
+  import argparse, torch
+  ap = argparse.ArgumentParser(); ap.add_argument("--adapter"); a = ap.parse_args()
   t0 = time.time()
   spec = modelspec.load("llama31_8b"); b = Backend(spec); task = get_task("haggling"); tok = b.tok
+  if a.adapter:
+    from peft import PeftModel
+    b.model = PeftModel.from_pretrained(b.model, a.adapter); b.model.eval()
   used = set(json.load(open(os.path.join(ROOT, "demo", "gen", "lora_train_cells.json")))) | {c["cell"] for c in task.cases("select_B")}
   pool = [c for c in task.cases("train") if c["cell"] not in used]
   cases = pool[:: max(1, len(pool) // 20)][:20]
@@ -55,9 +61,10 @@ def main():
   rate = len(parsed) / len(rows)
   ok = agree >= THRESH_AGREE and rate >= THRESH_PARSE
   out = {"n_prompts": len(rows), "parse_rate": rate, "agreement_on_parsed": agree, "thresholds": {"agree": THRESH_AGREE, "parse": THRESH_PARSE},
-         "pass": ok, "gpu_seconds": time.time() - t0, "rows": rows}
+         "pass": ok, "adapter": a.adapter, "gpu_seconds": time.time() - t0, "rows": rows}
   os.makedirs(os.path.join(ROOT, "demo_out", "llama"), exist_ok=True)
-  json.dump(out, open(os.path.join(ROOT, "demo_out", "llama", "freegen_check.json"), "w"), indent=1)
+  name = "freegen_check.json" if not a.adapter else f"freegen_check_{os.path.basename(a.adapter.rstrip('/'))}.json"
+  json.dump(out, open(os.path.join(ROOT, "demo_out", "llama", name), "w"), indent=1)
   print(json.dumps({k: out[k] for k in ("n_prompts", "parse_rate", "agreement_on_parsed", "pass", "gpu_seconds")}, indent=1))
   for r in rows[:4]:
     print(r["forced"], r["free"], repr(r["reply"][:120]))

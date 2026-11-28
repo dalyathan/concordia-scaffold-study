@@ -36,8 +36,8 @@
  },
  "R3_secondary_holds": true,
  "budget": {
-  "gpu_hours_records": 3.3754057007365756,
-  "usd_records": 2.0253
+  "gpu_hours_records": 3.2245209179321925,
+  "usd_records": 1.9346999999999999
  },
  "control_versions": {
   "cheapest_label_n100": "selected",
@@ -96,8 +96,16 @@
    0.25977584073979143,
    0.7863107616689099
   ],
-  "perm_p_neutral": 0.001,
-  "perm_p_plain": 0.0011
+  "perm_p_neutral": 0.0010998900109989002,
+  "perm_p_plain": 0.0011998800119988001
+ },
+ "diff/tune/notes:method_original_minus_wrong_rule": {
+  "ci": [
+   0.16225140619976317,
+   -0.014877053656512188,
+   0.29833613932971587
+  ],
+  "perm_p": 0.07899210078992101
  },
  "diff/tune/notes:neutral": {
   "gap_closed": 0.02742174557505259,
@@ -113,7 +121,7 @@
    1.2460598322077392
   ],
   "perm_p_neutral": null,
-  "perm_p_plain": 0.1384
+  "perm_p_plain": 0.1384861513848615
  },
  "diff/tune/notes:teacher": {
   "gap_closed": 0.26211277792997073,
@@ -132,8 +140,16 @@
    0.35923110869785924,
    0.9773091228344108
   ],
-  "perm_p_neutral": 0.0006,
-  "perm_p_plain": 0.0004
+  "perm_p_neutral": 0.0006999300069993001,
+  "perm_p_plain": 0.0004999500049995
+ },
+ "diff/tune/notes:teacher_minus_wrong_rule": {
+  "ci": [
+   0.3192951863567523,
+   0.06588309326432978,
+   0.5051738436262695
+  ],
+  "perm_p": 0.030496950304969503
  },
  "diff/tune/notes:wrong_rule": {
   "gap_closed": 0.5912920053856178,
@@ -152,13 +168,33 @@
    0.08393586961105097,
    0.6998999712735732
   ],
-  "perm_p_neutral": 0.0054,
-  "perm_p_plain": 0.005
+  "perm_p_neutral": 0.005499450054994501,
+  "perm_p_plain": 0.005099490050994901
  },
  "diff/tune/plain_minus_rule": [
   0.9699736791555997,
   0.5388739289576454,
   1.2744377659163122
+ ],
+ "diff/tune/plain_minus_uniform/all": [
+  -0.07563478645286577,
+  -0.16037283933019938,
+  -0.005829020850425807
+ ],
+ "diff/tune/plain_minus_uniform/at_or_above": [
+  -0.05040462965159911,
+  -0.24158291053561992,
+  0.12359866265524976
+ ],
+ "diff/tune/plain_minus_uniform/below": [
+  -0.04298167152525282,
+  -0.17429975283040747,
+  0.07382088829126877
+ ],
+ "diff/tune/plain_minus_uniform/no_cost": [
+  -0.13351805818174536,
+  -0.18651077002211527,
+  -0.08370147452276273
  ],
  "freegen": {
   "agreement_on_parsed": 0.53,
@@ -172,6 +208,18 @@
   },
   "parse_rate": 1.0,
   "pass": false
+ },
+ "freegen_adapter/llama31_8b_claude_examples_n100_lr1e-04_s0": {
+  "agreement_on_parsed": 0.9494949494949495,
+  "parse_rate": 0.99
+ },
+ "freegen_adapter/llama31_8b_claude_examples_n100_lr1e-04_s1": {
+  "agreement_on_parsed": 0.8969072164948454,
+  "parse_rate": 0.97
+ },
+ "freegen_adapter/llama31_8b_claude_examples_n100_lr1e-04_s2": {
+  "agreement_on_parsed": 0.9489795918367347,
+  "parse_rate": 0.98
  },
  "gemma_vs_llama/Claude's lesson (teacher paragraph)": {
   "gemma_a10g": 0.39034814782993976,
@@ -258,7 +306,7 @@
   {
    "brier": "-",
    "id": "L1c",
-   "observed": "0.260 [-0.110, 0.742]",
+   "observed": "0.260 [-0.106, 0.754]",
    "statement": "slope of offer on stated cost (below) <= 0.45",
    "verdict": "UNCLEAR"
   },
@@ -284,7 +332,7 @@
    "verdict": "UNCLEAR"
   },
   {
-   "brier": "0.490 (p 0.7, outcome no); |teacher - rule| 0.157",
+   "brier": "0.490 (p 0.7, outcome no); |teacher - method paragraph| 0.157",
    "id": "L2b",
    "observed": "-0.254 [-0.330, -0.162]",
    "statement": "teacher minus plain in [-0.38, -0.08]",
@@ -371,6 +419,67 @@
  "readout/probe_train_noprefix.json": 0.47157056495547295,
  "readout/probe_train_prefix_answer.json": 0.9981016141176223,
  "readout/readout_probe.json": 0.4873880787193775,
+ "seen_tuples": {
+  "n_seen": 36,
+  "n_unseen": 48,
+  "soft_seen": 0.03151584268344667,
+  "soft_unseen": 0.059532167469677134
+ },
+ "signed_error/Claude's lesson (teacher paragraph)": {
+  "all": 0.6456786682463248,
+  "at_or_above": 0.7322219323799297,
+  "below": 1.0493155046536382,
+  "no_cost": 0.15549856770540676,
+  "top_letter_share": 0.30183809949102214
+ },
+ "signed_error/examples-100": {
+  "all": -0.06583459298648157,
+  "at_or_above": 0.007296378072740369,
+  "below": -0.019648385642755322,
+  "no_cost": -0.18515177138942976
+ },
+ "signed_error/neutral text (control)": {
+  "all": 0.9222423358898352,
+  "at_or_above": 0.8806825852230334,
+  "below": 1.4737474251201381,
+  "no_cost": 0.4122969973263337,
+  "top_letter_share": 0.3931474648089584
+ },
+ "signed_error/plain Gemma (imported record; confounded)": {
+  "all": 0.36670297119702344,
+  "at_or_above": 0.2927483858485661,
+  "below": 0.8810513899741513,
+  "no_cost": -0.07369086223164727,
+  "top_letter_share": null
+ },
+ "signed_error/plain Llama": {
+  "all": 0.9821447975975727,
+  "at_or_above": 0.9763177642007351,
+  "below": 1.5242618180645775,
+  "no_cost": 0.445854810527405,
+  "top_letter_share": 0.39067902144045796
+ },
+ "signed_error/uniform": {
+  "all": 0.8571428571428574,
+  "at_or_above": 0.9285714285714288,
+  "below": 1.3571428571428577,
+  "no_cost": 0.28571428571428603,
+  "top_letter_share": 0.2
+ },
+ "signed_error/written rule (our method paragraph)": {
+  "all": 0.37709146580895014,
+  "at_or_above": 0.48332852405664134,
+  "below": 0.6178630381534739,
+  "no_cost": 0.030082835216735,
+  "top_letter_share": 0.28312264814117866
+ },
+ "signed_error/wrong rule (control)": {
+  "all": 0.09344871853018248,
+  "at_or_above": 0.2254738047176294,
+  "below": 0.24032495001616846,
+  "no_cost": -0.18545259914325044,
+  "top_letter_share": 0.30134925446567457
+ },
  "step4/train/baseline:cheapest": {
   "by_type": {
    "at_or_above": 0.0,
@@ -389,8 +498,8 @@
   "record": "runs/haggling/none/baseline_cheapest-train-s0-20261127T215346678757Z.json",
   "slope": [
    0.02438471135306804,
-   -0.11580822527987526,
-   0.12908574876004944
+   -0.11928676499051617,
+   0.1336111605677018
   ],
   "soft": 0.5731851851851851,
   "top_letter_share": null
@@ -413,8 +522,8 @@
   "record": "runs/haggling/none/baseline_stated_cost_rule-train-s0-20261127T215346871145Z.json",
   "slope": [
    0.7194434993005936,
-   0.6164726948318494,
-   0.8090852954661137
+   0.6165058145261522,
+   0.8072482659234078
   ],
   "soft": 0.15651851851851853,
   "top_letter_share": null
@@ -437,8 +546,8 @@
   "record": "runs/haggling/llama31_8b/notes_method_original-train-s0-20261127T222122518219Z.json",
   "slope": [
    0.19753528376865676,
-   0.07256600272285547,
-   0.30127396715023497
+   0.07110680046752095,
+   0.30148993765328275
   ],
   "soft": 0.7668511575256614,
   "top_letter_share": 0.27883048097156676
@@ -461,8 +570,8 @@
   "record": "runs/haggling/llama31_8b/notes_neutral-train-s0-20261127T223803765286Z.json",
   "slope": [
    0.13232923077200306,
-   0.008539934812688804,
-   0.22977677275593222
+   0.012315890238354978,
+   0.23214540533863917
   ],
   "soft": 1.0822501115556151,
   "top_letter_share": 0.3936559770639597
@@ -485,8 +594,8 @@
   "record": "runs/haggling/llama31_8b/notes_teacher-train-s0-20261127T222943793069Z.json",
   "slope": [
    0.17868132976316672,
-   0.0705669934895574,
-   0.26897673104753345
+   0.06949853481107679,
+   0.2678268749779061
   ],
   "soft": 0.8738667221606197,
   "top_letter_share": 0.2937671348704674
@@ -509,8 +618,8 @@
   "record": "runs/haggling/llama31_8b/notes_wrong_rule-train-s0-20261127T224503562106Z.json",
   "slope": [
    0.09943508310057109,
-   -0.011920540416260042,
-   0.18789494921937808
+   -0.01477296945541228,
+   0.19019981063791008
   ],
   "soft": 0.6847941206222457,
   "top_letter_share": 0.29672688225552285
@@ -553,8 +662,8 @@
   "record": "runs/haggling/llama31_8b/plain-train-s0-20261127T220140193450Z.json",
   "slope": [
    0.14712908719976714,
-   0.0358338815292724,
-   0.24321985706389632
+   0.034767252597637514,
+   0.24470185738469696
   ],
   "soft": 1.1106476335888265,
   "top_letter_share": 0.38888870189623065
@@ -577,8 +686,8 @@
   "record": "runs/haggling/none/uniform-train-s0-20261127T215346480987Z.json",
   "slope": [
    0.024384711353067526,
-   -0.11580822527987421,
-   0.12908574876004952
+   -0.11928676499051638,
+   0.13361116056770342
   ],
   "soft": 1.2036296296296294,
   "top_letter_share": null
@@ -601,8 +710,8 @@
   "record": "runs/haggling/none/baseline_cheapest-tune-s0-20261127T215346025061Z.json",
   "slope": [
    0.06153846153846186,
-   -0.2857142857142856,
-   0.6167429577464785
+   -0.28499259807549937,
+   0.6108890831082149
   ],
   "soft": 0.42857142857142855,
   "top_letter_share": null
@@ -625,7 +734,7 @@
   "record": "runs/haggling/none/baseline_stated_cost_rule-tune-s0-20261127T215346098541Z.json",
   "slope": [
    0.7600000000000001,
-   0.49517684887459795,
+   0.49517684887459806,
    1.0000000000000002
   ],
   "soft": 0.21428571428571427,
@@ -649,8 +758,8 @@
   "record": "runs/haggling/llama31_8b/notes_method_original-tune-s0-20261127T220939295677Z.json",
   "slope": [
    0.2253394951030642,
-   -0.06972018165865432,
-   0.6307966158440986
+   -0.06970266165515328,
+   0.643004906260958
   ],
   "soft": 0.7729731177218968,
   "top_letter_share": 0.28312264814117866
@@ -673,8 +782,8 @@
   "record": "runs/haggling/llama31_8b/notes_neutral-tune-s0-20261127T221205378637Z.json",
   "slope": [
    0.25205119665345643,
-   -0.11545808039642053,
-   0.7609771551086333
+   -0.10979823156520137,
+   0.7612453257770664
   ],
   "soft": 1.1576610219970116,
   "top_letter_share": 0.3931474648089584
@@ -697,8 +806,8 @@
   "record": "runs/haggling/llama31_8b/notes_teacher-tune-s0-20261127T221052410709Z.json",
   "slope": [
    0.2379377117777116,
-   -0.03807507753729392,
-   0.6922404995476957
+   -0.03567014211164681,
+   0.6855941662077703
   ],
   "soft": 0.9300168978788858,
   "top_letter_share": 0.30183809949102214
@@ -721,8 +830,8 @@
   "record": "runs/haggling/llama31_8b/notes_wrong_rule-tune-s0-20261127T221306504290Z.json",
   "slope": [
    0.17220810124026317,
-   -0.04890836898645935,
-   0.5809955571695826
+   -0.05019687388765135,
+   0.580855536796187
   ],
   "soft": 0.6107217115221337,
   "top_letter_share": 0.30134925446567457
@@ -765,8 +874,8 @@
   "record": "runs/haggling/llama31_8b/plain-tune-s0-20261127T215449648928Z.json",
   "slope": [
    0.2595123685151089,
-   -0.10958189792033335,
-   0.7422031167808362
+   -0.10620756132931408,
+   0.7535367817611061
   ],
   "soft": 1.1842593934413141,
   "top_letter_share": 0.39067902144045796
@@ -789,21 +898,22 @@
   "record": "runs/haggling/none/uniform-tune-s0-20261127T215345961756Z.json",
   "slope": [
    0.06153846153846162,
-   -0.28571428571428514,
-   0.6167429577464795
+   -0.2849925980754991,
+   0.6108890831082154
   ],
   "soft": 1.2598941798941798,
   "top_letter_share": null
  },
  "tune_groups": 19,
  "verdicts": {
-  "R1": "plain fails like Gemma (soft 1.184; minus rule 0.970 [0.539, 1.274]; largest type below; plain letter mass 0.9978)",
-  "R2 controls": "NOT inert (neutral minus plain -0.027 [-0.061, 0.005]; wrong rule minus plain -0.574 [-0.780, -0.290]; the wrong rule helps: any push toward lower offers lowers Llama's regret, so R2 'helps' does not show the paragraphs' content is what helps)",
+  "R1": "R1 criteria met; plain Llama is close to uniform guessing (plain minus uniform -0.076 [-0.160, -0.006]), so 'fails like Gemma' is not claimed: uniform guessing would meet R1 too (soft 1.184; minus rule 0.970 [0.539, 1.274]; largest type below; plain letter mass 0.9978)",
+  "R2 controls": "NOT inert (neutral minus plain -0.027 [-0.061, 0.005]; wrong rule minus plain -0.574 [-0.780, -0.290]; the wrong rule helps at least as much as either paragraph, so R2 'helps' does not show that the paragraphs' content is what helps: the gain may be generic (lower offers, less letter-position bias; see the G2 checks))",
   "R2 method_original": "helps (minus plain -0.411 [-0.530, -0.249]; minus neutral -0.385 [-0.510, -0.224]; arm letter mass 0.9970)",
   "R2 teacher": "helps (minus plain -0.254 [-0.330, -0.162]; minus neutral -0.228 [-0.307, -0.134]; arm letter mass 0.9967)",
   "R3": "not replicated; failed: planted 4/4 (each adapter) (seed mean 0.048; planted: seed 0 planted-nocost failed at mass 0.401 (top option 3); seed 1 planted-nocost failed at mass 0.130 (top option 1); seed 2 planted-nocost failed at mass 0.361 (top option 2))",
+  "R3 note": "Gemma's imported adapter records were scored without planted cases, so the planted condition was never applied to Gemma; 'not replicated' therefore partly reflects a check Gemma was not held to. All numbers are forced-choice letters after 'Answer: (', conditional on one training draw and label set; seeds range 0.024-0.082.",
   "R3 secondary (without the planted condition; labelled secondary per LLAMA_PLAN.md)": "all other R3 conditions hold",
   "R4": "cheapest-label N=25 within 0.05 of always-cheapest: yes; cheapest-label N=100 within 0.05 of always-cheapest: yes; scrambled at least 0.15 worse than examples-100: yes",
-  "R5": "examples-25 within 0.05 of the examples-100 mean (0.086 vs 0.048; one seed)"
+  "R5": "examples-25 within 0.05 of the examples-100 mean (0.086 vs 0.048, 1.8x; one seed, worse than every examples-100 seed; difference interval -0.039 [-0.097, 0.002] straddles the 0.05 edge, so 'within' is not resolved)"
  }
 }

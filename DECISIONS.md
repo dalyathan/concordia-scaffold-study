@@ -171,3 +171,27 @@ L21. **Step 5 done** (scripts/llama_step5.py; 8 runs, each also scoring its last
 L22. **Report fix after the runs (code, not a rule):** tools/llama_report.py picked up `_last` records when reading the seed-0 select_B values for the lr rule (those records have no selection field and it crashed); the filter now excludes `_last`. The R3 line now names each planted failure with its mass and adds the labelled secondary verdict without the planted condition, both of which LLAMA_PLAN.md already required.
 L23. **Planted no-cost fails for every examples-100 adapter** (expected-option mass 0.401, 0.130, 0.361 for seeds 0-2; the threshold is 0.9). R3 is therefore "not replicated" by the frozen rule; its other conditions all hold (labelled secondary). Context, not a rule change: planted-nocost is a near-tie (payoffs 1, 1.6, 1.8, 1.6, 1, so offering 2 or 4 costs only 0.2) and the adapters spread their mass over 2, 3 and 4. Gemma's imported records were scored without planted cases, so Gemma's adapters were never held to this check; the comparison cannot be made.
 L24. **Process slip (logged, no data seen):** while looking for Gemma planted results, a glob over `runs/haggling/*gemma*/*claude_examples*` also loaded the pre-existing legacy Gemma records named test_hard and test_same; only their `planted` field was printed (empty: they have no planted cases). No case, score or summary from them was displayed. Later globs are restricted to `-tune-`.
+
+## G2: Llama results (2026-11-28; Sonnet + Opus; both "partly justified")
+
+Reviews: reviews/2026-11-28_G2_llama-results_{sonnet,opus}.md. Packet: proposal of conclusions, plan, predictions, results, report JSON, code; the hub-commit keyword was spelled `commit_pin` in the packet copy (stated in the proposal).
+
+| # | Point (who) | Action |
+|---|---|---|
+| 1 | Plain Llama is near uniform; "fails as Gemma did" and the slope claim are unsupported; measure the signed offer error (both; most severe for both) | **Applied** (CPU): plain-vs-uniform table per type, signed offer error per arm (plain Llama offers too much on every type; Gemma's plain record too, less so), R1 reworded to "criteria met; close to uniform", slope claim dropped from the summary |
+| 2 | Readout validity: every claim is about the forced-choice letter; check the adapters' free answers (both) | **Applied**: the free-answer check rerun with each examples-100 adapter (scripts/llama_freegen_check.py --adapter; same 20 train cases, a few GPU-min each); "forced-choice letter" wording in the summary and R3 note |
+| 3 | R2 mechanism unmeasured; no paired interval vs the wrong rule (both) | **Applied**: paired intervals and permutation p for each paragraph minus the wrong rule; signed offer error and top-letter share shown; wording "the gain may be generic". **Deferred** (open): letter-prior-calibrated regret; a length-matched one-sentence neutral control and a "double the cost" rule (new arms, a new experiment) |
+| 4 | R3: do not soften with "near-tie"; Gemma never held to planted cases (both / Opus) | **Applied**: the summary no longer uses the near-tie framing (L23's payoff arithmetic stays as context only); the asymmetry is stated next to R3. **Deferred**: rescoring Gemma's adapters on planted cases (needs the Gemma GPU path; parity skipped by the owner) |
+| 5 | Tune is in-family with training: split regret by seen/unseen decision tuples (Sonnet) | **Applied** (CPU) |
+| 6 | No-cost accuracy on tune/train no-cost cells; are Claude's no-cost labels payoff-optimal? (Sonnet) | **Deferred** (open point) |
+| 7 | R5 weak: one seed, 1.8x, interval straddles the edge (both) | **Applied** (wording in R5 line and summary) |
+| 8 | lr choice within seed noise; cheapest-label a weak comparator; examples-100 vs rule marginal (Sonnet) | **Applied** as wording in the summary |
+| 9 | Do not print Gemma-minus-Llama deltas (Sonnet) | **Applied**: column removed |
+| 10 | GPU total double-counts the last-epoch scoring (Opus) | **Applied** in the report (3.22 h, the `_last` rows marked "included in its run"); the trainer's record format is unchanged |
+| 11 | perm_p can be 0; slope uses 2,000 resamples; L2b label (Opus) | **Applied**: (k+1)/(B+1); 10,000 resamples; label "teacher - method paragraph" |
+| 12 | Dead `if not control: break` (Sonnet) | **Rejected**: harmless, kept so non-control use stays possible |
+| 13 | `_prior_look` keyed on the config hash; freeze lists for a test look (both) | **Deferred** to LLAMA_TEST_PLAN.md |
+
+L25. The report also restricts its Gemma glob to `legacy-*-tune-*.json`, so test-split legacy records are no longer loaded at all (see L24).
+L26. **Adapter free-answer check (G2 point 2):** agreement of the free answer with the forced letter 0.95 / 0.90 / 0.95 for examples-100 seeds 0-2 (parse rate 0.97-0.99; plain 0.53). GPU about 0.15 h including model loads (about $0.09). Descriptive; no threshold. Total Llama GPU on this branch: 3.22 h in the records + about 0.35 h of probes, checks and loads, about $2.15; budget 10 h.
+L27. **Conclusions written after G2** in LLAMA_RESULTS.md (summary) and README (node F 🟡, history Nov 28). **Step 7:** LLAMA_TEST_PLAN.md drafted (one look at test2_same and test2_newkey; freeze list, harness port of the test2 splits as locked, one look per arm, planted handling decided in advance). Nothing on test was opened or run. Stopping here as instructed: a test look needs G3 (Sonnet + Opus), the owner's go and the owner's scorer-pin tag.

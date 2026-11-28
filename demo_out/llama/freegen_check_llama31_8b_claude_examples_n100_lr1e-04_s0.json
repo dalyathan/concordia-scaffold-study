@@ -1,0 +1,1514 @@
+{
+ "n_prompts": 100,
+ "parse_rate": 0.99,
+ "agreement_on_parsed": 0.9494949494949495,
+ "thresholds": {
+  "agree": 0.7,
+  "parse": 0.5
+ },
+ "pass": true,
+ "adapter": "demo_out/adapters_harness/llama31_8b_claude_examples_n100_lr1e-04_s0",
+ "gpu_seconds": 96.81222081184387,
+ "rows": [
+  {
+   "cid": "V2-gC-information-C1-p1_5-w1-n0",
+   "order": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "forced": "a",
+   "free": null,
+   "parsed_by": null,
+   "agree": null,
+   "reply": "1 coin, as Emrys Olivebrook mentioned that the farm charged them 1 coin for it, and Kestra Zestmoor always drives a hard bargain, taking advantage of the information given to her."
+  },
+  {
+   "cid": "V2-gC-information-C1-p1_5-w1-n0",
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    0
+   ],
+   "forced": "e",
+   "free": "e",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "e) 3 coins."
+  },
+  {
+   "cid": "V2-gC-information-C1-p1_5-w1-n0",
+   "order": [
+    2,
+    3,
+    4,
+    0,
+    1
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "d) 3 coins."
+  },
+  {
+   "cid": "V2-gC-information-C1-p1_5-w1-n0",
+   "order": [
+    3,
+    4,
+    0,
+    1,
+    2
+   ],
+   "forced": "c",
+   "free": "c",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "c) 3 coins."
+  },
+  {
+   "cid": "V2-gC-information-C1-p1_5-w1-n0",
+   "order": [
+    4,
+    0,
+    1,
+    2,
+    3
+   ],
+   "forced": "b",
+   "free": "b",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "b) 3 coins."
+  },
+  {
+   "cid": "V9-gC-information-C7-p2_6-w0-n1",
+   "order": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "forced": "e",
+   "free": "e",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "e) 7 coins."
+  },
+  {
+   "cid": "V9-gC-information-C7-p2_6-w0-n1",
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    0
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "d) 3 coins."
+  },
+  {
+   "cid": "V9-gC-information-C7-p2_6-w0-n1",
+   "order": [
+    2,
+    3,
+    4,
+    0,
+    1
+   ],
+   "forced": "c",
+   "free": "c",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "c) 7 coins."
+  },
+  {
+   "cid": "V9-gC-information-C7-p2_6-w0-n1",
+   "order": [
+    3,
+    4,
+    0,
+    1,
+    2
+   ],
+   "forced": "b",
+   "free": "b",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "b) 7 coins."
+  },
+  {
+   "cid": "V9-gC-information-C7-p2_6-w0-n1",
+   "order": [
+    4,
+    0,
+    1,
+    2,
+    3
+   ],
+   "forced": "a",
+   "free": "a",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "a) 7 coins."
+  },
+  {
+   "cid": "V7-gC-information-C4-p1_10-w0-n0",
+   "order": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "forced": "b",
+   "free": "b",
+   "parsed_by": "price",
+   "agree": true,
+   "reply": "briar elderglen proposes 4 coins, a price that is exactly the amount Dunstan Cherrydale paid for the fruit at the farm."
+  },
+  {
+   "cid": "V7-gC-information-C4-p1_10-w0-n0",
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    0
+   ],
+   "forced": "a",
+   "free": "a",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "a) 4 coins."
+  },
+  {
+   "cid": "V7-gC-information-C4-p1_10-w0-n0",
+   "order": [
+    2,
+    3,
+    4,
+    0,
+    1
+   ],
+   "forced": "e",
+   "free": "e",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "e) 4 coins."
+  },
+  {
+   "cid": "V7-gC-information-C4-p1_10-w0-n0",
+   "order": [
+    3,
+    4,
+    0,
+    1,
+    2
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "d) 5 coins."
+  },
+  {
+   "cid": "V7-gC-information-C4-p1_10-w0-n0",
+   "order": [
+    4,
+    0,
+    1,
+    2,
+    3
+   ],
+   "forced": "c",
+   "free": "c",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "c) 4 coins."
+  },
+  {
+   "cid": "V9-gB-information-C3-p2_10-w1-n1",
+   "order": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "forced": "b",
+   "free": "b",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "b) 3 coins."
+  },
+  {
+   "cid": "V9-gB-information-C3-p2_10-w1-n1",
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    0
+   ],
+   "forced": "a",
+   "free": "a",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "a) 3 coins."
+  },
+  {
+   "cid": "V9-gB-information-C3-p2_10-w1-n1",
+   "order": [
+    2,
+    3,
+    4,
+    0,
+    1
+   ],
+   "forced": "e",
+   "free": "e",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "e) 3 coins."
+  },
+  {
+   "cid": "V9-gB-information-C3-p2_10-w1-n1",
+   "order": [
+    3,
+    4,
+    0,
+    1,
+    2
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "d) 3 coins."
+  },
+  {
+   "cid": "V9-gB-information-C3-p2_10-w1-n1",
+   "order": [
+    4,
+    0,
+    1,
+    2,
+    3
+   ],
+   "forced": "c",
+   "free": "c",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "c) 3 coins."
+  },
+  {
+   "cid": "V4-gB-information-C1-p1_10-w1-n0",
+   "order": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "forced": "a",
+   "free": "a",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "a) 2 coins."
+  },
+  {
+   "cid": "V4-gB-information-C1-p1_10-w1-n0",
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    0
+   ],
+   "forced": "e",
+   "free": "e",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "e) 2 coins."
+  },
+  {
+   "cid": "V4-gB-information-C1-p1_10-w1-n0",
+   "order": [
+    2,
+    3,
+    4,
+    0,
+    1
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "d) 2 coins."
+  },
+  {
+   "cid": "V4-gB-information-C1-p1_10-w1-n0",
+   "order": [
+    3,
+    4,
+    0,
+    1,
+    2
+   ],
+   "forced": "c",
+   "free": "c",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "c) 2 coins."
+  },
+  {
+   "cid": "V4-gB-information-C1-p1_10-w1-n0",
+   "order": [
+    4,
+    0,
+    1,
+    2,
+    3
+   ],
+   "forced": "b",
+   "free": "b",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "b) 2 coins."
+  },
+  {
+   "cid": "V6-gB-information-C5-p2_10-w0-n1",
+   "order": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "d) 6 coins."
+  },
+  {
+   "cid": "V6-gB-information-C5-p2_10-w0-n1",
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    0
+   ],
+   "forced": "c",
+   "free": "c",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "c) 5 coins."
+  },
+  {
+   "cid": "V6-gB-information-C5-p2_10-w0-n1",
+   "order": [
+    2,
+    3,
+    4,
+    0,
+    1
+   ],
+   "forced": "b",
+   "free": "b",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "b) 5 coins."
+  },
+  {
+   "cid": "V6-gB-information-C5-p2_10-w0-n1",
+   "order": [
+    3,
+    4,
+    0,
+    1,
+    2
+   ],
+   "forced": "a",
+   "free": "a",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "a) 5 coins."
+  },
+  {
+   "cid": "V6-gB-information-C5-p2_10-w0-n1",
+   "order": [
+    4,
+    0,
+    1,
+    2,
+    3
+   ],
+   "forced": "e",
+   "free": "e",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "e) 5 coins."
+  },
+  {
+   "cid": "V4-gA-information-C1-p2_6-w1-n0",
+   "order": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "forced": "a",
+   "free": "a",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "a) 1 coin."
+  },
+  {
+   "cid": "V4-gA-information-C1-p2_6-w1-n0",
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    0
+   ],
+   "forced": "e",
+   "free": "e",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "e) 1 coin."
+  },
+  {
+   "cid": "V4-gA-information-C1-p2_6-w1-n0",
+   "order": [
+    2,
+    3,
+    4,
+    0,
+    1
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "d) 1 coin."
+  },
+  {
+   "cid": "V4-gA-information-C1-p2_6-w1-n0",
+   "order": [
+    3,
+    4,
+    0,
+    1,
+    2
+   ],
+   "forced": "c",
+   "free": "c",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "c) 1 coin."
+  },
+  {
+   "cid": "V4-gA-information-C1-p2_6-w1-n0",
+   "order": [
+    4,
+    0,
+    1,
+    2,
+    3
+   ],
+   "forced": "b",
+   "free": "b",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "b) 1 coin."
+  },
+  {
+   "cid": "V3-gC-information-C4-p3_7-w1-n1",
+   "order": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "forced": "a",
+   "free": "a",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "a) 3 coins."
+  },
+  {
+   "cid": "V3-gC-information-C4-p3_7-w1-n1",
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    0
+   ],
+   "forced": "e",
+   "free": "e",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "e) 3 coins."
+  },
+  {
+   "cid": "V3-gC-information-C4-p3_7-w1-n1",
+   "order": [
+    2,
+    3,
+    4,
+    0,
+    1
+   ],
+   "forced": "e",
+   "free": "d",
+   "parsed_by": "letter",
+   "agree": false,
+   "reply": "d) 3 coins."
+  },
+  {
+   "cid": "V3-gC-information-C4-p3_7-w1-n1",
+   "order": [
+    3,
+    4,
+    0,
+    1,
+    2
+   ],
+   "forced": "d",
+   "free": "c",
+   "parsed_by": "letter",
+   "agree": false,
+   "reply": "c) 3 coins."
+  },
+  {
+   "cid": "V3-gC-information-C4-p3_7-w1-n1",
+   "order": [
+    4,
+    0,
+    1,
+    2,
+    3
+   ],
+   "forced": "b",
+   "free": "b",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "b) 3 coins."
+  },
+  {
+   "cid": "V5-gB-information-C6-p3_7-w1-n0",
+   "order": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "forced": "a",
+   "free": "a",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "a) 2 coins."
+  },
+  {
+   "cid": "V5-gB-information-C6-p3_7-w1-n0",
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    0
+   ],
+   "forced": "e",
+   "free": "e",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "e) 2 coins."
+  },
+  {
+   "cid": "V5-gB-information-C6-p3_7-w1-n0",
+   "order": [
+    2,
+    3,
+    4,
+    0,
+    1
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "d) 2 coins."
+  },
+  {
+   "cid": "V5-gB-information-C6-p3_7-w1-n0",
+   "order": [
+    3,
+    4,
+    0,
+    1,
+    2
+   ],
+   "forced": "c",
+   "free": "c",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "c) 2 coins."
+  },
+  {
+   "cid": "V5-gB-information-C6-p3_7-w1-n0",
+   "order": [
+    4,
+    0,
+    1,
+    2,
+    3
+   ],
+   "forced": "b",
+   "free": "b",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "b) 2 coins."
+  },
+  {
+   "cid": "V2-gC-information-C3-p2_10-w1-n1",
+   "order": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "forced": "a",
+   "free": "a",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "a) 3 coins."
+  },
+  {
+   "cid": "V2-gC-information-C3-p2_10-w1-n1",
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    0
+   ],
+   "forced": "e",
+   "free": "e",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "e) 3 coins."
+  },
+  {
+   "cid": "V2-gC-information-C3-p2_10-w1-n1",
+   "order": [
+    2,
+    3,
+    4,
+    0,
+    1
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "d) 3 coins."
+  },
+  {
+   "cid": "V2-gC-information-C3-p2_10-w1-n1",
+   "order": [
+    3,
+    4,
+    0,
+    1,
+    2
+   ],
+   "forced": "c",
+   "free": "c",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "c) 3 coins."
+  },
+  {
+   "cid": "V2-gC-information-C3-p2_10-w1-n1",
+   "order": [
+    4,
+    0,
+    1,
+    2,
+    3
+   ],
+   "forced": "b",
+   "free": "b",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "b) 3 coins."
+  },
+  {
+   "cid": "V4-gA-information-C5-p3_7-w1-n0",
+   "order": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "forced": "b",
+   "free": "b",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "b) 2 coins."
+  },
+  {
+   "cid": "V4-gA-information-C5-p3_7-w1-n0",
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    0
+   ],
+   "forced": "e",
+   "free": "a",
+   "parsed_by": "letter",
+   "agree": false,
+   "reply": "a) 2 coins."
+  },
+  {
+   "cid": "V4-gA-information-C5-p3_7-w1-n0",
+   "order": [
+    2,
+    3,
+    4,
+    0,
+    1
+   ],
+   "forced": "d",
+   "free": "a",
+   "parsed_by": "letter",
+   "agree": false,
+   "reply": "a) 3 coins."
+  },
+  {
+   "cid": "V4-gA-information-C5-p3_7-w1-n0",
+   "order": [
+    3,
+    4,
+    0,
+    1,
+    2
+   ],
+   "forced": "c",
+   "free": "c",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "c) 1 coin."
+  },
+  {
+   "cid": "V4-gA-information-C5-p3_7-w1-n0",
+   "order": [
+    4,
+    0,
+    1,
+    2,
+    3
+   ],
+   "forced": "b",
+   "free": "b",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "b) 1 coin."
+  },
+  {
+   "cid": "V3-gC-information-C5-p2_6-w1-n1",
+   "order": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "forced": "a",
+   "free": "a",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "a) 3 coins."
+  },
+  {
+   "cid": "V3-gC-information-C5-p2_6-w1-n1",
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    0
+   ],
+   "forced": "e",
+   "free": "e",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "e) 3 coins."
+  },
+  {
+   "cid": "V3-gC-information-C5-p2_6-w1-n1",
+   "order": [
+    2,
+    3,
+    4,
+    0,
+    1
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "d) 3 coins."
+  },
+  {
+   "cid": "V3-gC-information-C5-p2_6-w1-n1",
+   "order": [
+    3,
+    4,
+    0,
+    1,
+    2
+   ],
+   "forced": "c",
+   "free": "c",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "c) 3 coins."
+  },
+  {
+   "cid": "V3-gC-information-C5-p2_6-w1-n1",
+   "order": [
+    4,
+    0,
+    1,
+    2,
+    3
+   ],
+   "forced": "b",
+   "free": "b",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "b) 3 coins."
+  },
+  {
+   "cid": "V2-gB-information-C3-p2_6-w1-n0",
+   "order": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "forced": "b",
+   "free": "b",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "b) 3 coins."
+  },
+  {
+   "cid": "V2-gB-information-C3-p2_6-w1-n0",
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    0
+   ],
+   "forced": "e",
+   "free": "e",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "e) 2 coins."
+  },
+  {
+   "cid": "V2-gB-information-C3-p2_6-w1-n0",
+   "order": [
+    2,
+    3,
+    4,
+    0,
+    1
+   ],
+   "forced": "e",
+   "free": "e",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "e) 3 coins."
+  },
+  {
+   "cid": "V2-gB-information-C3-p2_6-w1-n0",
+   "order": [
+    3,
+    4,
+    0,
+    1,
+    2
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "d) 3 coins."
+  },
+  {
+   "cid": "V2-gB-information-C3-p2_6-w1-n0",
+   "order": [
+    4,
+    0,
+    1,
+    2,
+    3
+   ],
+   "forced": "c",
+   "free": "c",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "c) 3 coins."
+  },
+  {
+   "cid": "V3-gC-information-C4-p1_10-w0-n1",
+   "order": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "forced": "b",
+   "free": "b",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "b) 4 coins."
+  },
+  {
+   "cid": "V3-gC-information-C4-p1_10-w0-n1",
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    0
+   ],
+   "forced": "e",
+   "free": "e",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "e) 3 coins."
+  },
+  {
+   "cid": "V3-gC-information-C4-p1_10-w0-n1",
+   "order": [
+    2,
+    3,
+    4,
+    0,
+    1
+   ],
+   "forced": "e",
+   "free": "e",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "e) 4 coins."
+  },
+  {
+   "cid": "V3-gC-information-C4-p1_10-w0-n1",
+   "order": [
+    3,
+    4,
+    0,
+    1,
+    2
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "d) 4 coins."
+  },
+  {
+   "cid": "V3-gC-information-C4-p1_10-w0-n1",
+   "order": [
+    4,
+    0,
+    1,
+    2,
+    3
+   ],
+   "forced": "c",
+   "free": "c",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "c) 4 coins."
+  },
+  {
+   "cid": "V2-gC-neutral-p1_5-w0-n0",
+   "order": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "forced": "a",
+   "free": "a",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "a) 1 coin. Rhea Tangelo is known to drive a hard bargain, and considering she can sell the fruit for 2 coins back in her hometown, she would likely try to get the best deal possible. Offering 1 coin is a lowball price that Jory Walnutlea might be willing to accept"
+  },
+  {
+   "cid": "V2-gC-neutral-p1_5-w0-n0",
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    0
+   ],
+   "forced": "e",
+   "free": "e",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "e) 3 coins."
+  },
+  {
+   "cid": "V2-gC-neutral-p1_5-w0-n0",
+   "order": [
+    2,
+    3,
+    4,
+    0,
+    1
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "d) 3 coins."
+  },
+  {
+   "cid": "V2-gC-neutral-p1_5-w0-n0",
+   "order": [
+    3,
+    4,
+    0,
+    1,
+    2
+   ],
+   "forced": "c",
+   "free": "c",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "c) 3 coins."
+  },
+  {
+   "cid": "V2-gC-neutral-p1_5-w0-n0",
+   "order": [
+    4,
+    0,
+    1,
+    2,
+    3
+   ],
+   "forced": "b",
+   "free": "b",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "b) 3 coins."
+  },
+  {
+   "cid": "V5-gC-neutral-p3_7-w1-n1",
+   "order": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "forced": "a",
+   "free": "a",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "a) 3 coins."
+  },
+  {
+   "cid": "V5-gC-neutral-p3_7-w1-n1",
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    0
+   ],
+   "forced": "e",
+   "free": "e",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "e) 3 coins."
+  },
+  {
+   "cid": "V5-gC-neutral-p3_7-w1-n1",
+   "order": [
+    2,
+    3,
+    4,
+    0,
+    1
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "d) 3 coins."
+  },
+  {
+   "cid": "V5-gC-neutral-p3_7-w1-n1",
+   "order": [
+    3,
+    4,
+    0,
+    1,
+    2
+   ],
+   "forced": "c",
+   "free": "c",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "c) 3 coins."
+  },
+  {
+   "cid": "V5-gC-neutral-p3_7-w1-n1",
+   "order": [
+    4,
+    0,
+    1,
+    2,
+    3
+   ],
+   "forced": "b",
+   "free": "b",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "b) 3 coins."
+  },
+  {
+   "cid": "V5-gA-neutral-p2_10-w0-n0",
+   "order": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "forced": "c",
+   "free": "c",
+   "parsed_by": "price",
+   "agree": true,
+   "reply": "3 coins."
+  },
+  {
+   "cid": "V5-gA-neutral-p2_10-w0-n0",
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    0
+   ],
+   "forced": "b",
+   "free": "b",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "b) 3 coins."
+  },
+  {
+   "cid": "V5-gA-neutral-p2_10-w0-n0",
+   "order": [
+    2,
+    3,
+    4,
+    0,
+    1
+   ],
+   "forced": "a",
+   "free": "a",
+   "parsed_by": "price",
+   "agree": true,
+   "reply": "Perrin Fennelmoor proposes 3 coins, knowing that she can sell the fruit for 5 coins back in her hometown, and she's trying to drive a hard bargain."
+  },
+  {
+   "cid": "V5-gA-neutral-p2_10-w0-n0",
+   "order": [
+    3,
+    4,
+    0,
+    1,
+    2
+   ],
+   "forced": "e",
+   "free": "e",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "e) 3 coins."
+  },
+  {
+   "cid": "V5-gA-neutral-p2_10-w0-n0",
+   "order": [
+    4,
+    0,
+    1,
+    2,
+    3
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "price",
+   "agree": true,
+   "reply": "Perrin Fennelmoor would propose 3 coins, knowing that she can sell the fruit for 5 coins back in her hometown, but also aware that Alder Juniperfold likely paid less than 5 coins for it, and she wants to drive a hard bargain."
+  },
+  {
+   "cid": "V7-gA-neutral-p3_7-w0-n1",
+   "order": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "forced": "c",
+   "free": "c",
+   "parsed_by": "price",
+   "agree": true,
+   "reply": "3 coins."
+  },
+  {
+   "cid": "V7-gA-neutral-p3_7-w0-n1",
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    0
+   ],
+   "forced": "c",
+   "free": "c",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "c) 4 coins."
+  },
+  {
+   "cid": "V7-gA-neutral-p3_7-w0-n1",
+   "order": [
+    2,
+    3,
+    4,
+    0,
+    1
+   ],
+   "forced": "b",
+   "free": "b",
+   "parsed_by": "price",
+   "agree": true,
+   "reply": "Briar Medlarwick would propose 4 coins, as she is trying to drive a hard bargain and is aware that Emrys Barleyfield likely paid between 3 and 7 coins for the fruit, so she is offering a price that is below the likely cost but still a reasonable offer."
+  },
+  {
+   "cid": "V7-gA-neutral-p3_7-w0-n1",
+   "order": [
+    3,
+    4,
+    0,
+    1,
+    2
+   ],
+   "forced": "e",
+   "free": "a",
+   "parsed_by": "letter",
+   "agree": false,
+   "reply": "a) 4 coins."
+  },
+  {
+   "cid": "V7-gA-neutral-p3_7-w0-n1",
+   "order": [
+    4,
+    0,
+    1,
+    2,
+    3
+   ],
+   "forced": "e",
+   "free": "e",
+   "parsed_by": "price",
+   "agree": true,
+   "reply": "Briar Medlarwick would propose 4 coins, as she knows that Emrys Barleyfield paid between 3 and 7 coins per kilogram at the farm, and she wants to drive a hard bargain."
+  },
+  {
+   "cid": "V2-gB-pressure-p1_10-w1-n0",
+   "order": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "forced": "a",
+   "free": "a",
+   "parsed_by": "price",
+   "agree": true,
+   "reply": "a. 2 coins."
+  },
+  {
+   "cid": "V2-gB-pressure-p1_10-w1-n0",
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    0
+   ],
+   "forced": "e",
+   "free": "e",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "e) 2 coins."
+  },
+  {
+   "cid": "V2-gB-pressure-p1_10-w1-n0",
+   "order": [
+    2,
+    3,
+    4,
+    0,
+    1
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "d) 2 coins."
+  },
+  {
+   "cid": "V2-gB-pressure-p1_10-w1-n0",
+   "order": [
+    3,
+    4,
+    0,
+    1,
+    2
+   ],
+   "forced": "c",
+   "free": "c",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "c) 2 coins."
+  },
+  {
+   "cid": "V2-gB-pressure-p1_10-w1-n0",
+   "order": [
+    4,
+    0,
+    1,
+    2,
+    3
+   ],
+   "forced": "b",
+   "free": "b",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "b) 2 coins."
+  },
+  {
+   "cid": "V5-gC-neutral-p3_7-w0-n1",
+   "order": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "forced": "a",
+   "free": "a",
+   "parsed_by": "price",
+   "agree": true,
+   "reply": "3 coins."
+  },
+  {
+   "cid": "V5-gC-neutral-p3_7-w0-n1",
+   "order": [
+    1,
+    2,
+    3,
+    4,
+    0
+   ],
+   "forced": "e",
+   "free": "e",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "e) 3 coins."
+  },
+  {
+   "cid": "V5-gC-neutral-p3_7-w0-n1",
+   "order": [
+    2,
+    3,
+    4,
+    0,
+    1
+   ],
+   "forced": "d",
+   "free": "d",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "d) 3 coins."
+  },
+  {
+   "cid": "V5-gC-neutral-p3_7-w0-n1",
+   "order": [
+    3,
+    4,
+    0,
+    1,
+    2
+   ],
+   "forced": "c",
+   "free": "c",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "c) 3 coins."
+  },
+  {
+   "cid": "V5-gC-neutral-p3_7-w0-n1",
+   "order": [
+    4,
+    0,
+    1,
+    2,
+    3
+   ],
+   "forced": "b",
+   "free": "b",
+   "parsed_by": "letter",
+   "agree": true,
+   "reply": "b) 3 coins."
+  }
+ ]
+}
