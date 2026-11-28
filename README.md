@@ -96,6 +96,7 @@ Pruned: baking the vector into a bias (convenience, not knowledge), steering sid
 
 | Path | What it is |
 | --- | --- |
+| [WEIGHT_EDITING_RULES.md](WEIGHT_EDITING_RULES.md) | Do's and don'ts whenever Claude chooses or computes a weight edit directly (edit card first, locate before editing, reversible delta files, size budget, same-size controls, no edits to the readout) |
 | `demo/floor.py`, [DEMO_RUNBOOK.md](DEMO_RUNBOOK.md) | Stage tool: score a case, change the stated cost, shuffle options, switch the prompt text or a trained add-on on and off; the runbook gives every command and fallback |
 | `demo/gen_cases.py`, `demo/gen/` | Case generator, frozen cell lists, locked test sets and their fingerprints, Claude's lessons and labels |
 | `demo/gen_lora.py` and its chains | LoRA training arms and controls on the generated data |
