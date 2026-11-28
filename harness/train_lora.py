@@ -49,6 +49,20 @@ PINNED = {  # sha256 of the input files and of the label sets, as used and recor
     "labels:shuffled_claude": "b263b077cd347249efef88b82c6c2d77953fd9c0910776ceba43b75d9b696aa6",
 }
 ARMS = ("claude_examples", "cheapest_label", "shuffled_claude")
+# targeted experiment (TARGETED_PLAN.md): the committed draws, orders, labels and rule, pinned like PINNED (G1: inner hashes alone are self-referential)
+PINNED_TARGETED = {"qwen25_7b": {"draws_file": "af62514fab6650bb85a786697916a69cb13ff792136339cb543be264f8454246",
+                                 "labels_file": "751cd5d2a0905ba27c59a2f0f3e04098c2aad84105e52d87e0b56e3c829d4053",
+                                 "draws": "97c122e06ac64beb4bb00fe88e8b1c8f59dcc494028c3cc4b670e6d06e878f93",
+                                 "orders": "5b8061dab9060ac6a8ffd86170b5b342d166843f8cf76f254b0c5ae3e3dee70d",
+                                 "labels": "48621cbc6e9a0e769f4cf884dfc3f50a3521dd5e9d43cd69d5afd59fa1b43eab",
+                                 "rule": "41eb171c77efc4baec64df411918db63a1377e15198f47a77f432be0fbad9a77"}}
+ORDER_SEED = 20261204
+
+
+def targeted_orders(cell):
+  """scripts/targeted_prepare.orders_for, restated: three of the five cyclic orders, a seeded function of the cell alone"""
+  import random
+  return sorted(random.Random(f"{ORDER_SEED}:{cell}").sample(range(5), 3))
 TYPES = ("below", "at_or_above", "no_cost")
 SCHEDULE = {10: (2, 5, 10, 20, 30, 40, 50), 25: (2, 4, 8, 12, 16, 20), 50: (1, 2, 4, 6, 8, 10), 100: (1, 2, 3, 4, 5),
             150: (1, 2, 3, 4, 5)}   # 150: the targeted experiment (100 + 50 extra cells, 750 steps; TARGETED_PLAN.md)
@@ -113,17 +127,25 @@ class _LiveAdapter(_HFSolver):
             "adapter_weights_sha256": _sha_file(sd) if os.path.exists(sd) else None, "trained_in_process": True, **self.info}
 
 
-def add_extra_cells(a, task, tspec, train, by_id, labels, claude, orders_of):
+def add_extra_cells(a, task, tspec, train, by_id, labels, claude, orders_of, pins=None):
   """Targeted experiment: append the 50 pool3 cells of draw a.extra_key (its labels and fixed orders) to the 100 training cells, in place.
   Checks: draws and labels files unedited (their inner sha256), 50 distinct pool3 cells outside select3 and the 100, 150 cells in all."""
   dr, lb = json.load(open(a.extra_draws)), json.load(open(a.extra_labels))
   assert _sha_obj(dr["draws"]) == dr["draws_sha256"] and _sha_obj(lb["labels"]) == lb["labels_sha256"], "draws or labels file edited"
+  if pins is not None:                    # the committed files (None only in CPU tests with stand-in files)
+    assert _sha_file(a.extra_draws) == pins["draws_file"] and _sha_file(a.extra_labels) == pins["labels_file"], "draws or labels file differs from the pinned one"
+    assert (_sha_obj(dr["draws"]), _sha_obj(dr["orders"]), _sha_obj(lb["labels"]), dr["rule_sha256"]) == \
+           (pins["draws"], pins["orders"], pins["labels"], pins["rule"]), "draws, orders, labels or rule differ from the pinned ones"
+  assert _sha_obj(dr["orders"]) == dr["orders_sha256"], "orders edited"
   ecells = dr["draws"][a.extra_key]
   pool = {c["cell"]: c for c in task.cases("pool3")}
   sel3 = {c["cell"] for c in task.cases("select3")}
   assert len(ecells) == 50 == len(set(ecells)) and set(ecells) <= set(pool) and not set(ecells) & sel3, "extra cells must be 50 pool3 cells outside select3"
-  assert not set(ecells) & set(tspec)
+  assert not set(ecells) & set(tspec) and not sel3 & set(tspec)
   for cell in ecells:
+    o = dr["orders"][cell]
+    assert o == targeted_orders(cell) and len(set(o)) == 3 and all(0 <= i < 5 for i in o), f"orders of {cell} are not the frozen function of the cell"
+    assert lb["labels"][cell] in range(5), f"label of {cell} is not a grid position"
     case = pool[cell]
     by_id[case["cid"]] = case
     labels[case["cid"]] = lb["labels"][cell]
@@ -181,15 +203,15 @@ def main(argv=None):
   full_ids = [f"{k}-n{v['name_variant']}" for k, v in tspec.items()]
   labels, claude = build_labels(a.arm, by_id, full_ids)
   train = [by_id[f"{k}-n{v['name_variant']}"] for k, v in tspec.items() if k in subset]
-  if a.limit:
-    train = train[:a.limit]
   assert all(c["split"] == "train" for c in train)
   sel_cells = {c["cell"] for c in task.cases("select_B")}
   assert not sel_cells & set(tspec), "selection set overlaps the training cells"
   orders_of = {c["cell"]: tspec[c["cell"]]["orders"] for c in train}
   extra_info = {}
   if extra:
-    extra_info = add_extra_cells(a, task, tspec, train, by_id, labels, claude, orders_of)
+    extra_info = add_extra_cells(a, task, tspec, train, by_id, labels, claude, orders_of, pins=PINNED_TARGETED.get(a.model) or ap.error(f"no pinned targeted files for {a.model}"))
+  if a.limit:                             # smoke runs: cut after the extras are added (G1), keeping the first extras in view
+    train = train[:a.limit // 2] + train[100:100 + a.limit - a.limit // 2] if extra else train[:a.limit]
   epochs = 5 if a.n_cells == 100 else math.ceil(a.max_steps / a.n_cells)
   eval_epochs = set(SCHEDULE[a.n_cells])
   assert max(eval_epochs) == epochs

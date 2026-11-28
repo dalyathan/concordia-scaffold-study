@@ -318,3 +318,34 @@ T1. Reviews: reviews/2026-11-28_G1_targeted-plan_{sonnet,opus}.md. Packet /tmp/g
 - **(Opus)** gen_test3: the original study cells (44) and the planted problems are now excluded; fingerprints hash every rendered prompt in five orders, plus phase3.py and fruitville_haggling.py; the docstring about names is corrected. test3 and the pool were rebuilt; no model had seen either.
 - **(Opus)** The targeting Claude also sees per-seed failure values. A stratum "(V, grid) present in the extras" is added.
 T2. **Code choices for the targeted experiment (2026-11-28, before any run).** (a) The new splits (test3 locked; pool3, probe3, select3 build) are in a new module, harness/tasks/haggling3.py (same task name and prompts), so harness/tasks/haggling.py, harness/task.py and scripts/test2_look.py, which are frozen by hash for the test2 look, stay byte-identical. The new scripts import from them without editing them. (b) Labels: the plan said "one request"; the arm-blind, shuffled union of drawn cells (about 250 cells) is split into packets of at most 100 cases, the size of the original packet, and the replies are concatenated. This follows the G1 point that a 150+-case request is unlike the original. (c) A known, pre-existing limitation: `tools/test2_report.py --check` compares the JSON byte for byte, and floats differ in the last digit between machines (numpy summation order). The markdown reports are identical. Not changed, because the file is frozen; checks across machines compare the markdown.
+
+## G1: targeted training code and arm E (2026-11-28; Sonnet + Opus; code go-with-changes, arm E no-go from both)
+
+T3. Reviews: reviews/2026-11-28_G1_targeted-code-armE_{sonnet,opus}.md. Packet /tmp/gate_G1_02685ec2.
+- **Arm E: both no-go.** It does not run, and it is **removed from the test3 look**. Scoring it after the look would be a second look. It goes back to design as a follow-up with its own held-out set and its own G1. Points to address:
+  - locating must use cells where the donor has a real gain, or regret-gradient attribution, plus module-level and all-position patching;
+  - near-constant keys (effective rank of K; a constant-target control);
+  - C regularised (many more positions or a stated ridge; perplexity text disjoint);
+  - three A0 bases and at least three control seeds, a LoRA-on-same-examples control, Claude-labelled targets, a defined "rank-one", the last 1-2 layers excluded, a minimum gain over A0, and a 40-cell build-only development set.
+- **Applied (both, or most severe for either):**
+  - **Pins:** train_lora pins the committed draws, labels, orders and rule (file and content hashes, PINNED_TARGETED). It asserts that each extra cell's orders equal the frozen function of the cell, that labels are grid positions, and that select3 does not overlap the 100 cells. `--limit` now applies after the extras.
+  - **Freeze builder:** test3_look `build_freeze` read the training fields from the wrong level (a KeyError on real records); fixed. A missing run is reported, not fatal. The training environment is checked against A0's.
+  - **Training driver:** targeted_train checks that the draws and labels files are committed **and unmodified**. Its budget stop is now 4.5 h, near the plan's 3.8 h.
+  - **test3 report:**
+    - records selected by step tag, exactly one per (arm, seed), with a lock token;
+    - a missing letter mass raises an error;
+    - every-seed pairing by seed id;
+    - a missing seed in T, R, N or A0 makes its rules "not concluded";
+    - the readout gate on every rule (H1, H2, H3);
+    - the bootstrap limitation (27 seed combinations) stated in the report;
+    - the descriptive tables (V band, grid, extras stratum, planted no-cost mass) and prediction scoring written and tested now, before G3.
+  - **Last-epoch adapters:** tune-only; not scored on test3.
+- **Wording added to the plan before any run:** "T beats N but not R" (N_only) and "not concluded".
+- **Logged, no change:**
+  - **(a) Solver names** carry the arm but not the seed, by the pooling convention; run ids and adapter folders carry both.
+  - **(b) H2 margin** stays +0.10, as frozen in the plan at the first G1. Each prediction is scored by its own definition: Q2 is T-R only; Q3 uses +0.05.
+  - **(c) The targeting prompt** gave, besides the failure table, the training ranges and the pool composition; this is reported as such.
+  - **(d) Achieved V distribution of N:** 23-30 of 50 cells at V 10-15. Low-V no-cost problems run out. "Controls for V coverage" is softened to "a V-spread no-cost control".
+  - **(e) Oracle-label sensitivity run:** not triggered, since no-cost label agreement is 1.0 in every arm.
+  - **(f) Record keys** in select3 runs keep the name `select_B` in the history; `selection_split` says which set was used.
+- **Deferred:** a tiny-model end-to-end smoke of the extras path (no model can be downloaded on this CPU machine). The first real run's own checks (training path = scoring path, epoch-0 equality with the plain select3 record, reload) act as the smoke, and the run stops on any failure. Tying the lock token to a committed G3 verdict is also deferred: the owner's pin stays the hard control, as for test2.

@@ -8,7 +8,8 @@ resume by scoring only arms without a record.
   HARNESS_PIN_REF=scorer-pin-1 python scripts/test3_look.py --look --lock-token G3-OWNER-GO:<date> [--model qwen25_7b]
 
 Arms: plain; A0 (examples-100, seeds 0-2, as frozen for test2); T, R, N (seeds 0-2, the selected adapters of the targeted runs).
-Arm E (a delta on A0) is added by its own plan section once it exists."""
+Arm E is NOT in this look (G1 no-go; DECISIONS.md T3): it is redesigned as a follow-up with its own held-out set. Last-epoch adapters are
+tune-only (not scored on test3)."""
 from __future__ import annotations
 
 import argparse
@@ -26,7 +27,7 @@ LR = {"qwen25_7b": "3e-04"}
 FILES = ["harness/evaluate.py", "harness/task.py", "harness/records.py", "harness/tasks/haggling.py", "harness/tasks/haggling3.py",
          "harness/solvers/hf.py", "harness/solvers/cpu.py", "harness/protected/scorer.py", "harness/protected/payoffs/haggling.py",
          "tools/lock_protected.py", "tools/test3_report.py", "scripts/test3_look.py", "scripts/test2_look.py", "TARGETED_PLAN.md",
-         "TARGETED_PREDICTIONS.md", "demo/gen/test3_cases.jsonl", "demo/gen/test3_cells.json", "demo/gen/test3_fingerprints.json"]
+         "TARGETED_PREDICTIONS.md", "tools/llama_report.py", "harness/train_lora.py", "demo/gen/test3_cases.jsonl", "demo/gen/test3_cells.json", "demo/gen/test3_fingerprints.json"]
 REFS = ("oracle", "uniform", "baseline:cheapest", "baseline:stated_cost_rule")
 
 
@@ -49,15 +50,23 @@ def build_freeze(model):
   arms = [a for a in base["arms"] if a["label"] in ("plain", "examples-100")]
   for a in arms:
     a["label"] = "A0" if a["label"] == "examples-100" else "plain"
+  envs = set()
   for X in ("T", "R", "N"):
     solver = f"lora:claude_examples_n150_{X}_lr{LR[model]}"
     for s in (0, 1, 2):
-      p = look.tune_record(model, solver, s)
-      r = json.load(open(p)); t = r["solver_config"]
+      try:
+        p = look.tune_record(model, solver, s)
+      except SystemExit:
+        print(f"{X} seed {s}: no tune record (crashed or not run); reported as missing, never rerun"); continue
+      r = json.load(open(p)); sc = r["solver_config"]; tr = sc["training"]
+      envs.add(json.dumps({k: r["environment"]["packages"][k] for k in look.PACKAGES}, sort_keys=True))
       arms.append({"label": X, "solver": solver, "seed": s, "tune_record": os.path.relpath(p, ROOT), "tune_record_sha256": look.sha_file(p),
-                   "adapter": {"dir": t["adapter_dir"], "weights_sha256": t["adapter_weights_sha256"], "dir_sha256": t["adapter_sha256"],
-                               "best_epoch": t["best_epoch"], "version": t["version"]},
-                   "training": {"seed": s, "arm": t.get("arm"), "best_epoch": t["best_epoch"], "version": t["version"], "extra_key": t.get("extra_key")}})
+                   "adapter": {"dir": sc["adapter_dir"], "weights_sha256": sc["adapter_weights_sha256"], "dir_sha256": sc["adapter_sha256"],
+                               "best_epoch": tr["best_epoch"], "version": tr["version"]},
+                   "training": {"seed": s, "arm": tr.get("arm"), "best_epoch": tr["best_epoch"], "version": tr["version"],
+                                "extra_key": tr.get("extra_key")}})
+  if len(envs) > 1 or (envs and json.loads(envs.pop()) != base["environment"]["packages"]):
+    raise SystemExit("the targeted runs' package versions differ from each other or from A0's; the preflight could not be exact")
   files = FILES + [f"harness/models/{model}.yaml", f"demo/gen/targeted_draws_{model}.json", f"demo/gen/targeted_labels_{model}.json",
                    f"demo/gen/targeting_rule_{model}.json"]
   return {**{k: base[k] for k in ("model", "model_revision", "environment", "readout")}, "plan": "TARGETED_PLAN.md", "splits": ["test3"],

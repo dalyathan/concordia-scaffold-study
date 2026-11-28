@@ -58,12 +58,13 @@ def gpu_h(model):
 
 
 def main(argv=None):
-  ap = argparse.ArgumentParser(); ap.add_argument("--model", default="qwen25_7b"); ap.add_argument("--budget-stop-h", type=float, default=6.0)
+  ap = argparse.ArgumentParser(); ap.add_argument("--model", default="qwen25_7b"); ap.add_argument("--budget-stop-h", type=float, default=4.5)
   a = ap.parse_args(argv)
   dr = os.path.join(ROOT, "demo", "gen", f"targeted_draws_{a.model}.json"); lb = os.path.join(ROOT, "demo", "gen", f"targeted_labels_{a.model}.json")
   for f in (dr, lb):
-    if subprocess.run(["git", "ls-files", "--error-unmatch", f], cwd=ROOT, capture_output=True).returncode:
-      raise SystemExit(f"{f} must be committed before training")
+    if subprocess.run(["git", "ls-files", "--error-unmatch", f], cwd=ROOT, capture_output=True).returncode or \
+       subprocess.run(["git", "diff", "--quiet", "HEAD", "--", f], cwd=ROOT).returncode:
+      raise SystemExit(f"{f} must be committed and unmodified before training")
   plain = os.path.relpath(plain_select3(a.model), ROOT)
   for key in ORDER:
     if done(a.model, key):

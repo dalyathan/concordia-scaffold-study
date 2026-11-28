@@ -1,0 +1,13 @@
+# G1 review (Sonnet), targeted training code and arm E. Packet /tmp/gate_G1_02685ec2. 2026-11-28.
+**Verdict: training/look code go-with-changes; arm E no-go as written (revise and re-gate; no GPU needed yet).**
+Training code matches the plan (150 cells, 750 steps, select3 patience 2 with epoch 0, explicit lr, arms differ only by extra cells: same init, permutation, base cells, extras at the same positions).
+1. Extra-cell pins weak: only inner hashes; orders/rule hashes recorded not checked; no check orders = seeded function (3 distinct in range); labels in range(5); select3 vs 100 cells. Fix: pin file hashes (freeze), assert these.
+2. Solver name carries arm, not seed (by pooling convention); record as deviation from plan text.
+3. Report passes silently on missing data: missing letter mass -> 1.0; only T/R/N required; gate not applied to H2/H3/E-H2; crashed run makes build_freeze raise. Fix: raise on missing mass, assert 3 seeds + A0 + references, "not concluded" for missing arm, gate every rule.
+4. Descriptive outputs (last-epoch on test3, planted no-cost mass, V band, grid, extras stratum) have no frozen code. Fix: add or drop; write and hash before G3.
+5. Look freeze excludes E; scoring E later is a second look. Fix: E's development before the freeze, or declare E out.
+6. H2 margin: predictions Q3 say +0.05, plan/report +0.10. Log as post-hoc or restore.
+7. Two-level bootstrap with 3 seeds: 27 combinations, interval too narrow; T_s/R_s matched by draw but resampled independently; state in report.
+8. Minor: tune scored twice per run (selected + last); select_B key names under select3; done() retry edge; budget stop 6 h vs 3.8 h; tests lack E, missing arm, missing mass, null-p; A0 solver name match and name-variant averaging unverified.
+Arm E: 9. locating does not locate the no-cost fix (unstable denominators; residual patch cumulative; last-token only). 10. keys near-constant -> edit acts as a bias (= steering). 11. C singular (2,000 positions vs 18,944/3,584 dims): more positions or stated ridge; perplexity sample disjoint. 12. dev gate weak (no required gain over A0; 10 no-cost select3 cells reused; random control a low bar; control seeds; LoRA control; data mismatch vs T; define scrambled control; where free-answer/planted checks measured). 13. card ambiguities (rank-one, norm budget if LoRA does not touch the matrix, fp32 delta path, E wording, A0 seed).
+Freeze before the look: freeze file with all hashes; E card/delta/base; report and descriptive code; missing/diverged/epoch-0 rules; readout gate for every rule; H2 margin; A0 seed for E; last-epoch decision; owner go.

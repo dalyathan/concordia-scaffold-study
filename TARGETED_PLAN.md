@@ -1,6 +1,6 @@
 # TARGETED_PLAN: does aiming extra examples at the model's failures beat the same number of random ones? (Qwen 2.5 7B first)
 
-Status: **G1 done (Sonnet + Opus, both go-with-changes; changes applied, DECISIONS.md T1).** Predictions were committed alone first (TARGETED_PREDICTIONS.md, c1f1795). Nothing has been trained or scored for this plan. The training and look code is still to be written and tested on CPU (end of this file). The test3 look needs G3 and the owner's go.
+Status: **G1 on the plan done (DECISIONS.md T1); G1 on the code done (code go-with-changes, applied; arm E no-go: removed from the test3 look and redesigned as a follow-up; DECISIONS.md T3).** Predictions were committed alone first (TARGETED_PREDICTIONS.md, c1f1795). Nothing has been trained or scored for this plan. The training and look code is still to be written and tested on CPU (end of this file). The test3 look needs G3 and the owner's go.
 
 ## Why
 
@@ -29,7 +29,7 @@ Every cell poses a decision problem ((V, grid, stated cost) or (V, grid, cost ra
 3. **Draws (no GPU; one draw per training seed, so the cell draw is a source of variance in the analysis).** For each seed s = 0, 1, 2, an arm takes 50 pool cells outside select3, one per problem:
    - **T_s (targeted):** sampled from the rule's weighted distribution with seed 100 + s;
    - **R_s (random):** uniform over the pool with seed 200 + s;
-   - **N_s (no-cost random, V-balanced):** V-balanced draw of no-cost cells, like test3, with seed 300 + s. N controls for "more no-cost data" and for V coverage.
+   - **N_s (no-cost random, V-balanced):** V-balanced draw of no-cost cells, like test3, with seed 300 + s. N controls for "more no-cost data" and spreads over V (achieved: 23-30 of 50 cells at V 10-15, since low-V no-cost problems run out).
 
    The three fixed option orders of each extra cell are a seeded function of the cell alone (seed 20261204), so they are the same in every arm that uses the cell. Per-arm counts by type, V band (2-9, 10-15), grid and wording are reported.
 4. **Labels (no GPU).**
@@ -40,7 +40,7 @@ Every cell poses a decision problem ((V, grid, stated cost) or (V, grid, cost ra
    - Training set: the same 100 Claude-labelled cells plus the seed's 50 extra cells; 5 epochs = 750 optimizer steps (`--max-steps 750`).
    - Early stopping is scored on **select3**, with patience 2 and epoch 0 a candidate.
    - Arms T, R and N, seeds 0-2. A0 (the existing examples-100 adapters) is the reference and is not retrained; A0 comparisons are descriptive only (100 cells and 500 steps against 150 and 750).
-   - **The selected adapter is primary.** The last-epoch adapter is scored descriptively.
+   - **The selected adapter is primary.** Last-epoch adapters are scored on tune only (not on test3).
    - A run that selects epoch 0 is included as is (it is plain Qwen). A run that diverges or crashes is included or reported as missing, never rerun or replaced.
    - The tune split is scored once per run.
 6. **Development check (tune only; descriptive; cannot change the rules).** Per arm: tune soft regret overall and on no-cost cells, planted cases, letter mass, best epoch, the training-path and reload checks.
@@ -78,6 +78,8 @@ All of these are published whatever the outcome.
 **Wording.**
 - **H1 both parts hold:** "examples aimed by Claude at the model's failures fix them better than the same number of random examples, and better than random examples of the failing type".
 - **T beats R but not N:** "adding examples of the failing type helps; Claude's aiming was not shown to add to that".
+- **T beats N but not R:** "Claude's examples beat random examples of the failing type but were not shown to beat random examples of every type".
+- **A rule with a missing seed or a failed readout gate:** "the targeting comparison is not concluded".
 - **Neither:** "aiming the extra examples was not shown to beat random ones".
 - **H2:** "no large harm elsewhere" if it holds; "harm elsewhere not excluded" if it fails.
 - "Not shown" means the frozen test did not establish it, not that it is absent.
@@ -92,7 +94,7 @@ All of these are published whatever the outcome.
 - **Single model:** Qwen first. Llama and Gemma repeat the same plan only if G2 on the Qwen result says it is worth it.
 
 
-## Arm E: a direct weight edit chosen by Claude (DRAFT; needs its own G1 before any run; follows WEIGHT_EDITING_RULES.md)
+## Arm E: a direct weight edit chosen by Claude (NOT RUN: G1 no-go from both reviewers; not in the test3 look; to be redesigned as a follow-up with its own held-out set, DECISIONS.md T3)
 
 Predictions were committed alone first (TARGETED_EDIT_PREDICTIONS.md, 1c25baa). Arm E asks whether Claude choosing **the edit itself** closes the no-cost gap better than Claude choosing **examples** for LoRA (arm T). The adapters guide where the edit goes, Claude decides what it is, and a closed-form solve computes it. All inputs are build cells: probe, pool and select3. Tune and test cells are never used.
 

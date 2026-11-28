@@ -76,3 +76,33 @@ def test_low_letter_mass_is_not_concluded(tmp_path, monkeypatch):
 def test_incomplete_look():
   md, J = R3.build("qwen25_7b", [])
   assert J["status"] == "incomplete" and "No complete look" in md
+
+
+def test_t_beats_no_cost_random_only(tmp_path, monkeypatch):
+  _, J = look(tmp_path, monkeypatch, {"T": (0.8, 0.95), "R": (0.8, 0.95), "N": (0.3, 0.95), "A0": (0.4, 0.95)})
+  assert J["conclusion"]["H1"] == "N_only"
+
+
+def test_missing_seed_is_not_concluded(tmp_path, monkeypatch):
+  md, J = look(tmp_path, monkeypatch, {"T": (0.95, 0.95), "R": (0.5, 0.95), "N": (0.7, 0.95), "A0": (0.4, 0.95)})
+  recs = [r for r in R3.load("qwen25_7b", root=str(tmp_path)) if not (r["solver"].endswith("_R_lr3e-04") and r["seed"] == 2)]
+  md, J = R3.build("qwen25_7b", recs, root=str(tmp_path))
+  assert J["conclusion"]["H1"] == "not_concluded" and "Incomplete arms" in md
+
+
+def test_stray_and_duplicate_records(tmp_path, monkeypatch):
+  import json, shutil
+  look(tmp_path, monkeypatch, {"T": (0.95, 0.95), "R": (0.5, 0.95), "N": (0.7, 0.95), "A0": (0.4, 0.95)})
+  d = tmp_path / "runs" / "haggling" / "qwen25_7b"
+  f = sorted(d.glob("*n150_T*test3-s0*.json"))[0]
+  r = json.load(open(f)); r["config"]["step"] = "something else"; json.dump(r, open(d / "stray.json", "w"))
+  assert len(R3.load("qwen25_7b", root=str(tmp_path))) == 13              # the stray record is not read
+  shutil.copy(f, d / "dup.json")
+  with pytest.raises(SystemExit, match="two test3 records"):
+    R3.load("qwen25_7b", root=str(tmp_path))
+
+
+def test_descriptive_and_predictions_present(tmp_path, monkeypatch):
+  md, J = look(tmp_path, monkeypatch, {"T": (0.95, 0.95), "R": (0.5, 0.95), "N": (0.7, 0.95), "A0": (0.4, 0.95)})
+  assert "V 10-15" in J["descriptive"]["slices"] and "T" in J["descriptive"]["planted_nocost"]
+  assert set(J["predictions"]["outcomes"]) >= {"Q1", "Q2", "Q3", "Q5", "Q6", "Q7", "Q8"}

@@ -40,9 +40,14 @@ def run_args(argv, monkeypatch, tmp_path):
   return sorted(os.listdir(tmp_path / "adapters"))
 
 
-def test_targeted_run_ids_differ_by_arm(files, monkeypatch, tmp_path):
-  common = ["--n-cells", "150", "--max-steps", "750", "--select", "select3", "--extra-draws", str(files / "d.json"),
-            "--extra-labels", str(files / "l.json"), "--plain-select-record", "x.json", "--seed", "0"]
+GEN = os.path.join(ROOT, "demo", "gen")
+DRAWS, LABELS = os.path.join(GEN, "targeted_draws_qwen25_7b.json"), os.path.join(GEN, "targeted_labels_qwen25_7b.json")
+
+
+def test_targeted_run_ids_differ_by_arm(monkeypatch, tmp_path):
+  """with the committed, pinned draws and labels"""
+  common = ["--n-cells", "150", "--max-steps", "750", "--select", "select3", "--extra-draws", DRAWS,
+            "--extra-labels", LABELS, "--plain-select-record", "x.json", "--seed", "0"]
   ids = []
   for arm in ("T", "R", "N"):
     ids += run_args(BASE + common + ["--extra-key", f"{arm}_s0"], monkeypatch, tmp_path / arm)
@@ -91,3 +96,20 @@ def test_edited_draws_file_is_refused(files):
   a = types.SimpleNamespace(extra_draws=str(files / "d.json"), extra_labels=str(files / "l.json"), extra_key="T_s0", select="select3")
   with pytest.raises(AssertionError, match="edited"):
     TL.add_extra_cells(a, Haggling3Task(), json.load(open(TL.TRAIN_CELLS)), [None] * 100, {}, {}, {}, {})
+
+
+def test_committed_files_pass_the_pins_and_an_edited_copy_fails(tmp_path):
+  task = Haggling3Task(); tspec = json.load(open(TL.TRAIN_CELLS))
+  a = types.SimpleNamespace(extra_draws=DRAWS, extra_labels=LABELS, extra_key="T_s1", select="select3")
+  info = TL.add_extra_cells(a, task, tspec, [None] * 100, {}, {}, {}, {}, pins=TL.PINNED_TARGETED["qwen25_7b"])
+  assert len(info["extra_cells"]) == 50
+  d = json.load(open(DRAWS)); k = sorted(d["orders"])[0]; d["orders"][k] = [0, 1, 2] if d["orders"][k] != [0, 1, 2] else [1, 2, 3]
+  d["orders_sha256"] = TL._sha_obj(d["orders"]); json.dump(d, open(tmp_path / "d.json", "w"))
+  a.extra_draws = str(tmp_path / "d.json")
+  with pytest.raises(AssertionError, match="pinned"):
+    TL.add_extra_cells(a, task, tspec, [None] * 100, {}, {}, {}, {}, pins=TL.PINNED_TARGETED["qwen25_7b"])
+
+
+def test_orders_function_matches_the_prepare_script():
+  for c in ("a", "V10-gF-neutral-p1_5-w3", "zz"):
+    assert TL.targeted_orders(c) == tp.orders_for(c)
