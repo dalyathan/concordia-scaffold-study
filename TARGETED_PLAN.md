@@ -91,6 +91,46 @@ All of these are published whatever the outcome.
 - **Probe cells may be in an arm's extras:** allowed, because they are build data. test3 shares no problem with the pool.
 - **Single model:** Qwen first. Llama and Gemma repeat the same plan only if G2 on the Qwen result says it is worth it.
 
+
+## Arm E: a direct weight edit chosen by Claude (DRAFT; needs its own G1 before any run; follows WEIGHT_EDITING_RULES.md)
+
+Predictions were committed alone first (TARGETED_EDIT_PREDICTIONS.md, 1c25baa). Arm E asks whether Claude choosing **the edit itself** closes the no-cost gap better than Claude choosing **examples** for LoRA (arm T). The adapters guide where the edit goes, Claude decides what it is, and a closed-form solve computes it. All inputs are build cells: probe, pool and select3. Tune and test cells are never used.
+
+1. **Locate (GPU, about 0.3 h).**
+   - Run plain Qwen and each A0 adapter on the 90 probe cells and record the residual stream and each module's input and output at the last prompt token, per layer.
+   - Activation patching: copy the adapter's state at layer L (whole residual; then attention out and MLP out separately) into plain Qwen and record how much of the adapter's gain on that cell is recovered.
+   - Do this separately for stated-cost cells (which A0 solves) and no-cost cells (which it does not).
+   - Also record, per layer and module, the Frobenius norm of each adapter's weight change (B·A), which shows where training chose to act.
+2. **Edit card (Claude; committed before any edit).**
+   - A fresh Claude instance gets only the locating tables and the rules file. It chooses one site (layer and matrix: an MLP down-projection or an attention output projection, never the embedding or unembedding, the final norm, the tokenizer, the template or the soft-cap) and the base (A0 seed 0 + edit, the primary design).
+   - It also sets the size budget (the edit's Frobenius norm at most that of A0's own weight change at that layer), the predicted effects and the rejected sites, with reasons.
+   - The attempt ladder is fixed: one layer rank-one, then one layer full-rank solve, then two adjacent layers; at most 5 attempts in total.
+3. **Targets and solve (GPU, minutes per attempt).**
+   - Keys K: the chosen matrix's input at the last token on the no-cost pool cells (outside select3, name variant 0, three fixed orders), with the A0 adapter on.
+   - Values: for each key, a target output found by optimizing only that matrix's output vector (at most 25 steps, a norm limit) so the model puts its mass on the payoff-optimal option, the same answer Claude's labels give.
+   - Protection C: the second-moment matrix of that matrix's inputs over 2,000 ordinary-text positions (a fixed WikiText-103 sample, seed 0) and the stated-cost pool cells.
+   - Edit: ΔW = R Kᵀ (λC + K Kᵀ)⁻¹, with λ fixed in the edit card. It is saved as a separate delta file with its sha256; loading A0 without it must reproduce A0 bit for bit.
+4. **Development checks on select3 (descriptive gate for keeping an attempt).** An attempt is kept only if all of these hold; otherwise it counts as a failed attempt and the ladder continues:
+   - on no-cost select3 cells it beats both same-size controls, a random-direction edit at the same site and an edit solved from scrambled targets;
+   - letter mass >= 0.90 on every type;
+   - free-answer agreement drops by at most 0.10;
+   - no new planted-case failure;
+   - perplexity on held-out ordinary text rises by at most 2%.
+
+   The first kept attempt is E. If none passes, E is reported as a failed arm and is not scored on test3.
+5. **Test.** E joins the single test3 look with T, R, N and A0: one adapter plus delta, the same preflight (A0 + delta re-scored on tune against its development record).
+
+**Rules for E (fixed now).**
+- **E-H1:** E minus A0 on test3 no-cost cases: mean < 0, two-level interval below 0 (the seed level is the A0 seed the edit is built on; E is one edit, so this test uses group resampling only and says so), permutation p < 0.05.
+- **E-H2 (no harm):** the upper bound of E minus A0 on below and at-or-above cells is at most +0.10.
+- **E vs T:** descriptive, with its interval.
+- **Wording:**
+  - E-H1 holds: "a single edit Claude chose and computed closed part of the gap without retraining";
+  - E-H1 fails: "a direct edit was not shown to help".
+- Who decided what (Claude: site, base, budget, targets' definition; formula: ΔW) is stated in every report.
+
+**Budget for E:** about 0.6 GPU-hours (locating 0.3 h, attempts and controls 0.2 h, its share of the look 0.1 h).
+
 ## Budget
 
 About 4.5 GPU-hours on an A40, about $2.7:
