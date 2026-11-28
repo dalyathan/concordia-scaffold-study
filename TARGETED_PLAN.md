@@ -26,7 +26,7 @@ Every cell poses a decision problem ((V, grid, stated cost) or (V, grid, cost ra
    - A fresh Claude instance with no project history gets only the failure table: probe cell features (type, V, grid, cost range or stated cost, line, wording) and the A0 seed-mean regret. It gets nothing about test3 beyond "a held-out set exists", and no tune or test numbers.
    - It writes a targeting rule as a JSON filter with weights over cell features, plus two sentences of reasoning.
    - A script draws **50 pool cells** from the cells that match, one per problem, proportional to the weights (seed 1, PCG64).
-   - If fewer than 50 match, Claude gets one revision. The rule and the drawn cells are committed before any training.
+   - If fewer than 50 match, Claude gets one second attempt. The rule and the drawn cells are committed before any training.
 3. **Labels for the extra cells (no GPU).**
    - The cells of every arm are put to a fresh Claude instance in the same worked-example packet format as the original 100 (demo/gen/examples_packet.md), and its chosen positions are the labels. On the original 100, Claude's labels equal the payoff-optimal offer with the lowest-price tie rule in 100 of 100 cells.
    - Any new label that differs from that is reported and kept. Claude is the teacher.
