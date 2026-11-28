@@ -252,7 +252,7 @@ def three_model_table(arms, L, gem, J):
   U = arms.get(("uniform", "tune"))
   out = [f"## Three models on the same 42 tune cells: Gemma 2 9B, Llama 3.1 8B, {NAME}", "",
          f"Gemma: imported records of the pre-refactor code (A10G originals; A40 = rescore on the A40, which the harness reproduces to 3.3e-16 per case after the readout fix). "
-         f"Llama and {NAME}: harness, A40, at each model's chosen lr (Llama {lr_l:.0e}). Uniform guessing: {f3(U and U.mean())}. Code check: {LIMITATION}. "
+         f"Llama and {NAME}: harness, A40, at each model's chosen lr (Llama {lr_l:.0e}, {NAME} {J.get('lr_choice', {}).get('chosen', float('nan')):.0e}). Uniform guessing: {f3(U and U.mean())}. Code check: {LIMITATION}. "
          f"The columns differ in model-specific framing: Gemma has no assistant prefix and folds the system sentence into the first user turn; Llama and {NAME} both read the letter after "
          f"an \"Answer: (\" assistant prefix and get a real system message, and Llama's template adds a date header. All values are forced-choice letters.", "",
          f"| arm | Gemma A10G | Gemma A40 | Llama A40 | {NAME} A40 |", "| --- | --- | --- | --- | --- |"]
@@ -277,7 +277,8 @@ def llama_planted_nocost():
 def g2_checks(arms, gem, J):
   """Checks added after review gate G2 (CPU, from the same records; descriptive, no decision rule depends on them)."""
   P, U, W = arms.get(("plain", "tune")), arms.get(("uniform", "tune")), arms.get(("notes:wrong_rule", "tune"))
-  out = ["### Checks added after review gate G2 (descriptive; from the same records)", ""]
+  out = ["### Checks added after review gate G2 (descriptive; from the same records)" if MODEL == "llama31_8b" else
+         "### Checks from the Llama G2 review, built into this plan (descriptive; from the same records)", ""]
   if P and U:
     out += ["**Plain against uniform guessing** (plain minus uniform; negative = plain better):", "",
             "| type | plain | uniform | plain minus uniform [95%] |", "| --- | --- | --- | --- |"]
@@ -420,7 +421,7 @@ def build():
     J["seen_tuples"] = {"n_seen": len(ins), "n_unseen": len(outs), "soft_seen": float(np.mean([e.soft[c] for c in ins])) if ins else None,
                         "soft_unseen": float(np.mean([e.soft[c] for c in outs])) if outs else None}
     st = J["seen_tuples"]
-    out += ["**Checks added after review gate G2 (descriptive):** examples-100 signed offer error (expected offer minus the nearest optimal price) "
+    out += [("**Checks added after review gate G2 (descriptive):**" if MODEL == "llama31_8b" else "**Checks from the Llama G2 review (descriptive):**") + " examples-100 signed offer error (expected offer minus the nearest optimal price) "
             + ", ".join(f"{t or 'all'} {sv[t]:+.2f}" for t in (None,) + TYPES) + ". "
             f"Tune cases whose decision tuple (V, grid, line, stated cost) also occurs among the 100 training cells: {st['n_seen']} of {len(e.cids)} "
             f"(examples-100 soft {f3(st['soft_seen'])}); unseen tuples: {st['n_unseen']} (soft {f3(st['soft_unseen'])}). "
@@ -463,7 +464,7 @@ def build():
   out += [f"| **total (records; model loads outside records are in DECISIONS.md)** | **{tot_s / 3600:.2f}** | **{tot_u:.2f}** |", ""]
   J["budget"] = {"gpu_hours_records": tot_s / 3600, "usd_records": tot_u}
   # ---------------- decision rules
-  out += ["## Decision rules (LLAMA_PLAN.md), applied mechanically", ""]
+  out += [f"## Decision rules ({'LLAMA' if MODEL == 'llama31_8b' else NAME.upper()}_PLAN.md), applied mechanically", ""]
   verdicts = {}
   if P and R_:
     d = J["diff/tune/plain_minus_rule"]; bt = {t: P.mean(t) for t in TYPES}
@@ -536,8 +537,14 @@ def build():
       r4.append(("scrambled at least 0.15 worse than examples-100", L["scrambled N=100"].mean() - e.mean() >= 0.15))
     verdicts["R4"] = "; ".join(f"{k}: {'yes' if v else 'NO'}" for k, v in r4) or "controls not run"
     if "examples-25" in L:
+      v25, d25 = L["examples-25"].mean(), J["diff/tune/ex100_minus/examples-25"]
+      nb = sum(v25 < v for v in e.seed_soft)
+      rank25 = ("worse than every examples-100 seed" if nb == 0 else "better than every examples-100 seed" if nb == len(e.seed_soft)
+                else f"better than {nb} of {len(e.seed_soft)} examples-100 seeds")
+      edge25 = ("straddles the 0.05 edge, so 'within' is not resolved" if any(d25[1] <= x <= d25[2] for x in (-0.05, 0.05))
+                else ("lies inside +-0.05" if -0.05 < d25[1] and d25[2] < 0.05 else "lies beyond 0.05"))
       verdicts["R5"] = f"examples-25 {'within' if abs(L['examples-25'].mean() - e.mean()) <= 0.05 else 'not within'} 0.05 of the examples-100 mean " \
-                       f"({L['examples-25'].mean():.3f} vs {e.mean():.3f}, {L['examples-25'].mean() / e.mean():.1f}x; one seed, worse than every examples-100 seed; difference interval {fci(J['diff/tune/ex100_minus/examples-25'])} straddles the 0.05 edge, so 'within' is not resolved)"
+                       f"({L['examples-25'].mean():.3f} vs {e.mean():.3f}, {L['examples-25'].mean() / e.mean():.1f}x; one seed, {rank25}; difference interval {fci(d25)} {edge25})"
   for k, v in verdicts.items():
     out.append(f"- **{k}**: {v}")
   J["verdicts"] = verdicts

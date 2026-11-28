@@ -1,0 +1,993 @@
+{
+ "R3_conditions": {
+  "3 seeds": true,
+  "every seed below plain": true,
+  "interval vs cheapest-label N=100 below 0": true,
+  "interval vs plain below 0": true,
+  "interval vs scrambled N=100 below 0": true,
+  "letter mass >= 0.97 (each adapter)": true,
+  "mean <= 0.15": true,
+  "planted 4/4 (each adapter)": false
+ },
+ "R3_planted_failures": [
+  "seed 0 planted-nocost failed at mass 0.555 (top option 2)",
+  "seed 1 planted-nocost failed at mass 0.441 (top option 2)",
+  "seed 2 planted-nocost failed at mass 0.711 (top option 2)"
+ ],
+ "R3_planted_mass": {
+  "0": {
+   "planted-atabove": 0.9997983419072459,
+   "planted-below": 0.999251306559643,
+   "planted-high": 0.9994588207184654,
+   "planted-nocost": 0.5554078809671923
+  },
+  "1": {
+   "planted-atabove": 0.999950368531969,
+   "planted-below": 0.9970377631115357,
+   "planted-high": 0.9731897781341278,
+   "planted-nocost": 0.4407063581762255
+  },
+  "2": {
+   "planted-atabove": 0.9325082733197819,
+   "planted-below": 0.9822643812318268,
+   "planted-high": 0.9584517466327556,
+   "planted-nocost": 0.7108663707145647
+  }
+ },
+ "R3_secondary_holds": true,
+ "budget": {
+  "gpu_hours_records": 2.7567686270342935,
+  "usd_records": 1.6543
+ },
+ "control_versions": {
+  "cheapest_label_n100": "selected",
+  "cheapest_label_n25": "selected",
+  "shuffled_claude_n100": "selected"
+ },
+ "diff/tune/ex100_minus/always-cheapest": [
+  -0.3651052676295489,
+  -0.7367542692426714,
+  -0.10731940247092006
+ ],
+ "diff/tune/ex100_minus/cheapest-label N=100": [
+  -0.3651294540173963,
+  -0.7367561115147798,
+  -0.10733140448243203
+ ],
+ "diff/tune/ex100_minus/cheapest-label N=25": [
+  -0.36510930544880427,
+  -0.7367582638363509,
+  -0.10732407265237413
+ ],
+ "diff/tune/ex100_minus/examples-25": [
+  0.019604436270450096,
+  -0.0023758761855328303,
+  0.04699519946979791
+ ],
+ "diff/tune/ex100_minus/plain": [
+  -1.6022602152172698,
+  -1.8918025284490616,
+  -1.2433372703531789
+ ],
+ "diff/tune/ex100_minus/scrambled N=100": [
+  -0.8062666436070206,
+  -1.0553359010020809,
+  -0.5836695148436263
+ ],
+ "diff/tune/ex100_minus/stated-cost rule": [
+  -0.15081955334383462,
+  -0.3824221643004053,
+  -0.01069870501518658
+ ],
+ "diff/tune/notes:method_original": {
+  "gap_closed": 0.6286032424308151,
+  "minus_neutral": [
+   -0.8370434096091982,
+   -1.0417524349337135,
+   -0.5594854207110099
+  ],
+  "minus_plain": [
+   -0.9123803062495698,
+   -1.140046199532025,
+   -0.6125358103664266
+  ],
+  "minus_rule": [
+   0.5390603556238652,
+   0.24853600451056648,
+   0.7479575213428221
+  ],
+  "perm_p_neutral": 0.0004999500049995,
+  "perm_p_plain": 0.00039996000399960006
+ },
+ "diff/tune/notes:method_original_minus_wrong_rule": {
+  "ci": [
+   0.23830005831489512,
+   -0.06041608333862657,
+   0.4580168633571609
+  ],
+  "perm_p": 0.12238776122387761
+ },
+ "diff/tune/notes:neutral": {
+  "gap_closed": 0.0519049098039816,
+  "minus_neutral": null,
+  "minus_plain": [
+   -0.07533689664037177,
+   -0.14202551129437782,
+   -0.013644691204631874
+  ],
+  "minus_rule": [
+   1.3761037652330632,
+   0.8313479149174916,
+   1.7603918401936003
+  ],
+  "perm_p_neutral": null,
+  "perm_p_plain": 0.038696130386961305
+ },
+ "diff/tune/notes:teacher": {
+  "gap_closed": 0.3642885554184773,
+  "minus_neutral": [
+   -0.4534063253491408,
+   -0.5800014450798657,
+   -0.30591760035226434
+  ],
+  "minus_plain": [
+   -0.5287432219895125,
+   -0.6685039313088734,
+   -0.36213020944433744
+  ],
+  "minus_rule": [
+   0.9226974398839227,
+   0.46155995028718205,
+   1.2511535330358727
+  ],
+  "perm_p_neutral": 0.00019998000199980003,
+  "perm_p_plain": 0.00019998000199980003
+ },
+ "diff/tune/notes:teacher_minus_wrong_rule": {
+  "ci": [
+   0.6219371425749524,
+   0.2023508019409941,
+   0.9334489690844454
+  ],
+  "perm_p": 0.015898410158984102
+ },
+ "diff/tune/notes:wrong_rule": {
+  "gap_closed": 0.7927849858355447,
+  "minus_neutral": [
+   -1.0753434679240932,
+   -1.433955618900103,
+   -0.614964827165772
+  ],
+  "minus_plain": [
+   -1.150680364564465,
+   -1.5339377419845663,
+   -0.6709712795836842
+  ],
+  "minus_rule": [
+   0.30076029730897014,
+   -0.023390898499769813,
+   0.6360096642398672
+  ],
+  "perm_p_neutral": 0.0024997500249975004,
+  "perm_p_plain": 0.001999800019998
+ },
+ "diff/tune/plain_minus_rule": [
+  1.4514406618734348,
+  0.8922268960842434,
+  1.856756200693607
+ ],
+ "diff/tune/plain_minus_uniform/all": [
+  0.4058321962649695,
+  0.20507351077911012,
+  0.5830734278095122
+ ],
+ "diff/tune/plain_minus_uniform/at_or_above": [
+  0.6537840162251409,
+  0.37778960681612445,
+  0.9230199661385661
+ ],
+ "diff/tune/plain_minus_uniform/below": [
+  0.48654777859850123,
+  0.183470412388797,
+  0.7390359357420638
+ ],
+ "diff/tune/plain_minus_uniform/no_cost": [
+  0.07716479397126637,
+  -0.1454915893767929,
+  0.28431862654993567
+ ],
+ "freegen": {
+  "agreement_on_letter_parsed": 0.53,
+  "agreement_on_parsed": 0.53,
+  "parse_rate": 1.0
+ },
+ "freegen_adapter/qwen25_7b_claude_examples_n100_lr3e-04_s0": {
+  "agreement_on_letter_parsed": 0.95,
+  "agreement_on_parsed": 0.95,
+  "parse_rate": 1.0
+ },
+ "freegen_adapter/qwen25_7b_claude_examples_n100_lr3e-04_s1": {
+  "agreement_on_letter_parsed": 0.89,
+  "agreement_on_parsed": 0.89,
+  "parse_rate": 1.0
+ },
+ "freegen_adapter/qwen25_7b_claude_examples_n100_lr3e-04_s2": {
+  "agreement_on_letter_parsed": 0.89,
+  "agreement_on_parsed": 0.89,
+  "parse_rate": 1.0
+ },
+ "gemma_planted_nocost_mass": [
+  0.19799964042716098,
+  0.28929224198679704,
+  0.5680788852396186
+ ],
+ "limitation": "harness readout parity with the stored Gemma scores passed on the A40 after the soft-cap readout fix (per case at most 3.3e-16, plain and nine stored adapters; DECISIONS.md L38-L39); the fix leaves every Llama record bit-identical",
+ "lr_choice": {
+  "chosen": 0.0003,
+  "select_B_1e-4": 0.05899312641155647,
+  "select_B_3e-4": 0.019971737976821852
+ },
+ "plain_tune_mass": 0.9992073184285917,
+ "predictions": [
+  {
+   "brier": "-",
+   "id": "Q1a",
+   "observed": "1.666 [1.331, 1.944]",
+   "statement": "plain soft regret 0.45-1.10",
+   "verdict": "FAILED"
+  },
+  {
+   "brier": "-",
+   "id": "Q1b below",
+   "observed": "2.358 [1.910, 2.716]",
+   "statement": "plain below 0.8-1.8",
+   "verdict": "FAILED"
+  },
+  {
+   "brier": "-",
+   "id": "Q1b at_or_above",
+   "observed": "1.982 [1.414, 2.451]",
+   "statement": "plain at_or_above 0.2-1.2",
+   "verdict": "FAILED"
+  },
+  {
+   "brier": "-",
+   "id": "Q1b no_cost",
+   "observed": "0.657 [0.423, 0.904]",
+   "statement": "plain no_cost 0.08-0.5",
+   "verdict": "UNCLEAR"
+  },
+  {
+   "brier": "-",
+   "id": "Q1b shape",
+   "observed": "worst below; below/no-cost 3.59",
+   "statement": "below is the worst type and >= 2x no-cost",
+   "verdict": "HELD"
+  },
+  {
+   "brier": "-",
+   "id": "Q1c",
+   "observed": "0.094 [-0.258, 0.563]",
+   "statement": "slope of the offer on stated cost (below) <= 0.50",
+   "verdict": "UNCLEAR"
+  },
+  {
+   "brier": "unprefixed: 0.250 (p 0.5, outcome no); prefixed: 0.010 (p 0.9, outcome yes)",
+   "id": "Q1d",
+   "observed": "unprefixed 0.0055; prefixed 0.998",
+   "statement": "unprefixed letter mass: P(>= 0.95) = 0.5; with the prefix if needed: >= 0.95 (P 0.9) (train probe)",
+   "verdict": "probability only"
+  },
+  {
+   "brier": "0.250 (p 0.5, outcome no)",
+   "id": "Q1e",
+   "observed": "0.280",
+   "statement": "P(top-letter share > 0.30) = 0.5",
+   "verdict": "probability only"
+  },
+  {
+   "brier": "0.423 (p 0.65, outcome no)",
+   "id": "Q1f",
+   "observed": "plain 1.666; uniform 1.260",
+   "statement": "P(plain beats uniform by >= 0.10, i.e. <= 1.16) = 0.65",
+   "verdict": "probability only"
+  },
+  {
+   "brier": "-",
+   "id": "Q2a",
+   "observed": "-0.912 [-1.140, -0.613]",
+   "statement": "written rule minus plain in [-0.50, -0.10]",
+   "verdict": "FAILED"
+  },
+  {
+   "brier": "0.122 (p 0.65, outcome yes)",
+   "id": "Q2b",
+   "observed": "-0.529 [-0.669, -0.362]",
+   "statement": "lesson minus plain in [-0.45, -0.05]; P(lesson helps less than the written rule) = 0.65",
+   "verdict": "UNCLEAR"
+  },
+  {
+   "brier": "-",
+   "id": "Q2c",
+   "observed": "-0.075 [-0.142, -0.014]",
+   "statement": "|neutral minus plain| <= 0.10",
+   "verdict": "UNCLEAR"
+  },
+  {
+   "brier": "0.160 (p 0.6, outcome yes)",
+   "id": "Q2d",
+   "observed": "-1.151 [-1.534, -0.671]",
+   "statement": "P(the wrong rule helps: interval of wrong minus plain below 0) = 0.6",
+   "verdict": "probability only"
+  },
+  {
+   "brier": "0.423 (p 0.35, outcome yes)",
+   "id": "Q2e",
+   "observed": "-0.238 [-0.458, 0.060]",
+   "statement": "wrong minus written rule in [-0.25, +0.35]; P(wrong <= written) = 0.35",
+   "verdict": "UNCLEAR"
+  },
+  {
+   "brier": "0.090 (p 0.7, outcome yes)",
+   "id": "Q2f",
+   "observed": "lower of the two 0.753",
+   "statement": "P(neither paragraph below 0.30) = 0.7",
+   "verdict": "probability only"
+  },
+  {
+   "brier": "0.003 (p 0.95, outcome yes)",
+   "id": "Q3a",
+   "observed": "0.063 [0.038, 0.103]",
+   "statement": "examples-100 0.01-0.10; P(every seed below plain) = 0.95",
+   "verdict": "UNCLEAR"
+  },
+  {
+   "brier": "0.062 (p 0.75, outcome yes)",
+   "id": "Q3b",
+   "observed": "0.044 [0.013, 0.087]",
+   "statement": "examples-25 0.02-0.15; P(within 0.05 of examples-100) = 0.75",
+   "verdict": "UNCLEAR"
+  },
+  {
+   "brier": "0.010 (p 0.9, outcome yes)",
+   "id": "Q3c",
+   "observed": "0.429, 0.429 vs 0.429",
+   "statement": "P(cheapest-label N=25 and N=100 each within 0.05 of always-cheapest) = 0.9",
+   "verdict": "probability only"
+  },
+  {
+   "brier": "0.010 (p 0.9, outcome yes)",
+   "id": "Q3d",
+   "observed": "0.870 [0.645, 1.129]",
+   "statement": "scrambled 0.45-1.00; P(at least 0.15 worse than examples-100) = 0.9",
+   "verdict": "UNCLEAR"
+  },
+  {
+   "brier": "-",
+   "id": "Q3e",
+   "observed": "0.743 [0.479, 0.987]",
+   "statement": "examples-100 slope >= 0.50",
+   "verdict": "UNCLEAR"
+  },
+  {
+   "brier": "-",
+   "id": "Q3f",
+   "observed": "lowest adapter mean 0.9991",
+   "statement": "letter mass of every trained adapter >= 0.97",
+   "verdict": "HELD"
+  },
+  {
+   "brier": "0.360 (p 0.6, outcome no)",
+   "id": "Q3g",
+   "observed": "3e-04",
+   "statement": "P(the lr rule picks 1e-4) = 0.6",
+   "verdict": "probability only"
+  },
+  {
+   "brier": "0.023 (p 0.85, outcome yes)",
+   "id": "Q4a",
+   "observed": "0/4",
+   "statement": "P(plain passes at most 2 of 4 planted) = 0.85",
+   "verdict": "probability only"
+  },
+  {
+   "brier": "0.040 (p 0.8, outcome yes)",
+   "id": "Q4b",
+   "observed": "3 of 3 seeds fail",
+   "statement": "P(examples-100 fail planted no-cost in >= 2 of 3 seeds) = 0.8",
+   "verdict": "probability only"
+  },
+  {
+   "brier": "0.090 (p 0.7, outcome yes)",
+   "id": "Q4c",
+   "observed": "yes",
+   "statement": "P(examples-100 pass the other three planted cases in every seed) = 0.7",
+   "verdict": "probability only"
+  },
+  {
+   "brier": "-",
+   "id": "Q5a",
+   "observed": "0.53",
+   "statement": "plain free-answer agreement 0.35-0.80",
+   "verdict": "HELD"
+  },
+  {
+   "brier": "0.062 (p 0.75, outcome yes)",
+   "id": "Q5b",
+   "observed": "0.95, 0.89, 0.89",
+   "statement": "P(after examples-100 every seed's agreement >= 0.85) = 0.75",
+   "verdict": "probability only"
+  }
+ ],
+ "readout/probe_train_noprefix.json": 0.005504008689313195,
+ "readout/probe_train_prefix_answer.json": 0.99770059466362,
+ "seen_tuples": {
+  "n_seen": 36,
+  "n_unseen": 48,
+  "soft_seen": 0.04061654417099955,
+  "soft_unseen": 0.08060337352003975
+ },
+ "signed_error/Claude's lesson (teacher paragraph)": {
+  "all": 1.1415289263499981,
+  "at_or_above": 1.0753745552124434,
+  "below": 1.5460663578521208,
+  "no_cost": 0.8031458659854301,
+  "top_letter_share": 0.37045188565251275
+ },
+ "signed_error/examples-100": {
+  "all": -0.03801948272766687,
+  "at_or_above": 0.012340001374423244,
+  "below": 0.0019750720036995468,
+  "no_cost": -0.1283735215611234
+ },
+ "signed_error/neutral text (control)": {
+  "all": 1.5560426650007064,
+  "at_or_above": 1.5155333956604977,
+  "below": 2.1563779583699234,
+  "no_cost": 0.9962166409716992,
+  "top_letter_share": 0.3055751735732007
+ },
+ "signed_error/plain Gemma (imported record; confounded)": {
+  "all": 0.36670297119702344,
+  "at_or_above": 0.2927483858485661,
+  "below": 0.8810513899741513,
+  "no_cost": -0.07369086223164727,
+  "top_letter_share": null
+ },
+ "signed_error/plain Qwen": {
+  "all": 1.6388016803431316,
+  "at_or_above": 1.7013515894870266,
+  "below": 2.120176992373635,
+  "no_cost": 1.0948764591687323,
+  "top_letter_share": 0.2796016029561522
+ },
+ "signed_error/uniform": {
+  "all": 0.8571428571428574,
+  "at_or_above": 0.9285714285714288,
+  "below": 1.3571428571428577,
+  "no_cost": 0.28571428571428603,
+  "top_letter_share": 0.2
+ },
+ "signed_error/written rule (our method paragraph)": {
+  "all": 0.4174793265627324,
+  "at_or_above": 0.5444421108515057,
+  "below": 0.6677098402573103,
+  "no_cost": 0.0402860285793813,
+  "top_letter_share": 0.3430281708942826
+ },
+ "signed_error/wrong rule (control)": {
+  "all": -0.059333657518191446,
+  "at_or_above": 0.19969893233699668,
+  "below": 0.003682991554165373,
+  "no_cost": -0.38138289644573636,
+  "top_letter_share": 0.33361672390015346
+ },
+ "step4/train/baseline:cheapest": {
+  "by_type": {
+   "at_or_above": 0.0,
+   "below": 1.25,
+   "no_cost": 0.4695555555555556
+  },
+  "ci": [
+   0.5731851851851851,
+   0.31128982631700025,
+   0.9336803560852003
+  ],
+  "hard": 0.5731851851851851,
+  "mass_mean": null,
+  "mass_min": null,
+  "planted": "1/4",
+  "record": "runs/haggling/none/baseline_cheapest-train-s0-20261127T215346678757Z.json",
+  "slope": [
+   0.02438471135306804,
+   -0.11928676499051617,
+   0.1336111605677018
+  ],
+  "soft": 0.5731851851851851,
+  "top_letter_share": null
+ },
+ "step4/train/baseline:stated_cost_rule": {
+  "by_type": {
+   "at_or_above": 0.0,
+   "below": 0.0,
+   "no_cost": 0.4695555555555556
+  },
+  "ci": [
+   0.15651851851851853,
+   0.07218608331990264,
+   0.27885838697463083
+  ],
+  "hard": 0.15651851851851853,
+  "mass_mean": null,
+  "mass_min": null,
+  "planted": "3/4",
+  "record": "runs/haggling/none/baseline_stated_cost_rule-train-s0-20261127T215346871145Z.json",
+  "slope": [
+   0.7194434993005936,
+   0.6165058145261522,
+   0.8072482659234078
+  ],
+  "soft": 0.15651851851851853,
+  "top_letter_share": null
+ },
+ "step4/train/notes:method_original": {
+  "by_type": {
+   "at_or_above": 0.6263547380107152,
+   "below": 0.9796764562506283,
+   "no_cost": 0.48369718447970156
+  },
+  "ci": [
+   0.696576126247015,
+   0.5899741638872162,
+   0.8156078097666016
+  ],
+  "hard": 0.3487962962962963,
+  "mass_mean": 0.9999895925518861,
+  "mass_min": 0.9994050215210077,
+  "planted": "0/4",
+  "record": "runs/haggling/qwen25_7b/notes_method_original-train-s0-20261128T041847481590Z.json",
+  "slope": [
+   0.2782877400731814,
+   0.18327735295677502,
+   0.36206307801239085
+  ],
+  "soft": 0.696576126247015,
+  "top_letter_share": 0.33425117670755594
+ },
+ "step4/train/notes:neutral": {
+  "by_type": {
+   "at_or_above": 1.3918532949848594,
+   "below": 2.2922991048305845,
+   "no_cost": 0.748476299929946
+  },
+  "ci": [
+   1.4775428999151299,
+   1.268188126235291,
+   1.6873586771367362
+  ],
+  "hard": 1.6373333333333333,
+  "mass_mean": 0.9975133943102199,
+  "mass_min": 0.6569974043908969,
+  "planted": "0/4",
+  "record": "runs/haggling/qwen25_7b/notes_neutral-train-s0-20261128T043425082939Z.json",
+  "slope": [
+   0.028524983086986262,
+   -0.07057679424231178,
+   0.10985995107572195
+  ],
+  "soft": 1.4775428999151299,
+  "top_letter_share": 0.3061146700082281
+ },
+ "step4/train/notes:teacher": {
+  "by_type": {
+   "at_or_above": 1.114933874222798,
+   "below": 1.4752865448936743,
+   "no_cost": 0.5318342307640075
+  },
+  "ci": [
+   1.0406848832934934,
+   0.8764586001808008,
+   1.1980200718230414
+  ],
+  "hard": 0.9061296296296297,
+  "mass_mean": 0.9999632299559892,
+  "mass_min": 0.9965414544933611,
+  "planted": "0/4",
+  "record": "runs/haggling/qwen25_7b/notes_teacher-train-s0-20261128T042637133981Z.json",
+  "slope": [
+   0.2176103591047671,
+   0.11779956054015495,
+   0.29511556098127706
+  ],
+  "soft": 1.0406848832934934,
+  "top_letter_share": 0.3708847414816088
+ },
+ "step4/train/notes:wrong_rule": {
+  "by_type": {
+   "at_or_above": 0.13413947611814553,
+   "below": 1.2470032278881649,
+   "no_cost": 0.28819547478641394
+  },
+  "ci": [
+   0.5564460595975748,
+   0.35783192032350675,
+   0.8210460205562004
+  ],
+  "hard": 0.46746296296296286,
+  "mass_mean": 0.9999988083427241,
+  "mass_min": 0.9999067577186768,
+  "planted": "1/4",
+  "record": "runs/haggling/qwen25_7b/notes_wrong_rule-train-s0-20261128T044026273068Z.json",
+  "slope": [
+   0.09848155100510092,
+   0.012679564680026978,
+   0.1678183687973284
+  ],
+  "soft": 0.5564460595975748,
+  "top_letter_share": 0.35816289513047816
+ },
+ "step4/train/oracle": {
+  "by_type": {
+   "at_or_above": 0.0,
+   "below": 0.0,
+   "no_cost": 0.0
+  },
+  "ci": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "hard": 8.881784197001253e-18,
+  "mass_mean": null,
+  "mass_min": null,
+  "planted": "4/4",
+  "record": "runs/haggling/none/oracle-train-s0-20261127T215346254336Z.json",
+  "slope": null,
+  "soft": 0.0,
+  "top_letter_share": null
+ },
+ "step4/train/plain": {
+  "by_type": {
+   "at_or_above": 1.5291104515803418,
+   "below": 2.2776564014991867,
+   "no_cost": 0.7951111445060575
+  },
+  "ci": [
+   1.5339593325285288,
+   1.3001835709380816,
+   1.762148456242502
+  ],
+  "hard": 1.7110185185185185,
+  "mass_mean": 0.9985964106372115,
+  "mass_min": 0.8250830306928857,
+  "planted": "0/4",
+  "record": "runs/haggling/qwen25_7b/plain-train-s0-20261128T040116724471Z.json",
+  "slope": [
+   0.05938993884668656,
+   -0.04066054616888945,
+   0.1454450828108636
+  ],
+  "soft": 1.5339593325285288,
+  "top_letter_share": 0.28924451138547425
+ },
+ "step4/train/uniform": {
+  "by_type": {
+   "at_or_above": 1.054,
+   "below": 1.8880000000000001,
+   "no_cost": 0.6688888888888889
+  },
+  "ci": [
+   1.2036296296296294,
+   1.0407891952218955,
+   1.3808835694091035
+  ],
+  "hard": 0.5731851851851851,
+  "mass_mean": null,
+  "mass_min": null,
+  "planted": "0/4",
+  "record": "runs/haggling/none/uniform-train-s0-20261127T215346480987Z.json",
+  "slope": [
+   0.024384711353067526,
+   -0.11928676499051638,
+   0.13361116056770342
+  ],
+  "soft": 1.2036296296296294,
+  "top_letter_share": null
+ },
+ "step4/tune/baseline:cheapest": {
+  "by_type": {
+   "at_or_above": 0.0,
+   "below": 0.6428571428571429,
+   "no_cost": 0.6428571428571429
+  },
+  "ci": [
+   0.42857142857142855,
+   0.1574468085106383,
+   0.8222222222222222
+  ],
+  "hard": 0.42857142857142855,
+  "mass_mean": null,
+  "mass_min": null,
+  "planted": "1/4",
+  "record": "runs/haggling/none/baseline_cheapest-tune-s0-20261127T215346025061Z.json",
+  "slope": [
+   0.06153846153846186,
+   -0.28499259807549937,
+   0.6108890831082149
+  ],
+  "soft": 0.42857142857142855,
+  "top_letter_share": null
+ },
+ "step4/tune/baseline:stated_cost_rule": {
+  "by_type": {
+   "at_or_above": 0.0,
+   "below": 0.0,
+   "no_cost": 0.6428571428571429
+  },
+  "ci": [
+   0.21428571428571427,
+   0.05579115367077064,
+   0.481081081081081
+  ],
+  "hard": 0.21428571428571427,
+  "mass_mean": null,
+  "mass_min": null,
+  "planted": "3/4",
+  "record": "runs/haggling/none/baseline_stated_cost_rule-tune-s0-20261127T215346098541Z.json",
+  "slope": [
+   0.7600000000000001,
+   0.49517684887459806,
+   1.0000000000000002
+  ],
+  "soft": 0.21428571428571427,
+  "top_letter_share": null
+ },
+ "step4/tune/notes:method_original": {
+  "by_type": {
+   "at_or_above": 0.8747741520516694,
+   "below": 0.9400815400650951,
+   "no_cost": 0.44518251761197386
+  },
+  "ci": [
+   0.7533460699095796,
+   0.656818191262942,
+   0.8641159411760106
+  ],
+  "hard": 0.5264550264550265,
+  "mass_mean": 0.9999899720503079,
+  "mass_min": 0.9992746935622108,
+  "planted": "0/4",
+  "record": "runs/haggling/qwen25_7b/notes_method_original-tune-s0-20261128T040813740268Z.json",
+  "slope": [
+   0.3335129626768186,
+   0.05522596118884548,
+   0.742806333572211
+  ],
+  "soft": 0.7533460699095796,
+  "top_letter_share": 0.3430281708942826
+ },
+ "step4/tune/notes:neutral": {
+  "by_type": {
+   "at_or_above": 1.794043789151927,
+   "below": 2.3680554019389874,
+   "no_cost": 0.6090692474654187
+  },
+  "ci": [
+   1.5903894795187774,
+   1.2827193643040613,
+   1.841021520848039
+  ],
+  "hard": 1.846031746031746,
+  "mass_mean": 0.9986929537761927,
+  "mass_min": 0.9226941716644805,
+  "planted": "0/4",
+  "record": "runs/haggling/qwen25_7b/notes_neutral-tune-s0-20261128T041030316194Z.json",
+  "slope": [
+   0.10293192717953363,
+   -0.2268480937110537,
+   0.5460281961917662
+  ],
+  "soft": 1.5903894795187774,
+  "top_letter_share": 0.3055751735732007
+ },
+ "step4/tune/notes:teacher": {
+  "by_type": {
+   "at_or_above": 1.3798991224850456,
+   "below": 1.6073405704456003,
+   "no_cost": 0.42370976957826423
+  },
+  "ci": [
+   1.1369831541696371,
+   0.9017759077073331,
+   1.347693017428809
+  ],
+  "hard": 0.9761904761904762,
+  "mass_mean": 0.9999623028830619,
+  "mass_min": 0.9982627677401968,
+  "planted": "0/4",
+  "record": "runs/haggling/qwen25_7b/notes_teacher-tune-s0-20261128T040922198257Z.json",
+  "slope": [
+   0.23888729676374482,
+   0.04951512264261184,
+   0.5479998063324569
+  ],
+  "soft": 1.1369831541696371,
+  "top_letter_share": 0.37045188565251275
+ },
+ "step4/tune/notes:wrong_rule": {
+  "by_type": {
+   "at_or_above": 0.25886512457628225,
+   "below": 1.0514316841002107,
+   "no_cost": 0.2348412261075604
+  },
+  "ci": [
+   0.5150460115946844,
+   0.30963490282559747,
+   0.8111766146725401
+  ],
+  "hard": 0.39285714285714285,
+  "mass_mean": 0.999998781789196,
+  "mass_min": 0.9999247047593355,
+  "planted": "1/4",
+  "record": "runs/haggling/qwen25_7b/notes_wrong_rule-tune-s0-20261128T041122527862Z.json",
+  "slope": [
+   0.10955451464672125,
+   -0.05864639836318717,
+   0.45017117147570107
+  ],
+  "soft": 0.5150460115946844,
+  "top_letter_share": 0.33361672390015346
+ },
+ "step4/tune/oracle": {
+  "by_type": {
+   "at_or_above": 0.0,
+   "below": 0.0,
+   "no_cost": 0.0
+  },
+  "ci": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "hard": 1.057355261547768e-17,
+  "mass_mean": null,
+  "mass_min": null,
+  "planted": "4/4",
+  "record": "runs/haggling/none/oracle-tune-s0-20261127T215343660006Z.json",
+  "slope": null,
+  "soft": 0.0,
+  "top_letter_share": null
+ },
+ "step4/tune/plain": {
+  "by_type": {
+   "at_or_above": 1.9823554447965697,
+   "below": 2.357976350027073,
+   "no_cost": 0.6568473336538061
+  },
+  "ci": [
+   1.6657263761591494,
+   1.3311511948305004,
+   1.9441570082641708
+  ],
+  "hard": 1.7865079365079364,
+  "mass_mean": 0.9992073184285917,
+  "mass_min": 0.9505439878297909,
+  "planted": "0/4",
+  "record": "runs/haggling/qwen25_7b/plain-tune-s0-20261128T035522245387Z.json",
+  "slope": [
+   0.0938004154189321,
+   -0.25787272900735414,
+   0.5633027318999634
+  ],
+  "soft": 1.6657263761591494,
+  "top_letter_share": 0.2796016029561522
+ },
+ "step4/tune/uniform": {
+  "by_type": {
+   "at_or_above": 1.3285714285714292,
+   "below": 1.8714285714285717,
+   "no_cost": 0.5796825396825397
+  },
+  "ci": [
+   1.2598941798941798,
+   1.057655894308943,
+   1.4471876477541372
+  ],
+  "hard": 0.42857142857142855,
+  "mass_mean": null,
+  "mass_min": null,
+  "planted": "0/4",
+  "record": "runs/haggling/none/uniform-tune-s0-20261127T215345961756Z.json",
+  "slope": [
+   0.06153846153846162,
+   -0.2849925980754991,
+   0.6108890831082154
+  ],
+  "soft": 1.2598941798941798,
+  "top_letter_share": null
+ },
+ "three_models/Claude's lesson (teacher paragraph)": {
+  "gemma_a10g": 0.39034814782993976,
+  "gemma_a40": null,
+  "llama": 0.9300168978788858,
+  "qwen": 1.1369831541696371
+ },
+ "three_models/always-cheapest (no model)": {
+  "gemma_a10g": 0.42857142857142855,
+  "gemma_a40": null,
+  "llama": 0.42857142857142855,
+  "qwen": 0.42857142857142855
+ },
+ "three_models/cheapest-label N=100": {
+  "gemma_a10g": 0.4285981932914673,
+  "gemma_a40": 0.42859852080219757,
+  "llama": 0.42859917541287196,
+  "qwen": 0.428595614959276
+ },
+ "three_models/cheapest-label N=25": {
+  "gemma_a10g": 0.4285975658383112,
+  "gemma_a40": 0.42859878660958417,
+  "llama": 0.4285718620651798,
+  "qwen": 0.42857546639068406
+ },
+ "three_models/examples-100, 3-seed mean": {
+  "gemma_a10g": 0.03206784077141945,
+  "gemma_a40": 0.03239959633424429,
+  "llama": 0.047525171132721214,
+  "qwen": 0.06346616094187965
+ },
+ "three_models/examples-25, seed 0": {
+  "gemma_a10g": 0.043012236672990006,
+  "gemma_a40": 0.042706657287267705,
+  "llama": 0.08647526584170581,
+  "qwen": 0.04386172467142957
+ },
+ "three_models/neutral text (control)": {
+  "gemma_a10g": 0.7348036718808173,
+  "gemma_a40": null,
+  "llama": 1.1576610219970116,
+  "qwen": 1.5903894795187774
+ },
+ "three_models/plain": {
+  "gemma_a10g": 0.6572416108190681,
+  "gemma_a40": 0.66079056021702,
+  "llama": 1.1842593934413141,
+  "qwen": 1.6657263761591494
+ },
+ "three_models/scrambled N=100": {
+  "gemma_a10g": 0.6945645665043692,
+  "gemma_a40": 0.6954272121089659,
+  "llama": 0.658980192370218,
+  "qwen": 0.8697328045489005
+ },
+ "three_models/stated-cost rule (no model)": {
+  "gemma_a10g": 0.21428571428571427,
+  "gemma_a40": null,
+  "llama": 0.21428571428571427,
+  "qwen": 0.21428571428571427
+ },
+ "three_models/written rule (our method paragraph)": {
+  "gemma_a10g": 0.3688113158315839,
+  "gemma_a40": null,
+  "llama": 0.7729731177218968,
+  "qwen": 0.7533460699095796
+ },
+ "three_models/wrong rule (control)": {
+  "gemma_a10g": 0.617946518082289,
+  "gemma_a40": null,
+  "llama": 0.6107217115221337,
+  "qwen": 0.5150460115946844
+ },
+ "tune_groups": 19,
+ "verdicts": {
+  "R1": "R1 criteria met; plain Qwen is worse than uniform guessing (plain minus uniform 0.406 [0.205, 0.583]), so 'fails like Gemma' is not claimed: its picks are systematically wrong, not only uninformed (soft 1.666; minus rule 1.451 [0.892, 1.857]; largest type below; plain letter mass 0.9992)",
+  "R2 controls": "NOT inert (neutral minus plain -0.075 [-0.142, -0.014]; wrong rule minus plain -1.151 [-1.534, -0.671]; the wrong rule helps at least as much as either paragraph, so R2 'helps' does not show that the paragraphs' content is what helps: the gain may be generic (lower offers, less letter-position bias; see the G2 checks))",
+  "R2 method_original": "helps (minus plain -0.912 [-1.140, -0.613]; minus neutral -0.837 [-1.042, -0.559]; arm letter mass 1.0000)",
+  "R2 teacher": "helps (minus plain -0.529 [-0.669, -0.362]; minus neutral -0.453 [-0.580, -0.306]; arm letter mass 1.0000)",
+  "R3": "not replicated; failed: planted 4/4 (each adapter) (seed mean 0.063; planted: seed 0 planted-nocost failed at mass 0.555 (top option 2); seed 1 planted-nocost failed at mass 0.441 (top option 2); seed 2 planted-nocost failed at mass 0.711 (top option 2))",
+  "R3 note": "Gemma comparison (harness on the A40 after the readout fix, the stored Gemma examples-100 adapters): Gemma's adapters fail the same planted no-cost case (mass 0.20, 0.29, 0.57; the other planted cases pass), so the planted failure is shared with Gemma, and Llama's examples-100 adapters fail it too (mass 0.40, 0.13, 0.36), so it is not new in Qwen. All numbers are forced-choice letters after 'Answer: (', conditional on one training draw and label set; seeds range 0.032-0.104.",
+  "R3 secondary (without the planted condition; labelled secondary per LLAMA_PLAN.md)": "all other R3 conditions hold",
+  "R4": "cheapest-label N=25 within 0.05 of always-cheapest: yes; cheapest-label N=100 within 0.05 of always-cheapest: yes; scrambled at least 0.15 worse than examples-100: yes",
+  "R5": "examples-25 within 0.05 of the examples-100 mean (0.044 vs 0.063, 0.7x; one seed, better than 2 of 3 examples-100 seeds; difference interval 0.020 [-0.002, 0.047] lies inside +-0.05)"
+ }
+}

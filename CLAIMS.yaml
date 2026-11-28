@@ -129,3 +129,55 @@ claims:
       - {shown: "0.20", evidence: {kind: file_value, path: demo_out/llama_report.json, sha256: b7dc1607333a1a07b95ded9dd83e2e2eed63a159e9027c18427c46a11929ab68, key: "gemma_planted_nocost_mass.0"}}
       - {shown: "0.29", evidence: {kind: file_value, path: demo_out/llama_report.json, sha256: b7dc1607333a1a07b95ded9dd83e2e2eed63a159e9027c18427c46a11929ab68, key: "gemma_planted_nocost_mass.1"}}
       - {shown: "0.57", evidence: {kind: file_value, path: demo_out/llama_report.json, sha256: b7dc1607333a1a07b95ded9dd83e2e2eed63a159e9027c18427c46a11929ab68, key: "gemma_planted_nocost_mass.2"}}
+  # ---- QWEN_RESULTS.md (branch qwen; tune only; harness run records)
+  - id: qwen-plain
+    file: QWEN_RESULTS.md
+    text: "It scores 1.67, against 1.26 for picking at random and 0.214 for the stated-cost rule"
+    numbers:
+      - {shown: "1.67", evidence: {kind: run_mean, task: haggling, model: qwen25_7b, solver: "plain", split: tune, n_records: 1}}
+      - {shown: "1.26", evidence: {kind: run_mean, task: haggling, model: null, solver: "uniform", split: tune, n_records: 1}}
+      - {shown: "0.214", evidence: {kind: run_mean, task: haggling, model: null, solver: "baseline:stated_cost_rule", split: tune, n_records: 1}}
+  - id: qwen-prompt-arms
+    file: QWEN_RESULTS.md
+    text: "Our method paragraph scores 0.75, Claude's lesson 1.14, neutral text 1.59 and the one-sentence wrong rule 0.52."
+    numbers:
+      - {shown: "0.75", evidence: {kind: run_mean, task: haggling, model: qwen25_7b, solver: "notes:method_original", split: tune, n_records: 1}}
+      - {shown: "1.14", evidence: {kind: run_mean, task: haggling, model: qwen25_7b, solver: "notes:teacher", split: tune, n_records: 1}}
+      - {shown: "1.59", evidence: {kind: run_mean, task: haggling, model: qwen25_7b, solver: "notes:neutral", split: tune, n_records: 1}}
+      - {shown: "0.52", evidence: {kind: run_mean, task: haggling, model: qwen25_7b, solver: "notes:wrong_rule", split: tune, n_records: 1}}
+  - id: qwen-lora-ex100
+    file: QWEN_RESULTS.md
+    text: "Examples-100 averages 0.063 over 3 seeds"
+    numbers:
+      - {shown: "100", evidence: {kind: definition, reason: "training set size N"}}
+      - {shown: "0.063", evidence: {kind: run_mean, task: haggling, model: qwen25_7b, solver: "lora:claude_examples_n100_lr3e-04", split: tune, n_records: 3}}
+      - {shown: "3", evidence: {kind: definition, reason: "three seeds; n_records 3 pinned"}}
+  - id: qwen-lora-ex25
+    file: QWEN_RESULTS.md
+    text: "examples-25 scores 0.044"
+    numbers:
+      - {shown: "25", evidence: {kind: definition, reason: "training set size N"}}
+      - {shown: "0.044", evidence: {kind: run_mean, task: haggling, model: qwen25_7b, solver: "lora:claude_examples_n25_lr3e-04", split: tune, n_records: 1}}
+  - id: qwen-lora-controls
+    file: QWEN_RESULTS.md
+    text: "cheapest-label N=100 scores 0.43 and scrambled answers N=100 score 0.87"
+    numbers:
+      - {shown: "100", evidence: {kind: definition, reason: "training set size N"}}
+      - {shown: "0.43", evidence: {kind: run_mean, task: haggling, model: qwen25_7b, solver: "lora:cheapest_label_n100_lr3e-04", split: tune, n_records: 1}}
+      - {shown: "0.87", evidence: {kind: run_mean, task: haggling, model: qwen25_7b, solver: "lora:shuffled_claude_n100_lr3e-04", split: tune, n_records: 1}}
+  - id: qwen-planted-nocost
+    file: QWEN_RESULTS.md
+    text: "(mass on the expected option 0.56, 0.44 and 0.71 against a 0.9 bar)"
+    numbers:
+      - {shown: "0.56", evidence: {kind: file_value, path: demo_out/qwen_report.json, sha256: 636b26fff2ebc2d86d6355819032b5aee76f9e819c504023a9665874957f9f43, key: "R3_planted_mass.0.planted-nocost"}}
+      - {shown: "0.44", evidence: {kind: file_value, path: demo_out/qwen_report.json, sha256: 636b26fff2ebc2d86d6355819032b5aee76f9e819c504023a9665874957f9f43, key: "R3_planted_mass.1.planted-nocost"}}
+      - {shown: "0.71", evidence: {kind: file_value, path: demo_out/qwen_report.json, sha256: 636b26fff2ebc2d86d6355819032b5aee76f9e819c504023a9665874957f9f43, key: "R3_planted_mass.2.planted-nocost"}}
+      - {shown: "0.9", evidence: {kind: definition, reason: "planted pass bar PLANTED_MIN_MASS in harness/evaluate.py"}}
+  - id: qwen-freegen
+    file: QWEN_RESULTS.md
+    text: "agrees with its own free answer on 0.53 of the probe prompts; with the examples-100 adapters, 0.95, 0.89 and 0.89"
+    numbers:
+      - {shown: "0.53", evidence: {kind: file_value, path: demo_out/qwen_report.json, sha256: 636b26fff2ebc2d86d6355819032b5aee76f9e819c504023a9665874957f9f43, key: "freegen.agreement_on_parsed"}}
+      - {shown: "0.95", evidence: {kind: file_value, path: demo_out/qwen_report.json, sha256: 636b26fff2ebc2d86d6355819032b5aee76f9e819c504023a9665874957f9f43, key: "freegen_adapter/qwen25_7b_claude_examples_n100_lr3e-04_s0.agreement_on_parsed"}}
+      - {shown: "0.89", evidence: {kind: file_value, path: demo_out/qwen_report.json, sha256: 636b26fff2ebc2d86d6355819032b5aee76f9e819c504023a9665874957f9f43, key: "freegen_adapter/qwen25_7b_claude_examples_n100_lr3e-04_s1.agreement_on_parsed"}}
+      - {shown: "100", evidence: {kind: definition, reason: "examples-100"}}
