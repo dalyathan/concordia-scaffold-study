@@ -52,7 +52,7 @@ def main():
   man = {"repo": REPO, "prefix": PREFIX, "branch": TAG, "model": MODEL, "n_files": len(entries), "total_bytes": sum(e["bytes"] for e in entries), "files": entries}
   json.dump(man, open(MANIFEST, "w"), indent=1)
   ops = [CommitOperationAdd(path_in_repo=e["repo_path"], path_or_fileobj=os.path.join(ROOT, e["local_path"])) for e in entries]
-  ops.append(CommitOperationAdd(path_in_repo=PREFIX + "llama_artifacts_manifest.json", path_or_fileobj=MANIFEST))
+  ops.append(CommitOperationAdd(path_in_repo=PREFIX + os.path.basename(MANIFEST), path_or_fileobj=MANIFEST))
   c = api.create_commit(repo_id=REPO, repo_type="model", operations=ops, commit_message=f"{TAG}: {len(entries)} artifacts (adapters_harness, logs) from branch {TAG}")
   print(f"uploaded {len(entries)} files + manifest, {man['total_bytes']} bytes; hub commit {c.oid}", flush=True)
 
