@@ -4,5 +4,141 @@ Every number is soft regret in coins (lower is better) from the forced-choice le
 
 Readout (from tune probe prompts, not test): forced-choice letter agrees with the free answer on 0.53 of prompts for plain Llama and on 0.95, 0.90, 0.95 for the examples-100 adapters.
 
-**No look yet.** No test2 record exists for this model.
+## test2_same
+
+| arm | n cases | soft regret [95%] | below | at or above | no cost | hard regret | per seed | letter mass mean / min | planted |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| oracle | 240 | 0.000 [0.000, 0.000] | 0.000 | 0.000 | 0.000 | 0.000 | - | 1.000 / 1.000 | 4/4 |
+| uniform | 240 | 1.133 [0.949, 1.341] | 1.830 | 0.850 | 0.718 | 0.582 | - | 1.000 / 1.000 | 0/4 |
+| always-cheapest | 240 | 0.582 [0.322, 0.903] | 1.225 | 0.000 | 0.522 | 0.582 | - | 1.000 / 1.000 | 1/4 |
+| stated-cost rule | 240 | 0.174 [0.080, 0.310] | 0.000 | 0.000 | 0.522 | 0.174 | - | 1.000 / 1.000 | 3/4 |
+| plain | 240 | 1.046 [0.876, 1.230] | 1.778 | 0.812 | 0.547 | 0.938 | - | 0.998 / 0.994 | 0/4 |
+| examples-100 | 240 | 0.061 [0.037, 0.091] | 0.024 | 0.042 | 0.118 | 0.049 | 0.047, 0.101, 0.036 | 1.000 / 0.996 | 9/12 |
+| scrambled N=100 | 240 | 0.780 [0.541, 1.068] | 1.655 | 0.054 | 0.633 | 0.599 | - | 0.999 / 0.997 | 1/4 |
+| cheapest-label N=100 | 240 | 0.583 [0.322, 0.903] | 1.225 | 0.000 | 0.523 | 0.582 | - | 1.000 / 1.000 | 1/4 |
+
+24 (V, grid) groups.
+
+| examples-100 minus | difference [95%] |
+| --- | --- |
+| plain | -0.985 [-1.152, -0.824] |
+| scrambled N=100 | -0.719 [-0.991, -0.494] |
+| stated-cost rule (reported, not part of T1) | -0.113 [-0.231, -0.029] |
+
+| stratum | n cases | examples-100 | plain |
+| --- | --- | --- | --- |
+| label key seen in the 100 LoRA cells | 96 | 0.014 | 0.879 |
+| label key not seen | 144 | 0.093 | 1.157 |
+
+**T1:** mean <= 0.15: yes; every seed below plain: yes; examples-100 minus plain interval below 0: yes; examples-100 minus scrambled interval below 0: yes; readout (mass >= 0.9): yes -> **T1 holds**.
+
+Planted cases on test2_same (not part of any rule):
+
+| arm | seed | case | top pick | mass on expected | passes (mass >= 0.9) |
+| --- | --- | --- | --- | --- | --- |
+| plain | 0 | planted-below | incorrect | 0.11 | no |
+| plain | 0 | planted-nocost | incorrect | 0.13 | no |
+| plain | 0 | planted-atabove | incorrect | 0.49 | no |
+| plain | 0 | planted-high | incorrect | 0.24 | no |
+| examples-100 | 0 | planted-below | correct | 1.00 | yes |
+| examples-100 | 0 | planted-nocost | incorrect | 0.40 | no |
+| examples-100 | 0 | planted-atabove | correct | 1.00 | yes |
+| examples-100 | 0 | planted-high | correct | 1.00 | yes |
+| examples-100 | 1 | planted-below | correct | 1.00 | yes |
+| examples-100 | 1 | planted-nocost | incorrect | 0.13 | no |
+| examples-100 | 1 | planted-atabove | correct | 1.00 | yes |
+| examples-100 | 1 | planted-high | correct | 1.00 | yes |
+| examples-100 | 2 | planted-below | correct | 1.00 | yes |
+| examples-100 | 2 | planted-nocost | correct | 0.36 | no |
+| examples-100 | 2 | planted-atabove | correct | 1.00 | yes |
+| examples-100 | 2 | planted-high | correct | 1.00 | yes |
+| scrambled N=100 | 0 | planted-below | incorrect | 0.01 | no |
+| scrambled N=100 | 0 | planted-nocost | incorrect | 0.10 | no |
+| scrambled N=100 | 0 | planted-atabove | correct | 1.00 | yes |
+| scrambled N=100 | 0 | planted-high | incorrect | 0.00 | no |
+| cheapest-label N=100 | 0 | planted-below | incorrect | 0.00 | no |
+| cheapest-label N=100 | 0 | planted-nocost | incorrect | 0.00 | no |
+| cheapest-label N=100 | 0 | planted-atabove | correct | 1.00 | yes |
+| cheapest-label N=100 | 0 | planted-high | incorrect | 0.00 | no |
+
+## test2_newkey
+
+| arm | n cases | soft regret [95%] | below | at or above | no cost | hard regret | per seed | letter mass mean / min | planted |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| oracle | 240 | 0.000 [0.000, 0.000] | 0.000 | 0.000 | 0.000 | 0.000 | - | 1.000 / 1.000 | 4/4 |
+| uniform | 240 | 2.824 [2.403, 3.147] | 3.230 | 2.570 | 2.672 | 1.390 | - | 1.000 / 1.000 | 0/4 |
+| always-cheapest | 240 | 1.390 [0.706, 2.401] | 2.475 | 0.000 | 1.696 | 1.390 | - | 1.000 / 1.000 | 1/4 |
+| stated-cost rule | 240 | 0.565 [0.245, 1.046] | 0.000 | 0.000 | 1.696 | 0.565 | - | 1.000 / 1.000 | 3/4 |
+| plain | 240 | 2.847 [2.326, 3.229] | 3.276 | 2.661 | 2.603 | 3.416 | - | 0.998 / 0.988 | 0/4 |
+| examples-100 | 240 | 0.287 [0.147, 0.479] | 0.142 | 0.048 | 0.670 | 0.247 | 0.294, 0.295, 0.271 | 0.999 / 0.951 | 9/12 |
+| scrambled N=100 | 240 | 1.735 [1.167, 2.569] | 2.881 | 0.117 | 2.207 | 1.399 | - | 0.999 / 0.998 | 1/4 |
+| cheapest-label N=100 | 240 | 1.390 [0.706, 2.401] | 2.475 | 0.000 | 1.696 | 1.390 | - | 1.000 / 1.000 | 1/4 |
+
+Never one pooled number: each pre-declared slice separately. Slices overlap (a cell can carry several novelties).
+
+| slice | n cases | groups | examples-100 (per seed) | plain | stated-cost rule | scrambled N=100 | ex100 minus plain [95%] (perm p) | ex100 minus rule [95%] (perm p) | ex100 mass mean / min |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| training ranges (no novelty) | 36 | 14 | 0.006 (0.005, 0.006, 0.006) | 1.545 | 0.000 | 1.860 | -1.539 [-1.935, -1.138] (0.000) | 0.006 [0.001, 0.009] (0.000) | 1.000 / 1.000 |
+| new V only (>=10, grids A-C, wordings 0-1) | 30 | 10 | 0.758 (0.723, 0.869, 0.683) | 2.835 | 2.767 | 4.415 | -2.077 [-3.104, -1.151] (0.005) | -2.009 [-2.840, -0.867] (0.031) | 0.997 / 0.965 |
+| new grid F (any V, wordings 0-1) | 74 | 10 | 0.068 (0.096, 0.033, 0.077) | 3.316 | 0.000 | 0.818 | -3.248 [-3.772, -2.592] (0.002) | 0.068 [0.007, 0.179] (0.002) | 1.000 / 0.999 |
+| new wording 3 (any V, grids A-C) | 28 | 13 | 0.626 (0.544, 0.741, 0.593) | 2.078 | 1.881 | 3.828 | -1.452 [-2.433, -0.508] (0.018) | -1.255 [-1.908, -0.667] (0.004) | 0.997 / 0.951 |
+| new grid F and new wording 3 | 72 | 10 | 0.323 (0.366, 0.296, 0.306) | 3.319 | 0.000 | 0.684 | -2.996 [-3.745, -2.140] (0.002) | 0.323 [0.038, 0.763] (0.002) | 1.000 / 0.997 |
+| V 13-15 (T2 slice) | 66 | 12 | 0.806 (0.855, 0.763, 0.799) | 2.337 | 1.375 | 2.761 | -1.531 [-2.219, -0.754] (0.007) | -0.569 [-1.731, 0.216] (0.217) | 0.998 / 0.951 |
+
+V 13-15 slice: 33 cells (below 10, at or above 7, no cost 16); 16 on grid F, 19 with the new seller wording. The stated-cost rule has zero regret on below and at-or-above cells, so T2b is decided by the no-cost cells.
+
+Per seed (descriptive): seed 0: 0.855, minus plain -1.482 [-2.215, -0.713], minus rule -0.520 [-1.790, 0.358]; seed 1: 0.763, minus plain -1.574 [-2.218, -0.774], minus rule -0.612 [-1.609, 0.064]; seed 2: 0.799, minus plain -1.538 [-2.255, -0.745], minus rule -0.576 [-1.778, 0.237].
+
+**T2a (beats plain):** holds. **T2b (beats the stated-cost rule):** fails. Each needs the mean lower, the paired interval below 0 and permutation p < 0.05.
+
+Planted cases on test2_newkey (not part of any rule):
+
+| arm | seed | case | top pick | mass on expected | passes (mass >= 0.9) |
+| --- | --- | --- | --- | --- | --- |
+| plain | 0 | planted-below | incorrect | 0.11 | no |
+| plain | 0 | planted-nocost | incorrect | 0.13 | no |
+| plain | 0 | planted-atabove | incorrect | 0.49 | no |
+| plain | 0 | planted-high | incorrect | 0.24 | no |
+| examples-100 | 0 | planted-below | correct | 1.00 | yes |
+| examples-100 | 0 | planted-nocost | incorrect | 0.40 | no |
+| examples-100 | 0 | planted-atabove | correct | 1.00 | yes |
+| examples-100 | 0 | planted-high | correct | 1.00 | yes |
+| examples-100 | 1 | planted-below | correct | 1.00 | yes |
+| examples-100 | 1 | planted-nocost | incorrect | 0.13 | no |
+| examples-100 | 1 | planted-atabove | correct | 1.00 | yes |
+| examples-100 | 1 | planted-high | correct | 1.00 | yes |
+| examples-100 | 2 | planted-below | correct | 1.00 | yes |
+| examples-100 | 2 | planted-nocost | correct | 0.36 | no |
+| examples-100 | 2 | planted-atabove | correct | 1.00 | yes |
+| examples-100 | 2 | planted-high | correct | 1.00 | yes |
+| scrambled N=100 | 0 | planted-below | incorrect | 0.01 | no |
+| scrambled N=100 | 0 | planted-nocost | incorrect | 0.10 | no |
+| scrambled N=100 | 0 | planted-atabove | correct | 1.00 | yes |
+| scrambled N=100 | 0 | planted-high | incorrect | 0.00 | no |
+| cheapest-label N=100 | 0 | planted-below | incorrect | 0.00 | no |
+| cheapest-label N=100 | 0 | planted-nocost | incorrect | 0.00 | no |
+| cheapest-label N=100 | 0 | planted-atabove | correct | 1.00 | yes |
+| cheapest-label N=100 | 0 | planted-high | incorrect | 0.00 | no |
+
+## Conclusion (wording fixed before the look)
+
+**Llama: in-family fit replicates on fresh cells; on the V 13-15 cells they improve on plain but are not shown to beat the model-free stated-cost rule.**
+
+'Not shown' means the frozen test did not establish the effect, not that it is absent. Gemma numbers on test2, if any, come from a different scoring script and are description only.
+
+## Predictions (TEST2_PREDICTIONS.md; scored by the rule in this file)
+
+| id | prediction | probability | outcome |
+| --- | --- | --- | --- |
+| P1 | test2_same examples-100 mean in 0.03-0.15 | 0.8 | yes |
+| P3 | T1 holds | 0.8 | yes |
+| P5 | examples-100: key-unseen stratum worse than key-seen | 0.75 | yes |
+| P6 | V 13-15 examples-100 mean in 0.10-0.80 | 0.7 | no |
+| P8 | V 13-15: examples-100 below plain with the paired interval below 0 | 0.85 | yes |
+| P9 | examples-100 below the stated-cost rule on V 13-15 with the interval below 0 (the 'T2' of the predictions) | 0.35 | no |
+| P11 | new wording 3 slice within 0.10 of the training-ranges slice (examples-100) | 0.7 | no |
+| P12 | every examples-100 adapter fails the planted no-cost case on both splits | 0.85 | yes |
+| P13 | scrambled N=100 at least 0.3 worse than examples-100 on test2_same | 0.9 | yes |
+
+Brier score over the scorable predictions: 0.144 (0 is perfect; always saying 0.5 scores 0.25).
 
