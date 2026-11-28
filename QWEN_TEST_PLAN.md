@@ -1,6 +1,6 @@
-# QWEN_TEST_PLAN: one look at test2 for Qwen 2.5 7B Instruct (DRAFT, not approved, nothing run)
+# QWEN_TEST_PLAN: one look at test2 for Qwen 2.5 7B Instruct (frozen at G3; not run)
 
-Status: **draft for G3.** A test look needs (1) G3 with Sonnet + Opus (REVIEW_GATES.md), (2) the owner's explicit go in a message, and (3) the owner's scorer-pin tag (`HARNESS_PIN_REF`). None exists yet. No test case has been opened or scored for Qwen; the test2 cells are described only from their construction report (demo_out/gen_test2_report.md: CPU only, nothing scored). The harness reproduces the stored Gemma scores on the A40 (DECISIONS.md L39). If Llama is also looked at (LLAMA_TEST_PLAN.md), the two looks are planned and reviewed together at one G3, so the number of looks is known in advance.
+Status: **G3 done (Sonnet + Opus, go-with-changes; changes applied, DECISIONS.md X4).** A test look needs (1) G3 with Sonnet + Opus (REVIEW_GATES.md), (2) the owner's explicit go in a message, and (3) the owner's scorer-pin tag (`HARNESS_PIN_REF`). The owner's go and the pin tag do not exist yet. No test case has been opened or scored for Qwen; the test2 cells are described only from their construction report (demo_out/gen_test2_report.md: CPU only, nothing scored). The harness reproduces the stored Gemma scores on the A40 (DECISIONS.md L39). If Llama is also looked at (LLAMA_TEST_PLAN.md), the two looks are planned and reviewed together at one G3, so the number of looks is known in advance.
 
 
 ## Prepared for G3 (2026-11-28)
@@ -37,20 +37,33 @@ The selected adapters are used, never the `_last` ones, and nothing is retrained
 - bootstrap: PCG64 seed 0, 10,000 resamples, clusters = (V, grid) groups within each slice (number of groups reported; slices without a type are reported as such); intervals exclude seed variance, so the per-seed values are always reported next to the seed mean;
 - the planted rule below; the conclusion wording below.
 
-## Code needed before the look (not written; G3 reviews it)
+## Code items (written before G3; see "Prepared for G3" above)
 
 1. **Port test2 into the harness as locked splits.** `harness/tasks/haggling.py` has `locked_splits = ("test_same", "test_hard")`; test2_same and test2_newkey are not in it. Add both, loaded from demo/gen/test2_* with a fingerprint check; a unit test that `evaluate` refuses them without a lock token.
 2. **One look per (model, split, arm), not per config hash.** `_prior_look` keys on the solver-config sha, so a changed config could take a second look; key it also on (model, split, solver name), and refuse any second look.
 3. **Report section** for test2 (`tools/llama_report.py --model qwen25_7b --split test2_*`), written and frozen before the look, per slice.
 
-## Primary analysis and decision rules (proposed; G3 may change them before the look, nobody after)
+## Decision rules (frozen at G3, 2026-11-28; identical for Llama and Qwen; implemented in tools/test2_report.py)
 
-- **test2_same (within-distribution):** examples-100 3-seed mean soft regret, overall, by type, and stratified by label key seen / unseen in the 100 training cells. **T1** holds if the mean is at most 0.15, every seed is below plain, and the paired intervals of examples-100 minus plain and minus scrambled N=100 are below 0. Examples-100 minus the stated-cost rule is reported (marginal on tune), not part of T1.
-- **test2_newkey (generalisation):** never one pooled number; each pre-declared slice reported (training ranges, new V only, new grid F, new wording 3, grid F plus wording 3, V 13-15). **T2** (primary slice: V 13-15, the clean extension) holds if the examples-100 mean is below plain and below the stated-cost rule with paired intervals below 0; the other slices are descriptive.
-- **Planted cases:** the same four on every split, so the no-cost confidence shortfall seen on tune will recur. T1 and T2 are judged **without** the planted condition; planted results are reported per adapter as "top pick correct/incorrect, mass m".
-- **Readout:** forced-choice letters throughout; the free-answer agreement on tune probe prompts (plain 0.53; adapters 0.89-0.95) travels with every number; no free-answer scoring on test unless added at G3.
-- **Wording fixed now:** if T1 holds and T2 fails: "in-family fit replicates on fresh cells; no evidence of generalisation to new values". If both hold: "generalises to V 13-15 on the forced-choice readout". If T1 fails: "the tune result does not replicate on fresh in-family cells". Gemma and Llama numbers on test2, if any, are confounded description.
-- **Test predictions** (ranges and probabilities for T1, T2 and the slice means) are committed in a separate file before the look.
+Each model gets its own verdict; the models are never pooled. "Fails" means the frozen test did not show the effect, not that it is absent.
+
+- **Readout rule.** Every arm a rule uses (examples-100 seeds and plain; for T1 also scrambled N=100) must have mean first-token letter mass >= 0.90 on the cases the rule uses. Otherwise that rule is "not concluded (readout)". Mean and minimum mass are reported per arm, split and slice.
+- **T1 (test2_same, within-distribution).** Holds if the examples-100 3-seed mean is at most 0.15, every seed's mean is below plain, and the paired 95% intervals of examples-100 minus plain and minus scrambled N=100 lie entirely below 0. Examples-100 minus the stated-cost rule is reported and is **not** part of T1, so T1 can hold with a mean above the rule. Reported beside it: by type, and stratified by label key seen / unseen in the 100 LoRA cells.
+- **test2_newkey (generalisation).** Never one pooled number. Each pre-declared slice is reported (training ranges, new V only, new grid F, new wording 3, grid F plus wording 3, V 13-15), with the number of (V, grid) groups, per-seed means, both paired intervals and the group sign-flip permutation p.
+- **T2a (V 13-15 slice, beats plain).** The examples-100 mean is below plain, the paired interval lies entirely below 0, and the permutation p is below 0.05.
+- **T2b (V 13-15 slice, beats the stated-cost rule).** The same against the model-free stated-cost rule. On this slice the rule's regret comes only from the no-cost cells, so T2b is decided there. The slice is not a pure V extension: its at-or-above cells use grid F, and some cells carry the new wording. The report prints its composition (cells by type, grid F, wording 3) next to T2. With 12 groups the percentile intervals undercover; the permutation condition is there for that reason. Per-seed T2 checks are descriptive.
+- **Planted cases:** reported per adapter (top pick correct or not, mass on the expected options); not part of any rule.
+- **Readout limitation travels with every number:** forced-choice letters; the free-answer agreement on tune probe prompts is quoted in the report.
+- **Wording** (two parts, fixed now):
+  - **T1:** holds "in-family fit replicates on fresh cells"; fails "the tune result does not replicate on fresh in-family cells"; not concluded "in-family replication is not concluded".
+  - **T2a and T2b both hold:** "on the V 13-15 cells (which also carry grid F or the new seller wording in part) the examples-100 adapters beat both plain and the model-free stated-cost rule".
+  - **T2a only:** "on the V 13-15 cells they improve on plain but are not shown to beat the model-free stated-cost rule".
+  - **T2b only:** "on the V 13-15 cells they beat the stated-cost rule but an improvement over plain is not shown".
+  - **Neither:** "on the V 13-15 cells an improvement over plain is not shown".
+  - **Not concluded:** "on the V 13-15 cells the comparison is not concluded".
+- **Incomplete look and resume.** A frozen arm with no record makes the rules that need it "not concluded". After a crash, rerunning the look scores only (arm, split) pairs without a record; that is not a second look. A failed preflight stops the look and scores nothing for that arm.
+- **Predictions** (TEST2_PREDICTIONS.md) are scored by the code in tools/test2_report.py. Each one is a yes/no event with its stated probability; a range prediction's event is "the point estimate lies in the range". The report lists the outcomes and the Brier score.
+- Gemma numbers on test2, if any, come from a different scoring script and are description only.
 
 ## Process
 

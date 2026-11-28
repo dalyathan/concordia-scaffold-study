@@ -5,6 +5,7 @@
    "label": "plain",
    "seed": 0,
    "solver": "plain",
+   "training": null,
    "tune_record": "runs/haggling/llama31_8b/plain-tune-s0-20261127T215449648928Z.json",
    "tune_record_sha256": "e808bf5dcd4f43592439f5fdfe5241c31296edee7303c58995e7844b0ccc1e1c"
   },
@@ -12,6 +13,7 @@
    "adapter": {
     "best_epoch": 4,
     "dir": "demo_out/adapters_harness/llama31_8b_claude_examples_n100_lr1e-04_s0",
+    "dir_sha256": "7a5b785a75fea9784f9d59eefd2fbe6017d7833999a9c0dd3d3d6d379e18851a",
     "version": "selected on select_B (early stopping, epoch 0 a candidate)",
     "weights_sha256": "6208169e43b36bbacc30d0168417a4dd06006a3774eb92bd078e61de0e95f289"
    },
@@ -31,6 +33,7 @@
    "adapter": {
     "best_epoch": 5,
     "dir": "demo_out/adapters_harness/llama31_8b_claude_examples_n100_lr1e-04_s1",
+    "dir_sha256": "f23399ad0edeba9d659c3b553a75e2393c7efb7218cae0adaf3d5f9ebf0f6bd3",
     "version": "selected on select_B (early stopping, epoch 0 a candidate)",
     "weights_sha256": "6af56e214d56ce029e0e7fae9ae953be1209bc59cd00a78099a221f8c9ea46aa"
    },
@@ -50,6 +53,7 @@
    "adapter": {
     "best_epoch": 5,
     "dir": "demo_out/adapters_harness/llama31_8b_claude_examples_n100_lr1e-04_s2",
+    "dir_sha256": "c380dc35c1691386219fbd9f67b94e3e0500bdeb22762e8832c8ee012cbfaac9",
     "version": "selected on select_B (early stopping, epoch 0 a candidate)",
     "weights_sha256": "e61025254c4303706a46bef13213c90830bc18d2097fcbe2cdaf63d164fc0091"
    },
@@ -69,6 +73,7 @@
    "adapter": {
     "best_epoch": 4,
     "dir": "demo_out/adapters_harness/llama31_8b_shuffled_claude_n100_lr1e-04_s0",
+    "dir_sha256": "ab781ec2faeb00db3965355dc9dea15fc32003e25303b687ba60b62ac4afc8c3",
     "version": "selected on select_B (early stopping, epoch 0 a candidate)",
     "weights_sha256": "118d6a68202cf907165ae944127040182e61e8479a9475c0ee35edafa2b99248"
    },
@@ -88,6 +93,7 @@
    "adapter": {
     "best_epoch": 5,
     "dir": "demo_out/adapters_harness/llama31_8b_cheapest_label_n100_lr1e-04_s0",
+    "dir_sha256": "1c4d7d5a1f8f95c3b78e28d917386b50704b2ba0f1943f1420609f8c649b95a7",
     "version": "selected on select_B (early stopping, epoch 0 a candidate)",
     "weights_sha256": "852fe781bc856d2e52edee280e4923cf7454066f20c07d333e4d96044f9ede5e"
    },
@@ -110,20 +116,39 @@
   "resamples": 10000,
   "seed": 0
  },
+ "environment": {
+  "gpu_model": "A40",
+  "packages": {
+   "peft": "0.12.0",
+   "torch": "2.4.1+cu121",
+   "transformers": "4.44.2"
+  }
+ },
  "file_sha256": {
+  "LLAMA_TEST_PLAN.md": "874c19a098ca5f88be181f291ba5be2b02ae31fcb6d08947d067c593d4bed602",
+  "QWEN_TEST_PLAN.md": "d386b89c8932dc3530361e666f628901e134c9b806694c9e7abf35c392ad0f65",
+  "TEST2_PREDICTIONS.md": "295f0c66256d7c665177b2cf465c84b6690bae9d89da60f341ce436f4f76bc79",
   "demo/gen/test2_cases.jsonl": "7889eb0cfa1f3f63dfb1c99aec2f29cb65252c9ed0c42cb2de9d8c6455f86526",
   "demo/gen/test2_cells.json": "2c2b8e2e0844a8a18a8494740ff834fb55b1165607deb772967509f34b787e16",
   "demo/gen/test2_fingerprints.json": "d72ca71d59937673b2920478b3636374b8f17dd52a083e8a4caff6ecdcacbb8a",
   "harness/evaluate.py": "6253a5e350ff17b9c92758f8344bfc2b761515fb2457a786a8aa0408dc6d44ec",
   "harness/models/llama31_8b.yaml": "c833ae0b5a0d9727be87b8d0e73668f1bcdf00551cecbce75e7dc2a2296cd2da",
   "harness/modelspec.py": "984c5fd87989b8047a0c6f328259ab3c7917836241efe179e0728ed64c7910df",
+  "harness/protected/payoffs/haggling.py": "a0423b3a0a2908c6494e8e2e1f2c55e35c6c17eb934122f06cf7455bc95a13e2",
+  "harness/protected/scorer.py": "3b6141e7cd16ed0c4cab1c058653427f673ecdfbc9fb9436716e4ebb16084265",
+  "harness/records.py": "1a5d5f03bef6e4fd88642e43d9f5a933d120f2d3e425a64c393706f5c0bf74a6",
+  "harness/solver.py": "a215e763a3331d10d7b40e4dad86bc4c549651a9f161c8871993a8cb0549eacc",
+  "harness/solvers/cpu.py": "18b20c21954f6ed94d901565c631544cb8db92aecdbc58dcaef6ab03306b05c9",
   "harness/solvers/hf.py": "3c728530a1d4c6ae0d536483ffceeaf75a953bfc1a2ad96cbffe6230221ed36d",
+  "harness/task.py": "83f681161d65b082c1bec72644c8b227ad8bd971ff79f336bbe05a4586f1132d",
   "harness/tasks/haggling.py": "8ef86657374c613ab20b01a5e2ec47532927ad6e46893c29978712b6e1144c54",
-  "scripts/test2_look.py": "27aff8be18189ce76ceb9469bc6bbceb50beda0ebcc93590ab6e9891edaf3c32",
-  "tools/test2_report.py": "96b3d0ee4c402ad7c0474d9ef646af7be34456fe692b70868be1830168e175d0"
+  "scripts/test2_look.py": "82e5a7a830cdc8212c513616ae4510b59fb2eb389a82fc3659130df4670bfc4e",
+  "tools/llama_report.py": "5c6673a8f0bd67e37e42bfcd51aefad95dae7c674b582f304c4ac90f8a022551",
+  "tools/lock_protected.py": "a6b867be22c6131a873fb44bc1410580659825c0b0d1772293edd6d39f5bbf3e",
+  "tools/test2_report.py": "38e32e329032e958463e4fdfde4277e9d0fbbc2eedf0213e84820a562411dd36"
  },
  "model": "llama31_8b",
- "model_yaml_sha256": "c833ae0b5a0d9727be87b8d0e73668f1bcdf00551cecbce75e7dc2a2296cd2da",
+ "model_revision": "0e9e39f249a16976918f6564b8830bc894c89659",
  "plan": "LLAMA_TEST_PLAN.md",
  "preflight": {
   "max_abs_prob_diff": 0.001,
