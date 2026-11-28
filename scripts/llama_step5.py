@@ -26,7 +26,8 @@ def plain_train():
 
 
 def gpu_hours():
-  return sum((r.get("timing") or {}).get("gpu_seconds") or 0 for r in recs()) / 3600
+  # a `_last` record's scoring time is already inside its run's record (G1 Qwen): count it once
+  return sum((r.get("timing") or {}).get("gpu_seconds") or 0 for r in recs() if not r["solver"].endswith("_last")) / 3600
 
 
 def done(arm, n, lr, seed):

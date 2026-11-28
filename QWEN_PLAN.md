@@ -1,4 +1,4 @@
-# QWEN_PLAN: Qwen 2.5 7B Instruct replication of the haggling study (branch `qwen`, written 2026-11-28 before any Qwen GPU run)
+# QWEN_PLAN: Qwen 2.5 7B Instruct replication of the haggling study (branch `qwen`, written 2026-11-28 before any Qwen GPU run; changes from the G1 review marked "G1")
 
 Model: `Qwen/Qwen2.5-7B-Instruct` at revision a09a3545 (harness/models/qwen25_7b.yaml; MODEL_CHECKS.md: PASS on 2026-11-28, single-token letters ids 64-68, real system role, no final logit soft-cap). Task: the generated haggling dataset (harness/tasks/haggling.py), five cyclic option orders, the stored name variants, first-token letter readout through the harness. Splits used: **train and tune only**, plus `select_B` (42 train cells outside the 100 training cells) for LoRA early stopping and the lr choice. test_same, test_hard, test2_same and test2_newkey are never opened. Predictions were committed alone before any Qwen code: QWEN_PREDICTIONS.md (commit 7e3d2f9).
 
@@ -13,6 +13,13 @@ The plan is the Llama plan (LLAMA_PLAN.md, frozen there), with the same arms, re
 3. The tune cells are not used to choose the framing. If a prefix is used, the model check is rerun with it (letters single tokens after the prefix).
 4. **Free-answer agreement** (scripts/llama_freegen_check.py, model-agnostic): the greedy free answer without the prefix vs the forced letter's argmax, on the same 20 train cases; **descriptive only, no threshold**. Rerun with each examples-100 adapter after step 5.
 5. Step 4 then also applies the Llama floor: R1 and R2 are concluded only if plain tune letter mass >= 0.9 (code stop below 0.9).
+
+**G1 additions to the readout check (fixed before the probe runs):**
+- The rule is computed in code (`scripts/llama_readout_probe.py --threshold 0.95`) and written to the JSON: **pass iff the mean bare-letter mass >= 0.95 and every case type's mean >= 0.90**. Case-type counts of the 20 probe cases, the per-type means, the minimum prompt and the share of prompts below 0.9 are reported.
+- If the prefix is used, a CPU check also confirms that the natural tokenisation of "<prompt>Answer: (" + letter equals the prefix tokens followed by the letter id; if not, the readout is reported as off-distribution (as for Llama, where "(a" merges), not as a stop.
+- **If the train probe passes but plain tune mass is below 0.9 at step 4, the run stops and is reported; the framing is not switched** (the tune cells never choose the framing).
+- **Q1d is scored on the train probe's unprefixed mean** (no unprefixed tune mass is computed for Qwen).
+- The free-answer check uses explicit plain greedy decoding (repetition_penalty 1.0; Qwen's generation_config sets 1.05), records the settings, reports agreement on letter-parsed answers separately, and for Qwen has no threshold, no pass field and exit 0. The adapter variant loads the saved adapter with PEFT and generates without the prefix it was trained with; both are noted as off-distribution, the agreement is descriptive.
 
 ## Step 4: failure map and prompt arms (GPU, `scripts/llama_step4.py --model qwen25_7b`, train and tune)
 
@@ -34,7 +41,7 @@ The Llama recipe unchanged: rank 4, alpha 8, dropout 0, q/k/v/o, fp32 adapter we
 
 ## Metrics and report (`tools/llama_report.py --model qwen25_7b`, generalised; QWEN_RESULTS.md)
 
-Everything the Llama report gives (soft and hard regret per type, cluster-bootstrap intervals over (V, grid) groups, 10,000 resamples, PCG64 seed 0; slope of the offer on stated cost with 10,000 resamples; letter mass; top-letter share; planted cases with masses; per-seed values; GPU and USD per record, `_last` scoring counted once), plus from the start: plain minus uniform per type; each paragraph minus the wrong rule (paired interval, permutation p as (k+1)/(B+1)); the signed offer error per arm and type; regret on tune cases whose decision tuple is seen vs unseen among the 100 training cells; free-answer agreement before and after LoRA; a three-model table on the same tune cells: Gemma (imported stored records, A10G and A40 columns; the harness reproduces the A40 column) and Llama and Qwen (harness, A40), labelled confounded by model-specific framing.
+Everything the Llama report gives (soft and hard regret per type, cluster-bootstrap intervals over (V, grid) groups, 10,000 resamples, PCG64 seed 0; slope of the offer on stated cost with 10,000 resamples; letter mass; top-letter share; planted cases with masses; per-seed values; GPU and USD per record, `_last` scoring counted once, in the report and, after G1, also in the driver's budget stop), plus from the start: plain minus uniform per type; each paragraph minus the wrong rule (paired interval, permutation p as (k+1)/(B+1)); the signed offer error per arm and type; regret on tune cases whose decision tuple is seen vs unseen among the 100 training cells; free-answer agreement before and after LoRA; a three-model table on the same tune cells: Gemma (imported stored records, A10G and A40 columns; the harness reproduces the A40 column) and Llama and Qwen (harness, A40), labelled confounded by model-specific framing.
 
 ## Decision rules (as frozen for Llama, with the Llama G2 wording)
 
@@ -45,13 +52,19 @@ Everything the Llama report gives (soft and hard regret per type, cluster-bootst
 - **R5** examples-25 within 0.05 of the examples-100 mean (descriptive; one seed; the interval is reported).
 - **Predictions** in QWEN_PREDICTIONS.md scored mechanically (HELD / FAILED / UNCLEAR / probability with a Brier term / not testable).
 - **Stops (code):** plain tune mass < 0.9; oracle failing a planted case or always-cheapest passing planted-high; any trainer check failing; no new run once the Qwen records' GPU time reaches 5 h (budget 6 h).
+- **G1: prediction scoring precedence.** For a range statement, UNCLEAR takes precedence whenever the 95% interval contains a range edge; otherwise HELD if the point is inside the range, else FAILED. A statement with a range and a probability (Q3a, Q3b, Q3d) scores the range part mechanically and the probability part by its Brier term only; direction-only statements ("every seed below plain") are HELD/FAILED on the seeds. QWEN_PREDICTIONS.md itself is not edited.
+- **G1: R1 headroom clause** (as for Llama): if plain < 0.30, R2-R5 are reported as headroom-limited. "Every seed below plain" is reported, but the paired interval is the test.
+- **G1: the planted no-cost case** (V 6, grid A, prior 1-5, no cost; best offer 3, payoffs 1, 1.6, 1.8, 1.6, 1) is checked before the runs: Claude's labels are payoff-optimal on all 100 training cells (33 no-cost); the V 6 / grid A / prior 1-5 no-cost pattern does not occur among the training cells (V 6, grid A no-cost occurs only with priors 2-6 and 2-10); its 0.2 best-to-second gap is typical of no-cost training cells (10 of 33 have 0.2, 10 are exact ties). So it tests a near-tie off the training pattern. R3 keeps the planted condition as frozen, R3-secondary is reported, and a third failure is not read as evidence about the models' arithmetic.
+- **G1: content of the prompt gain.** The wrong rule is one short sentence, not length-matched; as on Llama, R2 may well leave the content question unresolved, and the results say so. A length-matched wrong paragraph is not added (not part of the owner's arm list).
+- **G1: headline comparisons** for the examples arms: the scrambled control and the stated-cost rule, side by side; cheapest-label is reported but is a weak comparator (it collapses onto always-cheapest). The seen/unseen tuple split stays in the headline. Intervals over about 20 (V, grid) groups undercover; said again in QWEN_RESULTS.md.
+- **G1: crash rule.** If a training run dies after writing its `_last` record and adapter but before the main record, the partial `_last` record and both adapter folders of that run are moved to demo_out/adapters_harness/_failed/ and logged, and the run is restarted once.
 - No conclusion before G2 (Sonnet + Opus).
 
 ## Changes from the Llama plan, with reasons
 
 1. **Readout rule fixed in advance** (owner): format-only, mass >= 0.95 on train cases, "Answer: (" only if the unprefixed mass is below that; free-answer agreement descriptive. Reason: the Llama check was restated post hoc; fixing it before the data removes that forking path.
 2. **Model-specific framing:** Qwen's chat template has a real system role (the same system sentence is passed; Qwen's default "You are Qwen..." system prompt is therefore not used) and no date header. sdpa attention, no soft-cap.
-3. **Code:** the Llama scripts are generalised by a `--model` argument (step 4 already has one; step 5 driver, free-answer check and report gain one); outputs for Qwen go to QWEN_RESULTS.md and demo_out/qwen/. No change to the harness scorer, evaluator, task or trainer.
+3. **Code:** the Llama scripts are generalised by a `--model` argument (step 4 already has one; step 5 driver, free-answer check and report gain one); outputs for Qwen go to QWEN_RESULTS.md and demo_out/qwen/. No change to the harness scorer, evaluator, task or trainer. The report generator is generalised before G2 (not before the runs; G1 point deferred, DECISIONS.md Q4), and must regenerate LLAMA_RESULTS.md unchanged.
 4. **Budget:** 6 GPU-h (owner), stop for new runs at 5 h.
 5. **Not run** (as for Llama): steering, rule-trained students, N = 10 and 50, a second subset draw.
 

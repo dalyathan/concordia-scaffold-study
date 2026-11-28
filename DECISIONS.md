@@ -226,3 +226,20 @@ Q0. **Disk.** Parity passed, so the cached Llama weights were deleted as the own
 Q1. **Predictions** QWEN_PREDICTIONS.md committed alone (7e3d2f9) before any Qwen code or run, from the Gemma and Llama tune results.
 Q2. **Model check** rerun (tools/model_checks.py --write --keep-previous): qwen25_7b PASS (letters single tokens, ids 64-68; system role; 28 layers, hidden 3584); MODEL_CHECKS.md unchanged byte for byte; Mistral stays NOT CHECKED (no sentencepiece), as before.
 Q3. **Plan** QWEN_PLAN.md: the Llama plan with the readout rule fixed in advance (owner: format-only, mass >= 0.95 on 20 train cases; "Answer: (" only if the unprefixed mass is below; else stop; free-answer agreement descriptive, before and after LoRA), the Llama G2 analyses built into the report from the start, budget 6 GPU-h (code stop for new runs at 5 h). Scripts gained --model (step-5 driver, free-answer check, readout probe output dir; step 4 scores plain:noprefix only if a prefix is used); Llama paths and defaults unchanged.
+Q4. **G1 (Sonnet + Opus, both go-with-changes; reviews/2026-11-28_G1_qwen-plan_{sonnet,opus}.md).** Packet /tmp/gate_G1_892e0054 (hub-commit keyword spelled commit_pin in the copy).
+
+| # | Point (who) | Action |
+|---|---|---|
+| 1 | Free-answer check keeps the Llama thresholds, pass field and exit 2 (both; Opus most severe) | **Applied**: descriptive for non-Llama models (no thresholds, no pass, exit 0) |
+| 2 | Inherited repetition penalty in greedy decoding (Opus) | **Applied** (verified: Qwen generation_config sets 1.05): explicit repetition_penalty 1.0, settings recorded, letter-parsed agreement reported; Llama's default is 1.0, so its numbers are unaffected |
+| 3 | 0.95 rule applied by hand, wrong band printed, only the mean (both) | **Applied**: --threshold in code, rule mean >= 0.95 and every type's mean >= 0.90, per-type means, minimum, share below 0.9, counts per type |
+| 4 | Undecided paths: train pass but tune mass < 0.9; which Q1d value; HELD/UNCLEAR precedence; compound items (both) | **Applied** in QWEN_PLAN.md (stop, no framing switch; train probe; UNCLEAR first; range part mechanical, probability part Brier) |
+| 5 | Budget stop may not see training time; `_last` double count (both) | **Checked**: records.cost emits gpu_seconds (training records 1,050+ s); driver now counts `_last` once; unit test tests/harness/test_step5_budget.py |
+| 6 | Natural tokenisation of prefix + letter (Sonnet) | **Applied** (CPU check if the prefix is used; off-distribution is reported, not a stop) |
+| 7 | Planted no-cost is a design question (both) | **Applied**: checked before the runs (labels optimal on all 100 training cells; the planted pattern is absent from training; typical near-tie); R3 kept as frozen, wording set |
+| 8 | Wrong rule not length-matched (Sonnet) | **Deferred**: not an owner arm; the results will say the content question may stay unresolved |
+| 9 | Generalise and freeze the report generator before the runs (Opus) | **Deferred** to before G2 (open point): the report does not affect any run or stop; it must regenerate LLAMA_RESULTS.md unchanged |
+| 10 | Headline comparators, in-family wording, caption on framing, interval undercoverage, R1 headroom clause (both) | **Applied** in the plan |
+| 11 | PEFT load path for the adapter free-answer check and off-distribution generation (Sonnet) | **Applied** as a stated limitation (descriptive check) |
+| 12 | Minor: step-4 log per model, docstrings, crash cleanup rule (Opus) | **Applied** |
+| 13 | Freeze lists for a test look (both) | **Deferred** to QWEN_TEST_PLAN.md |

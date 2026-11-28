@@ -5,7 +5,8 @@ one model load, one run record per (solver, split). Refuses every split except t
     PYTHONPATH=concordia:. .venv/bin/python scripts/llama_step4.py [--model llama31_8b] [--splits tune,train] [--only plain,notes_teacher]
 
 Order: CPU references (oracle, uniform, cheapest, stated_cost_rule) -> plain tune -> plain train -> notes arms tune -> notes arms train.
-Stops (exit 2) after plain tune if its mean first-token letter mass is below the harness floor (0.5): the readout would be wrong."""
+Stops (exit 2) after plain tune if its mean first-token letter mass is below 0.9 (LLAMA_PLAN.md / QWEN_PLAN.md mass floor).
+Log: logs/llama_step4.jsonl for llama31_8b, logs/<model>_step4.jsonl otherwise."""
 import argparse, json, os, sys, time
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -29,7 +30,7 @@ def main():
   want = lambda n: only is None or n in only
   task = get_task("haggling")
   os.makedirs(os.path.join(ROOT, "logs"), exist_ok=True)
-  log = open(os.path.join(ROOT, "logs", "llama_step4.jsonl"), "a")
+  log = open(os.path.join(ROOT, "logs", "llama_step4.jsonl" if a.model == "llama31_8b" else f"{a.model}_step4.jsonl"), "a")
   def note(**kw):
     kw["t"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()); log.write(json.dumps(kw) + "\n"); log.flush(); print(json.dumps(kw), flush=True)
   for split in splits:

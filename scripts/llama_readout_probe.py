@@ -17,7 +17,9 @@ def main():
   ap = argparse.ArgumentParser(); ap.add_argument("--model", default="llama31_8b"); ap.add_argument("--n", type=int, default=20)
   ap.add_argument("--prefix", help="try an assistant prefix (overrides the config)"); ap.add_argument("--split", default="tune", choices=("tune", "train_other"),
       help="train_other: train cases outside the 100 LoRA training cells and select_B (used to judge a framing change without the tune cells)")
-  ap.add_argument("--out", default="readout_probe.json"); a = ap.parse_args()
+  ap.add_argument("--out", default="readout_probe.json")
+  ap.add_argument("--threshold", type=float, help="G1 (Qwen): the format-only rule; PASS iff mean bare mass >= threshold and every case type's mean >= 0.90")
+  a = ap.parse_args()
   import torch
   t0 = time.time()
   spec = modelspec.load(a.model)
@@ -46,17 +48,25 @@ def main():
       top = torch.topk(p, 10)
       m = {k: float(p[v].sum()) for k, v in groups.items()}
       for k in sums: sums[k] += m[k]
-      rows.append({"cid": c["cid"], "order": list(order), "mass": m,
+      rows.append({"cid": c["cid"], "type": c["type"], "order": list(order), "mass": m,
                    "top10": [[tok.decode([int(i)]), round(float(q), 5)] for q, i in zip(top.values, top.indices)]})
   n = len(rows)
   mean = {k: v / n for k, v in sums.items()}
   band = "interpret" if mean["bare"] >= 0.9 else ("caution: stop and re-gate a framing change" if mean["bare"] >= 0.5 else "stop")
-  out = {"model": spec.name, "revision": b.revision, "assistant_prefix": spec.assistant_prefix, "split": a.split, "n_prompts": n, "mean_mass": mean, "band": band, "groups": groups,
+  types = sorted({r["type"] for r in rows})
+  by_type = {t: float(sum(r["mass"]["bare"] for r in rows if r["type"] == t) / sum(1 for r in rows if r["type"] == t)) for t in types}
+  extra = {"cases_per_type": {t: len({r["cid"] for r in rows if r["type"] == t}) for t in types}, "bare_mass_by_type": by_type,
+           "bare_mass_min_prompt": min(r["mass"]["bare"] for r in rows), "share_prompts_below_0.9": sum(r["mass"]["bare"] < 0.9 for r in rows) / n}
+  if a.threshold is not None:
+    extra["rule"] = f"mean bare mass >= {a.threshold} and every case type's mean >= 0.90 (QWEN_PLAN.md, fixed before the data)"
+    extra["rule_pass"] = bool(mean["bare"] >= a.threshold and min(by_type.values()) >= 0.90)
+  out = {**extra, "model": spec.name, "revision": b.revision, "assistant_prefix": spec.assistant_prefix, "split": a.split, "n_prompts": n, "mean_mass": mean, "band": band, "groups": groups,
          "gpu_seconds": time.time() - t0, "rows": rows}
   odir = os.path.join(ROOT, "demo_out", "llama" if a.model == "llama31_8b" else a.model.split("_")[0][:4])   # demo_out/llama, demo_out/qwen
   os.makedirs(odir, exist_ok=True)
   json.dump(out, open(os.path.join(odir, a.out), "w"), indent=1)
-  print(json.dumps({k: out[k] for k in ("n_prompts", "mean_mass", "band", "gpu_seconds", "revision")}, indent=1))
+  print(json.dumps({k: out.get(k) for k in ("n_prompts", "mean_mass", "band", "bare_mass_by_type", "cases_per_type", "bare_mass_min_prompt",
+                                           "share_prompts_below_0.9", "rule", "rule_pass", "gpu_seconds", "revision")}, indent=1))
   for r in rows[:3]:
     print(r["cid"], r["top10"][:5])
 

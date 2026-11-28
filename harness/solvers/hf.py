@@ -1,4 +1,4 @@
-"""Model-backed solvers (GPU). WRITTEN BUT NOT RUN in the refactor session (the GPU was busy); see REFACTOR_STATUS.md.
+"""Model-backed solvers (GPU). Run on the A40 since 2026-11-27; readout parity with the stored pre-refactor scores checked 2026-11-28 (REFACTOR_STATUS.md).
 
 Everything model-specific comes from a ModelSpec; no model name appears here. Readout: first-token probability of each answer
 letter right after the rendered prompt (the same readout as the pre-refactor code in refimpl/), renormalised over the letters, with the
