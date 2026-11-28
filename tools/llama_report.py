@@ -359,7 +359,7 @@ def build():
     sec = {k: v for k, v in conds.items() if not k.startswith("planted")}
     verdicts["R3 secondary (without the planted condition; labelled secondary per LLAMA_PLAN.md)"] = \
         "all other R3 conditions hold" if all(sec.values()) else "fails also without planted: " + ", ".join(k for k, v in sec.items() if not v)
-    J["R3_conditions"] = conds; J["R3_planted_failures"] = pf; J["R3_secondary_holds"] = all(sec.values())
+    J["R3_conditions"] = conds; J["R3_planted_failures"] = pf; J["R3_planted_mass"] = {str(r["seed"]): {c["cid"]: c["planted_mass_on_expected"] for c in r["cases"] if c["planted"]} for r in E100}; J["R3_secondary_holds"] = all(sec.values())
     ch = arms.get(("baseline:cheapest", "tune"))
     r4 = []
     for nm in ("cheapest-label N=25", "cheapest-label N=100"):

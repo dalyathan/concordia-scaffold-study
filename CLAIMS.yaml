@@ -63,3 +63,47 @@ claims:
     text: "Written offer agrees with its own pick on about a third of cases"
     qualitative: true
     numbers: []
+  # ---- LLAMA_RESULTS.md (branch llama; tune only; Llama numbers from harness run records)
+  - id: llama-plain-tune
+    file: LLAMA_RESULTS.md
+    text: "Plain Llama scores 1.18 on tune against 0.214 for the model-free stated-cost rule; the below-cost type is worst at 1.83. Gemma's plain score on the same cells was 0.66"
+    numbers:
+      - {shown: "1.18", evidence: {kind: run_mean, task: haggling, model: llama31_8b, solver: plain, split: tune, n_records: 1}}
+      - {shown: "0.214", evidence: {kind: run_mean, task: haggling, model: null, solver: "baseline:stated_cost_rule", split: tune, n_records: 1}}
+      - {shown: "1.83", evidence: {kind: run_mean, task: haggling, model: llama31_8b, solver: plain, split: tune, type: below, n_records: 1}}
+      - {shown: "0.66", evidence: {kind: run_mean, task: haggling, model: gemma2_9b, solver: "legacy:plain", split: tune, n_records: 1}}
+  - id: llama-prompt-arms
+    file: LLAMA_RESULTS.md
+    text: "Our method paragraph 0.77, Claude's lesson 0.93, neutral text 1.16, wrong rule 0.61."
+    numbers:
+      - {shown: "0.77", evidence: {kind: run_mean, task: haggling, model: llama31_8b, solver: "notes:method_original", split: tune, n_records: 1}}
+      - {shown: "0.93", evidence: {kind: run_mean, task: haggling, model: llama31_8b, solver: "notes:teacher", split: tune, n_records: 1}}
+      - {shown: "1.16", evidence: {kind: run_mean, task: haggling, model: llama31_8b, solver: "notes:neutral", split: tune, n_records: 1}}
+      - {shown: "0.61", evidence: {kind: run_mean, task: haggling, model: llama31_8b, solver: "notes:wrong_rule", split: tune, n_records: 1}}
+  - id: llama-lora-examples
+    file: LLAMA_RESULTS.md
+    text: "Examples-100 (3 seeds at the chosen learning rate) averages 0.048 (Gemma 0.032); examples-25 (one seed) 0.086. Controls: cheapest-label N=100 0.43, scrambled answers N=100 0.66."
+    numbers:
+      - {shown: "3", evidence: {kind: definition, reason: "three seeds were run (LLAMA_PLAN.md); n_records 3 is pinned on the next entry"}}
+      - {shown: "0.048", evidence: {kind: run_mean, task: haggling, model: llama31_8b, solver: "lora:claude_examples_n100_lr1e-04", split: tune, n_records: 3}}
+      - {shown: "0.032", evidence: {kind: run_mean, task: haggling, model: gemma2_9b, solver: "legacy:claude_examples", split: tune, n_records: 3}}
+      - {shown: "0.086", evidence: {kind: run_mean, task: haggling, model: llama31_8b, solver: "lora:claude_examples_n25_lr1e-04", split: tune, n_records: 1}}
+      - {shown: "100", evidence: {kind: definition, reason: "training set size N (number of worked-example cells)"}}
+      - {shown: "25", evidence: {kind: definition, reason: "training set size N"}}
+      - {shown: "0.43", evidence: {kind: run_mean, task: haggling, model: llama31_8b, solver: "lora:cheapest_label_n100_lr1e-04", split: tune, n_records: 1}}
+      - {shown: "0.66", evidence: {kind: run_mean, task: haggling, model: llama31_8b, solver: "lora:shuffled_claude_n100_lr1e-04", split: tune, n_records: 1}}
+  - id: llama-planted-nocost
+    file: LLAMA_RESULTS.md
+    text: "(mass on the expected option 0.40, 0.13 and 0.36 for seeds 0-2, against a 0.9 bar)"
+    numbers:
+      - {shown: "0.40", evidence: {kind: file_value, path: demo_out/llama_report.json, sha256: 657f9eef93a84a9304e6f5954e3db6ddb32c435ab9f88a190bdaed87107f1431, key: "R3_planted_mass.0.planted-nocost"}}
+      - {shown: "0.13", evidence: {kind: file_value, path: demo_out/llama_report.json, sha256: 657f9eef93a84a9304e6f5954e3db6ddb32c435ab9f88a190bdaed87107f1431, key: "R3_planted_mass.1.planted-nocost"}}
+      - {shown: "0.36", evidence: {kind: file_value, path: demo_out/llama_report.json, sha256: 657f9eef93a84a9304e6f5954e3db6ddb32c435ab9f88a190bdaed87107f1431, key: "R3_planted_mass.2.planted-nocost"}}
+      - {shown: "0", evidence: {kind: definition, reason: "seed label"}}
+      - {shown: "2", evidence: {kind: definition, reason: "seed label"}}
+      - {shown: "0.9", evidence: {kind: definition, reason: "planted pass bar PLANTED_MIN_MASS in harness/evaluate.py"}}
+  - id: llama-readout-limitation
+    file: LLAMA_RESULTS.md
+    text: "they agree with Llama's own free answer on about half the probe prompts"
+    qualitative: true
+    numbers: []
