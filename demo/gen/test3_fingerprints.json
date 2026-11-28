@@ -1,29 +1,33 @@
 {
  "files": {
+  "concordia/examples/modular/environment/modules/fruitville_haggling.py": "f850d8a8cb0ecac90f4fe70964734f87a000828d7c4482f48b24f2c762f4e5e0",
   "demo/gen/cells.json": "428925050d28a3d0bc23b87551aa837ae0f7daa4465ceb45f5973dbb415bfe86",
-  "demo/gen/pool3_cases.jsonl": "5591faec5fcb34593619fb9003bf2184214a4380554b382b17ccfb4092302898",
-  "demo/gen/pool3_cells.json": "4f9a7f0a060cc4594c1709aca2fe669eaafaa0ce6bf698b6b8513d86a4328215",
+  "demo/gen/pool3_cases.jsonl": "b0760a81701e9267cf88d90d2795c301e4ece365da27007fe91964f706f5515f",
+  "demo/gen/pool3_cells.json": "5b865a60fac5a4918be6bb14948327585a83d30d73f492f62ad76f814e6dcdd8",
   "demo/gen/test2_cells.json": "2c2b8e2e0844a8a18a8494740ff834fb55b1165607deb772967509f34b787e16",
-  "demo/gen/test3_cases.jsonl": "ba1e632285173e24f7c159c44f4d8a67b5fc0b1d28477048eeddc0c4cd6a1918",
-  "demo/gen/test3_cells.json": "1895946a310bc4fdd9ace434dfac658dc113cd315921ee91bb1b4692d18e81f1",
+  "demo/gen/test3_cases.jsonl": "792559999a6af68e62e4b27d49373208da98d445695b9420354b9e946028237e",
+  "demo/gen/test3_cells.json": "80cd7341dc35773b473596c9574a632539f6ae69dc716f9d663145f37661b33a",
   "demo/gen_cases.py": "cc0024b70ee5d53e4dad5966aa312200d9d53fb00248b3826ec4f6b2af01044f",
   "demo/gen_test2.py": "3bd42a41fd7b1dd31f31166add21472dbd67a1ccc25427f79b492dcca55a3e75",
-  "demo/gen_test3.py": "d6a762e4028143c097a5802ce06b05fdd4968a990a0d4c5baf597ea6ca636f0a",
-  "refimpl/core.py": "7a83fa03261cf843fa3ed9f7b83791af61189075a8176d7d41b2f74a96a775d8"
+  "demo/gen_test3.py": "b7266525c0a367b365f5789f86306598271b9a45dffaedc995235d37828ef885",
+  "refimpl/core.py": "7a83fa03261cf843fa3ed9f7b83791af61189075a8176d7d41b2f74a96a775d8",
+  "refimpl/phase3.py": "b5f83cb69b6f332c78a874605e37b145981763c6a7fce25934da3b363328aded"
  },
  "seed": 20261203,
  "sets": {
   "pool": {
-   "cases_sha256": "333b1b43c46bede6c84deed4b10deb94e05a637765f56a5c3ff01586fb215492",
-   "cells_sha256": "f4f438eb4789ec0278dc3aab797beda687cd7040f23cd67fb08971d8e12c071a",
-   "n_cases": 552,
-   "n_cells": 552
+   "cases_sha256": "e26f51c2500614e89b3f8b1e1e92281303d7af2199643c66c01a36d3514eb9d9",
+   "cells_sha256": "b19ae4c99cf0010c09f85c17ba634c87c18a6b113be01cf7060daa7c0af14b42",
+   "n_cases": 549,
+   "n_cells": 549,
+   "prompts_sha256_all_orders": "af74c9c966e2c0e64da51c5109ca232e014c5679561f2d61adeb1c6a0eb574e3"
   },
   "test3": {
-   "cases_sha256": "c7f4f45ed3aa2e915a3646b14d46bbf505d7cf4061f16df0d5cc507346bc30f6",
-   "cells_sha256": "877e5e63499a2db53c9803704c3970703b9d68803402709a20d2c00026fbd80f",
+   "cases_sha256": "36bc5ae16928e73b4d823a90802251f3d62cc24eab63b6bcf439b3e121ff1f42",
+   "cells_sha256": "61951f36bbe22aacf62006f3b142cd346ecb7bc64b875f219f3458b31a90b068",
    "n_cases": 240,
-   "n_cells": 120
+   "n_cells": 120,
+   "prompts_sha256_all_orders": "88fb380dd1a0e6281598830f5d92a73a4154ace0f31e6a462c9ff1e80f4143e5"
   }
  }
 }

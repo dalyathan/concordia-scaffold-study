@@ -11,8 +11,11 @@ problem. All-tie cells are dropped. Resale values 2-15, grids A-F, wordings 0-3,
           the probe set (failure map) and the extra training cells of arms T and R are drawn from it (TARGETED_PLAN.md).
   probe   90 pool cells (45 no_cost, 30 below, 15 at_or_above), V-balanced, for the failure map of the examples-100 adapters.
 
-Names: new first-name and surname lists, disjoint from every name used so far (gen_cases pools, refimpl.core names), so no prompt in test3
-or the pool repeats a buyer or seller name."""
+  select3 30 pool cells outside the probe (10 no_cost, 14 below, 6 at_or_above), V-balanced: the early-stopping set of the new arms; never an
+          extra training cell.
+Excluded besides earlier problems: the original study's cell space (grid A, prior 1-5, V 2-6, as gen_test2) and the planted cases' problems.
+Names: new first-name and surname lists, disjoint from every name part used before (gen_cases pools, refimpl.core names). test3 and the pool
+use disjoint buyer/seller full names from the same parts; names can repeat within a set."""
 from __future__ import annotations
 
 import collections
@@ -36,6 +39,9 @@ GRIDS = ("A", "B", "C", "D", "E", "F")
 WORDINGS = (0, 1, 2, 3)
 TEST3 = {"no_cost": 60, "below": 30, "at_or_above": 30}
 PROBE = {"no_cost": 45, "below": 30, "at_or_above": 15}
+SELECT3 = {"no_cost": 10, "below": 14, "at_or_above": 6}   # early-stopping set for the new arms (G1): pool cells in test3's ranges,
+                                                            # disjoint from the probe and never used as an extra training cell
+PLANTED_PROBLEMS = {(5, "A", 2), (6, "A", (1, 5)), (3, "A", 4), (9, "A", 5)}   # harness.tasks.haggling planted cases
 BUYER_FIRST = ["Aster", "Bryony", "Clover", "Dahlia", "Elowen", "Fern", "Gilia", "Heather", "Iris", "Jessamine", "Kalmia", "Lobelia",
                "Myrtle", "Nerine", "Oxalis", "Primrose", "Rosalind", "Saffron", "Tansy", "Ulmaria", "Violet", "Winnow", "Yarrow", "Zinnia"]
 SELLER_FIRST = ["Ambrose", "Barnaby", "Crispin", "Desmond", "Edgar", "Fabian", "Godfrey", "Horace", "Ignatius", "Jethro", "Leopold",
@@ -69,13 +75,15 @@ def build():
   used_problems = {t2.problem(key(c)) for c in first + second}
   used_cells = {c["cell"] for c in first + second}
   rng = random.Random(SEED3)
-  stats = {"ties_dropped": collections.Counter()}
+  stats = {"ties_dropped": collections.Counter(), "original_study_excluded": 0}
   by_problem = {t: collections.defaultdict(list) for t in g.TYPES}
   for typ in g.TYPES:
     for x in t2.candidates(typ, VS, GRIDS, WORDINGS):
       V, gn, line, C, prior, w = x
-      if g.cell_key(*x) in used_cells or t2.problem(x) in used_problems:
+      if g.cell_key(*x) in used_cells or t2.problem(x) in used_problems or t2.problem(x) in PLANTED_PROBLEMS:
         continue
+      if t2.original_study_cell(V, gn, prior):           # the original study's cell space (grid A, prior 1-5, V 2-6), as gen_test2
+        stats["original_study_excluded"] += 1; continue
       if g.label(V, g.GRIDS[gn], C, prior)["all_tie"]:
         stats["ties_dropped"][typ] += 1; continue
       by_problem[typ][t2.problem(x)].append(x)
@@ -118,8 +126,14 @@ def build():
     cand = [tuple(c["problem"]) for c in pool if c["type"] == typ]
     pick = set(map(tuple, v_balanced(cand, PROBE[typ])))
     probe += [c["cell"] for c in pool if c["type"] == typ and tuple(c["problem"]) in pick]
+  select3 = []
+  for typ in g.TYPES:
+    cand = [tuple(c["problem"]) for c in pool if c["type"] == typ and c["cell"] not in set(probe)]
+    pick = set(map(tuple, v_balanced(cand, SELECT3[typ])))
+    select3 += [c["cell"] for c in pool if c["type"] == typ and tuple(c["problem"]) in pick]
   for c in cells:
     c["probe"] = c["cell"] in set(probe)
+    c["select3"] = c["cell"] in set(select3)
   pools = name_pools(random.Random(SEED3 + 1))
   cases = []
   for c in cells:
@@ -132,19 +146,23 @@ def build():
   stats["ties_dropped"] = dict(stats["ties_dropped"])
   stats["counts"] = {s: dict(collections.Counter(c["type"] for c in cells if c["split"] == s)) for s in ("test3", "pool")}
   stats["probe"] = dict(collections.Counter(c["type"] for c in cells if c["probe"]))
+  stats["select3"] = dict(collections.Counter(c["type"] for c in cells if c["select3"]))
   return cells, cases, stats
 
 
 def fingerprints(cells, cases):
   sha = lambda b: hashlib.sha256(b).hexdigest()
   f = lambda p: sha(open(os.path.join(ROOT, p), "rb").read())
+  t2.install()
+  fv = "concordia/examples/modular/environment/modules/fruitville_haggling.py"
   fp = {"seed": SEED3, "files": {p: f(p) for p in ("demo/gen_test3.py", "demo/gen_test2.py", "demo/gen_cases.py", "refimpl/core.py",
-                                                    "demo/gen/cells.json", "demo/gen/test2_cells.json")}, "sets": {}}
+                                                    "refimpl/phase3.py", fv, "demo/gen/cells.json", "demo/gen/test2_cells.json")}, "sets": {}}
   for s in ("test3", "pool"):
     cs = sorted((c for c in cells if c["split"] == s), key=lambda c: c["cell"])
     ks = sorted((c for c in cases if c["split"] == s), key=lambda c: c["cid"])
     fp["sets"][s] = {"n_cells": len(cs), "n_cases": len(ks), "cells_sha256": sha(json.dumps(cs, sort_keys=True).encode()),
-                     "cases_sha256": sha(json.dumps(ks, sort_keys=True).encode())}
+                     "cases_sha256": sha(json.dumps(ks, sort_keys=True).encode()),
+                     "prompts_sha256_all_orders": sha("\n\x00".join(g.render(c, o)[0] for c in ks for o in g.orders()).encode())}
   return fp
 
 

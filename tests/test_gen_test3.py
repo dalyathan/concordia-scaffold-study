@@ -61,3 +61,17 @@ def test_prompts_render():
   for c in CASES[:20] + PCASES[:20]:
     text, l2p = g.render(c, g.orders()[0])
     assert c["buyer"] in text and text.endswith("Answer: (") and sorted(l2p.values()) == sorted(c["grid"])
+
+
+def test_select3_probe_and_exclusions():
+  assert {t: sum(c["type"] == t and c["select3"] for c in POOL) for t in g.TYPES} == t3.SELECT3
+  assert not any(c["select3"] and c["probe"] for c in POOL)
+  for c in T3 + POOL:
+    assert P(c) not in t3.PLANTED_PROBLEMS
+    assert not (c["grid_name"] == "A" and tuple(c["prior"]) == (1, 5) and c["V"] in (2, 3, 4, 5, 6))
+
+
+def test_rendered_prompts_fingerprint():
+  fp = json.load(open(os.path.join(OUT, "test3_fingerprints.json")))
+  assert all("prompts_sha256_all_orders" in fp["sets"][s] for s in ("test3", "pool"))
+  assert "refimpl/phase3.py" in fp["files"]
